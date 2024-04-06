@@ -36,6 +36,7 @@
     "@mui/x-tree-view": "^6.17.0",
     "@reduxjs/toolkit": "^2.2.1",
     "@tabler/icons-react": "^2.47.0",
+    "@tinymce/tinymce-react": "^4.3.2",
     "amazon-cognito-identity-js": "^6.3.7",
     "apexcharts": "^3.46.0",
     "axios": "^1.6.7",
