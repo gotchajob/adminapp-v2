@@ -49,7 +49,7 @@ const application: NavItemType = {
           title: <FormattedMessage id="social-profile" />,
           type: 'item',
           url: '/apps/user/social-profile/posts',
-          breadcrumbs: false
+          breadcrumbs: false,
         },
         {
           id: 'account-profile',
