@@ -30,42 +30,6 @@ const Login = () => {
   }, [editorRef.current]);
   return (
     <AuthWrapper1>
-      <Editor
-        initialValue={''}
-        init={{
-          height: 500,
-          menubar: false,
-          plugins: [
-            'advlist',
-            'autolink',
-            'lists',
-            'link',
-            'image',
-            'charmap',
-            'anchor',
-            'searchreplace',
-            'visualblocks',
-            'code',
-            'fullscreen',
-            'insertdatetime',
-            'media',
-            'table',
-            'preview',
-            'help',
-            'wordcount'
-          ],
-          toolbar:
-            'undo redo | blocks | ' +
-            'bold italic forecolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help',
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-        }}
-        onInit={(event, editor) => {
-          // @ts-ignore
-          editorRef.current = editor;
-        }}
-      />
       <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
         <Grid item xs={12}>
           <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 68px)' }}>
