@@ -50,10 +50,10 @@ function a11yProps(index: number) {
 
 // tabs option
 const tabsOption = [
-    {
-        label: 'Form',
-        icon: <MailTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-    },
+    // {
+    //     label: 'Form',
+    //     icon: <MailTwoToneIcon sx={{ fontSize: '1.3rem' }} />
+    // },
     {
         label: 'Profile',
         icon: <AccountCircleTwoToneIcon sx={{ fontSize: '1.3rem' }} />
@@ -127,22 +127,22 @@ const Profile1 = () => {
                             <Tab key={index} component={Link} href="#" icon={tab.icon} label={tab.label} {...a11yProps(index)} />
                         ))}
                     </Tabs>
-                    <TabPanel value={value} index={0}>
+                    {/* <TabPanel value={value} index={0}>
                         <FormRegister />
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
+                    </TabPanel> */}
+                    <TabPanel value={value} index={0}>
                         <Profile />
                     </TabPanel>
-                    <TabPanel value={value} index={2}>
+                    <TabPanel value={value} index={1}>
                         <PersonalAccount />
                     </TabPanel>
-                    <TabPanel value={value} index={3}>
+                    <TabPanel value={value} index={2}>
                         <MyAccount />
                     </TabPanel>
-                    <TabPanel value={value} index={4}>
+                    <TabPanel value={value} index={3}>
                         <ChangePassword />
                     </TabPanel>
-                    <TabPanel value={value} index={5}>
+                    <TabPanel value={value} index={4}>
                         <Settings />
                     </TabPanel>
                 </Grid>
