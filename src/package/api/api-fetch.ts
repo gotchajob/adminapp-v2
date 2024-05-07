@@ -37,3 +37,13 @@ export const errorSystem = (error: string, data: any) => {
     data
   };
 };
+
+export const getDataCity = async (cityUrl: string): Promise<any> => {
+  try {
+    // Sử dụng apiServerFetch với phương thức GET để lấy dữ liệu thành phố mà không cần accessToken
+    const data = await apiServerFetch(cityUrl, 'GET');
+    return data; // Trả về dữ liệu nhận được
+  } catch (error) {
+    return errorSystem('Failed to fetch city data', (error as Error).message);
+  }
+};
