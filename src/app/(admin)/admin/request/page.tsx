@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // material-ui
 import { useTheme, Theme } from '@mui/material/styles';
@@ -44,6 +44,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import { GetMentor } from 'package/api/mentor-register-request';
 
 // table sort
 function descendingComparator(a: KeyedObject, b: KeyedObject, orderBy: string) {
@@ -306,6 +307,15 @@ const CustomerList = () => {
     const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+    const getMentorRegisterRequest = async () => {
+        const data = await GetMentor({ limit: 1, page: 1 }, "Phu");
+        console.log("Mentor resgiter request data :", data);
+    }
+
+    useEffect(() => {
+        getMentorRegisterRequest();
+    }, [])
 
     return (
         <MainCard title="Mentor Request List" content={false}>

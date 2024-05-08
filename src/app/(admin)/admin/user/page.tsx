@@ -36,6 +36,15 @@ const ListStylePage2 = () => {
     setAnchorEl(null);
   };
 
+  const getUser = async () => {
+    const data = await GetUser({ limit: 1, page: 1, sortBy: 'createdAt', sortOrder: 'asc' }, "Phu");
+    console.log("user data:", data);
+  }
+
+  useEffect(() => {
+    getUser();
+  }, [])
+
   return (
     <MainCard
       title={
