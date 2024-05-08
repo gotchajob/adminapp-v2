@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -20,6 +20,7 @@ import { gridSpacing } from 'store/constant';
 // assets
 import { IconSearch } from '@tabler/icons-react';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import { GetUser } from 'package/api/user';
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
@@ -33,6 +34,15 @@ const ListStylePage2 = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const getUser = async () => {
+    const data = await GetUser({ limit: 1, page: 1, sortBy: 'createdAt', sortOrder: 'asc' }, "Phu");
+    console.log("user data:", data);
+  }
+
+  useEffect(() => {
+    getUser();
+  }, [])
 
   return (
     <MainCard

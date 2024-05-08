@@ -44,6 +44,6 @@ export const GetUser = async (
     }
     return res;
   } catch (error: any) {
-    return errorSystem("Không thể lấy thông tin", { token: "" });
+    return errorSystem("Không thể lấy thông tin", { list: [], total: 0 });
   }
 };
