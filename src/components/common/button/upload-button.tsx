@@ -1,10 +1,10 @@
 "use client";
-import { CldUploadButton, CldUploadWidgetResults } from "next-cloudinary";
+import { CldUploadButton, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useState } from "react";
 import "../button/style.css";
 export const UploadImageButton = ({ setImage }: { setImage: any }) => {
   const [info, updateInfo] = useState<any>();
-  function handleOnUpload(result: CldUploadWidgetResults, widget: any) {
+  function handleOnUpload(result: CloudinaryUploadWidgetResults, widget: any) {
     updateInfo(result?.info);
     //@ts-ignore
     setImage(result?.info?.secure_url || "");

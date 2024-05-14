@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import Chip from 'ui-component/extended/Chip';
 import { CVUploadImage } from './avatar';
+import { InformationComponent } from './information-component';
 import { HeaderComponent } from './header-component';
 
 const numberColumnOptions = [1, 2, 3, 4, 5];
@@ -24,16 +25,18 @@ export const CreateCV = ({ data }: { data: CVTemplate }) => {
       <Grid item xs={8}>
         <Grid container component={Paper} maxWidth={900} margin={'auto'}>
           {template.layout
-            .sort((a, b) => a.column - b.column)
             .map((e) => {
               return (
                 <Grid key={e.id} xs={e.size} minHeight={100} bgcolor={e.color} borderRadius={'inherit'} p={1}>
                   {e.componentList.map((e) => {
                     if (e.dataType === 'image') {
-                      return <CVUploadImage />;
-                    } 
-                    if (e.dataType === "text") {
-                      return <HeaderComponent component={e}/>
+                      return <CVUploadImage avatar={e.description}/>;
+                    }
+                    if (e.dataType === 'information') {
+                      return <InformationComponent component={e} information={template.personal} />;
+                    }
+                    if (e.dataType === 'text') {
+                      return <HeaderComponent component={e} />;
                     }
                   })}
                 </Grid>

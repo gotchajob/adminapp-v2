@@ -223,6 +223,58 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cloudinary-util/types@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@cloudinary-util/types@npm:1.0.3"
+  checksum: 10c0/95b6be4353439c21b4c70bd961f6a033540036a25aa3f96f8d8c9b1003ac9147774b0ecf9c24f55602f87970588e66095664199f799d98a7cb54f5180e94b3f4
+  languageName: node
+  linkType: hard
+
+"@cloudinary-util/url-loader@npm:5.2.2":
+  version: 5.2.2
+  resolution: "@cloudinary-util/url-loader@npm:5.2.2"
+  dependencies:
+    "@cloudinary-util/util": "npm:3.0.0"
+    "@cloudinary/url-gen": "npm:1.15.0"
+    zod: "npm:^3.22.4"
+  checksum: 10c0/2736ac8b2beac185f277997ce6938be833246b175ed0d98e385873341398235f8c59f3d498e05632a0e5889a044a094d05d27df04b0ffc21ae04e42d94b6ad24
+  languageName: node
+  linkType: hard
+
+"@cloudinary-util/util@npm:3.0.0, @cloudinary-util/util@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@cloudinary-util/util@npm:3.0.0"
+  checksum: 10c0/59f792bcee17c6e0782c3d325b47a0a888da6e5c4eac5f9ee99c5c58cbe6cd70b6a9e417f30155b2070487deab93089805b1196e63bdbb01228f38e57850c7bb
+  languageName: node
+  linkType: hard
+
+"@cloudinary/transformation-builder-sdk@npm:^1.10.0, @cloudinary/transformation-builder-sdk@npm:^1.13.0":
+  version: 1.13.3
+  resolution: "@cloudinary/transformation-builder-sdk@npm:1.13.3"
+  dependencies:
+    "@cloudinary/url-gen": "npm:^1.7.0"
+  checksum: 10c0/2f2b2e29ff0e0be205c6d4a20b6e8831e47d2b479e66cebd1b927ac4a7b864ecdedd6d98c3a153ab6353d8ac27f84ceae77949b6151ef682b8268107f674afdc
+  languageName: node
+  linkType: hard
+
+"@cloudinary/url-gen@npm:1.15.0":
+  version: 1.15.0
+  resolution: "@cloudinary/url-gen@npm:1.15.0"
+  dependencies:
+    "@cloudinary/transformation-builder-sdk": "npm:^1.10.0"
+  checksum: 10c0/4b50b690f40b117068d7396906e9bbda36bd4b8e6143bbc8ad57709cf18f7b3953611a414f56f6551680277e683c3e82f581b01d67e6d06ff88125f8c8f447d6
+  languageName: node
+  linkType: hard
+
+"@cloudinary/url-gen@npm:^1.7.0":
+  version: 1.19.0
+  resolution: "@cloudinary/url-gen@npm:1.19.0"
+  dependencies:
+    "@cloudinary/transformation-builder-sdk": "npm:^1.13.0"
+  checksum: 10c0/bfef710f7ea7b7ebd8752cf8bae4e0f860ce9f9afb970ce5c7592b45d38f4c9543ff211752678ca034c0215c9cfa5bd8230e864d3009d61a923f39db57c770e5
+  languageName: node
+  linkType: hard
+
 "@emotion/babel-plugin@npm:^11.11.0":
   version: 11.11.0
   resolution: "@emotion/babel-plugin@npm:11.11.0"
@@ -2069,6 +2121,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/recommended@npm:^1.0.3":
+  version: 1.0.6
+  resolution: "@tsconfig/recommended@npm:1.0.6"
+  checksum: 10c0/4789509c7958c99cfbfc1c41d59b4af21bd628d3914930529b70159572902e86727de15c4d99725169eeb56d91024497a5e1358a6293a43112a715012d226bec
+  languageName: node
+  linkType: hard
+
 "@types/chance@npm:^1.1.6":
   version: 1.1.6
   resolution: "@types/chance@npm:1.1.6"
@@ -3101,6 +3160,7 @@ __metadata:
     mapbox-gl: "npm:^3.1.2"
     material-ui-popup-state: "npm:^5.0.10"
     next: "npm:^14.1.0"
+    next-cloudinary: "npm:^6.5.2"
     next-transpile-modules: "npm:^10.0.1"
     notistack: "npm:^3.0.1"
     prettier: "npm:^3.2.5"
@@ -7102,6 +7162,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"next-cloudinary@npm:^6.5.2":
+  version: 6.5.2
+  resolution: "next-cloudinary@npm:6.5.2"
+  dependencies:
+    "@cloudinary-util/types": "npm:1.0.3"
+    "@cloudinary-util/url-loader": "npm:5.2.2"
+    "@cloudinary-util/util": "npm:^3.0.0"
+    "@tsconfig/recommended": "npm:^1.0.3"
+  peerDependencies:
+    next: ^12 || ^13 || ^14
+    react: ^17 || ^18
+  checksum: 10c0/3f64f849443bccd1b0f83b4f29f8e9164d92d0eee8808dee963da3442447221ad9c616dd321f13e6c284a8452f155fa444485c330b05c6d1954fa4cd79c3aaf2
+  languageName: node
+  linkType: hard
+
 "next-transpile-modules@npm:^10.0.1":
   version: 10.0.1
   resolution: "next-transpile-modules@npm:10.0.1"
@@ -9961,6 +10036,13 @@ __metadata:
     compress-commons: "npm:^4.1.2"
     readable-stream: "npm:^3.6.0"
   checksum: 10c0/38f91ca116a38561cf184c29e035e9453b12c30eaf574e0993107a4a5331882b58c9a7f7b97f63910664028089fbde3296d0b3682d1ccb2ad96929e68f1b2b89
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.22.4":
+  version: 3.23.8
+  resolution: "zod@npm:3.23.8"
+  checksum: 10c0/8f14c87d6b1b53c944c25ce7a28616896319d95bc46a9660fe441adc0ed0a81253b02b5abdaeffedbeb23bdd25a0bf1c29d2c12dd919aef6447652dd295e3e69
   languageName: node
   linkType: hard
 

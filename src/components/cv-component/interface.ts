@@ -11,7 +11,7 @@ export interface PersonalComponent {
   id: string;
   title: string;
   personalFieldId: string;
-  personalField: PersonalField[];
+  personalField: PersonalField;
 }
 export interface PersonalField {
   id: string;
@@ -28,12 +28,15 @@ export interface Column {
 export interface CVComponent {
   id: string;
   header: string;
+  color?: string;
   dataType: 'image' | 'information' | 'text';
   description: string;
 }
+
+
 export const CVTemplate: CVTemplate = {
   id: '1',
-  numberColumn: 2,
+  numberColumn: 3,
   name: "Kiet's CV",
   status: true,
   subject: 'IT',
@@ -41,60 +44,55 @@ export const CVTemplate: CVTemplate = {
     {
       id: '1',
       personalFieldId: '1',
-      personalField: [
-        {
-          id: '1',
-          field: 'name',
-          icon: '/assets/images/avatar-1.png'
-        }
-      ],
+      personalField: {
+        id: '1',
+        field: 'name',
+        icon: 'ic:baseline-person'
+      },
       title: 'Lý Anh Kiệt'
     },
     {
       id: '2',
       personalFieldId: '2',
-      personalField: [
-        {
-          id: '2',
-          field: 'birthday',
-          icon: '/assets/images/avatar-1.png'
-        }
-      ],
+      personalField: {
+        id: '2',
+        field: 'birthday',
+        icon: 'ic:baseline-calendar-month'
+      },
       title: '19/01/2002'
     },
     {
       id: '3',
       personalFieldId: '3',
-      personalField: [
-        {
-          id: '3',
-          field: 'phone',
-          icon: '/assets/images/avatar-1.png'
-        }
-      ],
+      personalField: {
+        id: '3',
+        field: 'phone',
+        icon: 'ic:baseline-phone'
+      },
       title: '0123456789'
     },
     {
       id: '4',
       personalFieldId: '4',
-      personalField: [
-        {
-          id: '4',
-          field: 'email',
-          icon: '/assets/images/avatar-1.png'
-        }
-      ],
+      personalField: {
+        id: '4',
+        field: 'email',
+        icon: 'ic:baseline-email'
+      },
       title: 'kietly1901@gmail.com'
+    },
+    {
+      id: '5',
+      personalFieldId: '5',
+      personalField: {
+        id: '5',
+        field: 'address',
+        icon: 'mdi:location'
+      },
+      title: 'DH FPT khu cn cao 123'
     }
   ],
   layout: [
-    {
-      color: '#ad3f40',
-      id: '1',
-      column: 0,
-      size: 0.5,
-      componentList: []
-    },
     {
       color: '#faf5f5',
       id: '2',
@@ -103,14 +101,22 @@ export const CVTemplate: CVTemplate = {
       componentList: [
         {
           dataType: 'image',
-          header: "Personal Details",
-          description: '/assets/images/users/profile.png',
+          header: 'Image',
+          description: 'https://th.bing.com/th/id/R.41921164a5125add470627e30d1286cc?rik=FzPBS2DwEt5Dfw&pid=ImgRaw&r=0',
           id: '1'
         },
         {
           dataType: 'text',
-          header: "Personal Details",
-          description: '/assets/images/users/profile.png',
+          color: '#ad3f40',
+          header: 'Skill',
+          description: '123456',
+          id: '2'
+        },
+        {
+          dataType: 'information',
+          color: '#ad3f40',
+          header: 'Personal Details',
+          description: '<p>This is the initial content of the editor.</p>',
           id: '2'
         }
       ]
@@ -119,8 +125,25 @@ export const CVTemplate: CVTemplate = {
       color: '#ffffff',
       id: '3',
       column: 2,
-      size: 8.5,
-      componentList: []
+      size: 8,
+      componentList: [
+        {
+          dataType: 'text',
+          color: '#ad3f40',
+          header: 'Personal Details',
+          description: '<p>This is the initial content of the editor.</p>',
+          id: '2'
+        },
+        {
+          dataType: 'text',
+          color: '#ad3f40',
+          header: 'Personal Details',
+          description: '<p>This is the initial content of the editor.</p>',
+          id: '2'
+        }
+      ]
     }
   ]
 };
+
+
