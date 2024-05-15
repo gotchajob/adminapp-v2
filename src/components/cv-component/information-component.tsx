@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 
 const FlexBox = styled(Box)({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'center'
 });
 export const InformationComponent = ({ component, information }: { component: CVComponent; information: PersonalComponent[] }) => {
   return (
@@ -19,10 +19,8 @@ export const InformationComponent = ({ component, information }: { component: CV
       <Divider />
       {information.map((e) => (
         <FlexBox key={e.id} pb={1}>
-          <Iconify icon={e.personalField.icon} width={20} color={component.color} />
-          <Typography ml={1} fontSize={14}>
-            {e.title}
-          </Typography>
+          <Iconify icon={e.icon} width={20} color={component.color} />
+          <input defaultValue={e.title} style={{ fontSize: '14px', marginLeft: '8px', border: '0px', backgroundColor: 'inherit' }} />
         </FlexBox>
       ))}
     </Stack>

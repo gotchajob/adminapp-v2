@@ -27,7 +27,7 @@ export const CreateCV = ({ data }: { data: CVTemplate }) => {
           {template.layout
             .map((e) => {
               return (
-                <Grid key={e.id} xs={e.size} minHeight={100} bgcolor={e.color} borderRadius={'inherit'} p={1}>
+                <Grid key={e.id} xs={e.size} minHeight={100} bgcolor={e.color} borderRadius={'inherit'} p={2}>
                   {e.componentList.map((e) => {
                     if (e.dataType === 'image') {
                       return <CVUploadImage avatar={e.description}/>;

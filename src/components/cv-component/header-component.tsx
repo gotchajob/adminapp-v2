@@ -12,7 +12,14 @@ export const HeaderComponent = ({ component }: { component: CVComponent }) => {
         {component.header}
       </Typography>
       <Divider />
-      <EnchantInput initValue={component.description} />
+      <Box mt={'0px !important'}>
+        <EnchantInput
+          initValue={component.description}
+          onChange={(e) => {
+            console.log(e);
+          }}
+        />
+      </Box>
     </Stack>
   );
 };
