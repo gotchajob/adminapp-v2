@@ -54,6 +54,8 @@ const Profile = () => {
     getPost();
   }, []);
 
+  console.log("post: ", posts);
+
   const editPost = async (id: string, commentId: string) => {
     dispatch(editComment(id, commentId));
   };
@@ -94,182 +96,185 @@ const Profile = () => {
   };
 
   return (
-    <Grid container spacing={gridSpacing}>
-      <Grid item xs={12} sm={12} md={4}>
-        <Grid container spacing={gridSpacing}>
-          <Grid item xs={12}>
-            <MainCard>
-              <Grid container alignItems="center" spacing={gridSpacing}>
-                <Grid item>
-                  <Box
-                    sx={{
-                      ...sideAvatarSX,
-                      bgcolor: alpha(theme.palette.primary.dark, 0.1),
-                      border: theme.palette.mode === ThemeMode.DARK ? '1px solid' : 'none',
-                      borderColor: 'primary.main',
-                      color: 'primary.dark'
-                    }}
-                  >
-                    <PeopleAltTwoToneIcon />
-                  </Box>
+    <>
+      {console.log("posts: ")}
+      <Grid container spacing={gridSpacing}>
+        <Grid item xs={12} sm={12} md={4}>
+          <Grid container spacing={gridSpacing}>
+            <Grid item xs={12}>
+              <MainCard>
+                <Grid container alignItems="center" spacing={gridSpacing}>
+                  <Grid item>
+                    <Box
+                      sx={{
+                        ...sideAvatarSX,
+                        bgcolor: alpha(theme.palette.primary.dark, 0.1),
+                        border: theme.palette.mode === ThemeMode.DARK ? '1px solid' : 'none',
+                        borderColor: 'primary.main',
+                        color: 'primary.dark'
+                      }}
+                    >
+                      <PeopleAltTwoToneIcon />
+                    </Box>
+                  </Grid>
+                  <Grid item xs zeroMinWidth>
+                    <Typography variant="h3" color="primary" sx={{ mb: 0.625 }}>
+                      239k
+                    </Typography>
+                    <Typography variant="body2">Friends</Typography>
+                  </Grid>
+                  <Grid item>
+                    <IconButton size="large" aria-label="navigation icon">
+                      <NavigateNextRoundedIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item xs zeroMinWidth>
-                  <Typography variant="h3" color="primary" sx={{ mb: 0.625 }}>
-                    239k
-                  </Typography>
-                  <Typography variant="body2">Friends</Typography>
+                <Divider sx={{ margin: '16px 0' }} />
+                <Grid container alignItems="center" spacing={gridSpacing}>
+                  <Grid item>
+                    <Box
+                      sx={{
+                        ...sideAvatarSX,
+                        bgcolor: alpha(theme.palette.secondary.dark, 0.1),
+                        borderColor: 'secondary.main',
+                        color: 'secondary.dark'
+                      }}
+                    >
+                      <RecentActorsTwoToneIcon />
+                    </Box>
+                  </Grid>
+                  <Grid item xs zeroMinWidth>
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        mb: 0.625,
+                        color: theme.palette.mode === ThemeMode.DARK ? 'text.secondary' : 'secondary.main'
+                      }}
+                    >
+                      234k
+                    </Typography>
+                    <Typography variant="body2">Followers</Typography>
+                  </Grid>
+                  <Grid item>
+                    <IconButton size="large" aria-label="navigation icon">
+                      <NavigateNextRoundedIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <IconButton size="large" aria-label="navigation icon">
-                    <NavigateNextRoundedIcon />
-                  </IconButton>
+              </MainCard>
+            </Grid>
+            <Grid item xs={12}>
+              <MainCard>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h4">About</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="body2">
+                      It is a long established fact that a reader will be distracted by the readable content of a page when looking at its
+                      layout.
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Divider sx={{ margin: '16px 0' }} />
-              <Grid container alignItems="center" spacing={gridSpacing}>
-                <Grid item>
-                  <Box
-                    sx={{
-                      ...sideAvatarSX,
-                      bgcolor: alpha(theme.palette.secondary.dark, 0.1),
-                      borderColor: 'secondary.main',
-                      color: 'secondary.dark'
-                    }}
-                  >
-                    <RecentActorsTwoToneIcon />
-                  </Box>
-                </Grid>
-                <Grid item xs zeroMinWidth>
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      mb: 0.625,
-                      color: theme.palette.mode === ThemeMode.DARK ? 'text.secondary' : 'secondary.main'
-                    }}
-                  >
-                    234k
-                  </Typography>
-                  <Typography variant="body2">Followers</Typography>
-                </Grid>
-                <Grid item>
-                  <IconButton size="large" aria-label="navigation icon">
-                    <NavigateNextRoundedIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </MainCard>
-          </Grid>
-          <Grid item xs={12}>
-            <MainCard>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="h4">About</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="body2">
-                    It is a long established fact that a reader will be distracted by the readable content of a page when looking at its
-                    layout.
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Divider sx={{ margin: '16px 0' }} />
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  '& >div': {
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    display: 'block',
-                    width: '100%'
-                  },
-                  '& a': {
-                    color: 'grey.700',
-
-                    '& svg': {
-                      mr: 1,
-                      verticalAlign: 'bottom'
+                <Divider sx={{ margin: '16px 0' }} />
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{
+                    '& >div': {
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      display: 'block',
+                      width: '100%'
                     },
-                    '&:hover': {
-                      color: 'primary.main',
-                      textDecoration: 'none'
+                    '& a': {
+                      color: 'grey.700',
+
+                      '& svg': {
+                        mr: 1,
+                        verticalAlign: 'bottom'
+                      },
+                      '&:hover': {
+                        color: 'primary.main',
+                        textDecoration: 'none'
+                      }
                     }
-                  }
-                }}
-              >
-                <Grid item xs={12}>
-                  <Link href="https://codedthemes.com/" target="_blank" underline="hover">
-                    <PublicTwoToneIcon color="secondary" /> https://codedthemes.com/
-                  </Link>
+                  }}
+                >
+                  <Grid item xs={12}>
+                    <Link href="https://codedthemes.com/" target="_blank" underline="hover">
+                      <PublicTwoToneIcon color="secondary" /> https://codedthemes.com/
+                    </Link>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Link href="https://www.instagram.com/codedthemes" target="_blank" underline="hover">
+                      <InstagramIcon sx={{ color: 'orange.dark' }} /> https://www.instagram.com/codedthemes
+                    </Link>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Link href="https://www.facebook.com/codedthemes" target="_blank" underline="hover">
+                      <FacebookIcon color="primary" /> https://www.facebook.com/codedthemes
+                    </Link>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Link href="https://in.linkedin.com/company/codedthemes" target="_blank" underline="hover">
+                      <LinkedInIcon sx={{ color: 'grey.900' }} /> https://in.linkedin.com/company/codedthemes
+                    </Link>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Link href="https://www.instagram.com/codedthemes" target="_blank" underline="hover">
-                    <InstagramIcon sx={{ color: 'orange.dark' }} /> https://www.instagram.com/codedthemes
-                  </Link>
-                </Grid>
-                <Grid item xs={12}>
-                  <Link href="https://www.facebook.com/codedthemes" target="_blank" underline="hover">
-                    <FacebookIcon color="primary" /> https://www.facebook.com/codedthemes
-                  </Link>
-                </Grid>
-                <Grid item xs={12}>
-                  <Link href="https://in.linkedin.com/company/codedthemes" target="_blank" underline="hover">
-                    <LinkedInIcon sx={{ color: 'grey.900' }} /> https://in.linkedin.com/company/codedthemes
-                  </Link>
-                </Grid>
-              </Grid>
-            </MainCard>
+              </MainCard>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid item xs={12} sm={12} md={8}>
-        <Grid container spacing={gridSpacing}>
-          <Grid item xs={12}>
-            <MainCard>
-              <Grid container spacing={gridSpacing}>
-                <Grid item xs={12}>
-                  <TextField id="outlined-textarea" placeholder="What’s on your mind, Larry?" rows={4} fullWidth multiline />
-                </Grid>
-                <Grid item xs={12}>
-                  <Grid container justifyContent="space-between" spacing={gridSpacing}>
-                    <Grid item>
-                      <Button variant="text" color="secondary" startIcon={<AttachmentTwoToneIcon />}>
-                        Gallery
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <AnimateButton>
-                        <Button variant="contained" color="secondary" startIcon={<LayersTwoToneIcon />}>
-                          Post
+        <Grid item xs={12} sm={12} md={8}>
+          <Grid container spacing={gridSpacing}>
+            <Grid item xs={12}>
+              <MainCard>
+                <Grid container spacing={gridSpacing}>
+                  <Grid item xs={12}>
+                    <TextField id="outlined-textarea" placeholder="What’s on your mind, Larry?" rows={4} fullWidth multiline />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container justifyContent="space-between" spacing={gridSpacing}>
+                      <Grid item>
+                        <Button variant="text" color="secondary" startIcon={<AttachmentTwoToneIcon />}>
+                          Gallery
                         </Button>
-                      </AnimateButton>
+                      </Grid>
+                      <Grid item>
+                        <AnimateButton>
+                          <Button variant="contained" color="secondary" startIcon={<LayersTwoToneIcon />}>
+                            Post
+                          </Button>
+                        </AnimateButton>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </MainCard>
+              </MainCard>
+            </Grid>
+            {posts &&
+              posts.map((post: PostDataType, index: number) => (
+                <Grid key={post.id} item xs={12}>
+                  <Posts
+                    key={post.id}
+                    post={post}
+                    editPost={editPost}
+                    renderPost={getPost}
+                    setPosts={setPosts}
+                    commentAdd={commentAdd}
+                    replyAdd={replyAdd}
+                    handlePostLikes={handlePostLikes}
+                    handleCommentLikes={handleCommentLikes}
+                    handleReplayLikes={handleReplayLikes}
+                  />
+                </Grid>
+              ))}
           </Grid>
-          {posts &&
-            posts.map((post: PostDataType, index: number) => (
-              <Grid key={post.id} item xs={12}>
-                <Posts
-                  key={post.id}
-                  post={post}
-                  editPost={editPost}
-                  renderPost={getPost}
-                  setPosts={setPosts}
-                  commentAdd={commentAdd}
-                  replyAdd={replyAdd}
-                  handlePostLikes={handlePostLikes}
-                  handleCommentLikes={handleCommentLikes}
-                  handleReplayLikes={handleReplayLikes}
-                />
-              </Grid>
-            ))}
         </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

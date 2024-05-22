@@ -1,6 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+//next
+import NextLink from 'next/link';
 
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
@@ -30,6 +33,10 @@ import { UserProfile } from 'types/user-profile';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { GetUserList } from 'package/api/user';
+import { PostBanUser } from 'package/api/user/id/ban';
+import { PostUnBanUser } from 'package/api/user/id/unban';
 
 const avatarImage = '/assets/images/users';
 
@@ -38,16 +45,67 @@ const avatarImage = '/assets/images/users';
 const UserList = () => {
   const theme = useTheme();
 
-  const [data, setData] = React.useState<UserProfile[]>([]);
-  const { usersS1 } = useSelector((state) => state.user);
+  // const [data, setData] = React.useState<UserProfile[]>([]);
+  // const { usersS1 } = useSelector((state) => state.user);
 
-  React.useEffect(() => {
-    setData(usersS1);
-  }, [usersS1]);
+  // React.useEffect(() => {
+  //   setData(usersS1);
+  // }, [usersS1]);
 
-  React.useEffect(() => {
-    dispatch(getUsersListStyle1());
-  }, []);
+  // React.useEffect(() => {
+  //   dispatch(getUsersListStyle1());
+  // }, []);
+
+  const [user, setUser] = useState([]);
+
+  const FetchUserList = async () => {
+    const data = await GetUserList({ pageNumber: 1, pageSize: 5 }, "");
+    console.log("Userlist :", data);
+  }
+
+  const FetchBanUser = async (id: number) => {
+    const data = await PostBanUser({ id }, '');
+    console.log("ban user:", data);
+  }
+
+  const FetchUnBanUser = async (id: number) => {
+    const data = await PostUnBanUser({ id }, '');
+    console.log("unban user:", data);
+  }
+
+  useEffect(() => {
+    FetchUserList();
+  }, [])
+
+  const data = [
+    {
+      id: 1,
+      avatar: "avatar-2.png",
+      name: "Vy",
+      email: "vy@example.com",
+      phone: "123-456-7890",
+      location: "Hanoi, Vietnam",
+      status: "Active"
+    },
+    {
+      id: 2,
+      avatar: "avatar-3.png",
+      name: "Lan",
+      email: "lan@example.com",
+      phone: "987-654-3210",
+      location: "Saigon, Vietnam",
+      status: "Active"
+    },
+    {
+      id: 3,
+      avatar: "avatar-4.png",
+      name: "Minh",
+      email: "minh@example.com",
+      phone: "456-789-1230",
+      location: "Danang, Vietnam",
+      status: "Ban"
+    }
+  ]
 
   return (
     <TableContainer>
@@ -55,11 +113,11 @@ const UserList = () => {
         <TableHead>
           <TableRow>
             <TableCell sx={{ pl: 3 }}>#</TableCell>
+            <TableCell>Tên</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Created</TableCell>
-            <TableCell>Status</TableCell>
+            <TableCell>Số điện thoại</TableCell>
+            <TableCell>Địa chỉ</TableCell>
+            <TableCell>Trạng thái</TableCell>
             <TableCell align="center" sx={{ pr: 3 }}>
               Actions
             </TableCell>
@@ -72,21 +130,21 @@ const UserList = () => {
                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <Avatar alt="User 1" src={`${avatarImage}/${row.avatar}`} />
-                    <Stack>
-                      <Stack direction="row" alignItems="center" spacing={0.25}>
-                        <Typography variant="subtitle1">{row.name}</Typography>
-                        {row.status === 'Active' && <CheckCircleIcon sx={{ color: 'success.dark', width: 14, height: 14 }} />}
-                      </Stack>
-                      <Typography variant="subtitle2" noWrap>
-                        {row.email}
-                      </Typography>
+                    <NextLink href={`/admin/user/profile`} passHref>
+                      <Avatar alt="User 1" src={`${avatarImage}/${row.avatar}`} />
+                    </NextLink>
+                    <Stack direction="row" alignItems="center" spacing={0.25}>
+                      <Typography variant="subtitle1">{row.name}</Typography>
                     </Stack>
                   </Stack>
                 </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" noWrap>
+                    {row.email}
+                  </Typography>
+                </TableCell>
+                <TableCell>{row.phone}</TableCell>
                 <TableCell>{row.location}</TableCell>
-                <TableCell>{row.friends}</TableCell>
-                <TableCell>{row.followers}</TableCell>
                 <TableCell>
                   {row.status === 'Active' && (
                     <Chip
@@ -98,9 +156,9 @@ const UserList = () => {
                       }}
                     />
                   )}
-                  {row.status === 'Rejected' && (
+                  {row.status === 'Ban' && (
                     <Chip
-                      label="Rejected"
+                      label="Ban"
                       size="small"
                       sx={{
                         bgcolor: theme.palette.mode === ThemeMode.DARK ? 'dark.main' : alpha(theme.palette.orange.light, 0.8),
@@ -108,37 +166,30 @@ const UserList = () => {
                       }}
                     />
                   )}
-                  {row.status === 'Pending' && (
-                    <Chip
-                      label="Pending"
-                      size="small"
-                      sx={{
-                        bgcolor: theme.palette.mode === ThemeMode.DARK ? 'dark.main' : 'warning.light',
-                        color: 'warning.dark'
-                      }}
-                    />
-                  )}
                 </TableCell>
                 <TableCell align="center" sx={{ pr: 3 }}>
                   <Stack direction="row" justifyContent="center" alignItems="center">
-                    <Tooltip placement="top" title="Message">
-                      <IconButton color="primary" aria-label="delete" size="large">
-                        <ChatBubbleTwoToneIcon sx={{ fontSize: '1.1rem' }} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip placement="top" title="Block">
-                      <IconButton
-                        color="primary"
-                        sx={{
-                          color: 'orange.dark',
-                          borderColor: 'orange.main',
-                          '&:hover ': { bgcolor: 'orange.light' }
-                        }}
-                        size="large"
-                      >
-                        <BlockTwoToneIcon sx={{ fontSize: '1.1rem' }} />
-                      </IconButton>
-                    </Tooltip>
+                    {row.status === "Ban" && (
+                      <Tooltip placement="top" title="Active">
+                        <IconButton color="primary" aria-label="delete" size="large">
+                          <LockOpenIcon sx={{ fontSize: '1.1rem' }} />
+                        </IconButton>
+                      </Tooltip>)}
+                    {row.status === "Active" && (
+                      <Tooltip placement="top" title="Ban">
+                        <IconButton
+                          color="primary"
+                          sx={{
+                            color: 'orange.dark',
+                            borderColor: 'orange.main',
+                            '&:hover ': { bgcolor: 'orange.light' }
+                          }}
+                          size="large"
+                        >
+                          <BlockTwoToneIcon sx={{ fontSize: '1.1rem' }} />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                   </Stack>
                 </TableCell>
               </TableRow>

@@ -35,6 +35,7 @@ const AutoComplete = () => {
       title="Autocomplete"
       secondary={<SecondaryAction link="https://next.material-ui.com/components/autocomplete/#main-content" />}
     >
+
       <Grid container spacing={gridSpacing}>
         <Grid item xs={12} md={6} lg={4}>
           <SubCard title="Combo Box">
@@ -101,6 +102,7 @@ const AutoComplete = () => {
             </Grid>
           </SubCard>
         </Grid>
+
         <Grid item xs={12} md={6} lg={4}>
           <SubCard title="Combo with Multiple Options">
             <Grid container direction="column" spacing={3}>
