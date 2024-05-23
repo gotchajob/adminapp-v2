@@ -13,7 +13,6 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 
 // project imports
-import UserList from 'components/users/list/Style1/UserList-admin';
 import { gridSpacing } from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
 import FilterBox from './_component/filter';
@@ -22,10 +21,11 @@ import FilterBox from './_component/filter';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { IconSearch } from '@tabler/icons-react';
 import { GetUserList } from 'package/api/user';
+import UserList from './_component/UserList';
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
-const ListStylePage2 = () => {
+const UserPage = () => {
   const [anchorEl, setAnchorEl] = React.useState<Element | (() => Element) | null | undefined>(null);
 
   const handleClick = (event: React.MouseEvent) => {
@@ -35,15 +35,6 @@ const ListStylePage2 = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  // const getUser = async () => {
-  //   const data = await GetUserList({ pageNumber: 1, page: 1, sortBy: 'createdAt', sortOrder: 'asc' }, "Phu");
-  //   console.log("user data:", data);
-  // }
-
-  // useEffect(() => {
-  //   getUser();
-  // }, [])
 
   return (
     <>
@@ -58,16 +49,6 @@ const ListStylePage2 = () => {
               <Typography variant="h3">User List</Typography>
             </Grid>
             <Grid item>
-              <OutlinedInput
-                id="input-search-list-style2"
-                placeholder="Search"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <IconSearch stroke={1.5} size="16px" />
-                  </InputAdornment>
-                }
-                size="small"
-              />
             </Grid>
           </Grid>
         }
@@ -119,4 +100,4 @@ const ListStylePage2 = () => {
   );
 };
 
-export default ListStylePage2;
+export default UserPage;

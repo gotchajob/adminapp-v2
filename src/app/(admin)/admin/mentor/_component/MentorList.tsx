@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 //next
 import NextLink from 'next/link';
 
 // material-ui
-import { alpha, useTheme } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
@@ -18,60 +17,122 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { alpha, useTheme } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Modal from '@mui/material/Modal';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Divider from '@mui/material/Divider';
 
 // project imports
-import Avatar from 'ui-component/extended/Avatar';
 import { GetUserList } from 'package/api/user';
 import { PostBanUser } from 'package/api/user/id/ban';
 import { PostUnBanUser } from 'package/api/user/id/unban';
-import { dispatch, useSelector } from 'store';
-import { getUsersListStyle1 } from 'store/slices/user';
+import Avatar from 'ui-component/extended/Avatar';
+import MainCard from 'ui-component/cards/MainCard';
+import { ThemeMode } from 'types/config';
+import { openSnackbar } from 'store/slices/snackbar';
+import { dispatch } from 'store';
 
 // types
-import { ThemeMode } from 'types/config';
-import { UserProfile } from 'types/user-profile';
+import type { UserList } from 'package/api/user';
 
 // assets
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { GetMentorRegister } from 'package/api/mentor-register-request';
-
+import CloseIcon from '@mui/icons-material/Close';
 
 const avatarImage = '/assets/images/users';
 
 // ==============================|| USER LIST 1 ||============================== //
 
-const UserList = () => {
+const MentorList = () => {
   const theme = useTheme();
 
-  const [user, setUser] = useState([]);
+  //user list state
+  const [userList, setUserList] = useState<UserList[] | undefined>([]);
 
+  //user selection state
+  const [user, setUser] = useState<UserList | undefined>(undefined);
+
+  //modal state
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
+  //Fetch API get uset list
   const FetchUserList = async () => {
-    const data = await GetUserList({ pageNumber: 1, pageSize: 5 }, "");
-    console.log("Userlist :", data);
+    const data = await GetUserList({ pageNumber: 1, pageSize: 4 }, "");
+    if (data) {
+      setUserList(data.data.list);
+    }
   }
 
-  const FetchBanUser = async (id: number) => {
-    const data = await PostBanUser({ id }, '');
-    console.log("ban user:", data);
+  //Fetch API post ban user
+  const BanUser = async (user: UserList) => {
+    if (user) {
+      try {
+        const id = user.id;
+        const action = await PostBanUser({ id }, '');
+        if (action.status !== "error") {
+          setOpenModal((prev) => !prev);
+          showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thành công` : `Kích hoạt tài khoản ${user.email} thành công`, 'success');
+        } else {
+          showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thất bại` : `Kích hoạt tài khoản ${user.email} thất bại`, 'error');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
-  const FetchUnBanUser = async (id: number) => {
-    const data = await PostUnBanUser({ id }, '');
-    console.log("unban user:", data);
+  //Fetch API post active user
+  const UnBanUser = async (user: UserList) => {
+    if (user) {
+      try {
+        const id = user.id;
+        const action = await PostUnBanUser({ id }, '');
+        if (action.status !== "error") {
+          setOpenModal((prev) => !prev);
+          showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thành công` : `Kích hoạt tài khoản ${user.email} thành công`, 'success');
+        } else {
+          showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thất bại` : `Kích hoạt tài khoản ${user.email} thất bại`, 'error');
+        }
+      } catch (error) {
+        console.log(error);
+        showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thất bại` : `Kích hoạt tài khoản ${user.email} thất bại`, 'error');
+      }
+    }
   }
 
-  const FetchMentorRegister = async () => {
-    const data = await GetMentorRegister({ limit: 1, page: 1 }, '');
-    console.log("GetMentorRegister", data)
+  //Ban user handle
+  const userHandle = async (id: number) => {
+    if (id) {
+      const filteredUserById = userList?.find((user) => user.id === id);
+      setUser(filteredUserById);
+    }
+    setOpenModal((prev) => !prev);
   }
 
+  //snackBar
+  const showSnackbar = (message: string, variant: string) => {
+    dispatch(
+      openSnackbar({
+        open: true,
+        anchorOrigin: { vertical: 'top', horizontal: 'center' },
+        message: message,
+        variant: 'alert',
+        alert: {
+          color: variant
+        },
+        close: false
+      })
+    );
+  }
+
+  //user Effect
   useEffect(() => {
     FetchUserList();
-    FetchMentorRegister ();
-  }, [])
+  }, [user]);
 
   const data = [
     {
@@ -126,7 +187,7 @@ const UserList = () => {
                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <NextLink href={`/admin/user/profile`} passHref>
+                    <NextLink href={`/admin/mentor/profile`} passHref>
                       <Avatar alt="User 1" src={`${avatarImage}/${row.avatar}`} />
                     </NextLink>
                     <Stack direction="row" alignItems="center" spacing={0.25}>
@@ -192,8 +253,55 @@ const UserList = () => {
             ))}
         </TableBody>
       </Table>
-    </TableContainer>
+
+      {/* Modal Handle Status User */}
+      <Modal
+        disablePortal
+        disableEnforceFocus
+        disableAutoFocus
+        aria-labelledby="server-modal-title"
+        aria-describedby="server-modal-description"
+        sx={{
+          display: 'flex',
+          p: 1,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        open={openModal}
+      >
+        <MainCard
+          sx={{
+            width: { xs: 280, sm: 450 },
+            zIndex: 1
+          }}
+          title="Xác nhận phương thức"
+          content={false}
+          secondary={
+            <IconButton size="large" aria-label="close modal" onClick={() => setOpenModal((prev) => !prev)}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          }
+        >
+          <CardContent>
+            <Typography variant="body1">Bạn muốn {user?.status === 1 ? "cấm" : "kích hoạt"} tài khoản với email {user?.email}</Typography>
+          </CardContent>
+          <CardActions>
+            <Grid container justifyContent="space-between">
+              <Button variant="contained" type="button" onClick={() => setOpenModal((prev) => !prev)}>
+                Hủy
+              </Button>
+              {user && user.status === 1 ? (<Button variant="contained" type="button" onClick={() => BanUser(user)}>
+                Chấp nhận
+              </Button>) : (<Button variant="contained" type="button" onClick={() => UnBanUser(user)}>
+                Chấp nhận
+              </Button>)}
+            </Grid>
+          </CardActions>
+        </MainCard>
+      </Modal>
+
+    </TableContainer >
   );
 };
 
-export default UserList;
+export default MentorList;
