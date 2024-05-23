@@ -1,11 +1,11 @@
-import { apiServerFetch, errorSystem } from '../api-fetch';
+import { apiServerFetch, errorSystem } from 'package/api/api-fetch';
 
 export interface GetUserListRequest {
   pageNumber: number;
   pageSize: number;
 }
 
-export interface GetUserListRespone {
+export interface GetUserListResponse {
   status: string;
   responseText: string;
   data: {
@@ -25,7 +25,7 @@ export interface UserList {
   createdAt: string;
 }
 
-export const GetUserList = async (params: GetUserListRequest, accessToken: string): Promise<GetUserListRespone> => {
+export const GetUserList = async (params: GetUserListRequest, accessToken: string): Promise<GetUserListResponse> => {
   try {
     const searchParams = new URLSearchParams();
     searchParams.set('pageNumber', params.pageNumber + '');

@@ -21,7 +21,9 @@ import Typography from '@mui/material/Typography';
 
 // project imports
 import Avatar from 'ui-component/extended/Avatar';
-
+import { GetUserList } from 'package/api/user';
+import { PostBanUser } from 'package/api/user/id/ban';
+import { PostUnBanUser } from 'package/api/user/id/unban';
 import { dispatch, useSelector } from 'store';
 import { getUsersListStyle1 } from 'store/slices/user';
 
@@ -34,9 +36,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { GetUserList } from 'package/api/user';
-import { PostBanUser } from 'package/api/user/id/ban';
-import { PostUnBanUser } from 'package/api/user/id/unban';
+import { GetMentorRegister } from 'package/api/mentor-register-request';
+
 
 const avatarImage = '/assets/images/users';
 
@@ -44,17 +45,6 @@ const avatarImage = '/assets/images/users';
 
 const UserList = () => {
   const theme = useTheme();
-
-  // const [data, setData] = React.useState<UserProfile[]>([]);
-  // const { usersS1 } = useSelector((state) => state.user);
-
-  // React.useEffect(() => {
-  //   setData(usersS1);
-  // }, [usersS1]);
-
-  // React.useEffect(() => {
-  //   dispatch(getUsersListStyle1());
-  // }, []);
 
   const [user, setUser] = useState([]);
 
@@ -73,8 +63,14 @@ const UserList = () => {
     console.log("unban user:", data);
   }
 
+  const FetchMentorRegister = async () => {
+    const data = await GetMentorRegister({ limit: 1, page: 1 }, '');
+    console.log("GetMentorRegister", data)
+  }
+
   useEffect(() => {
     FetchUserList();
+    FetchMentorRegister ();
   }, [])
 
   const data = [

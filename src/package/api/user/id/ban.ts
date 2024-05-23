@@ -4,13 +4,13 @@ export interface BanUserRequest {
   id: number;
 }
 
-export interface BanUserListRespone {
+export interface BanUserListResponse {
   status: string;
   responseText: string;
   data: string;
 }
 
-export const PostBanUser = async (params: BanUserRequest, accessToken: string): Promise<BanUserListRespone> => {
+export const PostBanUser = async (params: BanUserRequest, accessToken: string): Promise<BanUserListResponse> => {
   try {
     const res = await apiServerFetch(`/user/${params.id}/ban`, 'POST', undefined, accessToken);
     if (res.status === 'error') {
