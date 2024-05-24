@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -13,17 +13,20 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 
 // project imports
-import OrderList from 'components/users/list/Style1/OrderList-admin';
-import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
+import MainCard from 'ui-component/cards/MainCard';
+
 
 // assets
-import { IconSearch } from '@tabler/icons-react';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import { IconSearch } from '@tabler/icons-react';
+import RegisterRequestList from './_component/RequestLst';
+
+
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
-const ListStylePage2 = () => {
+const RegisterRequestPage = () => {
     const [anchorEl, setAnchorEl] = React.useState<Element | (() => Element) | null | undefined>(null);
 
     const handleClick = (event: React.MouseEvent) => {
@@ -35,69 +38,62 @@ const ListStylePage2 = () => {
     };
 
     return (
-        <MainCard
-            title={
-                <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
-                    <Grid item>
-                        <Typography variant="h3">Order List</Typography>
+        <>
+            {/* Filter Card */}
+
+            {/* Layout Table */}
+            <MainCard
+                title={
+                    <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
+                        <Grid item>
+                            <Typography variant="h3">Mentor Register Request List</Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <OutlinedInput
-                            id="input-search-list-style2"
-                            placeholder="Search"
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <IconSearch stroke={1.5} size="16px" />
-                                </InputAdornment>
-                            }
-                            size="small"
-                        />
-                    </Grid>
-                </Grid>
-            }
-        >
-            <OrderList />
-            <Grid item xs={12} sx={{ mt: 1.75 }}>
-                <Grid container justifyContent="space-between" spacing={gridSpacing}>
-                    <Grid item>
-                        <Pagination count={10} color="primary" />
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            variant="text"
-                            size="large"
-                            sx={{ color: 'grey.900' }}
-                            color="secondary"
-                            endIcon={<ExpandMoreRoundedIcon />}
-                            onClick={handleClick}
-                        >
-                            10 Rows
-                        </Button>
-                        <Menu
-                            id="menu-user-list-style2"
-                            anchorEl={anchorEl}
-                            keepMounted
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                            variant="selectedMenu"
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right'
-                            }}
-                            transformOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right'
-                            }}
-                        >
-                            <MenuItem onClick={handleClose}> 10 Rows</MenuItem>
-                            <MenuItem onClick={handleClose}> 20 Rows</MenuItem>
-                            <MenuItem onClick={handleClose}> 30 Rows </MenuItem>
-                        </Menu>
+                }
+            >
+                <RegisterRequestList />
+                <Grid item xs={12} sx={{ mt: 1.75 }}>
+                    <Grid container justifyContent="space-between" spacing={gridSpacing}>
+                        <Grid item>
+                            <Pagination count={10} color="primary" />
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                variant="text"
+                                size="large"
+                                sx={{ color: 'grey.900' }}
+                                color="secondary"
+                                endIcon={<ExpandMoreRoundedIcon />}
+                                onClick={handleClick}
+                            >
+                                10 Rows
+                            </Button>
+                            <Menu
+                                id="menu-user-list-style2"
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                                variant="selectedMenu"
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right'
+                                }}
+                            >
+                                <MenuItem onClick={handleClose}> 10 Rows</MenuItem>
+                                <MenuItem onClick={handleClose}> 20 Rows</MenuItem>
+                                <MenuItem onClick={handleClose}> 30 Rows </MenuItem>
+                            </Menu>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-        </MainCard>
+            </MainCard>
+        </>
     );
 };
 
-export default ListStylePage2;
+export default RegisterRequestPage;

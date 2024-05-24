@@ -43,14 +43,14 @@ const dashboard: NavItemType = {
       icon: icons.IconUserCheck,
       breadcrumbs: false
     },
-    // {
-    //   id: 'order',
-    //   title: <FormattedMessage id="Order" />,
-    //   type: 'item',
-    //   url: '/admin/order',
-    //   icon: icons.IconBasket,
-    //   breadcrumbs: false
-    // },
+    {
+      id: 'request',
+      title: <FormattedMessage id="Register Request" />,
+      type: 'item',
+      url: '/admin/request',
+      icon: icons.IconBasket,
+      breadcrumbs: false
+    },
     // {
     //   id: 'advisory',
     //   title: <FormattedMessage id="Advisory" />,

@@ -138,8 +138,8 @@ const MentorList = () => {
     {
       id: 1,
       avatar: "avatar-2.png",
-      name: "Vy",
-      email: "vy@example.com",
+      name: "Mentor Lan",
+      email: "lanvls15@example.com",
       phone: "123-456-7890",
       location: "Hanoi, Vietnam",
       status: "Active"
@@ -147,8 +147,8 @@ const MentorList = () => {
     {
       id: 2,
       avatar: "avatar-3.png",
-      name: "Lan",
-      email: "lan@example.com",
+      name: "Mentor Hong",
+      email: "hongngl11@example.com",
       phone: "987-654-3210",
       location: "Saigon, Vietnam",
       status: "Active"
@@ -156,10 +156,10 @@ const MentorList = () => {
     {
       id: 3,
       avatar: "avatar-4.png",
-      name: "Minh",
-      email: "minh@example.com",
+      name: "Mentor Kelvin",
+      email: "kelvinwin@example.com",
       phone: "456-789-1230",
-      location: "Danang, Vietnam",
+      location: "LA, America",
       status: "Ban"
     }
   ]
@@ -173,7 +173,7 @@ const MentorList = () => {
             <TableCell>Tên</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Số điện thoại</TableCell>
-            <TableCell>Địa chỉ</TableCell>
+            <TableCell>Vị trí địa lý </TableCell>
             <TableCell>Trạng thái</TableCell>
             <TableCell align="center" sx={{ pr: 3 }}>
               Actions

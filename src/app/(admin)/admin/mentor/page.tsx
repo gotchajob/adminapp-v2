@@ -15,13 +15,14 @@ import Typography from '@mui/material/Typography';
 // project imports
 import { gridSpacing } from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
-
+import MentorList from './_component/MentorList';
+import { GetUserList } from 'package/api/user';
 
 // assets
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { IconSearch } from '@tabler/icons-react';
-import { GetUserList } from 'package/api/user';
-import MentorList from './_component/MentorList';
+
+
 
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
@@ -47,8 +48,6 @@ const MentorPage = () => {
                     <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
                         <Grid item>
                             <Typography variant="h3">Mentor List</Typography>
-                        </Grid>
-                        <Grid item>
                         </Grid>
                     </Grid>
                 }
