@@ -18,7 +18,7 @@ export const apiServerFetch = async (url: string, method: 'GET' | 'POST', body?:
   if (body) {
     newBody = { body: JSON.stringify(body) };
   }
-  const res = await fetch('https://c078-27-74-255-96.ngrok-free.app' + url, {
+  const res = await fetch('https://gcjob.azurewebsites.net' + url, {
     method,
     headers,
     cache: 'no-cache',

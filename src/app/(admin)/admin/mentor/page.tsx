@@ -15,18 +15,19 @@ import Typography from '@mui/material/Typography';
 // project imports
 import { gridSpacing } from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
-
+import MentorList from './_component/MentorList';
+import { GetUserList } from 'package/api/user';
 
 // assets
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { IconSearch } from '@tabler/icons-react';
-import RegisterRequestList from './_component/RequestLst';
+
 
 
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
-const RegisterRequestPage = () => {
+const MentorPage = () => {
     const [anchorEl, setAnchorEl] = React.useState<Element | (() => Element) | null | undefined>(null);
 
     const handleClick = (event: React.MouseEvent) => {
@@ -46,12 +47,14 @@ const RegisterRequestPage = () => {
                 title={
                     <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
                         <Grid item>
-                            <Typography variant="h3">Mentor Register Request List</Typography>
+                            <Typography variant="h3">Mentor List</Typography>
                         </Grid>
                     </Grid>
                 }
             >
-                <RegisterRequestList />
+
+                {/* Data Table */}
+                <MentorList />
                 <Grid item xs={12} sx={{ mt: 1.75 }}>
                     <Grid container justifyContent="space-between" spacing={gridSpacing}>
                         <Grid item>
@@ -96,4 +99,4 @@ const RegisterRequestPage = () => {
     );
 };
 
-export default RegisterRequestPage;
+export default MentorPage;

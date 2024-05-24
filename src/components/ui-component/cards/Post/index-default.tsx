@@ -113,7 +113,6 @@ const Post = ({ commentAdd, handleCommentLikes, handlePostLikes, handleReplayLik
   };
 
   const [anchorSharedEl, setAnchorSharedEl] = React.useState<Element | null>(null);
-
   const handleSharedClick = (event: React.MouseEvent) => {
     setAnchorSharedEl(event.currentTarget);
   };
@@ -179,7 +178,7 @@ const Post = ({ commentAdd, handleCommentLikes, handlePostLikes, handleReplayLik
         <Grid item xs={12}>
           <Grid container wrap="nowrap" alignItems="center" spacing={1}>
             <Grid item>
-              <Avatar alt="User 1" src={`${avatarImage}/avatar-1`} />
+              <Avatar alt="User 1" src={`${avatarImage}/${profile.avatar}`} />
             </Grid>
             <Grid item xs zeroMinWidth>
               <Grid container alignItems="center" spacing={1}>
@@ -368,7 +367,6 @@ const Post = ({ commentAdd, handleCommentLikes, handlePostLikes, handleReplayLik
         {commentsResult}
       </Grid>
     </MainCard>
-
   );
 };
 
