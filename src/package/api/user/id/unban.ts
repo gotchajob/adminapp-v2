@@ -10,9 +10,9 @@ export interface UnBanUserListResponse {
   data: string;
 }
 
-export const PostUnBanUser = async (params: UnBanUserRequest, accessToken: string): Promise<UnBanUserListResponse> => {
+export const PatchUnBanUser = async (params: UnBanUserRequest, accessToken: string): Promise<UnBanUserListResponse> => {
   try {
-    const res = await apiServerFetch(`/user/${params.id}/unban`, 'POST', undefined, accessToken);
+    const res = await apiServerFetch(`/user/${params.id}/unban`, 'PATCH', undefined, accessToken);
     if (res.status === 'error') {
       throw new Error('');
     }

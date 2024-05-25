@@ -27,8 +27,8 @@ import Divider from '@mui/material/Divider';
 
 // project imports
 import { GetUserList } from 'package/api/user';
-import { PostBanUser } from 'package/api/user/id/ban';
-import { PostUnBanUser } from 'package/api/user/id/unban';
+import { PatchBanUser } from 'package/api/user/id/ban';
+import { PatchUnBanUser } from 'package/api/user/id/unban';
 import Avatar from 'ui-component/extended/Avatar';
 import MainCard from 'ui-component/cards/MainCard';
 import { ThemeMode } from 'types/config';
@@ -72,8 +72,9 @@ const UserList = () => {
     if (user) {
       try {
         const id = user.id;
-        const action = await PostBanUser({ id }, '');
+        const action = await PatchBanUser({ id }, '');
         if (action.status !== "error") {
+          FetchUserList();
           setOpenModal((prev) => !prev);
           showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thành công` : `Kích hoạt tài khoản ${user.email} thành công`, 'success');
         } else {
@@ -90,8 +91,9 @@ const UserList = () => {
     if (user) {
       try {
         const id = user.id;
-        const action = await PostUnBanUser({ id }, '');
+        const action = await PatchUnBanUser({ id }, '');
         if (action.status !== "error") {
+          FetchUserList();
           setOpenModal((prev) => !prev);
           showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thành công` : `Kích hoạt tài khoản ${user.email} thành công`, 'success');
         } else {
@@ -132,7 +134,7 @@ const UserList = () => {
   //user Effect
   useEffect(() => {
     FetchUserList();
-  }, [user]);
+  }, []);
 
   const data = [
     {

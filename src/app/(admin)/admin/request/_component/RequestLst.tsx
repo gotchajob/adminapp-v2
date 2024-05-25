@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 //next
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 
 // material-ui
 import Chip from '@mui/material/Chip';
@@ -37,18 +38,28 @@ import CloseIcon from '@mui/icons-material/Close';
 
 //type import
 import { ThemeMode } from 'types/config';
+import { GetMentorRegister, MentorRegister } from 'package/api/mentor-register-request';
+
 
 const avatarImage = '/assets/images/users';
 
 const RegisterRequestList = () => {
     const theme = useTheme();
 
+    // const router = useRouter();
+
     const [openModal, setOpenModal] = useState<boolean>(false);
+
+    const [status, setStatus] = useState<number>(0);
+
+    const [mentorRegisterList, setMentorRegisterList] = useState<MentorRegister[] | undefined>([]);
+
+    const [mentorSelection, setMentorSelection] = useState<MentorRegister | undefined>(null);
 
     const data = [
         {
             id: 1,
-            avatar: "avatar-2.png",
+            avatar: "",
             name: "Mentor Lan",
             email: "lanvls15@example.com",
             phone: "123-456-7890",
@@ -57,7 +68,7 @@ const RegisterRequestList = () => {
         },
         {
             id: 2,
-            avatar: "avatar-3.png",
+            avatar: "",
             name: "Mentor Hong",
             email: "hongngl11@example.com",
             phone: "987-654-3210",
@@ -66,7 +77,7 @@ const RegisterRequestList = () => {
         },
         {
             id: 3,
-            avatar: "avatar-4.png",
+            avatar: "",
             name: "Mentor Kelvin",
             email: "kelvinwin@example.com",
             phone: "456-789-1230",
@@ -75,26 +86,59 @@ const RegisterRequestList = () => {
         }
     ]
 
+    // const onClickRowHandle = () => {
+    //     router.push('/admin/mentor/profile');
+    // }
+
+    //Fetch Get Mentor Register Request
+    const GetMentorRegisterList = async () => {
+        const data = await GetMentorRegister({ limit: 4, page: 1 }, '');
+        setMentorRegisterList(data.data.list);
+    }
+
+    const registerHandle = (value: MentorRegister) => {
+        setStatus(0);
+        setMentorSelection(value);
+        setOpenModal(prev => !prev)
+    }
+
+    const cancelHandle = () => {
+        setStatus(1);
+        setOpenModal(prev => !prev);
+    }
+
+    useEffect(() => {
+        GetMentorRegisterList();
+    }, [])
+
     return (
         <>
             <TableContainer>
                 <Table>
                     <TableHead>
-                        <TableRow>
+                        {/* <TableRow>
                             <TableCell sx={{ pl: 3 }}>#</TableCell>
                             <TableCell>Tên</TableCell>
                             <TableCell>Email</TableCell>
                             <TableCell>Số điện thoại</TableCell>
                             <TableCell>Vị trí địa lý </TableCell>
                             <TableCell>Trạng thái</TableCell>
-                            <TableCell align="center" sx={{ pr: 3 }}>
+                            <TableCell align="center" sx={{ pr: 10 }}>
+                                Actions
+                            </TableCell>
+                        </TableRow> */}
+                        <TableRow>
+                            <TableCell sx={{ pl: 3 }}>#</TableCell>
+                            <TableCell>Email</TableCell>
+                            <TableCell>Trạng thái</TableCell>
+                            <TableCell align="center">
                                 Actions
                             </TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
+                    {/* <TableBody>
                         {data?.map((row, index) => (
-                            <TableRow hover key={index}>
+                            <TableRow hover key={index} >
                                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
                                 <TableCell>
                                     <Stack direction="row" alignItems="center" spacing={2}>
@@ -126,35 +170,97 @@ const RegisterRequestList = () => {
                                         ></Chip>
                                     )}
                                 </TableCell>
-                                <TableCell align="center" sx={{ pr: 3 }}>
-                                    <AnimateButton>
-                                        <Button
-                                            variant="contained"
-                                            sx={{
-                                                boxShadow: theme.customShadows.primary,
-                                                ':hover': {
-                                                    boxShadow: 'none'
-                                                }
-                                            }}
-                                            onClick={() => { setOpenModal(prev => !prev) }}
-                                        >
-                                            Xác nhận
-                                        </Button>
-                                    </AnimateButton>
-                                    <AnimateButton>
-                                        <Button
-                                            variant="contained"
-                                            sx={{
-                                                bgcolor: 'error.main',
-                                                borderColor: 'divider',
-                                                boxShadow: theme.customShadows.error,
-                                                ':hover': { boxShadow: 'none' }
-                                            }}
-                                            onClick={() => { setOpenModal(prev => !prev) }}
-                                        >
-                                            Hủy
-                                        </Button>
-                                    </AnimateButton>
+                                <TableCell align="center">
+                                    <Stack direction="row" spacing={1} >
+                                        <AnimateButton>
+                                            <Button
+                                                variant="contained"
+                                                sx={{
+                                                    boxShadow: theme.customShadows.primary,
+                                                    ':hover': {
+                                                        boxShadow: 'none'
+                                                    }
+                                                }}
+                                                onClick={() => { setOpenModal(prev => !prev) }}
+                                            >
+                                                Xác nhận
+                                            </Button>
+                                        </AnimateButton>
+                                        <AnimateButton>
+                                            <Button
+                                                variant="contained"
+                                                sx={{
+                                                    bgcolor: 'error.main',
+                                                    borderColor: 'divider',
+                                                    boxShadow: theme.customShadows.error,
+                                                    ':hover': { boxShadow: 'none' }
+                                                }}
+                                                onClick={() => { setOpenModal(prev => !prev) }}
+                                            >
+                                                Hủy
+                                            </Button>
+                                        </AnimateButton>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody> */}
+                    <TableBody>
+                        {mentorRegisterList?.map((row, index) => (
+                            <TableRow hover key={index} >
+                                <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
+                                <TableCell>
+                                    <Stack direction="row" alignItems="center" spacing={2}>
+                                        <Stack>
+                                            <NextLink href={`/admin/mentor/profile`} passHref>
+                                                <Avatar alt="User 1" src={`${avatarImage}/`}></Avatar>
+                                            </NextLink>
+                                        </Stack>
+                                        <Stack direction="row" alignItems="center" spacing={0.25}>
+                                            <Typography>{row.email}</Typography>
+                                        </Stack>
+                                    </Stack>
+                                </TableCell>
+                                <TableCell>
+                                    <Chip label="Pending"
+                                        size="small"
+                                        sx={{
+                                            bgcolor: theme.palette.mode === ThemeMode.DARK ? 'dark.main' : alpha(theme.palette.warning.light, 0.6),
+                                            color: 'warning.dark'
+                                        }}
+                                    ></Chip>
+                                </TableCell>
+                                <TableCell align="center" sx={{ pl: 35 }}>
+                                    <Stack direction="row" spacing={1} >
+                                        <AnimateButton>
+                                            <Button
+                                                variant="contained"
+                                                sx={{
+                                                    boxShadow: theme.customShadows.primary,
+                                                    ':hover': {
+                                                        boxShadow: 'none'
+                                                    }
+                                                }}
+                                                onClick={() => registerHandle(row)}
+                                            >
+                                                Xác nhận
+                                            </Button>
+                                        </AnimateButton>
+                                        <AnimateButton>
+                                            <Button
+                                                variant="contained"
+                                                sx={{
+                                                    bgcolor: 'error.main',
+                                                    borderColor: 'divider',
+                                                    boxShadow: theme.customShadows.error,
+                                                    ':hover': { boxShadow: 'none' }
+                                                }}
+                                                onClick={() => cancelHandle()}
+                                            >
+                                                Hủy
+                                            </Button>
+                                        </AnimateButton>
+                                    </Stack>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -191,7 +297,7 @@ const RegisterRequestList = () => {
                     }
                 >
                     <CardContent>
-                        <Typography variant="body1">Bạn muốn kích hoạt tài khoản cho mentor ?</Typography>
+                        <Typography variant="body1">Bạn muốn {status == 0 ? "kích hoạt" : "hủy kích hoạt"} tài khoản cho email {mentorSelection?.email} ?</Typography>
                     </CardContent>
                     <CardActions>
                         <Grid container justifyContent="space-between">
