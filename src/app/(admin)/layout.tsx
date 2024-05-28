@@ -1,5 +1,5 @@
 // PROJECT IMPORTS
-import DashboardLayout from 'layout/MainLayout';
+import DashboardLayout from 'layout/MainLayout_plk';
 
 // ==============================|| DASHBOARD LAYOUT ||============================== //
 

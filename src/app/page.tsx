@@ -6,8 +6,13 @@ export default async function Page() {
   const adminToken = await getAdminToken(cookies());
   const superAdminToken = await getSuperAdminToken(cookies());
   const mentorToken = await getMentorToken(cookies());
+
+  if (adminToken == "") {
+    redirect('/login');
+  }
+
   if (adminToken !== '') {
-    redirect('/admin');
+    redirect('/admin/dashboard');
   }
 
   if (superAdminToken !== '') {
@@ -17,5 +22,6 @@ export default async function Page() {
   if (mentorToken !== '') {
     redirect('/mentor');
   }
+
   redirect('/login');
 }

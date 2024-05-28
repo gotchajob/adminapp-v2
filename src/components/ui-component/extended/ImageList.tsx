@@ -43,7 +43,7 @@ const ImageList = ({ itemData }: ImageListProps) => {
 
         return (
           <ImageListItem key={index} cols={cols} rows={rows} sx={{ overflow: 'hidden', borderRadius: `${borderRadius}px` }}>
-            <Box sx={{ height: item.featured ? 320 : 220, maxWidth: '100%' }}>
+            <Box sx={{ height: item.featured ? 520 : 200, maxWidth: '100%' }}>
               <Image
                 src={srcset(`/assets/images/profile/${item.img}`, 250, 200, rows, cols)}
                 alt={item.title || 'dummy'}

@@ -28,6 +28,7 @@ const Login = () => {
       console.log(editorRef.current.getContent());
     }
   }, [editorRef.current]);
+  
   return (
     <AuthWrapper1>
       <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
