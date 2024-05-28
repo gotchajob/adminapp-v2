@@ -173,7 +173,7 @@ const MentorList = () => {
             <TableCell>Tên</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Số điện thoại</TableCell>
-            <TableCell>Vị trí địa lý </TableCell>
+            <TableCell>Địa chỉ</TableCell>
             <TableCell>Trạng thái</TableCell>
             <TableCell align="center" sx={{ pr: 3 }}>
               Actions

@@ -46,7 +46,7 @@ const RegisterRequestPage = () => {
                 title={
                     <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
                         <Grid item>
-                            <Typography variant="h3">Mentor Register Request List</Typography>
+                            <Typography variant="h3">Expert Register Requests</Typography>
                         </Grid>
                     </Grid>
                 }

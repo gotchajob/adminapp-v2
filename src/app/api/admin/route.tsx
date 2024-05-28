@@ -1,4 +1,4 @@
-import { UserLogin, UserLoginResponse } from 'package/api/user/login';
+
 import {
   getAdminToken,
   getMentorToken,
@@ -11,6 +11,7 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { errorSystem } from 'package/api/api-fetch';
 import { S } from '@fullcalendar/core/internal-common';
+import { UserLogin } from 'package/api/user/login';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
@@ -30,7 +31,8 @@ const response = async (params: any, adminToken: string, mentorToken: string, su
     switch (path) {
       case 'login':
         res = await UserLogin({ email: params.email, password: params.password });
-        if (res.data.user.roleId && res.data.user.roleId === 1) {
+        console.log("userlogin:", res);
+        if (res.data.roleId && res.data.roleId === 2) {
           setAdminToken(res.data.token, cookies());
         } else {
           throw new Error('Sai tài khoản hoặc mật khẩu');

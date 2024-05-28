@@ -44,8 +44,24 @@ const dashboard: NavItemType = {
       breadcrumbs: false
     },
     {
+      id: 'Expert',
+      title: <FormattedMessage id="Expert" />,
+      type: 'item',
+      url: '/admin/expert',
+      icon: icons.IconMail,
+      breadcrumbs: false
+    },
+    {
+      id: 'transaction',
+      title: <FormattedMessage id="Transaction" />,
+      type: 'item',
+      url: '/admin/transaction',
+      icon: icons.IconFileInvoice,
+      breadcrumbs: false
+    },
+    {
       id: 'request',
-      title: <FormattedMessage id="Register Request" />,
+      title: <FormattedMessage id="Request" />,
       type: 'item',
       url: '/admin/request',
       icon: icons.IconBasket,
@@ -59,14 +75,6 @@ const dashboard: NavItemType = {
     //   icon: icons.IconMessages,
     //   breadcrumbs: false
     // },
-    {
-      id: 'Mentor',
-      title: <FormattedMessage id="Mentor" />,
-      type: 'item',
-      url: '/admin/mentor',
-      icon: icons.IconMail,
-      breadcrumbs: false
-    },
     // {
     //   id: 'notification',
     //   title: <FormattedMessage id="Notification" />,
@@ -75,14 +83,6 @@ const dashboard: NavItemType = {
     //   icon: icons.IconBellRinging,
     //   breadcrumbs: false
     // },
-    {
-      id: 'transaction',
-      title: <FormattedMessage id="Transaction" />,
-      type: 'item',
-      url: '/admin/transaction',
-      icon: icons.IconFileInvoice,
-      breadcrumbs: false
-    },
   ]
 };
 

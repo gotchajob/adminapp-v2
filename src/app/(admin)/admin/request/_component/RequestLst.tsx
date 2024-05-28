@@ -92,7 +92,7 @@ const RegisterRequestList = () => {
 
     //Fetch Get Mentor Register Request
     const GetMentorRegisterList = async () => {
-        const data = await GetMentorRegister({ limit: 4, page: 1 }, '');
+        const data = await GetMentorRegister({ limit: 10, page: 1 }, '');
         setMentorRegisterList(data.data.list);
     }
 
@@ -230,7 +230,7 @@ const RegisterRequestList = () => {
                                         }}
                                     ></Chip>
                                 </TableCell>
-                                <TableCell align="center" sx={{ pl: 35 }}>
+                                {/* <TableCell align="center" sx={{ pl: 35 }}>
                                     <Stack direction="row" spacing={1} >
                                         <AnimateButton>
                                             <Button
@@ -260,6 +260,29 @@ const RegisterRequestList = () => {
                                                 Hủy
                                             </Button>
                                         </AnimateButton>
+                                    </Stack>
+                                </TableCell> */}
+                                <TableCell align="center" sx={{ pr: 2 }}>
+                                    <Stack direction="row" justifyContent="center" alignItems="center">
+                                        <Tooltip placement="top" title="Active">
+                                            <IconButton color="primary" aria-label="delete" size="large" onClick={() => registerHandle(row)}>
+                                                <LockOpenIcon sx={{ fontSize: '1.1rem' }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip placement="top" title="Ban">
+                                            <IconButton
+                                                color="primary"
+                                                sx={{
+                                                    color: 'orange.dark',
+                                                    borderColor: 'orange.main',
+                                                    '&:hover ': { bgcolor: 'orange.light' }
+                                                }}
+                                                size="large"
+                                                onClick={() => cancelHandle()}
+                                            >
+                                                <BlockTwoToneIcon sx={{ fontSize: '1.1rem' }} />
+                                            </IconButton>
+                                        </Tooltip>
                                     </Stack>
                                 </TableCell>
                             </TableRow>

@@ -46,10 +46,10 @@ const MenuList = () => {
       return false;
     });
     if (menuLoading) {
-      menuItem.items.splice(1, 0, widgetMenu);
+      menuItem.items.splice(1, 0);
       setMenuItems({ items: [...menuItem.items] });
     } else if (!menuLoading && widgetMenu?.id !== undefined && !isFound) {
-      menuItem.items.splice(1, 1, widgetMenu);
+      menuItem.items.splice(1, 1);
       setMenuItems({ items: [...menuItem.items] });
     } else {
       setMenuItems({ items: [...menuItem.items] });

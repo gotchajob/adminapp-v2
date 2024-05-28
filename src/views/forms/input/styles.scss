@@ -1,0 +1,32 @@
+.input {
+  background-color: #f1f8fc;
+  border: 0px;
+  padding: 8px 20px 7px;
+  color: #0e82c4;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 5px;
+  resize: none;
+}
+.input::placeholder {
+  color: #b4d8ed;
+}
+.input:focus {
+  border: 2px solid #0e82c4 ;
+  padding: 6px 18px 5.5px;
+  outline: none;
+}
+
+.input:disabled {
+  background-color: #d9d9d9;
+}
+.input:disabled::placeholder {
+  font-size: 20px;
+  color: #b7b7b7;
+}
+/* CSS để ẩn spinner */
+.input::-webkit-inner-spin-button,
+.input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -31,6 +31,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 import UpgradePlanCard from './UpgradePlanCard';
 import useAuth from 'hooks/useAuth';
+import { redirect } from 'next/navigation';
 
 // types
 import { ThemeMode } from 'types/config';
@@ -38,6 +39,7 @@ import { ThemeMode } from 'types/config';
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
 import useConfig from 'hooks/useConfig';
+// import { redirect } from 'next/dist/server/api-utils';
 
 const User1 = '/assets/images/users/user-round.svg';
 
@@ -58,9 +60,20 @@ const ProfileSection = () => {
    * anchorRef is used on different components and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef<any>(null);
-  const handleLogout = async () => {
+
+  // const handleLogout = async () => {
+  //   try {
+  //     await logout();
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  const handleLogout = () => {
     try {
-      await logout();
+      // Xóa mục "berry-cart" từ localStorage
+      localStorage.removeItem('berry-cart');
+      console.log("logout");
     } catch (err) {
       console.error(err);
     }

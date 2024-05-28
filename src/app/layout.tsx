@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headersList = headers();
   const header_url = headersList.get('next-url') || '';
-  const role_path = header_url.split('/')[1];
+  const role_path = header_url.split('/login')[1];
 
   const adminToken = await getAdminToken(cookies());
   const superAdminToken = await getSuperAdminToken(cookies());
@@ -36,6 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // if (mentorToken !== '' && role_path !== 'mentor') {
   //   redirect('/mentor');
   // }
+
   return (
     <html lang="en">
       <body>

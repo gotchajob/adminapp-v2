@@ -1,33 +1,42 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
+
 // material-ui
+import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
+import { IconButton } from '@mui/material';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 // project imports
+import Autocomplete from '@mui/material/Autocomplete';
 import useAuth from 'hooks/useAuth';
+import { enqueueSnackbar } from 'notistack';
+import { gridSpacing } from 'store/constant';
+import MainCard from 'ui-component/cards/MainCard';
 import SubCard from 'ui-component/cards/SubCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { gridSpacing } from 'store/constant';
-import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
-import Box from '@mui/material/Box';
+import * as yup from 'yup';
+import { useFormik } from 'formik';
+
 
 // assets
 import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import TwitterIcon from '@mui/icons-material/Twitter';
 import Typography from '@mui/material/Typography';
+import Image from 'next/image';
+
 
 
 //api
-import { fetchDistrictData, fetchProvinceDetailData, fetchProvinceData } from 'app/api/mentor/city';
-import { Select } from '@mui/material';
-
-
+// import { fetchDistrictData, fetchProvinceDetailData, fetchProvinceData } from 'app/api/mentor/city';
 
 interface City {
     id: number;
@@ -44,320 +53,392 @@ interface Ward {
     name: string;
 }
 
-
+const logo = '/assets/images/logo/logo.png';
 
 
 // ==============================|| PROFILE 1 - PROFILE ACCOUNT ||============================== //
 
 const FormRegister = () => {
     const { user } = useAuth();
+
+    const [isLoading, setIsLoading] = useState(false);
+
     const [citySelected, setCitySelected] = useState(false);
+
     const [provincesSelected, setProvincesSelected] = useState(false);
+
     const [city, setCity] = useState('');
-    const [provincesData, setProvincesData] = React.useState<Provinces[]>([]);
-    const [cityData, setCityData] = React.useState<City[]>([]);
-    const [wardData, setWardData] = React.useState<Ward[]>([]);
+
+    const [provincesData, setProvincesData] = useState<Provinces[]>([]);
+
+    const [cityData, setCityData] = useState<City[]>([]);
+
+    const [wardData, setWardData] = useState<Ward[]>([]);
+
     const [provinces, setProvinces] = useState('');
+
     const [ward, setWards] = useState('');
-    const [skillName, setSkillName] = useState('');
-    const [skillValue, setSkillValue] = useState(0);
-    const [skills, setSkills] = useState<{ name: string; }[]>([]);
 
-    // const clickCity = async () => {
-    //     const json = await fetchProvinceData();
-    //     console.log('city data' + json);
-    //     setCityData(json);
-    // }
+    const [valueBasic, setValueBasic] = React.useState<Date | null>(null);
 
-
-    // const handleChangeProvince = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setCity(event.target.value);
-    //     if (city) {
-    //         setCitySelected(true);
-    //     }
-    //     console.log(event.target.value);
-    //     try {
-    //         // const response = await fetch(`https://vnprovinces.pythonanywhere.com/api/provinces/${event.target.value}`);
-    //         // const json = await response.json();
-    //         const json = await fetchProvinceDetailData(event.target.value);
-    //         setProvincesData(json);
-    //     } catch (error) {
-    //         console.error('Error fetching provinces data:', error);
-    //     }
-    // }
-    const handleChangeProvince = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedCity = event.target.value;
-        setCity(selectedCity);
-        if (selectedCity) {
-            setCitySelected(true);
-            try {
-                // Lấy danh sách thành phố và lưu vào state cityData trước
-                const cities = await fetchProvinceData();
-                setCityData(cities);
-                // Gọi hàm fetchProvinceDetailData để lấy thông tin chi tiết của thành phố đã chọn
-                const provinceDetail = await fetchProvinceDetailData(selectedCity);
-                // Lưu thông tin chi tiết vào state provincesData
-                setProvincesData(provinceDetail);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
-    }
-
-
-    const handleChangeWards = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProvinces(event.target.value);
-        if (provinces) {
-            setProvincesSelected(true);
-        }
-        try {
-            // const response = await fetch(`https://vnprovinces.pythonanywhere.com/api/districts/${event.target.value}`);
-            // const json = await response.json();
-            const json = await fetchDistrictData(event.target.value);
-            setWardData(json);
-        } catch (error) {
-            console.error('Error fetching provinces data:', error);
-        }
-    }
-
-    const handleChangeWard = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const data = event.target.value;
-        setWards(data);
-    }
-
-    const handleSubmit = () => {
-        // Kiểm tra nếu skillName không rỗng và skillValue nằm trong khoảng từ 0 đến 100
-        if (skillName && skillValue >= 0 && skillValue <= 100) {
-            // Thêm kỹ năng mới vào mảng skills
-            setSkills([...skills, { name: skillName }]);
-            console.log(skills);
-            // Reset giá trị của skillName và skillValue về trạng thái mặc định
-            setSkillName('');
-        } else {
-            // Hiển thị thông báo lỗi nếu dữ liệu không hợp lệ
-            alert('Please enter valid skill name and value (between 0 and 100)');
-        }
+    const initialValues = {
+        email: '',
+        firstName: '',
+        lastName: '',
+        phone: '',
     };
 
+    const formSchema = yup.object().shape({
 
+    })
+
+    const handleFormSubmit = async (value: any) => {
+    };
+
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+        initialValues,
+        onSubmit: handleFormSubmit,
+        validationSchema: formSchema
+    });
+
+    const handleChangeProvince = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        // const selectedCity = event.target.value;
+        // setCity(selectedCity);
+        // if (selectedCity) {
+        //     setCitySelected(true);
+        //     try {
+        //         // Lấy danh sách thành phố và lưu vào state cityData trước
+        //         const cities = await fetchProvinceData();
+        //         setCityData(cities);
+        //         // Gọi hàm fetchProvinceDetailData để lấy thông tin chi tiết của thành phố đã chọn
+        //         const provinceDetail = await fetchProvinceDetailData(selectedCity);
+        //         // Lưu thông tin chi tiết vào state provincesData
+        //         setProvincesData(provinceDetail);
+        //     } catch (error) {
+        //         console.error('Error fetching data:', error);
+        //     }
+        // }
+    }
+
+
+    const handleChangeWard = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        // setProvinces(event.target.value);
+        // if (provinces) {
+        //     setProvincesSelected(true);
+        // }
+        // try {
+        //     const json = await fetchDistrictData(event.target.value);
+        //     setWardData(json);
+        // } catch (error) {
+        //     console.error('Error fetching provinces data:', error);
+        // }
+    }
+
+    const handleSkillChange = (event, value) => {
+        console.log(value);
+    };
+
+    const SkillNames = [
+        { id: 1, name: "mongoDB" },
+        { id: 2, name: "Express" },
+        { id: 3, name: "ReactJS" },
+        { id: 4, name: "NodeJS" },
+    ]
+
+    const handleAddSkill = () => {
+        return (
+            <Grid container spacing={2} alignItems="center" justifyContent="center">
+                <Grid item lg={6}>
+                    <Autocomplete
+                        disablePortal
+                        options={SkillNames}
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        defaultValue={SkillNames[SkillNames?.length]}
+                        onChange={handleSkillChange}
+                        renderInput={(params) => <TextField {...params} label="Skill name" />}
+                    />
+                </Grid>
+                <Grid item lg={4}>
+                    <TextField fullWidth label="Đường dẫn chứng chỉ" />
+                </Grid>
+                <Grid item lg={1}>
+                    <IconButton aria-label="add" onClick={handleAddSkill}>
+                        <AddIcon />
+                    </IconButton>
+                </Grid>
+                <Grid item lg={1}>
+                    <IconButton aria-label="remove">
+                        <ClearIcon />
+                    </IconButton>
+                </Grid>
+            </Grid>
+        )
+    }
 
     return (
-        <Grid style={{ marginTop: '3%', marginLeft: '17%', marginRight: '17%', marginBottom: '5%' }}>
-            <form noValidate autoComplete="off">
-                <Grid item xs={12} md={12} style={{ margin: '2%' }}>
-                    <SubCard title="Personal Information">
+        <MainCard>
+            <Grid container alignItems="center" justifyContent="center">
+                <Grid item container lg={6} alignItems="center" justifyContent="center">
 
-                        <Grid container spacing={gridSpacing}>
-                            <Grid item xs={12} md={6}>
-                                <TextField id="outlined-basic1" fullWidth label="Name" defaultValue={user?.name} />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField id="outlined-basic1" fullWidth label="Age" defaultValue={0} />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField id="outlined-select-currency" select fullWidth label="City" value={city} onChange={handleChangeProvince}>
-                                    {cityData?.map((option) => (
-                                        <MenuItem key={option.id} value={option.id.toString()}>
-                                            {option.name}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField id="outlined-select-currency" select fullWidth label="Province" value={provinces} onChange={handleChangeWards} disabled={!citySelected} helperText={!citySelected ? "Please select City first" : ""}>
-                                    {provincesData.map((option) => (
-                                        <MenuItem key={option.id} value={option.id}>
-                                            {option.name}
-                                        </MenuItem>
-                                    ))}
-                                    {/* <TextField>Hi</TextField> */}
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField id="outlined-select-currency" select fullWidth label="Ward" value={ward} onChange={handleChangeWard} disabled={!provincesSelected} helperText={!provincesSelected ? "Please select province first" : ""}>
-                                    {wardData.map((option) => (
-                                        <MenuItem key={option.id} value={option.id.toString()}>
-                                            {option.name}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField
-                                    label="More detail about your address"
-                                    // multiline
-                                    fullWidth
-                                    defaultValue="123A - An Phu Street"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="outlined-multiline-static1"
-                                    label="Bio"
-                                    multiline
-                                    fullWidth
-                                    rows={3}
-                                    defaultValue="I consider myself as a creative, professional and a flexible person. I can adapt with any kind of brief and design style"
-                                />
-                            </Grid>
-                            {/* <Grid item xs={12} md={6}>
-                <TextField id="outlined-select-experience" select fullWidth label="Experience" value={experience} onChange={handleChange2}>
-                  {experiences.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid> */}
-                        </Grid>
+                    {/* FORM */}
+                    <form autoComplete="on" onSubmit={handleSubmit}>
+                        <SubCard>
 
-                    </SubCard>
-                </Grid>
-                <Grid item xs={12} md={12} style={{ margin: '2%' }}>
-                    <SubCard title="Contact Information">
-                        <Grid container spacing={gridSpacing}>
-                            <Grid item xs={12} md={6}>
-                                <TextField id="outlined-basic2" fullWidth label="Contact Phone" defaultValue="(+99) 9999 999 999" />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField id="outlined-basic3" fullWidth label="Email" defaultValue="demo@sample.com" />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField id="outlined-basic4" fullWidth label="Portfolio Url" defaultValue="https://demo.com" />
-                            </Grid>
-                        </Grid>
-                    </SubCard>
-                </Grid>
-                <Grid item xs={12} md={12} style={{ margin: '2%' }}>
-                    <SubCard title="Social Information">
-
-                        <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
-                            <Grid item>
-                                <FacebookIcon />
-                            </Grid>
-                            <Grid item xs zeroMinWidth>
-                                <TextField fullWidth label="Facebook Profile Url" />
-                            </Grid>
-                            <Grid item>
-                                <AnimateButton>
-                                    <Button variant="contained" size="small" color="secondary">
-                                        Connect
-                                    </Button>
-                                </AnimateButton>
-                            </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
-                            <Grid item>
-                                <TwitterIcon />
-                            </Grid>
-                            <Grid item xs zeroMinWidth>
-                                <TextField fullWidth label="Twitter Profile Url" />
-                            </Grid>
-                            <Grid item>
-                                <AnimateButton>
-                                    <Button variant="contained" size="small" color="secondary">
-                                        Connect
-                                    </Button>
-                                </AnimateButton>
-                            </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" spacing={gridSpacing}>
-                            <Grid item>
-                                <LinkedInIcon />
-                            </Grid>
-                            <Grid item xs zeroMinWidth>
-                                <TextField fullWidth label="LinkedIn Profile Url" />
-                            </Grid>
-                            <Grid item>
-                                <AnimateButton>
-                                    <Button variant="contained" size="small" color="secondary">
-                                        Connect
-                                    </Button>
-                                </AnimateButton>
-                            </Grid>
-                        </Grid>
-
-                    </SubCard>
-                </Grid>
-                <Grid item xs={12} md={12} style={{ margin: '2%' }}>
-                    <SubCard title="Education">
-
-                        <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
-                            <Grid item xs zeroMinWidth>
-                                <TextField fullWidth label="First Certification" />
-                            </Grid>
-                            <Grid item>
-                                <AnimateButton>
-                                    <Button variant="contained" size="small" color="secondary">
-                                        Submit
-                                    </Button>
-                                </AnimateButton>
-                            </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
-                            <Grid item xs zeroMinWidth>
-                                <TextField fullWidth label="Second Certification" />
-                            </Grid>
-                            <Grid item>
-                                <AnimateButton>
-                                    <Button variant="contained" size="small" color="secondary">
-                                        Submit
-                                    </Button>
-                                </AnimateButton>
-                            </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" spacing={gridSpacing}>
-                            <Grid item xs zeroMinWidth>
-                                <TextField fullWidth label="Third Certification" />
-                            </Grid>
-                            <Grid item>
-                                <AnimateButton>
-                                    <Button variant="contained" size="small" color="secondary">
-                                        Submit
-                                    </Button>
-                                </AnimateButton>
-                            </Grid>
-                        </Grid>
-
-                    </SubCard>
-                </Grid>
-                <Grid item xs={12} md={12} style={{ margin: '2%' }}>
-                    <SubCard title="Skills">
-                        <Grid container spacing={2}>
-                            <Grid item xs={10} md={8}>
-                                <TextField
-                                    label="Skill Name"
-                                    fullWidth
-                                    value={skillName}
-                                    onChange={(e) => setSkillName(e.target.value)}
-                                    variant="outlined"
-                                />
-                            </Grid>
-                            <Grid item xs={2} md={4}>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    label="Age"
-                                    value="Basic"
-                                >
-                                    <MenuItem value={"Basic"}>Basic</MenuItem>
-                                    <MenuItem value={"Intermiate"}>Intermiate</MenuItem>
-                                    <MenuItem value={"Advanced"}>Advanced</MenuItem>
-                                </Select>
-                            </Grid>
-                            <Grid item xs={12} md={12}>
-                                <Button variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
-                            </Grid>
-                            {skills.map((skill, index) => (
-                                <Grid item xs={12} md={12} key={index}>
-                                    <Typography variant="body2">{skill.name}</Typography>
+                            {/* Logo Section */}
+                            <Grid item lg={12} sx={{ margin: "2%" }}>
+                                <Grid container alignItems="center" justifyContent="center" spacing={1}>
+                                    <Grid item>
+                                        <Image src={logo} height={210} width={210} alt="Gotchajob_logo" style={{ maxWidth: '100%', height: '100%', marginTop: '6px' }} />
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography variant="h1" sx={{ color: '#0782C6', fontWeight: 800, fontFamily: 'Arial, sans-serif' }}>
+                                            Expert Registry
+                                        </Typography>
+                                    </Grid>
                                 </Grid>
-                            ))}
-                        </Grid>
-                    </SubCard>
+                            </Grid>
+
+                            {/* Personal Information Subcard */}
+                            <Grid item lg={12} sx={{ margin: "2%" }}>
+                                <SubCard title="Thông tin cá nhân">
+                                    <Grid container spacing={gridSpacing}>
+                                        <Grid item lg={6}>
+                                            <TextField
+                                                id="name"
+                                                name="name"
+                                                label="Tên"
+                                                value={values.lastName}
+                                                defaultValue={""}
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                error={!!touched.lastName && !!errors.lastName}
+                                                helperText={(touched.lastName && errors.lastName) as string}
+                                                fullWidth
+                                            />
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <DateTimePicker
+                                                    slotProps={{ textField: { fullWidth: true } }}
+                                                    label="Ngày sinh"
+                                                    value={valueBasic}
+                                                    onChange={(newValue: Date | null) => {
+                                                        setValueBasic(newValue);
+                                                    }}
+                                                />
+                                            </LocalizationProvider>
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <TextField id="city" select fullWidth label="Thành phố" value={city} onChange={handleChangeProvince}>
+                                                {cityData?.map((option) => (
+                                                    <MenuItem key={option.id} value={option.id.toString()}>
+                                                        {option.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <TextField id="province" select fullWidth label="Tỉnh" value={provinces} onChange={handleChangeWard} disabled={!citySelected} helperText={!citySelected ? "Please select City first" : ""}>
+                                                {provincesData.map((option) => (
+                                                    <MenuItem key={option.id} value={option.id}>
+                                                        {option.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <TextField id="ward" select fullWidth label="Phường" value={ward} onChange={handleChangeWard} disabled={!provincesSelected} helperText={!provincesSelected ? "Please select province first" : ""}>
+                                                {wardData.map((option) => (
+                                                    <MenuItem key={option.id} value={option.id.toString()}>
+                                                        {option.name}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <TextField
+                                                label="Địa chỉ chi tiết"
+                                                multiline
+                                                fullWidth
+                                            />
+                                        </Grid>
+                                        <Grid item lg={12}>
+                                            <TextField
+                                                id="outlined-multiline-static1"
+                                                label="Bio"
+                                                multiline
+                                                fullWidth
+                                                defaultValue=""
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </SubCard>
+                            </Grid>
+
+                            {/* Contact Information SubCard */}
+                            <Grid item lg={12} sx={{ margin: "2%" }}>
+                                <SubCard title="Thông tin xã hội & liên lạc">
+                                    <Grid container spacing={gridSpacing}>
+                                        <Grid item lg={6}>
+                                            <TextField id="outlined-basic2" fullWidth label="Số điện thoại" defaultValue="" />
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <Grid item container alignItems="center" justifyContent="end" spacing={2}>
+                                                <Grid item xs>
+                                                    <TextField
+                                                        id='fbUrl'
+                                                        label="Đường dẫn Facebook"
+                                                        fullWidth
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <FacebookIcon />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid item lg={6}>
+                                            <TextField id="outlined-basic3" fullWidth label="Email" defaultValue="" />
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <Grid item container alignItems="center" justifyContent="end" spacing={2}>
+                                                <Grid item xs>
+                                                    <TextField
+                                                        id='twtUrl'
+                                                        label="Đường dẫn Twitter"
+                                                        fullWidth
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <TwitterIcon />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <TextField id="outlined-basic4" fullWidth label="Portfolio Url" defaultValue="" />
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <Grid item container alignItems="center" justifyContent="end" spacing={2}>
+                                                <Grid item xs>
+                                                    <TextField
+                                                        id='lnkUrl'
+                                                        label="Đường dẫn LinkedIn"
+                                                        fullWidth
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <LinkedInIcon />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </SubCard>
+                            </Grid>
+
+                            {/* Education Subcard */}
+                            <Grid item lg={12} sx={{ margin: "2%" }}>
+                                <SubCard title="Chứng chỉ & bằng cấp">
+                                    <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
+                                        <Grid item xs zeroMinWidth>
+                                            <TextField fullWidth label="First Certification" />
+                                        </Grid>
+                                        <Grid item>
+                                            <AnimateButton>
+                                                <Button variant="contained" size="small" color="info">
+                                                    Upload
+                                                </Button>
+                                            </AnimateButton>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
+                                        <Grid item xs zeroMinWidth>
+                                            <TextField fullWidth label="Second Certification" />
+                                        </Grid>
+                                        <Grid item>
+                                            <AnimateButton>
+                                                <Button variant="contained" size="small" color="info">
+                                                    Upload
+                                                </Button>
+                                            </AnimateButton>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container alignItems="center" spacing={gridSpacing}>
+                                        <Grid item xs zeroMinWidth>
+                                            <TextField fullWidth label="Third Certification" />
+                                        </Grid>
+                                        <Grid item>
+                                            <AnimateButton>
+                                                <Button variant="contained" size="small" color="info">
+                                                    Upload
+                                                </Button>
+                                            </AnimateButton>
+                                        </Grid>
+                                    </Grid>
+                                </SubCard>
+                            </Grid>
+
+                            {/* Skills Subcard */}
+                            <Grid item lg={12} sx={{ margin: "2%" }}>
+                                <SubCard title="Skills">
+                                    <Grid container spacing={2} alignItems="center" justifyContent="center">
+                                        <Grid item lg={2}>
+                                            <Autocomplete
+                                                disablePortal
+                                                options={SkillNames}
+                                                getOptionLabel={(option) => option.name}
+                                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                defaultValue={SkillNames[SkillNames?.length]}
+                                                onChange={handleSkillChange}
+                                                renderInput={(params) => <TextField {...params} label="Ngành nghề" />}
+                                            />
+                                        </Grid>
+                                        <Grid item lg={2}>
+                                            <Autocomplete
+                                                disablePortal
+                                                options={SkillNames}
+                                                getOptionLabel={(option) => option.name}
+                                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                                defaultValue={SkillNames[SkillNames?.length]}
+                                                onChange={handleSkillChange}
+                                                renderInput={(params) => <TextField {...params} label="Skill Options" />}
+                                            />
+                                        </Grid>
+                                        <Grid item lg={6}>
+                                            <TextField fullWidth label="Đường dẫn chứng chỉ" />
+                                        </Grid>
+                                        <Grid item lg={1}>
+                                            <IconButton aria-label="add" onClick={handleAddSkill}>
+                                                <AddIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item lg={1}>
+                                            <IconButton aria-label="remove">
+                                                <ClearIcon />
+                                            </IconButton>
+                                        </Grid>
+                                    </Grid>
+                                    {handleAddSkill}
+                                </SubCard>
+                            </Grid>
+
+                            {/* Submit Section */}
+                            <Grid item lg={12} sx={{ margin: "2%" }}>
+                                <Grid container alignItems="end" justifyContent="end" spacing={gridSpacing}>
+                                    <Grid item>
+                                        <Button variant="outlined" color="error" onClick={() => { }}>Reset</Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="contained" color="info" onClick={() => { }}>Submit</Button>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                        </SubCard>
+                    </form>
                 </Grid>
-            </form>
-        </Grid>
+            </Grid>
+        </MainCard >
     );
 };
 
