@@ -1,6 +1,8 @@
 .upload-button {
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
+    position: absolute;
+    z-index: 2;
     display: inline-flex;
     -webkit-box-align: center;
     align-items: center;
@@ -28,4 +30,6 @@
     border-radius: 4px;
     color: #697586;
     background-color: white;
+    color: white;
+    opacity: 0;
 }

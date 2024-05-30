@@ -14,7 +14,6 @@ import AuthWrapper1 from 'components/authentication/AuthWrapper1';
 import AuthCardWrapper from 'components/authentication/AuthCardWrapper';
 import Logo from 'ui-component/Logo';
 import AuthLogin from 'components/authentication/auth-forms/AuthLogin';
-import { Editor } from '@tinymce/tinymce-react';
 import { useEffect, useRef } from 'react';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
