@@ -49,6 +49,7 @@ import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
 import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
 
+
 const avatarImage = '/assets/images/users';
 
 const validationSchema = yup.object().shape({
@@ -112,6 +113,7 @@ const Post = ({ commentAdd, handleCommentLikes, handlePostLikes, handleReplayLik
   };
 
   const [anchorSharedEl, setAnchorSharedEl] = React.useState<Element | null>(null);
+
   const handleSharedClick = (event: React.MouseEvent) => {
     setAnchorSharedEl(event.currentTarget);
   };
@@ -177,7 +179,7 @@ const Post = ({ commentAdd, handleCommentLikes, handlePostLikes, handleReplayLik
         <Grid item xs={12}>
           <Grid container wrap="nowrap" alignItems="center" spacing={1}>
             <Grid item>
-              <Avatar alt="User 1" src={`${avatarImage}/${profile.avatar}`} />
+              <Avatar alt="User 1" src={`${avatarImage}/avatar-1`} />
             </Grid>
             <Grid item xs zeroMinWidth>
               <Grid container alignItems="center" spacing={1}>
@@ -366,6 +368,7 @@ const Post = ({ commentAdd, handleCommentLikes, handlePostLikes, handleReplayLik
         {commentsResult}
       </Grid>
     </MainCard>
+
   );
 };
 

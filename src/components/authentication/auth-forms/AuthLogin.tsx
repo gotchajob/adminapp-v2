@@ -40,8 +40,6 @@ const JWTLogin = ({ loginProp, ...others }: { loginProp?: number }) => {
   // const { login } = useAuth();
   // const scriptedRef = useScriptRef();
 
-  const [checked, setChecked] = React.useState(true);
-
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -54,8 +52,8 @@ const JWTLogin = ({ loginProp, ...others }: { loginProp?: number }) => {
   return (
     <Formik
       initialValues={{
-        email: 'info@codedthemes.com',
-        password: '123456',
+        email: '',
+        password: '',
         submit: null
       }}
       validationSchema={Yup.object().shape({
