@@ -31,7 +31,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 import UpgradePlanCard from './UpgradePlanCard';
 import useAuth from 'hooks/useAuth';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 // types
 import { ThemeMode } from 'types/config';
@@ -39,6 +39,8 @@ import { ThemeMode } from 'types/config';
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
 import useConfig from 'hooks/useConfig';
+import { apiClientFetch } from 'package/api/api-fetch';
+import { enqueueSnackbar } from 'notistack';
 // import { redirect } from 'next/dist/server/api-utils';
 
 const User1 = '/assets/images/users/user-round.svg';
@@ -49,7 +51,7 @@ const ProfileSection = () => {
   const theme = useTheme();
   const { borderRadius } = useConfig();
   // const navigate = useNavigate();
-
+const router = useRouter()
   const [sdm, setSdm] = useState(true);
   const [value, setValue] = useState('');
   const [notification, setNotification] = useState(false);
@@ -69,13 +71,16 @@ const ProfileSection = () => {
   //   }
   // };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      // Xóa mục "berry-cart" từ localStorage
-      localStorage.removeItem('berry-cart');
-      console.log("logout");
+      const res = await apiClientFetch('logout', {});
+      if (res.status === 'error') {
+        throw new Error('Không thể đăng xuất');
+      }
+      enqueueSnackbar('Đăng xuất thành công', { variant: 'success' });
+      window.location.href = "/login"
     } catch (err) {
-      console.error(err);
+      enqueueSnackbar('Đăng xuất thất bại', { variant: 'error' });
     }
   };
 

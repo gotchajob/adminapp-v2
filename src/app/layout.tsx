@@ -7,6 +7,7 @@ import ProviderWrapper from 'store/ProviderWrapper';
 import { headers, cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getAdminToken, getMentorToken, getSuperAdminToken } from 'package/cookies/token';
+import SnackbarProvider from 'layout/snackbar-provider';
 
 export const metadata: Metadata = {
   title: 'Berry - React Material Admin Dashboard Template by CodedThemes',
@@ -19,28 +20,18 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headersList = headers();
   const header_url = headersList.get('next-url') || '';
-  const role_path = header_url.split('/login')[1];
+  const role_path = header_url.split('/')[1];
 
   const adminToken = await getAdminToken(cookies());
   const superAdminToken = await getSuperAdminToken(cookies());
   const mentorToken = await getMentorToken(cookies());
 
-  // if (adminToken !== '' && role_path !== 'admin') {
-  //   redirect('/admin');
-  // }
-
-  // if (superAdminToken !== '' && role_path !== 'super-admin') {
-  //   redirect('/super-admin');
-  // }
-
-  // if (mentorToken !== '' && role_path !== 'mentor') {
-  //   redirect('/mentor');
-  // }
-
   return (
     <html lang="en">
       <body>
-        <ProviderWrapper>{children}</ProviderWrapper>
+        <ProviderWrapper>
+          <SnackbarProvider>{children}</SnackbarProvider>
+        </ProviderWrapper>
       </body>
     </html>
   );

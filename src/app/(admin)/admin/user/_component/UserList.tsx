@@ -87,7 +87,7 @@ const UserList = () => {
   }
 
   //Fetch API post active user
-  const UnBanUser = async (user: UserList) => {
+  const UnBanUser = async (user?: UserList) => {
     if (user) {
       try {
         const id = user.id;

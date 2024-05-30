@@ -16,84 +16,81 @@ import Typography from '@mui/material/Typography';
 import { gridSpacing } from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
 
-
 // assets
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { IconSearch } from '@tabler/icons-react';
-import RegisterRequestList from './_component/RequestLst';
-
-
+import RegisterRequestList from './_component/request-list';
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
 const RegisterRequestPage = () => {
-    const [anchorEl, setAnchorEl] = React.useState<Element | (() => Element) | null | undefined>(null);
+  const [anchorEl, setAnchorEl] = React.useState<Element | (() => Element) | null | undefined>(null);
 
-    const handleClick = (event: React.MouseEvent) => {
-        setAnchorEl(event.currentTarget);
-    };
+  const handleClick = (event: React.MouseEvent) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    return (
-        <>
-            {/* Filter Card */}
+  return (
+    <>
+      {/* Filter Card */}
 
-            {/* Layout Table */}
-            <MainCard
-                title={
-                    <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
-                        <Grid item>
-                            <Typography variant="h3">Expert Register Requests</Typography>
-                        </Grid>
-                    </Grid>
-                }
-            >
-                <RegisterRequestList />
-                <Grid item xs={12} sx={{ mt: 1.75 }}>
-                    <Grid container justifyContent="space-between" spacing={gridSpacing}>
-                        <Grid item>
-                            <Pagination count={10} color="primary" />
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="text"
-                                size="large"
-                                sx={{ color: 'grey.900' }}
-                                color="secondary"
-                                endIcon={<ExpandMoreRoundedIcon />}
-                                onClick={handleClick}
-                            >
-                                10 Rows
-                            </Button>
-                            <Menu
-                                id="menu-user-list-style2"
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                                variant="selectedMenu"
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right'
-                                }}
-                                transformOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right'
-                                }}
-                            >
-                                <MenuItem onClick={handleClose}> 10 Rows</MenuItem>
-                                <MenuItem onClick={handleClose}> 20 Rows</MenuItem>
-                                <MenuItem onClick={handleClose}> 30 Rows </MenuItem>
-                            </Menu>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </MainCard>
-        </>
-    );
+      {/* Layout Table */}
+      <MainCard
+        title={
+          <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
+            <Grid item>
+              <Typography variant="h3">Expert Register Requests</Typography>
+            </Grid>
+          </Grid>
+        }
+      >
+        <RegisterRequestList />
+        <Grid item xs={12} sx={{ mt: 1.75 }}>
+          <Grid container justifyContent="space-between" spacing={gridSpacing}>
+            <Grid item>
+              <Pagination count={10} color="primary" />
+            </Grid>
+            <Grid item>
+              <Button
+                variant="text"
+                size="large"
+                sx={{ color: 'grey.900' }}
+                color="secondary"
+                endIcon={<ExpandMoreRoundedIcon />}
+                onClick={handleClick}
+              >
+                10 Rows
+              </Button>
+              <Menu
+                id="menu-user-list-style2"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                variant="selectedMenu"
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+              >
+                <MenuItem onClick={handleClose}> 10 Rows</MenuItem>
+                <MenuItem onClick={handleClose}> 20 Rows</MenuItem>
+                <MenuItem onClick={handleClose}> 30 Rows </MenuItem>
+              </Menu>
+            </Grid>
+          </Grid>
+        </Grid>
+      </MainCard>
+    </>
+  );
 };
 
 export default RegisterRequestPage;

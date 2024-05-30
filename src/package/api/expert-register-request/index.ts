@@ -36,7 +36,7 @@ export const GetMentorRegister = async (params: MentorRegisterRequest, accessTok
     searchParams.set('page', params.page + '');
     searchParams.set('limit', params.limit + '');
 
-    const res = await apiServerFetch('/mentor-register-request?' + searchParams.toString(), 'GET', undefined, accessToken);
+    const res = await apiServerFetch('/expert-register-request?' + searchParams.toString(), 'GET', undefined, accessToken);
     if (res.status === 'error') {
       throw new Error('');
     }

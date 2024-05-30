@@ -2,6 +2,7 @@ import { apiServerFetch, errorSystem } from 'package/api/api-fetch';
 
 export interface MentorRegisterRejectRequest {
   id: number;
+  note: string;
 }
 
 export interface MentorRegisterRejectResponse {
@@ -10,12 +11,12 @@ export interface MentorRegisterRejectResponse {
   data: string;
 }
 
-export const MentorRegisterReject = async (
+export const ExpertRegisterReject = async (
   params: MentorRegisterRejectRequest,
   accessToken: string
 ): Promise<MentorRegisterRejectResponse> => {
   try {
-    const res = await apiServerFetch(`/mentor-register-request/${params.id}/reject`, 'POST', undefined, accessToken);
+    const res = await apiServerFetch(`/expert-register-request/${params.id}/reject`, 'POST', { note: params.note }, accessToken);
     if (res.status === 'error') {
       throw new Error('');
     }
