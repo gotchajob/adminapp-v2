@@ -5,14 +5,12 @@ import React, { useState } from 'react';
 // material-ui
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
-import { IconButton } from '@mui/material';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 // project imports
 import Autocomplete from '@mui/material/Autocomplete';
@@ -31,407 +29,400 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
-
-
-interface City {
-  id: number;
-  name: string;
-}
-
-interface Provinces {
-  id: number;
-  name: string;
-}
-
-interface Ward {
-  id: number;
-  name: string;
-}
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import { UploadImageButton } from 'components/common/button/upload-button';
+import { useRouter } from 'next/navigation';
+import { ExpertSkillOption, PostCreateExpertAccount } from 'package/api/user/create-expert-account';
+import { AddressData, useGetDistrict, useGetProvince, useGetWard } from 'hooks/use-address';
+import { formatDate } from 'package/util';
 
 const logo = '/assets/images/logo/logo.png';
 
 // ==============================|| PROFILE 1 - PROFILE ACCOUNT ||============================== //
 
-const FormRegister = () => {
-  const { user } = useAuth();
-
+export default function Page({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const [citySelected, setCitySelected] = useState(false);
+  const [provinceCode, setProvinceCode] = useState<string>('');
 
-  const [provincesSelected, setProvincesSelected] = useState(false);
+  const [districtCode, setDistrictCode] = useState<string>('');
 
-  const [city, setCity] = useState('');
+  const [education, setEducation] = useState<string[]>(['', '', '']);
 
-  const [provincesData, setProvincesData] = useState<Provinces[]>([]);
+  const [nation, setNation] = useState<string[]>([]);
 
-  const [cityData, setCityData] = useState<City[]>([]);
+  const [expertSkillOptionList, setExpertSkillOptionList] = useState<ExpertSkillOption[]>([]);
 
-  const [wardData, setWardData] = useState<Ward[]>([]);
+  const router = useRouter();
 
-  const [provinces, setProvinces] = useState('');
+  const { provinceOptions } = useGetProvince();
 
-  const [ward, setWards] = useState('');
+  const { districtOptions } = useGetDistrict(provinceCode);
 
-  const [valueBasic, setValueBasic] = React.useState<Date | null>(null);
+  const { wardOptions } = useGetWard(districtCode);
 
   const initialValues = {
     email: '',
     firstName: '',
     lastName: '',
-    phone: ''
+    phone: '',
+    avatar: 'https://as2.ftcdn.net/v2/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg',
+    street: '',
+    ward: '',
+    district: '',
+    province: '',
+    birthDate: '',
+    bio: '',
+    facebookUrl: '',
+    twitterUrl: '',
+    linkedInUrl: '',
+    yearExperience: 0
   };
 
   const formSchema = yup.object().shape({});
 
-  const handleFormSubmit = async (value: any) => {};
+  const handleFormSubmit = async (value: typeof initialValues) => {
+    try {
+      setIsLoading(true);
+      // const res = await PostCreateExpertAccount({
+      //   ...value,
+      //   portfolioUrl: '',
+      //   address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
+      //   education: education.join('[]'),
+      //   nationSupport: nation,
+      //   expertSKillOptionList: []
+      // });
+      console.log({
+        ...value,
+        portfolioUrl: '',
+        address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
+        education: education.join('[]'),
+        nationSupport: nation,
+        expertSKillOptionList: []
+      });
+      if (res.status === 'error') {
+        throw new Error(res.responseText);
+      }
+    } catch (error: any) {
+      enqueueSnackbar(error.message, { variant: 'error' });
+    } finally {
+      setIsLoading(false);
+      router.refresh();
+    }
+  };
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
     initialValues,
     onSubmit: handleFormSubmit,
     validationSchema: formSchema
   });
 
-  const handleChangeProvince = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    // const selectedCity = event.target.value;
-    // setCity(selectedCity);
-    // if (selectedCity) {
-    //     setCitySelected(true);
-    //     try {
-    //         // Lấy danh sách thành phố và lưu vào state cityData trước
-    //         const cities = await fetchProvinceData();
-    //         setCityData(cities);
-    //         // Gọi hàm fetchProvinceDetailData để lấy thông tin chi tiết của thành phố đã chọn
-    //         const provinceDetail = await fetchProvinceDetailData(selectedCity);
-    //         // Lưu thông tin chi tiết vào state provincesData
-    //         setProvincesData(provinceDetail);
-    //     } catch (error) {
-    //         console.error('Error fetching data:', error);
-    //     }
-    // }
+  const handleChangeEducation = (e: string, index: number) => {
+    const newEducation = education;
+    newEducation[index] = e;
+    setEducation(newEducation);
   };
-
-  const handleChangeWard = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setProvinces(event.target.value);
-    // if (provinces) {
-    //     setProvincesSelected(true);
-    // }
-    // try {
-    //     const json = await fetchDistrictData(event.target.value);
-    //     setWardData(json);
-    // } catch (error) {
-    //     console.error('Error fetching provinces data:', error);
-    // }
-  };
-
-  const handleSkillChange = (event: any, value: any) => {
-    console.log(value);
-  };
-
-  const SkillNames = [
-    { id: 1, name: 'mongoDB' },
-    { id: 2, name: 'Express' },
-    { id: 3, name: 'ReactJS' },
-    { id: 4, name: 'NodeJS' }
-  ];
-
-  const handleAddSkill = () => {
-    return (
-      <Grid container spacing={2} alignItems="center" justifyContent="center">
-        <Grid item lg={6}>
-          <Autocomplete
-            disablePortal
-            options={SkillNames}
-            getOptionLabel={(option) => option.name}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            defaultValue={SkillNames[SkillNames?.length]}
-            onChange={handleSkillChange}
-            renderInput={(params) => <TextField {...params} label="Skill name" />}
-          />
-        </Grid>
-        <Grid item lg={4}>
-          <TextField fullWidth label="Đường dẫn chứng chỉ" />
-        </Grid>
-        <Grid item lg={1}>
-          <IconButton aria-label="add" onClick={handleAddSkill}>
-            <AddIcon />
-          </IconButton>
-        </Grid>
-        <Grid item lg={1}>
-          <IconButton aria-label="remove">
-            <ClearIcon />
-          </IconButton>
-        </Grid>
-      </Grid>
-    );
-  };
-
   return (
     <MainCard>
-      <Grid container alignItems="center" justifyContent="center">
-        <Grid item container lg={6} alignItems="center" justifyContent="center">
-          {/* FORM */}
-          <form autoComplete="on" onSubmit={handleSubmit}>
-            <SubCard>
-              {/* Logo Section */}
-              <Grid item lg={12} sx={{ margin: '2%' }}>
-                <Grid container alignItems="center" justifyContent="center" spacing={1}>
-                  <Grid item>
-                    <Image
-                      src={logo}
-                      height={210}
-                      width={210}
-                      alt="Gotchajob_logo"
-                      style={{ maxWidth: '100%', height: '100%', marginTop: '6px' }}
+      <Container maxWidth="md">
+        {/* FORM */}
+        <form autoComplete="on" onSubmit={handleSubmit}>
+          <SubCard>
+            {/* Logo Section */}
+            <Grid item lg={12} sx={{ margin: '2%' }}>
+              <Grid container alignItems="center" justifyContent="center" spacing={1}>
+                <Grid item>
+                  <Image
+                    src={logo}
+                    height={210}
+                    width={210}
+                    alt="Gotchajob_logo"
+                    style={{ maxWidth: '100%', height: '100%', marginTop: '6px' }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            {/* Personal Information Subcard */}
+            <Grid item lg={12} sx={{ margin: '2%' }}>
+              <SubCard title="Thông tin cá nhân">
+                <Grid container spacing={gridSpacing}>
+                  <Grid item lg={6}>
+                    <TextField
+                      name="lastName"
+                      label="Họ"
+                      value={values.lastName}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.lastName && !!errors.lastName}
+                      helperText={(touched.lastName && errors.lastName) as string}
+                      fullWidth
                     />
                   </Grid>
-                  <Grid item>
-                    <Typography variant="h1" sx={{ color: '#0782C6', fontWeight: 800, fontFamily: 'Arial, sans-serif' }}>
-                      Expert Registry
-                    </Typography>
+                  <Grid item lg={6}>
+                    <TextField
+                      name="firstName"
+                      label="Tên"
+                      value={values.firstName}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={!!touched.firstName && !!errors.firstName}
+                      helperText={(touched.firstName && errors.firstName) as string}
+                      fullWidth
+                    />
                   </Grid>
-                </Grid>
-              </Grid>
-
-              {/* Personal Information Subcard */}
-              <Grid item lg={12} sx={{ margin: '2%' }}>
-                <SubCard title="Thông tin cá nhân">
-                  <Grid container spacing={gridSpacing}>
-                    <Grid item lg={6}>
-                      <TextField
-                        id="name"
-                        name="name"
-                        label="Tên"
-                        value={values.lastName}
-                        defaultValue={''}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.lastName && !!errors.lastName}
-                        helperText={(touched.lastName && errors.lastName) as string}
-                        fullWidth
+                  <Grid item lg={6}>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        slotProps={{ textField: { fullWidth: true } }}
+                        label="Ngày sinh"
+                        onChange={(newValue: Date | null) => {
+                          setFieldValue('birthDay', formatDate(newValue?.toISOString() || '', 'dd/MM/yyyy'));
+                        }}
                       />
-                    </Grid>
-                    <Grid item lg={6}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                          slotProps={{ textField: { fullWidth: true } }}
-                          label="Ngày sinh"
-                          value={valueBasic}
-                          onChange={(newValue: Date | null) => {
-                            setValueBasic(newValue);
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item lg={6}>
+                    <TextField
+                      select
+                      name="province"
+                      fullWidth
+                      label="Tỉnh / Thành phố"
+                      value={values.province}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.province && !!errors.province}
+                      helperText={(touched.province && errors.province) as string}
+                    >
+                      {provinceOptions?.map((option) => (
+                        <MenuItem
+                          key={option.idProvince}
+                          value={option.name}
+                          onClick={() => {
+                            setProvinceCode(option.idProvince);
                           }}
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item lg={6}>
-                      <TextField id="city" select fullWidth label="Thành phố" value={city} onChange={handleChangeProvince}>
-                        {cityData?.map((option) => (
-                          <MenuItem key={option.id} value={option.id.toString()}>
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </Grid>
-                    <Grid item lg={6}>
-                      <TextField
-                        id="province"
-                        select
-                        fullWidth
-                        label="Tỉnh"
-                        value={provinces}
-                        onChange={handleChangeWard}
-                        disabled={!citySelected}
-                        helperText={!citySelected ? 'Please select City first' : ''}
-                      >
-                        {provincesData.map((option) => (
-                          <MenuItem key={option.id} value={option.id}>
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </Grid>
-                    <Grid item lg={6}>
-                      <TextField
-                        id="ward"
-                        select
-                        fullWidth
-                        label="Phường"
-                        value={ward}
-                        onChange={handleChangeWard}
-                        disabled={!provincesSelected}
-                        helperText={!provincesSelected ? 'Please select province first' : ''}
-                      >
-                        {wardData.map((option) => (
-                          <MenuItem key={option.id} value={option.id.toString()}>
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </Grid>
-                    <Grid item lg={6}>
-                      <TextField label="Địa chỉ chi tiết" multiline fullWidth />
-                    </Grid>
-                    <Grid item lg={12}>
-                      <TextField id="outlined-multiline-static1" label="Bio" multiline fullWidth defaultValue="" />
-                    </Grid>
+                        >
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
-                </SubCard>
-              </Grid>
-
-              {/* Contact Information SubCard */}
-              <Grid item lg={12} sx={{ margin: '2%' }}>
-                <SubCard title="Thông tin xã hội & liên lạc">
-                  <Grid container spacing={gridSpacing}>
-                    <Grid item lg={6}>
-                      <TextField id="outlined-basic2" fullWidth label="Số điện thoại" defaultValue="" />
-                    </Grid>
-                    <Grid item lg={6}>
-                      <Grid item container alignItems="center" justifyContent="end" spacing={2}>
-                        <Grid item xs>
-                          <TextField id="fbUrl" label="Đường dẫn Facebook" fullWidth />
-                        </Grid>
-                        <Grid item>
-                          <FacebookIcon />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <Grid item lg={6}>
-                      <TextField id="outlined-basic3" fullWidth label="Email" defaultValue="" />
-                    </Grid>
-                    <Grid item lg={6}>
-                      <Grid item container alignItems="center" justifyContent="end" spacing={2}>
-                        <Grid item xs>
-                          <TextField id="twtUrl" label="Đường dẫn Twitter" fullWidth />
-                        </Grid>
-                        <Grid item>
-                          <TwitterIcon />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item lg={6}>
-                      <TextField id="outlined-basic4" fullWidth label="Portfolio Url" defaultValue="" />
-                    </Grid>
-                    <Grid item lg={6}>
-                      <Grid item container alignItems="center" justifyContent="end" spacing={2}>
-                        <Grid item xs>
-                          <TextField id="lnkUrl" label="Đường dẫn LinkedIn" fullWidth />
-                        </Grid>
-                        <Grid item>
-                          <LinkedInIcon />
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                  <Grid item lg={6}>
+                    <TextField
+                      select
+                      name="district"
+                      fullWidth
+                      label="Quận / huyện"
+                      value={values.district}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      disabled={values.province === ''}
+                      error={!!touched.district && !!errors.district}
+                      helperText={(touched.district && errors.district) as string}
+                    >
+                      {districtOptions?.map((option) => (
+                        <MenuItem
+                          key={option.idDistrict}
+                          value={option.name}
+                          onClick={() => {
+                            setDistrictCode(option.idDistrict);
+                          }}
+                        >
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
-                </SubCard>
-              </Grid>
-
-              {/* Education Subcard */}
-              <Grid item lg={12} sx={{ margin: '2%' }}>
-                <SubCard title="Chứng chỉ & bằng cấp">
-                  <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
-                    <Grid item xs zeroMinWidth>
-                      <TextField fullWidth label="First Certification" />
-                    </Grid>
-                    <Grid item>
-                      <AnimateButton>
-                        <Button variant="contained" size="small" color="info">
-                          Upload
-                        </Button>
-                      </AnimateButton>
-                    </Grid>
+                  <Grid item lg={6}>
+                    <TextField
+                      select
+                      name="ward"
+                      fullWidth
+                      label="Phường / Xã"
+                      value={values.ward}
+                      disabled={values.district === ''}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.ward && !!errors.ward}
+                      helperText={(touched.ward && errors.ward) as string}
+                    >
+                      {wardOptions?.map((option) => (
+                        <MenuItem key={option.name} value={option.name}>
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
-                  <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
-                    <Grid item xs zeroMinWidth>
-                      <TextField fullWidth label="Second Certification" />
-                    </Grid>
-                    <Grid item>
-                      <AnimateButton>
-                        <Button variant="contained" size="small" color="info">
-                          Upload
-                        </Button>
-                      </AnimateButton>
-                    </Grid>
+                  <Grid item lg={12}>
+                    <TextField
+                      label="Số nhà, tên đường"
+                      name="street"
+                      fullWidth
+                      value={values.street}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.street && !!errors.street}
+                      helperText={(touched.street && errors.street) as string}
+                    />
                   </Grid>
-                  <Grid container alignItems="center" spacing={gridSpacing}>
-                    <Grid item xs zeroMinWidth>
-                      <TextField fullWidth label="Third Certification" />
-                    </Grid>
-                    <Grid item>
-                      <AnimateButton>
-                        <Button variant="contained" size="small" color="info">
-                          Upload
-                        </Button>
-                      </AnimateButton>
-                    </Grid>
-                  </Grid>
-                </SubCard>
-              </Grid>
-
-              {/* Skills Subcard */}
-              <Grid item lg={12} sx={{ margin: '2%' }}>
-                <SubCard title="Skills">
-                  <Grid container spacing={2} alignItems="center" justifyContent="center">
-                    <Grid item lg={2}>
-                      <Autocomplete
-                        disablePortal
-                        options={SkillNames}
-                        getOptionLabel={(option) => option.name}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        defaultValue={SkillNames[SkillNames?.length]}
-                        onChange={handleSkillChange}
-                        renderInput={(params) => <TextField {...params} label="Ngành nghề" />}
-                      />
-                    </Grid>
-                    <Grid item lg={2}>
-                      <Autocomplete
-                        disablePortal
-                        options={SkillNames}
-                        getOptionLabel={(option) => option.name}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        defaultValue={SkillNames[SkillNames?.length]}
-                        onChange={handleSkillChange}
-                        renderInput={(params) => <TextField {...params} label="Skill Options" />}
-                      />
-                    </Grid>
-                    <Grid item lg={6}>
-                      <TextField fullWidth label="Đường dẫn chứng chỉ" />
-                    </Grid>
-                    <Grid item lg={1}>
-                      <IconButton aria-label="add" onClick={handleAddSkill}>
-                        <AddIcon />
-                      </IconButton>
-                    </Grid>
-                    <Grid item lg={1}>
-                      <IconButton aria-label="remove">
-                        <ClearIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                </SubCard>
-              </Grid>
-
-              {/* Submit Section */}
-              <Grid item lg={12} sx={{ margin: '2%' }}>
-                <Grid container alignItems="end" justifyContent="end" spacing={gridSpacing}>
-                  <Grid item>
-                    <Button variant="outlined" color="error" onClick={() => {}}>
-                      Reset
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button variant="contained" color="info" onClick={() => {}}>
-                      Submit
-                    </Button>
+                  <Grid item lg={12}>
+                    <TextField
+                      multiline
+                      minRows={4}
+                      label="Thông tin thêm"
+                      name="bio"
+                      fullWidth
+                      value={values.bio}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.bio && !!errors.bio}
+                      helperText={(touched.bio && errors.bio) as string}
+                    />
                   </Grid>
                 </Grid>
-              </Grid>
-            </SubCard>
-          </form>
-        </Grid>
-      </Grid>
+              </SubCard>
+            </Grid>
+
+            {/* Contact Information SubCard */}
+            <Grid item lg={12} sx={{ margin: '2%' }}>
+              <SubCard title="Thông tin xã hội & liên lạc">
+                <Grid container spacing={gridSpacing}>
+                  <Grid item lg={6}>
+                    <Box justifyContent={'center'} alignItems={'center'} display={'flex'} position={'relative'}>
+                      <UploadImageButton
+                        setImage={(e: string) => {
+                          setFieldValue('avatar', e);
+                        }}
+                      />
+                      <Image
+                        src={values.avatar}
+                        alt="avatar"
+                        width={100}
+                        height={100}
+                        style={{
+                          position: 'absolute',
+                          zIndex: 1,
+                          border: '1px solid black',
+                          borderRadius: 20,
+                          borderColor: '#2188ff',
+                          objectFit: 'cover',
+                          objectPosition: 'center'
+                        }}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item lg={6}>
+                    <Grid container spacing={gridSpacing}>
+                      <Grid item lg={12}>
+                        <TextField
+                          label="Số điện thoại"
+                          name="phone"
+                          fullWidth
+                          value={values.phone}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.phone && !!errors.phone}
+                          helperText={(touched.phone && errors.phone) as string}
+                        />
+                      </Grid>
+                      <Grid item lg={12}>
+                        <TextField
+                          label="Email"
+                          name="email"
+                          fullWidth
+                          value={values.email}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.email && !!errors.email}
+                          helperText={(touched.email && errors.email) as string}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item lg={12}></Grid>
+                  <Grid item lg={12}>
+                    <Grid item container alignItems="center" justifyContent="end" spacing={2}>
+                      <Grid item xs>
+                        <TextField
+                          label="Facebook"
+                          name="facebookUrl"
+                          fullWidth
+                          value={values.facebookUrl}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.facebookUrl && !!errors.facebookUrl}
+                          helperText={(touched.facebookUrl && errors.facebookUrl) as string}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <FacebookIcon />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item lg={12}>
+                    <Grid item container alignItems="center" justifyContent="end" spacing={2}>
+                      <Grid item xs>
+                        <TextField
+                          label="Twitter"
+                          name="twitterUrl"
+                          fullWidth
+                          value={values.twitterUrl}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.twitterUrl && !!errors.twitterUrl}
+                          helperText={(touched.twitterUrl && errors.twitterUrl) as string}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TwitterIcon />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item lg={12}>
+                    <Grid item container alignItems="center" justifyContent="end" spacing={2}>
+                      <Grid item xs>
+                        <TextField
+                          label="LinkedIn"
+                          name="linkedInUrl"
+                          fullWidth
+                          value={values.linkedInUrl}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.linkedInUrl && !!errors.linkedInUrl}
+                          helperText={(touched.linkedInUrl && errors.linkedInUrl) as string}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <LinkedInIcon />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </SubCard>
+            </Grid>
+
+            {/* Education Subcard */}
+            <Grid item lg={12} sx={{ margin: '2%' }}>
+              <SubCard title="Chứng chỉ & bằng cấp">
+                <Grid container alignItems="center" spacing={gridSpacing} sx={{ mb: 1.25 }}>
+                  {['First Certification', 'Second Certification', 'Third Certification'].map((label, index) => (
+                    <Grid item lg={12} zeroMinWidth key={index}>
+                      <TextField
+                        fullWidth
+                        onChange={(e) => {
+                          handleChangeEducation(e.target.value, index);
+                        }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </SubCard>
+            </Grid>
+          </SubCard>
+        </form>
+      </Container>
     </MainCard>
   );
-};
-
-export default FormRegister;
+}
