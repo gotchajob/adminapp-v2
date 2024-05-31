@@ -37,6 +37,8 @@ import { useRouter } from 'next/navigation';
 import { ExpertSkillOption, PostCreateExpertAccount } from 'package/api/user/create-expert-account';
 import { AddressData, useGetDistrict, useGetProvince, useGetWard } from 'hooks/use-address';
 import { formatDate } from 'package/util';
+import { DialogActions } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const logo = '/assets/images/logo/logo.png';
 
@@ -102,9 +104,9 @@ export default function Page({ params }: { params: { id: string } }) {
         nationSupport: nation,
         expertSKillOptionList: []
       });
-      if (res.status === 'error') {
-        throw new Error(res.responseText);
-      }
+      // if (res.status === 'error') {
+      //   throw new Error(res.responseText);
+      // }
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: 'error' });
     } finally {
@@ -421,6 +423,10 @@ export default function Page({ params }: { params: { id: string } }) {
               </SubCard>
             </Grid>
           </SubCard>
+          <DialogActions>
+            <Button>Xóa</Button>
+            <LoadingButton type='submit'>Gửi</LoadingButton>
+          </DialogActions>
         </form>
       </Container>
     </MainCard>
