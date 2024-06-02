@@ -27,8 +27,6 @@ import Divider from '@mui/material/Divider';
 
 // project imports
 import { GetUserList } from 'package/api/user';
-import { PostBanUser } from 'package/api/user/id/ban';
-import { PostUnBanUser } from 'package/api/user/id/unban';
 import Avatar from 'ui-component/extended/Avatar';
 import MainCard from 'ui-component/cards/MainCard';
 import { ThemeMode } from 'types/config';
