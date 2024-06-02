@@ -1,41 +1,43 @@
 import { apiServerFetch, errorSystem } from '../api-fetch';
 
-export interface MentorRegisterRequest {
+export interface ExpertRegisterRequestRq {
   page: number;
   limit: number;
 }
 
-export interface GetMentorRegisterRequest {
+export interface ExpertRegisterRequestResponse {
   status: string;
   responseText: string;
   data: {
-    list: MentorRegister[];
+    list: ExpertRegister[];
     total: number;
   };
 }
 
-export interface MentorRegister {
+export interface ExpertRegister {
   id: number;
   email: string;
-  createAt: string;
+  createdAt: string;
 }
 
-export interface PostMentorRegisterRequest {
+export interface PostExpertRegisterRequest {
   email: string;
 }
 
-export interface PostMentorRegisterResponse {
+export interface PostExpertRegisterResponse {
   status: string;
   responseText: string;
   data: string;
 }
 
-export const GetMentorRegister = async (params: MentorRegisterRequest, accessToken: string): Promise<GetMentorRegisterRequest> => {
+export const GetExpertRegisterRequest = async (
+  params: ExpertRegisterRequestRq,
+  accessToken: string
+): Promise<ExpertRegisterRequestResponse> => {
   try {
     const searchParams = new URLSearchParams();
     searchParams.set('page', params.page + '');
     searchParams.set('limit', params.limit + '');
-
     const res = await apiServerFetch('/expert-register-request?' + searchParams.toString(), 'GET', undefined, accessToken);
     if (res.status === 'error') {
       throw new Error('');
@@ -46,7 +48,7 @@ export const GetMentorRegister = async (params: MentorRegisterRequest, accessTok
   }
 };
 
-export const PostMentorRegister = async (params: PostMentorRegisterRequest, accessToken: string): Promise<PostMentorRegisterResponse> => {
+export const PostExpertRegister = async (params: PostExpertRegisterRequest, accessToken: string): Promise<PostExpertRegisterResponse> => {
   try {
     const searchParams = new URLSearchParams();
     searchParams.set('email', params.email + '');

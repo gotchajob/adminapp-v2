@@ -16,7 +16,7 @@ export const ExpertRegisterApprove = async (
   accessToken: string
 ): Promise<ExpertRegisterApproveResponse> => {
   try {
-    console.log(accessToken)
+    console.log(accessToken);
     const res = await apiServerFetch(`/expert-register-request/${params.id}/approve`, 'PATCH', { url: params.url }, accessToken);
     if (res.status === 'error') {
       throw new Error('');
