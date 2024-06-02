@@ -90,3 +90,24 @@ export const MentorToken = () => {
     mentorToken
   };
 };
+
+export const CustomerToken = () => {
+  const [customerToken, setCustomerToken] = useState('');
+  const getCustomerToken = async () => {
+    try {
+      const res = await apiClientFetch('customer-token', {});
+      if (res.status === 'error') {
+        throw new Error('Không thể lấy token');
+      }
+      setCustomerToken(res.token);
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  };
+  useEffect(() => {
+    getCustomerToken();
+  }, []);
+  return {
+    customerToken
+  };
+};

@@ -178,7 +178,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       onChange={(newValue: Date | null) => {
                         try {
                           setFieldValue('birthDay', formatDate(newValue?.toISOString() || '', 'dd/MM/yyyy'));
-                        } catch (error) {}
+                        } catch (error) { }
                       }}
                     />
                   </LocalizationProvider>

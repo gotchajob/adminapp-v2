@@ -7,7 +7,7 @@ export const apiClientFetch = async (path: string, body?: any): Promise<any> => 
   return await res.json();
 };
 
-export const apiServerFetch = async (url: string, method: 'GET' | 'POST' | 'PATCH', body?: any, accessToken?: string): Promise<any> => {
+export const apiServerFetch = async (url: string, method: 'GET' | 'POST' | 'PATCH' | 'PUT', body?: any, accessToken?: string): Promise<any> => {
   let headers: any = {
     'Content-type': 'application/json'
   };

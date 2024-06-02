@@ -1,14 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 
@@ -19,10 +17,6 @@ import FilterBox from './_component/filter';
 
 // assets
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import { apiServerFetch } from 'package/api/api-fetch';
-import { GetUser } from 'package/api/user';
-import { IconSearch } from '@tabler/icons-react';
-import { GetUserList } from 'package/api/user';
 import UserList from './_component/UserList';
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
