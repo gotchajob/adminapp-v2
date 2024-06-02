@@ -17,7 +17,7 @@ const dashboard: NavItemType = {
   children: [
     {
       id: 'dashboard',
-      title: <FormattedMessage id="dashboard" />,
+      title: <FormattedMessage id="Thống kê" />,
       type: 'item',
       url: '/admin/dashboard',
       icon: IconChartDots,
@@ -25,7 +25,7 @@ const dashboard: NavItemType = {
     },
     {
       id: 'user',
-      title: <FormattedMessage id="User" />,
+      title: <FormattedMessage id="Người dùng" />,
       type: 'item',
       url: '/admin/user',
       icon: IconUser,
@@ -33,7 +33,7 @@ const dashboard: NavItemType = {
     },
     {
       id: 'transaction',
-      title: <FormattedMessage id="Transaction" />,
+      title: <FormattedMessage id="Giao dịch" />,
       type: 'item',
       url: '/admin/transaction',
       icon: IconFileInvoice,
@@ -53,7 +53,14 @@ const dashboard: NavItemType = {
           breadcrumbs: false
         },
         {
-          id: 'request',
+          id: 'requests',
+          title: <FormattedMessage id="Chuyên gia gửi yêu cầu" />,
+          type: 'item',
+          url: '/admin/expert-request',
+          breadcrumbs: false
+        },
+        {
+          id: 'Request',
           title: <FormattedMessage id="Yêu cầu" />,
           type: 'item',
           url: '/admin/request',
