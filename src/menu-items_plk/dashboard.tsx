@@ -2,29 +2,17 @@
 import { FormattedMessage } from 'react-intl';
 
 // assets
-import { IconDashboard, IconDeviceAnalytics, IconChartDots, IconUserCheck, IconBasket, IconMessages, IconBellRinging, IconFileInvoice, IconMail } from '@tabler/icons-react';
+import { IconDashboard, IconChartDots, IconUserCheck, IconBasket, IconFileInvoice, IconMail, IconUser } from '@tabler/icons-react';
 
 // type
 import { NavItemType } from 'types';
-
-const icons = {
-  IconDashboard: IconDashboard,
-  IconDeviceAnalytics: IconDeviceAnalytics,
-  IconUserCheck: IconUserCheck,
-  IconChartDots: IconChartDots,
-  IconBasket: IconBasket,
-  IconMessages: IconMessages,
-  IconBellRinging: IconBellRinging,
-  IconFileInvoice: IconFileInvoice,
-  IconMail: IconMail,
-};
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
 const dashboard: NavItemType = {
   id: 'dashboard',
   title: <FormattedMessage id="admin CMS" />,
-  icon: icons.IconDashboard,
+  icon: IconDashboard,
   type: 'group',
   children: [
     {
@@ -32,7 +20,7 @@ const dashboard: NavItemType = {
       title: <FormattedMessage id="dashboard" />,
       type: 'item',
       url: '/admin/dashboard',
-      icon: icons.IconChartDots,
+      icon: IconChartDots,
       breadcrumbs: false
     },
     {
@@ -40,15 +28,7 @@ const dashboard: NavItemType = {
       title: <FormattedMessage id="User" />,
       type: 'item',
       url: '/admin/user',
-      icon: icons.IconUserCheck,
-      breadcrumbs: false
-    },
-    {
-      id: 'Expert',
-      title: <FormattedMessage id="Expert" />,
-      type: 'item',
-      url: '/admin/expert',
-      icon: icons.IconMail,
+      icon: IconUser,
       breadcrumbs: false
     },
     {
@@ -56,17 +36,31 @@ const dashboard: NavItemType = {
       title: <FormattedMessage id="Transaction" />,
       type: 'item',
       url: '/admin/transaction',
-      icon: icons.IconFileInvoice,
+      icon: IconFileInvoice,
       breadcrumbs: false
     },
     {
-      id: 'request',
-      title: <FormattedMessage id="Request" />,
-      type: 'item',
-      url: '/admin/request',
-      icon: icons.IconBasket,
-      breadcrumbs: false
-    },
+      id: 'expert-manager',
+      title: <FormattedMessage id="Quản lí chuyên gia" />,
+      icon: IconUserCheck,
+      type: 'collapse',
+      children: [
+        {
+          id: 'Expert',
+          title: <FormattedMessage id="Chuyên gia" />,
+          type: 'item',
+          url: '/admin/expert',
+          breadcrumbs: false
+        },
+        {
+          id: 'request',
+          title: <FormattedMessage id="Yêu cầu" />,
+          type: 'item',
+          url: '/admin/request',
+          breadcrumbs: false
+        }
+      ]
+    }
     // {
     //   id: 'advisory',
     //   title: <FormattedMessage id="Advisory" />,

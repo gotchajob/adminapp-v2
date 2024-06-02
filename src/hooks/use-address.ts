@@ -59,3 +59,21 @@ export const useGetWard = (districtCode: string) => {
     wardOptions
   };
 };
+
+export const useGetCountry = () => {
+  const [countries, setCountries] = useState<string[]>([]);
+  const getCountries = async () => {
+    try {
+      const res = await fetch('/api/countries');
+      const data = await res.json();
+      setCountries(data.data);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getCountries();
+  }, []);
+  return {
+    countries
+  };
+};

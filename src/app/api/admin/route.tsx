@@ -10,7 +10,6 @@ import {
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { errorSystem } from 'package/api/api-fetch';
-import { S } from '@fullcalendar/core/internal-common';
 import { UserLogin } from 'package/api/user/login';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {

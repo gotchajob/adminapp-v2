@@ -16,7 +16,7 @@ export const UploadImageButton = ({ setImage }: { setImage: any }) => {
     <>
       <CldUploadButton
         className="upload-button"
-        uploadPreset="bn1kbujc"
+        uploadPreset="my3ib4l5"
         
         onUpload={handleOnUpload}
       />
