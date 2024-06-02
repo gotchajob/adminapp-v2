@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -19,7 +18,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
+
 // project imports
+import { StyledLink } from 'components/common/link/styled-link';
 import { dispatch } from 'store';
 import { openSnackbar } from 'store/slices/snackbar';
 
@@ -31,9 +32,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { format, parseISO } from 'date-fns';
+import { useSearchParamsNavigation } from 'hooks/use-get-params';
 import { ExpertRegister, GetExpertRegisterRequest } from 'package/api/expert-register-request';
-import { ExpertRegisterApprove } from 'package/api/expert-register-request/id/approve';
-import { ExpertRegisterReject } from 'package/api/expert-register-request/id/reject';
+import { PatchApproveExpert } from 'package/api/user/id/approve-expert';
+import { PatchRejectExpert } from 'package/api/user/id/reject-expert';
+import { AdminToken } from 'hooks/use-login';
 
 const avatarImage = '/assets/images/experts';
 
@@ -53,6 +56,12 @@ const ExpertRequestList = () => {
 
   //reject dialog state
   const [rejectDialog, setRejectDialog] = useState<boolean>(false);
+
+  //get admín token
+  const { adminToken } = AdminToken();
+
+  //route hook
+  const { push } = useSearchParamsNavigation();
 
   //Fetch API get uset list
   const FetchExpertList = async () => {
@@ -84,12 +93,12 @@ const ExpertRequestList = () => {
   const approveHandle = async (expert?: ExpertRegister) => {
     if (expert) {
       try {
-        const action = await ExpertRegisterApprove({ id: expert.id, url }, '');
+        const action = await PatchApproveExpert({ id: expert.id }, '');
         if (action.status !== "error") {
           setApproveDialog((prev) => !prev);
           showSnackbar(`Kích hoạt tài khoản ${expert.email} thành công`, 'success');
         } else {
-          showSnackbar(`Kích hoạt tài khoản ${expert.email}} thất bại`, 'error');
+          showSnackbar(`Kích hoạt tài khoản ${expert.email} thất bại`, 'error');
         }
       } catch (error) {
         console.log(error);
@@ -102,12 +111,12 @@ const ExpertRequestList = () => {
   const rejectHandle = async (expert?: ExpertRegister) => {
     if (expert) {
       try {
-        const action = await ExpertRegisterReject({ id: expert.id, url }, '');
+        const action = await PatchRejectExpert({ id: expert.id }, '');
         if (action.status !== "error") {
           setApproveDialog((prev) => !prev);
           showSnackbar(`Từ chối tài khoản ${expert.email} thành công`, 'success');
         } else {
-          showSnackbar(`Từ chối tài khoản ${expert.email}} thất bại`, 'error');
+          showSnackbar(`Từ chối tài khoản ${expert.email} thất bại`, 'error');
         }
       } catch (error) {
         console.log(error);
@@ -132,6 +141,7 @@ const ExpertRequestList = () => {
     );
   }
 
+  //formatDate
   const formatDate = (date: string, pattern: string) => {
     return date ? format(parseISO(date), pattern) : '';
   };
@@ -160,7 +170,9 @@ const ExpertRequestList = () => {
               <TableCell sx={{ pl: 3 }}>{expert.id}</TableCell>
               <TableCell>
                 <Typography variant="subtitle2" noWrap>
-                  {expert.email}
+                  <StyledLink href={`/admin/expert-request/expert-skill-option/${expert.id}`}>
+                    {expert.email}
+                  </StyledLink>
                 </Typography>
               </TableCell>
               <TableCell>
