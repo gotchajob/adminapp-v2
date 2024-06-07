@@ -104,16 +104,7 @@ export default function Page({ params }: { params: { id: string } }) {
       if (expertSkillOptionList.length < 1) {
         throw new Error("Vui lòng thêm ít nhất 1 kĩ năng")
       }
-        console.log({
-          ...value,
-          portfolioUrl: '',
-          address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
-          education: education.join('[]'),
-          nationSupport: nation,
-          expertSKillOptionList: expertSkillOptionList
-        });
-
-      // const res = await PostCreateExpertAccount({
+      // console.log({
       //   ...value,
       //   portfolioUrl: '',
       //   address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
@@ -121,10 +112,19 @@ export default function Page({ params }: { params: { id: string } }) {
       //   nationSupport: nation,
       //   expertSKillOptionList: expertSkillOptionList
       // });
-      // if (res.status === 'error') {
-      //   throw new Error(res.responseText);
-      // }
-      // enqueueSnackbar(res.responseText, { variant: 'success' });
+
+      const res = await PostCreateExpertAccount({
+        ...value,
+        portfolioUrl: '',
+        address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
+        education: education.join('[]'),
+        nationSupport: nation,
+        expertSKillOptionList: expertSkillOptionList
+      });
+      if (res.status === 'error') {
+        throw new Error(res.responseText);
+      }
+      enqueueSnackbar(res.responseText, { variant: 'success' });
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: 'error' });
     } finally {
@@ -198,12 +198,12 @@ export default function Page({ params }: { params: { id: string } }) {
                       onError={() => {
                         setErrors({ birthDate: 'Thông tin không đúng định dạng' });
                       }}
-                      format="dd/MM/yyyy"
+                      format="dd-MM-yyyy"
                       label="Ngày sinh"
                       onChange={(newValue: Date | null) => {
                         try {
-                          setFieldValue('birthDate', formatDate(newValue?.toISOString() || '', 'dd/MM/yyyy'));
-                        } catch (error) {}
+                          setFieldValue('birthDate', formatDate(newValue?.toISOString() || '', 'yyyy-MM-dd'));
+                        } catch (error) { }
                       }}
                     />
                     {errors.birthDate ? errorText(errors.birthDate as string) : null}

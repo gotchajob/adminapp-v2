@@ -2,8 +2,8 @@ import { accessToken } from 'mapbox-gl';
 import { apiServerFetch, errorSystem } from '../../../../../../webapp_branch/webapp-v2/src/package/api/api-fetch';
 
 export interface UserVerifyExpertRequest {
-  page: string;
-  limit: string;
+  page: number;
+  limit: number;
 }
 export interface UserVerifyExpertResponse {
   status: string;

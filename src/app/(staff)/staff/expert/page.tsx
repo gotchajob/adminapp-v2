@@ -22,9 +22,6 @@ import { GetUserList } from 'package/api/user';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { IconSearch } from '@tabler/icons-react';
 
-
-
-
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
 const ExpertPage = () => {
