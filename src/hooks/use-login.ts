@@ -28,6 +28,27 @@ export const Logout = async () => {
   }
 };
 
+export const StaffToken = () => {
+  const [staffToken, setStaffToken] = useState('');
+  const getStaffToken = async () => {
+    try {
+      const res = await apiClientFetch('staff-token', {});
+      if (res.status === 'error') {
+        throw new Error('Không thể đăng xuất');
+      }
+      setStaffToken(res.token);
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  };
+  useEffect(() => {
+    getStaffToken();
+  }, []);
+  return {
+    staffToken
+  };
+};
+
 export const AdminToken = () => {
   const [adminToken, setAdminToken] = useState('');
   const getAdminToken = async () => {
@@ -49,45 +70,24 @@ export const AdminToken = () => {
   };
 };
 
-export const SuperAdminToken = () => {
-  const [superAdminToken, setSuperAdminToken] = useState('');
-  const getAdminToken = async () => {
+export const ExpertToken = () => {
+  const [expertToken, setExpertToken] = useState('');
+  const getExpertToken = async () => {
     try {
-      const res = await apiClientFetch('super-admin-token', {});
+      const res = await apiClientFetch('expert-token', {});
       if (res.status === 'error') {
         throw new Error('Không thể đăng xuất');
       }
-      setSuperAdminToken(res.token);
+      setExpertToken(res.token);
     } catch (error: any) {
       throw new Error(error.message);
     }
   };
   useEffect(() => {
-    getAdminToken();
+    getExpertToken();
   }, []);
   return {
-    superAdminToken
-  };
-};
-
-export const MentorToken = () => {
-  const [mentorToken, setMentorToken] = useState('');
-  const getMentorToken = async () => {
-    try {
-      const res = await apiClientFetch('mentor-token', {});
-      if (res.status === 'error') {
-        throw new Error('Không thể đăng xuất');
-      }
-      setMentorToken(res.token);
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
-  };
-  useEffect(() => {
-    getMentorToken();
-  }, []);
-  return {
-    mentorToken
+    expertToken
   };
 };
 

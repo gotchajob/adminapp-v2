@@ -93,7 +93,7 @@ const Profile = () => {
                 <Avatar alt="User 1" src={Avatar3} />
               </Grid>
               <Grid item xs zeroMinWidth>
-                <Typography variant="subtitle1">{user?.name}Mentor 1</Typography>
+                <Typography variant="subtitle1">{user?.name}Expert 1</Typography>
                 <Typography variant="subtitle2">Leader</Typography>
               </Grid>
               {/* <Grid item>

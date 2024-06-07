@@ -1,20 +1,20 @@
 import { apiServerFetch, errorSystem } from 'package/api/api-fetch';
 
-export interface MentorRegisterRejectRequest {
+export interface ExpertRegisterRejectRequest {
   id: number;
   note: string;
 }
 
-export interface MentorRegisterRejectResponse {
+export interface ExpertRegisterRejectResponse {
   status: string;
   responseText: string;
   data: string;
 }
 
 export const ExpertRegisterReject = async (
-  params: MentorRegisterRejectRequest,
+  params: ExpertRegisterRejectRequest,
   accessToken: string
-): Promise<MentorRegisterRejectResponse> => {
+): Promise<ExpertRegisterRejectResponse> => {
   try {
     const res = await apiServerFetch(`/expert-register-request/${params.id}/reject`, 'POST', { note: params.note }, accessToken);
     if (res.status === 'error') {

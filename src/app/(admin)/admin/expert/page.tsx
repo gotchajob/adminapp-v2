@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 // project imports
 import { gridSpacing } from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
-import MentorList from './_component/MentorList';
+import ExpertList from './_component/ExpertList';
 import { GetUserList } from 'package/api/user';
 
 // assets
@@ -27,7 +27,7 @@ import { IconSearch } from '@tabler/icons-react';
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
-const MentorPage = () => {
+const ExpertPage = () => {
     const [anchorEl, setAnchorEl] = React.useState<Element | (() => Element) | null | undefined>(null);
 
     const handleClick = (event: React.MouseEvent) => {
@@ -55,7 +55,7 @@ const MentorPage = () => {
             >
 
                 {/* Data Table */}
-                <MentorList />
+                <ExpertList />
                 <Grid item xs={12} sx={{ mt: 1.75 }}>
                     <Grid container justifyContent="space-between" spacing={gridSpacing}>
                         <Grid item>
@@ -100,4 +100,4 @@ const MentorPage = () => {
     );
 };
 
-export default MentorPage;
+export default ExpertPage;

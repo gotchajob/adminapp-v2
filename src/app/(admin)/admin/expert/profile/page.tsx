@@ -64,7 +64,7 @@ const tabsOption = [
     // }
 ];
 
-const MentorProfile = () => {
+const ExpertProfile = () => {
     const theme = useTheme();
 
     const [value, setValue] = useState<number>(0);
@@ -126,4 +126,4 @@ const MentorProfile = () => {
     )
 }
 
-export default MentorProfile;
+export default ExpertProfile;

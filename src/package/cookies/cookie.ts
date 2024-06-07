@@ -28,9 +28,9 @@ export const getConfig = (cookies: ReadonlyRequestCookies) => {
   const cookie = cookies.get('config');
   if (cookie === undefined) {
     const config: CookieConfig = {
-      superAdminToken: '',
-      mentorToken: '',
-      adminToken: ''
+      adminToken: '',
+      staffToken: '',
+      expertToken: '',
     };
     return config;
   } else {
