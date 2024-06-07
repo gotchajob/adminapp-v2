@@ -6,7 +6,7 @@ import './globals.css';
 import ProviderWrapper from 'store/ProviderWrapper';
 import { headers, cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getAdminToken, getMentorToken, getSuperAdminToken } from 'package/cookies/token';
+import { getStaffToken, getExpertToken, getAdminToken } from 'package/cookies/token';
 import SnackbarProvider from 'layout/snackbar-provider';
 
 export const metadata: Metadata = {
@@ -22,9 +22,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const header_url = headersList.get('next-url') || '';
   const role_path = header_url.split('/')[1];
 
+  const staffToken = await getStaffToken(cookies());
   const adminToken = await getAdminToken(cookies());
-  const superAdminToken = await getSuperAdminToken(cookies());
-  const mentorToken = await getMentorToken(cookies());
+  const expertToken = await getExpertToken(cookies());
 
   return (
     <html lang="en">

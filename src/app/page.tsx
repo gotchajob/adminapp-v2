@@ -1,26 +1,26 @@
 import { redirect } from 'next/navigation';
-import { getAdminToken, getMentorToken, getSuperAdminToken } from '../package/cookies/token';
+import { getStaffToken, getExpertToken, getAdminToken } from '../package/cookies/token';
 import { cookies } from 'next/headers';
 
 export default async function Page() {
+  const staffToken = await getStaffToken(cookies());
   const adminToken = await getAdminToken(cookies());
-  const superAdminToken = await getSuperAdminToken(cookies());
-  const mentorToken = await getMentorToken(cookies());
+  const expertToken = await getExpertToken(cookies());
 
-  if (adminToken == "") {
+  if (staffToken == "") {
     redirect('/login');
   }
 
+  if (staffToken !== '') {
+    redirect('/staff/dashboard');
+  }
+
   if (adminToken !== '') {
-    redirect('/admin/dashboard');
+    redirect('/admin');
   }
 
-  if (superAdminToken !== '') {
-    redirect('/super-admin');
-  }
-
-  if (mentorToken !== '') {
-    redirect('/mentor');
+  if (expertToken !== '') {
+    redirect('/expert');
   }
 
   redirect('/login');

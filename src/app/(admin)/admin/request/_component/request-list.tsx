@@ -24,7 +24,7 @@ import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 //type import
-import { GetMentorRegister, MentorRegister } from 'package/api/expert-register-request';
+import { GetExpertRegisterRequest, ExpertRegister } from 'package/api/expert-register-request';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -34,28 +34,28 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import { LoadingButton } from '@mui/lab';
 import { enqueueSnackbar } from 'notistack';
 import { ExpertRegisterApprove } from 'package/api/expert-register-request/id/approve';
-import { AdminToken } from 'hooks/use-login';
+import { StaffToken } from 'hooks/use-login';
 import { useRouter } from 'next/navigation';
 import { ExpertRegisterReject } from 'package/api/expert-register-request/id/reject';
 
 const avatarImage = '/assets/images/users';
 
 const RegisterRequestList = () => {
-  const [mentorRegisterList, setMentorRegisterList] = useState<MentorRegister[] | null>([]);
+  const [expertRegisterList, setExpertRegisterList] = useState<ExpertRegister[] | null>([]);
 
-  const [mentorApprove, setMentorApprove] = useState<MentorRegister | null>();
+  const [expertApprove, setExpertApprove] = useState<ExpertRegister | null>();
 
-  const [mentorReject, setMentorReject] = useState<MentorRegister | null>();
+  const [expertReject, setExpertReject] = useState<ExpertRegister | null>();
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { adminToken } = AdminToken();
+  const { staffToken } = StaffToken();
 
   const router = useRouter();
 
-  const GetMentorRegisterList = async () => {
-    const data = await GetMentorRegister({ limit: 10, page: 1 }, '');
-    setMentorRegisterList(data.data.list);
+  const GetExpertRegisterList = async () => {
+    const data = await GetExpertRegisterRequest({ limit: 10, page: 1 }, '');
+    setExpertRegisterList(data.data.list);
   };
 
   const handleApprove = async () => {
@@ -63,8 +63,8 @@ const RegisterRequestList = () => {
       setIsLoading(true);
       const currentHost = window.location.hostname;
       const data = await ExpertRegisterApprove(
-        { id: mentorApprove ? mentorApprove.id : 0, url: `${currentHost}:3000/form/${mentorApprove?.email}-${mentorApprove?.id}` },
-        adminToken
+        { id: expertApprove ? expertApprove.id : 0, url: `${currentHost}:3000/form/${expertApprove?.email}-${expertApprove?.id}` },
+        staffToken
       );
       if (data.status === 'error') {
         throw new Error('');
@@ -92,7 +92,7 @@ const RegisterRequestList = () => {
   const handleReject = async () => {
     try {
       setIsLoading(true);
-      const data = await ExpertRegisterReject({ id: mentorReject ? mentorReject.id : 0, note: 'Email không hợp lệ' }, adminToken);
+      const data = await ExpertRegisterReject({ id: expertReject ? expertReject.id : 0, note: 'Email không hợp lệ' }, staffToken);
       if (data.status === 'error') {
         throw new Error('');
       }
@@ -118,19 +118,19 @@ const RegisterRequestList = () => {
     }
   };
   const handleClose = () => {
-    setMentorApprove(null);
-    setMentorReject(null);
+    setExpertApprove(null);
+    setExpertReject(null);
   };
-  const handleOpenApprove = (value: MentorRegister) => {
-    setMentorApprove(value);
+  const handleOpenApprove = (value: ExpertRegister) => {
+    setExpertApprove(value);
   };
 
-  const handleOpenReject = (value: MentorRegister) => {
-    setMentorReject(value);
+  const handleOpenReject = (value: ExpertRegister) => {
+    setExpertReject(value);
   };
 
   useEffect(() => {
-    GetMentorRegisterList();
+    GetExpertRegisterList();
   }, []);
 
   return (
@@ -146,13 +146,13 @@ const RegisterRequestList = () => {
           </TableHead>
 
           <TableBody>
-            {mentorRegisterList?.map((row, index) => (
+            {expertRegisterList?.map((row, index) => (
               <TableRow hover key={index}>
                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center" spacing={2}>
                     <Stack>
-                      <NextLink href={`/admin/mentor/profile`} passHref>
+                      <NextLink href={`/admin/expert/profile`} passHref>
                         <Avatar alt="User 1" src={`${avatarImage}/`}></Avatar>
                       </NextLink>
                     </Stack>
@@ -192,10 +192,10 @@ const RegisterRequestList = () => {
       </TableContainer>
 
       {/* Approve */}
-      <Dialog maxWidth="xs" fullWidth open={Boolean(mentorApprove)}>
+      <Dialog maxWidth="xs" fullWidth open={Boolean(expertApprove)}>
         <DialogTitle>Xác nhận gửi form đăng kí?</DialogTitle>
         <DialogContent>
-          Bạn muốn gửi form đăng kí tới email: <span style={{ fontWeight: '600', marginLeft: 10 }}>{mentorApprove?.email}</span>
+          Bạn muốn gửi form đăng kí tới email: <span style={{ fontWeight: '600', marginLeft: 10 }}>{expertApprove?.email}</span>
         </DialogContent>
         <DialogActions>
           <Button color="error" onClick={handleClose}>
@@ -208,10 +208,10 @@ const RegisterRequestList = () => {
       </Dialog>
 
       {/* Reject */}
-      <Dialog maxWidth="xs" fullWidth open={Boolean(mentorReject)}>
+      <Dialog maxWidth="xs" fullWidth open={Boolean(expertReject)}>
         <DialogTitle>Xác nhận từ chối ?</DialogTitle>
         <DialogContent>
-          Bạn muốn từ chối email: <span style={{ fontWeight: '600', marginLeft: 10 }}>{mentorReject?.email}</span>
+          Bạn muốn từ chối email: <span style={{ fontWeight: '600', marginLeft: 10 }}>{expertReject?.email}</span>
         </DialogContent>
         <DialogActions>
           <Button color="error" onClick={handleClose}>

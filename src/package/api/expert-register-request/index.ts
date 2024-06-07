@@ -53,7 +53,7 @@ export const PostExpertRegister = async (params: PostExpertRegisterRequest, acce
     const searchParams = new URLSearchParams();
     searchParams.set('email', params.email + '');
 
-    const res = await apiServerFetch('/mentor-register-request?' + searchParams.toString(), 'POST', undefined, accessToken);
+    const res = await apiServerFetch('/expert-register-request?' + searchParams.toString(), 'POST', undefined, accessToken);
     if (res.status === 'error') {
       throw new Error('');
     }

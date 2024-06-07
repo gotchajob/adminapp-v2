@@ -1,11 +1,11 @@
 
 import {
+  getStaffToken,
+  getExpertToken,
   getAdminToken,
-  getMentorToken,
-  getSuperAdminToken,
-  setAdminToken,
-  setMentorToken,
-  setSuperAdminToken
+  setStaffToken,
+  setExpertToken,
+  setAdminToken
 } from 'package/cookies/token';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -16,15 +16,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(req.url);
 
   const params = await req.json();
+  const staffToken = await getStaffToken(cookies());
+  const expertToken = await getExpertToken(cookies());
   const adminToken = await getAdminToken(cookies());
-  const mentorToken = await getMentorToken(cookies());
-  const superAdminToken = await getSuperAdminToken(cookies());
   const path = searchParams.get('path') as string;
-  const data = await response(params, adminToken, mentorToken, superAdminToken, path);
+  const data = await response(params, staffToken, expertToken, adminToken, path);
   return NextResponse.json(data);
 }
 
-const response = async (params: any, adminToken: string, mentorToken: string, superAdminToken: string, path: string) => {
+const response = async (params: any, staffToken: string, expertToken: string, adminToken: string, path: string) => {
   try {
     let res: any = {};
     switch (path) {
@@ -32,30 +32,30 @@ const response = async (params: any, adminToken: string, mentorToken: string, su
         res = await UserLogin({ email: params.email, password: params.password });
         console.log("userlogin:", res);
         if (res.data.roleId && res.data.roleId === 2) {
-          setAdminToken(res.data.token, cookies());
+          setStaffToken(res.data.token, cookies());
         } else {
           throw new Error('Sai tài khoản hoặc mật khẩu');
         }
+        break;
+      case 'staff-token':
+        res = {
+          token: staffToken
+        };
+        break;
+      case 'expert-token':
+        res = {
+          token: expertToken
+        };
         break;
       case 'admin-token':
         res = {
           token: adminToken
         };
         break;
-      case 'mentor-token':
-        res = {
-          token: mentorToken
-        };
-        break;
-      case 'super-admin-token':
-        res = {
-          token: superAdminToken
-        };
-        break;
       case 'logout':
+        setStaffToken('', cookies());
+        setExpertToken('', cookies());
         setAdminToken('', cookies());
-        setMentorToken('', cookies());
-        setSuperAdminToken('', cookies());
         res = {
           responseText: 'Đăng xuất thành công',
           status: 'success'

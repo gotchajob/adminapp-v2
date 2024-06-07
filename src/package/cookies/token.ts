@@ -12,24 +12,24 @@ export const getAdminToken = async (cookies: ReadonlyRequestCookies) => {
   return config.adminToken;
 };
 
-export const setSuperAdminToken = async (superAdminToken: string, cookies: ReadonlyRequestCookies) => {
+export const setStaffToken = async (staffToken: string, cookies: ReadonlyRequestCookies) => {
   const config = getConfig(cookies);
-  config.superAdminToken = superAdminToken;
+  config.staffToken = staffToken;
   setConfig(config, cookies);
 };
 
-export const getSuperAdminToken = async (cookies: ReadonlyRequestCookies) => {
+export const getStaffToken = async (cookies: ReadonlyRequestCookies) => {
   const config = getConfig(cookies);
-  return config.superAdminToken;
+  return config.staffToken;
 };
 
-export const setMentorToken = async (mentorToken: string, cookies: ReadonlyRequestCookies) => {
+export const setExpertToken = async (expertToken: string, cookies: ReadonlyRequestCookies) => {
   const config = getConfig(cookies);
-  config.mentorToken = mentorToken;
+  config.expertToken = expertToken;
   setConfig(config, cookies);
 };
 
-export const getMentorToken = async (cookies: ReadonlyRequestCookies) => {
+export const getExpertToken = async (cookies: ReadonlyRequestCookies) => {
   const config = getConfig(cookies);
-  return config.mentorToken;
+  return config.expertToken;
 };
