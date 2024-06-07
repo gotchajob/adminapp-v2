@@ -1,12 +1,10 @@
 'use client';
 
-import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import Iconify from 'components/iconify/iconify';
 import { useGetCategories } from 'hooks/use-get-category';
 import { useGetSkill } from 'hooks/use-get-skill';
 import { useGetSkillOptions } from 'hooks/use-get-skill-option';
@@ -17,7 +15,7 @@ import { ExpertSkillOption } from 'package/api/user/create-expert-account';
 import { useEffect, useMemo, useState } from 'react';
 import { gridSpacing } from 'store/constant';
 import { Text } from 'views/forms/input/text/text';
-import { number } from 'yup';
+import ClearIcon from '@mui/icons-material/Clear';
 
 export interface SkillOptionComponent extends SkillOption {
   certificate: string;
@@ -86,12 +84,39 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleUpdateCategory = (category: Category, index: number) => {
-    if (category) {
-      const newAddingCategories = addingCategories;
-      newAddingCategories[index] = category;
-      setAddingCategories(newAddingCategories);
+  const handleUpdateCategory = (oldCategory?: Category, newCategory?: Category) => {
+    let newAddingCategories = addingCategories;
+    let newAddingSkills: Skill[] = [];
+    let newAddingSkillOptions: SkillOptionComponent[] = [];
+    if (oldCategory && newCategory && oldCategory.id === newCategory.id) {
+      return;
     }
+    if (newCategory && newAddingCategories.find((category) => category.id === newCategory.id)) {
+      return;
+    }
+    if (oldCategory) {
+      addingSkills
+        .filter((skill) => skill.categoryId == oldCategory.id)
+        .forEach((skill) => {
+          addingSkillOptions
+            .filter((skillOption) => skillOption.skillId !== skill.id)
+            .forEach((skillOption) => newAddingSkillOptions.push({ ...skillOption }));
+        });
+      addingSkills
+        .filter((skill) => skill.categoryId !== oldCategory.id)
+        .forEach((skill) => {
+          newAddingSkills.push(skill);
+        });
+
+      newAddingCategories = newAddingCategories.filter((category) => category.id !== oldCategory.id);
+    }
+
+    if (newCategory) {
+      newAddingCategories.push(newCategory);
+    }
+    setAddingCategories(newAddingCategories);
+    setAddingSkills(newAddingSkills);
+    setAddingSkillOptions(newAddingSkillOptions);
     setIsUpdate(isUpdate + 1);
   };
 
@@ -102,12 +127,26 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleUpdateSkill = (skill: Skill, index: number) => {
-    if (skill) {
-      const newAddingSkills = addingSkills;
-      newAddingSkills[index] = skill;
-      setAddingSkills(newAddingSkills);
+  const handleUpdateSkill = (oldSkill?: Skill, newSkill?: Skill) => {
+    let newAddingSkills: Skill[] = addingSkills;
+    let newAddingSkillOptions: SkillOptionComponent[] = [];
+    if (oldSkill && newSkill && oldSkill.id === newSkill.id) {
+      return;
     }
+    if (newSkill && newAddingSkills.find((skill) => skill.id === newSkill.id)) {
+      return;
+    }
+    if (oldSkill) {
+      addingSkillOptions
+        .filter((skillOptions) => skillOptions.skillId !== oldSkill.id)
+        .forEach((skillOptions) => newAddingSkillOptions.push(skillOptions));
+      newAddingSkills = newAddingSkills.filter((skill) => skill.id !== oldSkill.id);
+    }
+    if (newSkill) {
+      newAddingSkills.push(newSkill);
+    }
+    setAddingSkills(newAddingSkills);
+    setAddingSkillOptions(newAddingSkillOptions);
     setIsUpdate(isUpdate + 1);
   };
 
@@ -118,15 +157,31 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleUpdateSkillOption = (skillOption: SkillOptionComponent, index: number) => {
-    if (skillOption) {
-      const newAddingSkillOptions = addingSkillOptions;
-      newAddingSkillOptions[index] = skillOption;
-      setAddingSkillOptions(newAddingSkillOptions);
+  const handleUpdateSkillOption = (oldSkillOption?: SkillOptionComponent, newSkillOption?: SkillOptionComponent) => {
+    let newAddingSkillOptions = addingSkillOptions;
+    if (oldSkillOption && newSkillOption && oldSkillOption.id === newSkillOption.id) {
+      return;
     }
+    if (newSkillOption && addingSkillOptions.find((skillOption) => skillOption.id === newSkillOption.id)) {
+      return;
+    }
+    if (oldSkillOption) {
+      newAddingSkillOptions = newAddingSkillOptions.filter((addingSkillOption) => addingSkillOption.id !== oldSkillOption.id);
+    }
+    if (newSkillOption) {
+      newAddingSkillOptions.push(newSkillOption);
+    }
+    setAddingSkillOptions(newAddingSkillOptions);
     setIsUpdate(isUpdate + 1);
   };
 
+  const handleUpdateCertificate = (skillOptionId: number, certificate: string) => {
+    let newAddingSkillOptions = addingSkillOptions;
+    const index = newAddingSkillOptions.findIndex((skillOption) => skillOption.id === skillOptionId);
+    newAddingSkillOptions[index].certificate = certificate;
+    setAddingSkillOptions(newAddingSkillOptions);
+    setIsUpdate(isUpdate + 1);
+  };
   return (
     <Grid container alignItems="center" spacing={gridSpacing}>
       {addingCategories.map((category, index) => {
@@ -134,7 +189,7 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
           <Grid item xs={12} key={index}>
             <Grid container spacing={3}>
               <Grid item xs={2.5}>
-                <CategoryInput categories={categories} handleUpdateCategory={handleUpdateCategory} defaultValue={category} index={index} />
+                <CategoryInput categories={categories} handleUpdateCategory={handleUpdateCategory} defaultValue={category} />
               </Grid>
               <Grid item xs={9.5}>
                 <Grid container spacing={3}>
@@ -147,7 +202,6 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
                             <SkillInput
                               defaultValue={skill}
                               handleUpdateSkill={handleUpdateSkill}
-                              index={index}
                               skills={filterSkillByCategory(skills, category.id)}
                               key={skill.id}
                             />
@@ -158,7 +212,7 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
                                 <Grid item xs={12} key={index}>
                                   <SkillOptionInput
                                     handleUpdateSkillOption={handleUpdateSkillOption}
-                                    index={index}
+                                    handleUpdateCertificate={handleUpdateCertificate}
                                     skillOptions={skillOptionsSelect}
                                     defaultValue={skillOption as SkillOptionComponent}
                                   />
@@ -220,29 +274,46 @@ const CategoryInput = ({
   categories,
   handleUpdateCategory,
   defaultValue,
-  index,
   readonly = false
 }: {
   categories: Category[];
-  index: number;
   readonly?: boolean;
   defaultValue: Category;
-  handleUpdateCategory: (category: Category, index: number) => void;
+  handleUpdateCategory: (oldCategory?: Category, newCategory?: Category) => void;
 }) => {
   return (
-    <TextField size="small" select fullWidth label="Ngành nghề" disabled={readonly} value={defaultValue.id}>
-      {categories?.map((option) => (
-        <MenuItem
-          key={option.id}
-          value={option.id}
-          onClick={() => {
-            handleUpdateCategory(option, index);
-          }}
-        >
-          {option.name}
-        </MenuItem>
-      ))}
-    </TextField>
+    <Box position={'relative'}>
+      <ClearIcon
+        onClick={() => {
+          handleUpdateCategory(defaultValue);
+        }}
+        fontSize={'small'}
+        color="error"
+        sx={{
+          position: 'absolute',
+          zIndex: 1,
+          top: -8,
+          right: -8,
+          bgcolor: 'white',
+          ':hover': { color: '#fd0100', boxShadow: '0px 1px 1px gray' },
+          cursor: 'pointer',
+          borderRadius: 10
+        }}
+      />
+      <TextField size="small" select fullWidth label="Ngành nghề" disabled={readonly} value={defaultValue.id}>
+        {categories?.map((option) => (
+          <MenuItem
+            key={option.id}
+            value={option.id}
+            onClick={() => {
+              handleUpdateCategory(defaultValue, option);
+            }}
+          >
+            {option.name}
+          </MenuItem>
+        ))}
+      </TextField>
+    </Box>
   );
 };
 
@@ -250,29 +321,46 @@ const SkillInput = ({
   skills,
   handleUpdateSkill,
   defaultValue,
-  index,
   readonly = false
 }: {
   skills: Skill[];
-  index: number;
   readonly?: boolean;
   defaultValue: Skill;
-  handleUpdateSkill: (skill: Skill, index: number) => void;
+  handleUpdateSkill: (oldSkill?: Skill, newSkill?: Skill) => void;
 }) => {
   return (
-    <TextField size="small" select fullWidth label="Kĩ năng" disabled={readonly} value={defaultValue.id}>
-      {skills?.map((option) => (
-        <MenuItem
-          key={option.id}
-          value={option.id}
-          onClick={() => {
-            handleUpdateSkill(option, index);
-          }}
-        >
-          {option.name}
-        </MenuItem>
-      ))}
-    </TextField>
+    <Box position={'relative'}>
+      <ClearIcon
+        fontSize={'small'}
+        onClick={() => {
+          handleUpdateSkill(defaultValue);
+        }}
+        color="error"
+        sx={{
+          position: 'absolute',
+          zIndex: 1,
+          top: -8,
+          right: -8,
+          bgcolor: 'white',
+          ':hover': { color: '#fd0100', boxShadow: '0px 1px 1px gray' },
+          cursor: 'pointer',
+          borderRadius: 10
+        }}
+      />
+      <TextField size="small" select fullWidth label="Kĩ năng" disabled={readonly} value={defaultValue.id}>
+        {skills?.map((option) => (
+          <MenuItem
+            key={option.id}
+            value={option.id}
+            onClick={() => {
+              handleUpdateSkill(defaultValue, option);
+            }}
+          >
+            {option.name}
+          </MenuItem>
+        ))}
+      </TextField>
+    </Box>
   );
 };
 
@@ -280,43 +368,61 @@ const SkillOptionInput = ({
   skillOptions,
   readonly = false,
   defaultValue,
-  index,
-  handleUpdateSkillOption
+  handleUpdateSkillOption,
+  handleUpdateCertificate
 }: {
   skillOptions: SkillOption[];
-  index: number;
   readonly?: boolean;
   defaultValue: SkillOptionComponent;
-  handleUpdateSkillOption: (skillOption: SkillOptionComponent, index: number) => void;
+  handleUpdateSkillOption: (oldSkillOption?: SkillOptionComponent, newSkillOption?: SkillOptionComponent) => void;
+  handleUpdateCertificate: (skillOptionId: number, certificate: string) => void;
 }) => {
-  const handleUpdateOption = (skillOption: SkillOption) => {
-    handleUpdateSkillOption({ ...skillOption, certificate: defaultValue.certificate }, index);
-  };
-  const handleUpdateCertificate = (certificate: string) => {
-    handleUpdateSkillOption({ ...defaultValue, certificate }, index);
-  };
   return (
     <Grid container>
       <Grid item xs={4}>
-        <TextField size="small" select fullWidth label="" disabled={readonly} value={defaultValue.id}>
-          {skillOptions?.map((option) => (
-            <MenuItem
-              key={option.id}
-              value={option.id}
-              onClick={(e) => {
-                handleUpdateOption(option);
-              }}
-            >
-              {option.name}
-            </MenuItem>
-          ))}
-        </TextField>
+        <Box position={'relative'}>
+          <ClearIcon
+            fontSize={'small'}
+            color="error"
+            onClick={() => {
+              handleUpdateSkillOption(defaultValue);
+            }}
+            sx={{
+              position: 'absolute',
+              zIndex: 1,
+              top: -8,
+              right: -8,
+              bgcolor: 'white',
+              ':hover': { color: '#fd0100', boxShadow: '0px 1px 1px gray' },
+              cursor: 'pointer',
+              borderRadius: 10
+            }}
+          />
+          <TextField size="small" select fullWidth label="" disabled={readonly} value={defaultValue.id}>
+            {skillOptions?.map((option) => (
+              <MenuItem
+                key={option.id}
+                value={option.id}
+                onClick={(e) => {
+                  handleUpdateSkillOption(defaultValue, { ...option, certificate: '' });
+                }}
+              >
+                {option.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
       </Grid>
       <Grid item xs={0.5} justifyContent={'center'} alignItems={'center'} display={'flex'}>
         <Text fontWeight={'bold'}>:</Text>
       </Grid>
       <Grid item xs={7.5}>
-        <TextField size="small" fullWidth value={defaultValue.certificate} onChange={(e) => handleUpdateCertificate(e.target.value)} />
+        <TextField
+          size="small"
+          fullWidth
+          value={defaultValue.certificate}
+          onChange={(e) => handleUpdateCertificate(defaultValue.id, e.target.value)}
+        />
       </Grid>
     </Grid>
   );

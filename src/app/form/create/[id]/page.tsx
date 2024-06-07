@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 
 // material-ui
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,12 +12,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 // project imports
 import Autocomplete from '@mui/material/Autocomplete';
-import useAuth from 'hooks/useAuth';
 import { enqueueSnackbar } from 'notistack';
 import { gridSpacing } from 'store/constant';
-import MainCard from 'ui-component/cards/MainCard';
 import SubCard from 'ui-component/cards/SubCard';
-import AnimateButton from 'ui-component/extended/AnimateButton';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 
@@ -35,11 +30,11 @@ import Box from '@mui/material/Box';
 import { UploadImageButton } from 'components/common/button/upload-button';
 import { useRouter } from 'next/navigation';
 import { ExpertSkillOption, PostCreateExpertAccount } from 'package/api/user/create-expert-account';
-import { AddressData, useGetCountry, useGetDistrict, useGetProvince, useGetWard } from 'hooks/use-address';
+import { useGetCountry, useGetDistrict, useGetProvince, useGetWard } from 'hooks/use-address';
 import { formatDate } from 'package/util';
-import { DialogActions } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { SkillForm } from './_components/skill';
+import DialogActions from '@mui/material/DialogActions';
 
 const logo = '/assets/images/logo/logo.png';
 
@@ -83,26 +78,53 @@ export default function Page({ params }: { params: { id: string } }) {
     facebookUrl: '',
     twitterUrl: '',
     linkedInUrl: '',
-    yearExperience: 0
+    yearExperience: 1
   };
 
-  const formSchema = yup.object().shape({});
+  const formSchema = yup.object().shape({
+    email: yup.string().email('Email không đúng định dạng').required('Thông tin bắt buộc'),
+    firstName: yup.string().required('Thông tin bắt buộc'),
+    lastName: yup.string().required('Thông tin bắt buộc'),
+    phone: yup.string().required('Thông tin bắt buộc').min(10, 'Ít nhất 10 kí tự'),
+    street: yup.string().required('Thông tin bắt buộc'),
+    ward: yup.string().required('Thông tin bắt buộc'),
+    district: yup.string().required('Thông tin bắt buộc'),
+    province: yup.string().required('Thông tin bắt buộc'),
+    birthDate: yup.string().required('Thông tin bắt buộc'),
+    bio: yup.string().required('Thông tin bắt buộc'),
+    yearExperience: yup.number().min(1).required('Thông tin bắt buộc')
+  });
 
   const handleFormSubmit = async (value: typeof initialValues) => {
     try {
       setIsLoading(true);
-      const res = await PostCreateExpertAccount({
-        ...value,
-        portfolioUrl: '',
-        address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
-        education: education.join('[]'),
-        nationSupport: nation,
-        expertSKillOptionList: expertSkillOptionList
-      });
-      if (res.status === 'error') {
-        throw new Error(res.responseText);
+      if (nation.length < 1) {
+        throw new Error('Vui lòng thêm ít nhất 1 quốc gia');
       }
-      enqueueSnackbar(res.responseText, { variant: 'success' });
+      if (expertSkillOptionList.length < 1) {
+        throw new Error("Vui lòng thêm ít nhất 1 kĩ năng")
+      }
+        console.log({
+          ...value,
+          portfolioUrl: '',
+          address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
+          education: education.join('[]'),
+          nationSupport: nation,
+          expertSKillOptionList: expertSkillOptionList
+        });
+
+      // const res = await PostCreateExpertAccount({
+      //   ...value,
+      //   portfolioUrl: '',
+      //   address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
+      //   education: education.join('[]'),
+      //   nationSupport: nation,
+      //   expertSKillOptionList: expertSkillOptionList
+      // });
+      // if (res.status === 'error') {
+      //   throw new Error(res.responseText);
+      // }
+      // enqueueSnackbar(res.responseText, { variant: 'success' });
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: 'error' });
     } finally {
@@ -110,7 +132,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   };
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue, setErrors } = useFormik({
     initialValues,
     onSubmit: handleFormSubmit,
     validationSchema: formSchema
@@ -173,14 +195,18 @@ export default function Page({ params }: { params: { id: string } }) {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       slotProps={{ textField: { fullWidth: true } }}
+                      onError={() => {
+                        setErrors({ birthDate: 'Thông tin không đúng định dạng' });
+                      }}
                       format="dd/MM/yyyy"
                       label="Ngày sinh"
                       onChange={(newValue: Date | null) => {
                         try {
-                          setFieldValue('birthDay', formatDate(newValue?.toISOString() || '', 'dd/MM/yyyy'));
-                        } catch (error) { }
+                          setFieldValue('birthDate', formatDate(newValue?.toISOString() || '', 'dd/MM/yyyy'));
+                        } catch (error) {}
                       }}
                     />
+                    {errors.birthDate ? errorText(errors.birthDate as string) : null}
                   </LocalizationProvider>
                 </Grid>
                 <Grid item lg={6}>
@@ -434,6 +460,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     error={!!touched.yearExperience && !!errors.yearExperience}
                     helperText={(touched.yearExperience && errors.yearExperience) as string}
                   />
+                  {nation.length < 1 ? errorText('w', true) : null}
                 </Grid>
                 <Grid item lg={6} zeroMinWidth>
                   <Autocomplete
@@ -447,6 +474,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       setNation(v);
                     }}
                   />
+                  {nation.length < 1 ? errorText('Ít nhất 1 quốc gia') : null}
                 </Grid>
                 <Grid item lg={12} zeroMinWidth>
                   <SkillForm setExpertSkillOptionList={setExpertSkillOptionList} />
@@ -467,3 +495,22 @@ export default function Page({ params }: { params: { id: string } }) {
     </Container>
   );
 }
+
+const errorText = (text: string, hide?: boolean) => {
+  return (
+    <Typography
+      sx={{
+        fontWeight: 400,
+        fontSize: '0.75rem',
+        lineHeight: 1.66,
+        marginTop: '3px',
+        marginTight: '14px',
+        marginBottom: 0,
+        marginLeft: '14px',
+        color: hide ? 'white' : '#F44336'
+      }}
+    >
+      {text}
+    </Typography>
+  );
+};

@@ -44,12 +44,10 @@ const UserPage = () => {
             <Grid item>
               <Typography variant="h3">Expert Requests</Typography>
             </Grid>
-            <Grid item>
-            </Grid>
+            <Grid item></Grid>
           </Grid>
         }
       >
-
         {/* Data Table */}
         <ExpertRequestList />
         <Grid item xs={12} sx={{ mt: 1.75 }}>

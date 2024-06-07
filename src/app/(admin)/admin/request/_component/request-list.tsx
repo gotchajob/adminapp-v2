@@ -47,6 +47,7 @@ const RegisterRequestList = () => {
 
   const [expertReject, setExpertReject] = useState<ExpertRegister | null>();
 
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { staffToken } = StaffToken();
@@ -56,6 +57,7 @@ const RegisterRequestList = () => {
   const GetExpertRegisterList = async () => {
     const data = await GetExpertRegisterRequest({ limit: 10, page: 1 }, '');
     setExpertRegisterList(data.data.list);
+
   };
 
   const handleApprove = async () => {
@@ -65,6 +67,7 @@ const RegisterRequestList = () => {
       const data = await ExpertRegisterApprove(
         { id: expertApprove ? expertApprove.id : 0, url: `${currentHost}:3000/form/${expertApprove?.email}-${expertApprove?.id}` },
         staffToken
+
       );
       if (data.status === 'error') {
         throw new Error('');
@@ -121,12 +124,13 @@ const RegisterRequestList = () => {
     setExpertApprove(null);
     setExpertReject(null);
   };
-  const handleOpenApprove = (value: ExpertRegister) => {
+
     setExpertApprove(value);
   };
 
   const handleOpenReject = (value: ExpertRegister) => {
     setExpertReject(value);
+
   };
 
   useEffect(() => {
