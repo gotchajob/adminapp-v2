@@ -98,6 +98,7 @@ const ExpertRequestList = () => {
           setApproveDialog((prev) => !prev);
           showSnackbar(`Kích hoạt tài khoản ${expert.email} thành công`, 'success');
         } else {
+          setApproveDialog((prev) => !prev);
           showSnackbar(`Kích hoạt tài khoản ${expert.email} thất bại`, 'error');
         }
       } catch (error) {
@@ -116,6 +117,7 @@ const ExpertRequestList = () => {
           setApproveDialog((prev) => !prev);
           showSnackbar(`Từ chối tài khoản ${expert.email} thành công`, 'success');
         } else {
+          setApproveDialog((prev) => !prev);
           showSnackbar(`Từ chối tài khoản ${expert.email} thất bại`, 'error');
         }
       } catch (error) {

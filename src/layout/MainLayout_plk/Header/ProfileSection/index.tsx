@@ -51,7 +51,7 @@ const ProfileSection = () => {
   const theme = useTheme();
   const { borderRadius } = useConfig();
   // const navigate = useNavigate();
-const router = useRouter()
+  const router = useRouter()
   const [sdm, setSdm] = useState(true);
   const [value, setValue] = useState('');
   const [notification, setNotification] = useState(false);
@@ -188,7 +188,7 @@ const router = useRouter()
                             {user?.name}
                           </Typography>
                         </Stack>
-                        <Typography variant="subtitle2">Gotchajob Admin</Typography>
+                        <Typography variant="subtitle2">Gotchajob Staff</Typography>
                       </Stack>
                     </Box>
                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>

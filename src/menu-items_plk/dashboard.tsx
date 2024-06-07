@@ -11,7 +11,7 @@ import { NavItemType } from 'types';
 
 const dashboard: NavItemType = {
   id: 'dashboard',
-  title: <FormattedMessage id="admin CMS" />,
+  title: <FormattedMessage id="Staff CMS" />,
   icon: IconDashboard,
   type: 'group',
   children: [
@@ -68,22 +68,6 @@ const dashboard: NavItemType = {
         }
       ]
     }
-    // {
-    //   id: 'advisory',
-    //   title: <FormattedMessage id="Advisory" />,
-    //   type: 'item',
-    //   url: '/admin/advisory',
-    //   icon: icons.IconMessages,
-    //   breadcrumbs: false
-    // },
-    // {
-    //   id: 'notification',
-    //   title: <FormattedMessage id="Notification" />,
-    //   type: 'item',
-    //   url: '/admin/notification',
-    //   icon: icons.IconBellRinging,
-    //   breadcrumbs: false
-    // },
   ]
 };
 
