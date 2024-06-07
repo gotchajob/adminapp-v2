@@ -18,7 +18,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
-
 // project imports
 import { StyledLink } from 'components/common/link/styled-link';
 import { dispatch } from 'store';
@@ -28,15 +27,19 @@ import { openSnackbar } from 'store/slices/snackbar';
 
 // assets
 import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
-import CloseIcon from '@mui/icons-material/Close';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { format, parseISO } from 'date-fns';
-import { useSearchParamsNavigation } from 'hooks/use-get-params';
 import { ExpertRegister, GetExpertRegisterRequest } from 'package/api/expert-register-request';
 import { PatchApproveExpert } from 'package/api/user/id/approve-expert';
 import { PatchRejectExpert } from 'package/api/user/id/reject-expert';
-import { AdminToken } from 'hooks/use-login';
+import { useGetUserVerifyExpert } from 'hooks/use-get-user-verify-expert';
+import Avatar from 'ui-component/extended/Avatar';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import { UserVerifyExpert } from 'package/api/user/verify-expert';
+import { useRouter } from 'next/navigation';
 
 const avatarImage = '/assets/images/experts';
 
@@ -45,85 +48,51 @@ const avatarImage = '/assets/images/experts';
 const ExpertRequestList = () => {
   const theme = useTheme();
 
-  //expert list state
-  const [expertRqList, setExpertRqList] = useState<ExpertRegister[] | undefined>([]);
+  const { verifyExpert } = useGetUserVerifyExpert({ limit: 10, page: 1 });
 
+  const [refresh, setRefresh] = useState(0);
   //expert selection state
-  const [expert, setExpert] = useState<ExpertRegister | undefined>(undefined);
-
-  //active dialog state
-  const [approveDialog, setApproveDialog] = useState<boolean>(false);
-
-  //reject dialog state
-  const [rejectDialog, setRejectDialog] = useState<boolean>(false);
-
-  //get admín token
-  const { adminToken } = AdminToken();
-
-  //route hook
-  const { push } = useSearchParamsNavigation();
-
-  //Fetch API get uset list
-  const FetchExpertList = async () => {
-    const data = await GetExpertRegisterRequest({ page: 1, limit: 10 }, "");
-    if (data) {
-      setExpertRqList(data.data.list);
-    }
-  }
+  const [expertApprove, setExpertApprove] = useState<UserVerifyExpert | null>(null);
+  const [expertReject, setExpertReject] = useState<UserVerifyExpert | null>(null);
 
   //Approve expert handle
-  const approveExpertHandle = (id: number) => {
-    if (id) {
-      const filterExpertById = expertRqList?.find((expert) => expert.id === id);
-      setExpert(filterExpertById);
-    }
-    setApproveDialog((prev) => !prev);
-  }
+  const openExpertApprove = (expert: UserVerifyExpert) => {
+    setExpertApprove(expert);
+  };
 
   //Reject expert handle
-  const rejectExpertHandle = (id: number) => {
-    if (id) {
-      const filterExpertById = expertRqList?.find((expert) => expert.id === id);
-      setExpert(filterExpertById);
-    }
-    setRejectDialog((prev) => !prev);
-  }
+  const openExpertReject = (expert: UserVerifyExpert) => {
+    setExpertReject(expert);
+  };
 
   //Approve handle
-  const approveHandle = async (expert?: ExpertRegister) => {
-    if (expert) {
-      try {
-        const action = await PatchApproveExpert({ id: expert.id }, '');
-        if (action.status !== "error") {
-          setApproveDialog((prev) => !prev);
-          showSnackbar(`Kích hoạt tài khoản ${expert.email} thành công`, 'success');
-        } else {
-          showSnackbar(`Kích hoạt tài khoản ${expert.email} thất bại`, 'error');
-        }
-      } catch (error) {
-        console.log(error);
-        showSnackbar(`Kích hoạt tài khoản ${expert.email} thất bại`, 'error');
+  const approveHandle = async () => {
+    try {
+      const action = await PatchApproveExpert({ id: expertApprove ? expertApprove.userId : 0 }, '');
+      if (action.status === 'error') {
+        throw new Error('');
       }
+      showSnackbar(`Kích hoạt tài khoản thành công`, 'success');
+    } catch (error) {
+      showSnackbar(`Kích hoạt tài khoản thất bại`, 'error');
     }
-  }
+  };
 
   //Reject handle
-  const rejectHandle = async (expert?: ExpertRegister) => {
-    if (expert) {
-      try {
-        const action = await PatchRejectExpert({ id: expert.id }, '');
-        if (action.status !== "error") {
-          setApproveDialog((prev) => !prev);
-          showSnackbar(`Từ chối tài khoản ${expert.email} thành công`, 'success');
-        } else {
-          showSnackbar(`Từ chối tài khoản ${expert.email} thất bại`, 'error');
-        }
-      } catch (error) {
-        console.log(error);
-        showSnackbar(`Từ chối tài khoản ${expert.email} thất bại`, 'error');
+  const rejectHandle = async () => {
+    try {
+      const action = await PatchRejectExpert({ id: expertReject ? expertReject.userId : 0 }, '');
+      if (action.status === 'error') {
+        throw new Error('');
       }
+      showSnackbar(`Từ chối tài khoản thành công`, 'success');
+    } catch (error) {
+      console.log(error);
+      showSnackbar(`Từ chối tài khoản thất bại`, 'error');
+    } finally {
+      setExpertReject(null)
     }
-  }
+  };
 
   //snackBar
   const showSnackbar = (message: string, variant: string) => {
@@ -139,17 +108,7 @@ const ExpertRequestList = () => {
         close: false
       })
     );
-  }
-
-  //formatDate
-  const formatDate = (date: string, pattern: string) => {
-    return date ? format(parseISO(date), pattern) : '';
   };
-
-  //expert Effect
-  useEffect(() => {
-    FetchExpertList();
-  }, []);
 
   return (
     <TableContainer>
@@ -157,33 +116,48 @@ const ExpertRequestList = () => {
         <TableHead>
           <TableRow>
             <TableCell sx={{ pl: 3 }}>#</TableCell>
+            <TableCell>Tên</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell>Ngày yêu cầu</TableCell>
+            <TableCell>Số điện thoại</TableCell>
+            <TableCell>Địa chỉ</TableCell>
             <TableCell align="center" sx={{ pr: 3 }}>
               Actions
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {expertRqList?.map((expert, index) => (
+          {verifyExpert?.map((row, index) => (
             <TableRow hover key={index}>
-              <TableCell sx={{ pl: 3 }}>{expert.id}</TableCell>
+              <TableCell sx={{ pl: 3 }}>{row.expertId}</TableCell>
               <TableCell>
-                <Typography variant="subtitle2" noWrap>
-                  <StyledLink href={`/admin/expert-request/expert-skill-option/${expert.id}`}>
-                    {expert.email}
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <StyledLink href={`/admin/expert-request/expert-skill-option/${row.expertId}`} passHref>
+                    <Avatar alt="User 1" src={row.avatar} />
                   </StyledLink>
-                </Typography>
+                  <Stack direction="row" alignItems="center" spacing={0.25}>
+                    <Typography variant="subtitle1">{row.lastName + ' ' + row.firstName}</Typography>
+                  </Stack>
+                </Stack>
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" noWrap>
-                  {formatDate(expert.createdAt, "dd/MM/yyyy")}
+                  {row.email}
                 </Typography>
               </TableCell>
+              <TableCell>{row.phone}</TableCell>
+              <TableCell>{row.birthDate}</TableCell>
+
               <TableCell align="center" sx={{ pr: 3 }}>
                 <Stack direction="row" justifyContent="center" alignItems="center">
                   <Tooltip placement="top" title="Chấp nhận">
-                    <IconButton color="primary" aria-label="delete" size="large" onClick={() => { approveExpertHandle(expert.id) }}>
+                    <IconButton
+                      color="primary"
+                      aria-label="delete"
+                      size="large"
+                      onClick={() => {
+                        openExpertApprove(row);
+                      }}
+                    >
                       <LockOpenIcon sx={{ fontSize: '1.1rem' }} />
                     </IconButton>
                   </Tooltip>
@@ -196,7 +170,9 @@ const ExpertRequestList = () => {
                         '&:hover ': { bgcolor: 'orange.light' }
                       }}
                       size="large"
-                      onClick={() => { rejectExpertHandle(expert.id) }}
+                      onClick={() => {
+                        openExpertReject(row);
+                      }}
                     >
                       <BlockTwoToneIcon sx={{ fontSize: '1.1rem' }} />
                     </IconButton>
@@ -209,58 +185,37 @@ const ExpertRequestList = () => {
       </Table>
 
       {/* Approve dialog */}
-      <Dialog
-        open={approveDialog}
-        onClose={() => setApproveDialog((prev) => !prev)}
-        maxWidth="xs"
-        fullWidth
-      >
-        <DialogTitle id="alert-dialog-title">
-          Xác nhận phương thức
-          <IconButton size="large" aria-label="close modal" onClick={() => setApproveDialog((prev) => !prev)} style={{ position: 'absolute', right: 8, top: 8 }}>
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </DialogTitle>
+      <Dialog open={Boolean(expertApprove)} maxWidth="xs" fullWidth>
+        <DialogTitle id="alert-dialog-title">Xác nhận phương thức</DialogTitle>
         <DialogContent>
-          <Typography variant="body1">Bạn muốn kích hoạt tài khoản với email : {expert?.email}</Typography>
+          <Typography variant="body1">Bạn muốn kích hoạt tài khoản với email : {expertApprove ? expertApprove.email : ''}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button color='error' type="button" onClick={() => setRejectDialog((prev) => !prev)}>
+          <Button color="error" type="button" onClick={() => setExpertApprove(null)}>
             Hủy
           </Button>
-          <Button type="button" onClick={() => { approveHandle(expert) }}>
+          <Button type="button" onClick={approveHandle}>
             Chấp nhận
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Reject dialog */}
-      <Dialog
-        open={rejectDialog}
-        onClose={() => setRejectDialog((prev) => !prev)}
-        maxWidth="xs"
-        fullWidth
-      >
-        <DialogTitle id="alert-dialog-title">
-          Xác nhận phương thức
-          <IconButton size="large" aria-label="close modal" onClick={() => setRejectDialog((prev) => !prev)} style={{ position: 'absolute', right: 8, top: 8 }}>
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </DialogTitle>
+      <Dialog open={Boolean(expertReject)} maxWidth="xs" fullWidth>
+        <DialogTitle id="alert-dialog-title">Xác nhận phương thức</DialogTitle>
         <DialogContent>
-          <Typography variant="body1">Bạn muốn từ chối yêu cầu tài khoản với email : {expert?.email}</Typography>
+          <Typography variant="body1">Bạn muốn từ chối yêu cầu tài khoản với email : {expertReject ? expertReject.email : ''}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button color='error' type="button" onClick={() => setRejectDialog((prev) => !prev)}>
+          <Button color="error" type="button" onClick={() => setExpertReject(null)}>
             Hủy
           </Button>
-          <Button type="button" onClick={() => { rejectHandle(expert) }}>
+          <Button type="button" onClick={rejectHandle}>
             Chấp nhận
           </Button>
         </DialogActions>
       </Dialog>
-
-    </TableContainer >
+    </TableContainer>
   );
 };
 

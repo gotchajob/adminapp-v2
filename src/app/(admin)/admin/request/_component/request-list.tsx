@@ -24,7 +24,7 @@ import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 //type import
-import { GetMentorRegister, MentorRegister } from 'package/api/expert-register-request';
+import { GetExpertRegisterRequest, ExpertRegister } from 'package/api/expert-register-request';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -41,11 +41,11 @@ import { ExpertRegisterReject } from 'package/api/expert-register-request/id/rej
 const avatarImage = '/assets/images/users';
 
 const RegisterRequestList = () => {
-  const [mentorRegisterList, setMentorRegisterList] = useState<MentorRegister[] | null>([]);
+  const [mentorRegisterList, setMentorRegisterList] = useState<ExpertRegister[] | null>([]);
 
-  const [mentorApprove, setMentorApprove] = useState<MentorRegister | null>();
+  const [mentorApprove, setMentorApprove] = useState<ExpertRegister | null>();
 
-  const [mentorReject, setMentorReject] = useState<MentorRegister | null>();
+  const [mentorReject, setMentorReject] = useState<ExpertRegister | null>();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,7 +54,7 @@ const RegisterRequestList = () => {
   const router = useRouter();
 
   const GetMentorRegisterList = async () => {
-    const data = await GetMentorRegister({ limit: 10, page: 1 }, '');
+    const data = await GetExpertRegisterRequest({ limit: 10, page: 1 }, '');
     setMentorRegisterList(data.data.list);
   };
 
@@ -63,7 +63,7 @@ const RegisterRequestList = () => {
       setIsLoading(true);
       const currentHost = window.location.hostname;
       const data = await ExpertRegisterApprove(
-        { id: mentorApprove ? mentorApprove.id : 0, url: `${currentHost}:3000/form/${mentorApprove?.email}-${mentorApprove?.id}` },
+        { id: mentorApprove ? mentorApprove.id : 0, url: `${currentHost}:3000/form/create/${mentorApprove?.email}-${mentorApprove?.id}` },
         adminToken
       );
       if (data.status === 'error') {
@@ -121,11 +121,11 @@ const RegisterRequestList = () => {
     setMentorApprove(null);
     setMentorReject(null);
   };
-  const handleOpenApprove = (value: MentorRegister) => {
+  const handleOpenApprove = (value: ExpertRegister) => {
     setMentorApprove(value);
   };
 
-  const handleOpenReject = (value: MentorRegister) => {
+  const handleOpenReject = (value: ExpertRegister) => {
     setMentorReject(value);
   };
 
