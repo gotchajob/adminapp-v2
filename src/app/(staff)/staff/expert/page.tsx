@@ -45,7 +45,7 @@ const ExpertPage = () => {
                 title={
                     <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
                         <Grid item>
-                            <Typography variant="h3">Expert List</Typography>
+                            <Typography variant="h3">Danh sách chuyên gia</Typography>
                         </Grid>
                     </Grid>
                 }
