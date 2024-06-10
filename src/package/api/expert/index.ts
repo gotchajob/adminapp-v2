@@ -5,7 +5,7 @@ export interface getExpertListRequest {
   page: number;
   limit: number;
   sortBy?: string;
-  search?: string;
+  search?: string[];
 }
 
 export interface getExpertListResponse {
@@ -42,7 +42,9 @@ export const getExpertList = async (params: getExpertListRequest, accessToken: s
     searchParams.set('page', params.page + '');
     searchParams.set('limit', params.limit + '');
     if (params.search) {
-      searchParams.set('search', params.search + '');
+      params.search.forEach((value) => {
+        searchParams.set('search', value + '');
+      })
     }
     if (params.sortBy) {
       searchParams.set('sortBy', params.sortBy + '');
