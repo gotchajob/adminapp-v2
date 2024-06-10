@@ -172,7 +172,7 @@ const ExpertRequestList = () => {
                       </Typography>
                     </TableCell>
                     <TableCell>{row.phone}</TableCell>
-                    <TableCell>{formatDate(`${row.birthDate}`, 'dd-MM-yyyy')}</TableCell>
+                    <TableCell>{formatDate(row.birthDate, 'dd-MM-yyyy')}</TableCell>
                     <TableCell align="center" sx={{ pr: 3 }}>
                       <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip placement="top" title="Chấp nhận">

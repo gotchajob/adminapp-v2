@@ -42,8 +42,17 @@ import PinDropTwoToneIcon from '@mui/icons-material/PinDropTwoTone';
 import PublicTwoToneIcon from '@mui/icons-material/PublicTwoTone';
 import { IconEdit } from '@tabler/icons-react';
 import { useGetExpertSkillOptions } from 'hooks/use-get-expert-skill-option';
+import { Stack } from '@mui/material';
+import { formatDate } from 'package/util';
 
 // ==============================|| PROFILE 2 - Expert PROFILE ||============================== //
+
+export interface EducationData {
+  time: string;
+  timeDes: string;
+  title: string;
+  titleDes: string;
+}
 
 // progress
 function LinearProgressWithLabel({ value, ...others }: LinearProgressProps) {
@@ -87,7 +96,13 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
     console.log("Expert:", expert);
     console.log("Nation:", nation);
     console.log("Skill Options :", ExperSkillOptions);
-  }, [])
+  }, [nation])
+
+  const covertNationString = () => {
+    const array: string[] = [];
+    nation?.forEach((value) => array.push(value.nation));
+    return array?.join(", ")
+  }
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -106,13 +121,41 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
                 </Grid>
               }
             >
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="body2">
-                    bio{expert.bio}
-                  </Typography>
+              <Stack spacing={2}>
+                <Grid container item xs={12} spacing={1}>
+                  <Grid item xs={12}>
+                    <Typography variant="h4">About</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="body2">
+                      {expert.bio}
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
+
+                <Grid container item xs={12} spacing={1}>
+                  <Grid item xs={12}>
+                    <Typography variant="h4">Quốc gia hỗ trợ</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="body2">
+                      {covertNationString()}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid container item xs={12} spacing={1}>
+                  <Grid item xs={12}>
+                    <Typography variant="h4">Năm kinh nghiệm</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="body2">
+                      {expert.yearExperience} năm
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Stack>
+
               <Divider sx={{ margin: '16px 0' }} />
               <Grid
                 container
@@ -182,14 +225,14 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
                         >
                           <TableBody>
                             <TableRow>
-                              <TableCell variant="head">Địa chỉ</TableCell>
+                              <TableCell variant="head" >Địa chỉ</TableCell>
                               <TableCell>:</TableCell>
                               <TableCell> {expert.address}</TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell variant="head">Ngày sinh</TableCell>
+                              <TableCell variant="head" sx={{ minWidth: 150 }}>Ngày sinh</TableCell>
                               <TableCell>:</TableCell>
-                              <TableCell> {expert.birthDate}</TableCell>
+                              <TableCell> {formatDate(expert.birthDate, "dd/MM/yyyy")}</TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell variant="head">Liên lạc</TableCell>
@@ -211,48 +254,19 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
               <Grid item xs={12}>
                 <SubCard title="Thời gian">
                   <Grid container spacing={1}>
-                    <Grid item xs={12}>
+                    {JSON.parse(expert.education).map((row: EducationData, index) =>
+                    (<Grid item xs={12} key={index}>
                       <Grid container>
                         <Grid item xs={12} sm={4}>
-                          <Typography variant="subtitle1">2014-2017</Typography>
-                          <Typography variant="subtitle2">Master Degree</Typography>
+                          <Typography variant="subtitle1">{row.time}</Typography>
+                          <Typography variant="subtitle2">{row.timeDes}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={8}>
-                          <Typography variant="subtitle1">Master Degree in Computer Application</Typography>
-                          <Typography variant="subtitle2">University of Oxford, England</Typography>
+                          <Typography variant="subtitle1">{row.title}</Typography>
+                          <Typography variant="subtitle2">{row.titleDes}</Typography>
                         </Grid>
                       </Grid>
-                    </Grid>
-                    <Grid item xs={12} sx={{ display: { xs: 'block', sm: 'none' } }}>
-                      <Divider />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid container>
-                        <Grid item xs={12} sm={4}>
-                          <Typography variant="subtitle1">2011-2013</Typography>
-                          <Typography variant="subtitle2">Bachelor</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={8}>
-                          <Typography variant="subtitle1">Bachelor Degree in Computer Engineering</Typography>
-                          <Typography variant="subtitle2">Imperial College London</Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12} sx={{ display: { xs: 'block', sm: 'none' } }}>
-                      <Divider />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid container>
-                        <Grid item xs={12} sm={4}>
-                          <Typography variant="subtitle1">2009-2011</Typography>
-                          <Typography variant="subtitle2">School</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={8}>
-                          <Typography variant="subtitle1">Higher Secondary Education</Typography>
-                          <Typography variant="subtitle2">School of London, England</Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                    </Grid>))}
                   </Grid>
                 </SubCard>
               </Grid>

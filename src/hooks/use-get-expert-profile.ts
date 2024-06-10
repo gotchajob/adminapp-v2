@@ -1,5 +1,5 @@
 import { Expert } from 'package/api/expert';
-import { GetExpertNation, GetExpertNationSupportRequest } from 'package/api/expert-nation-support';
+import { ExpertNation, GetExpertNation, GetExpertNationSupportRequest } from 'package/api/expert-nation-support';
 import { ExpertSkillOption, ExpertSkillOptionRq, GetExpertSkillOption } from 'package/api/expert-skill-option';
 import { GetExpert, GetExpertRequest } from 'package/api/expert/id';
 import { useEffect, useState } from 'react';
@@ -59,7 +59,7 @@ export function useGetExpertSkillOption(params: ExpertSkillOptionRq) {
 }
 
 export function useGetExpertNatonSupport(params: GetExpertNationSupportRequest) {
-  const [nation, setNation] = useState<[] | undefined>(undefined);
+  const [nation, setNation] = useState<ExpertNation[]>([]);
 
   const fetchExpertProfile = async () => {
     try {

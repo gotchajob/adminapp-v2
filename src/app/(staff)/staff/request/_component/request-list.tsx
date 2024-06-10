@@ -58,10 +58,8 @@ const RegisterRequestList = () => {
 
   const { staffToken } = StaffToken();
 
-  const params = { limit: 100, page: 1 };
-
   //Get Expert Register Request Hook
-  const { expertRegisterRequest, loading } = useGeteExpertRegisterRequest(params, refreshTime);
+  const { expertRegisterRequest, loading } = useGeteExpertRegisterRequest({ limit: 10, page: 1 }, refreshTime);
 
   //Approve expert handle
   const handleOpenApprove = (value: any) => {
