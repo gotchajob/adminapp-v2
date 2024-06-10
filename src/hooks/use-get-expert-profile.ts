@@ -59,7 +59,7 @@ export function useGetExpertSkillOption(params: ExpertSkillOptionRq) {
 }
 
 export function useGetExpertNatonSupport(params: GetExpertNationSupportRequest) {
-  const [nation, setNation] = useState<ExpertNation[] >([]);
+  const [nation, setNation] = useState<ExpertNation[]>([]);
 
   const fetchExpertProfile = async () => {
     try {
