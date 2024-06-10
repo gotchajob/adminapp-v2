@@ -114,7 +114,8 @@ const ExpertProfile = () => {
                         ))}
                     </Tabs>
                     <TabPanel value={value} index={0}>
-                        <Profile></Profile>
+                        {/* <Profile></Profile> */}
+                        <ExpertProfile></ExpertProfile>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         {/* <Billing /> */}
