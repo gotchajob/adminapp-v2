@@ -35,6 +35,7 @@ import { formatDate } from 'package/util';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { SkillForm } from './_components/skill';
 import DialogActions from '@mui/material/DialogActions';
+import { CheckMail } from 'package/api/user/check-mail/email';
 
 const logo = '/assets/images/logo/logo.png';
 
@@ -102,17 +103,8 @@ export default function Page({ params }: { params: { id: string } }) {
         throw new Error('Vui lòng thêm ít nhất 1 quốc gia');
       }
       if (expertSkillOptionList.length < 1) {
-        throw new Error("Vui lòng thêm ít nhất 1 kĩ năng")
+        throw new Error('Vui lòng thêm ít nhất 1 kĩ năng');
       }
-      // console.log({
-      //   ...value,
-      //   portfolioUrl: '',
-      //   address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
-      //   education: education.join('[]'),
-      //   nationSupport: nation,
-      //   expertSKillOptionList: expertSkillOptionList
-      // });
-
       const res = await PostCreateExpertAccount({
         ...value,
         portfolioUrl: '',
@@ -138,6 +130,14 @@ export default function Page({ params }: { params: { id: string } }) {
     validationSchema: formSchema
   });
 
+  const handleChangeEmail = async (email: string) => {
+    try {
+      const res = await CheckMail({ email });
+      if (res.status === 'success') {
+        setErrors({ email: 'Email đã được đăng kí' });
+      }
+    } catch (error) {}
+  };
   const handleChangeEducation = (e: string, index: number) => {
     const newEducation = education;
     newEducation[index] = e;
@@ -357,9 +357,20 @@ export default function Page({ params }: { params: { id: string } }) {
                         label="Email"
                         name="email"
                         fullWidth
+                        autoComplete='off'
                         value={values.email}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
+                        onBlur={(e) => {
+                          handleBlur(e);
+                          if (!errors.email) {
+                            handleChangeEmail(values.email);
+                          }
+                        }}
+                        onChange={(e) => {
+                          handleChange(e);
+                          if (!errors.email) {
+                            handleChangeEmail(values.email);
+                          }
+                        }}
                         error={!!touched.email && !!errors.email}
                         helperText={(touched.email && errors.email) as string}
                       />

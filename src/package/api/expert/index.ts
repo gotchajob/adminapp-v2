@@ -1,4 +1,4 @@
-import { accessToken } from 'mapbox-gl';
+
 import { apiServerFetch, errorSystem } from '../api-fetch';
 
 export interface getExpertListRequest {
@@ -56,3 +56,4 @@ export const getExpertList = async (params: getExpertListRequest, accessToken: s
     return errorSystem('Không thể lấy thông tin', { list: [], totalPage: 0 });
   }
 };
+
