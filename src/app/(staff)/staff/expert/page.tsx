@@ -22,9 +22,6 @@ import { GetUserList } from 'package/api/user';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { IconSearch } from '@tabler/icons-react';
 
-
-
-
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
 const ExpertPage = () => {
@@ -48,7 +45,7 @@ const ExpertPage = () => {
                 title={
                     <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
                         <Grid item>
-                            <Typography variant="h3">Expert List</Typography>
+                            <Typography variant="h3">Danh sách chuyên gia</Typography>
                         </Grid>
                     </Grid>
                 }

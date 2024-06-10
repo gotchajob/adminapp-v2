@@ -189,7 +189,7 @@ const UserList = () => {
                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <NextLink href={`/admin/user/profile`} passHref>
+                    <NextLink href={`/staff/user/profile`} passHref>
                       <Avatar alt="User 1" src={`${avatarImage}/${row.avatar}`} />
                     </NextLink>
                     <Stack direction="row" alignItems="center" spacing={0.25}>
@@ -258,7 +258,7 @@ const UserList = () => {
               <TableCell sx={{ pl: 3 }}>{user.id}</TableCell>
               <TableCell>
                 <Stack direction="row" alignItems="center" spacing={2}>
-                  <NextLink href={`/admin/user/profile`} passHref>
+                  <NextLink href={`/staff/user/profile`} passHref>
                     <Avatar alt="User 1" src={`${avatarImage}/${user.avatar}`} />
                   </NextLink>
                   <Stack direction="row" alignItems="center" spacing={0.25}>

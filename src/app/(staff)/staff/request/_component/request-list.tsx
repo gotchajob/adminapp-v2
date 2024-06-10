@@ -37,105 +37,89 @@ import { ExpertRegisterApprove } from 'package/api/expert-register-request/id/ap
 import { StaffToken } from 'hooks/use-login';
 import { useRouter } from 'next/navigation';
 import { ExpertRegisterReject } from 'package/api/expert-register-request/id/reject';
+import { useRefresh } from 'hooks/use-refresh';
+import { useGeteExpertRegisterRequest } from 'hooks/use-get-expert-register-request';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
 
 const avatarImage = '/assets/images/users';
 
 const RegisterRequestList = () => {
-  const [expertRegisterList, setExpertRegisterList] = useState<ExpertRegister[] | null>([]);
 
   const [expertApprove, setExpertApprove] = useState<ExpertRegister | null>();
 
   const [expertReject, setExpertReject] = useState<ExpertRegister | null>();
 
-
+  //State loading button dialog
   const [isLoading, setIsLoading] = useState(false);
+
+  const { refreshTime, refresh } = useRefresh();
 
   const { staffToken } = StaffToken();
 
-  const router = useRouter();
+  const params = { limit: 10, page: 1 };
 
-  const GetExpertRegisterList = async () => {
-    const data = await GetExpertRegisterRequest({ limit: 10, page: 1 }, '');
-    setExpertRegisterList(data.data.list);
+  //Get Expert Register Request Hook
+  const { expertRegisterRequest, loading } = useGeteExpertRegisterRequest(params, refreshTime);
 
+  //Approve expert handle
+  const handleOpenApprove = (value: any) => {
+    setExpertApprove(value);
   };
 
+  //Reject expert handle
+  const handleOpenReject = (value: ExpertRegister) => {
+    setExpertReject(value);
+  };
+
+  //Approve handle
   const handleApprove = async () => {
     try {
       setIsLoading(true);
       const currentHost = window.location.hostname;
       const data = await ExpertRegisterApprove(
-        { id: expertApprove ? expertApprove.id : 0, url: `${currentHost}:3000/form/${expertApprove?.email}-${expertApprove?.id}` },
+        { id: expertApprove ? expertApprove.id : 0, url: `${currentHost}:3000/form/create/${expertApprove?.email}-${expertApprove?.id}` },
         staffToken
-
       );
       if (data.status === 'error') {
         throw new Error('');
       }
+      refresh();
       enqueueSnackbar('Gửi thành công !', {
         variant: 'success',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
       });
     } catch (error) {
       enqueueSnackbar('Gửi thất bại !', {
         variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
       });
     } finally {
       setIsLoading(false);
-      handleClose()
+      setExpertApprove(null);
     }
   };
+
+  //Reject handle
   const handleReject = async () => {
     try {
       setIsLoading(true);
       const data = await ExpertRegisterReject({ id: expertReject ? expertReject.id : 0, note: 'Email không hợp lệ' }, staffToken);
+      refresh();
       if (data.status === 'error') {
         throw new Error('');
       }
       enqueueSnackbar('Gửi thành công !', {
         variant: 'success',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
       });
     } catch (error) {
       enqueueSnackbar('Gửi thất bại !', {
         variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
       });
     } finally {
       setIsLoading(false);
-      router.refresh();
-      handleClose()
+      setExpertReject(null);
     }
   };
-  const handleClose = () => {
-    setExpertApprove(null);
-    setExpertReject(null);
-  };
-
-    setExpertApprove(value);
-  };
-
-  const handleOpenReject = (value: ExpertRegister) => {
-    setExpertReject(value);
-
-  };
-
-  useEffect(() => {
-    GetExpertRegisterList();
-  }, []);
 
   return (
     <>
@@ -150,47 +134,70 @@ const RegisterRequestList = () => {
           </TableHead>
 
           <TableBody>
-            {expertRegisterList?.map((row, index) => (
-              <TableRow hover key={index}>
-                <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
-                <TableCell>
-                  <Stack direction="row" alignItems="center" spacing={2}>
-                    <Stack>
-                      <NextLink href={`/admin/expert/profile`} passHref>
-                        <Avatar alt="User 1" src={`${avatarImage}/`}></Avatar>
-                      </NextLink>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" spacing={0.25}>
-                      <Typography>{row.email}</Typography>
-                    </Stack>
-                  </Stack>
-                </TableCell>
-
-                <TableCell align="center" sx={{ pr: 2 }}>
-                  <Stack direction="row" justifyContent="center" alignItems="center">
-                    <Tooltip placement="top" title="Duyệt">
-                      <IconButton color="primary" aria-label="delete" size="large" onClick={() => handleOpenApprove(row)}>
-                        <LockOpenIcon sx={{ fontSize: '1.1rem' }} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip placement="top" title="Từ chối">
-                      <IconButton
-                        color="primary"
-                        sx={{
-                          color: 'orange.dark',
-                          borderColor: 'orange.main',
-                          '&:hover ': { bgcolor: 'orange.light' }
-                        }}
-                        size="large"
-                        onClick={() => handleOpenReject(row)}
-                      >
-                        <BlockTwoToneIcon sx={{ fontSize: '1.1rem' }} />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Grid container justifyContent="center" alignItems="center" style={{ maxHeight: 100 }}>
+                    <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+                      <CircularProgress aria-label="progress" />
+                    </Box>
+                  </Grid>
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              <>
+                {expertRegisterRequest.length > 0 ? (
+                  expertRegisterRequest.map((row, index) => (
+                    <TableRow hover key={index}>
+                      <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
+                      <TableCell>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                          <Stack>
+                            <NextLink href={`/staff/expert/profile`} passHref>
+                              <Avatar alt="User 1" src={`${avatarImage}/`} />
+                            </NextLink>
+                          </Stack>
+                          <Stack direction="row" alignItems="center" spacing={0.25}>
+                            <Typography>{row.email}</Typography>
+                          </Stack>
+                        </Stack>
+                      </TableCell>
+                      <TableCell align="center" sx={{ pr: 2 }}>
+                        <Stack direction="row" justifyContent="center" alignItems="center">
+                          <Tooltip placement="top" title="Duyệt">
+                            <IconButton color="primary" aria-label="approve" size="large" onClick={() => handleOpenApprove(row)}>
+                              <LockOpenIcon sx={{ fontSize: '1.1rem' }} />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip placement="top" title="Từ chối">
+                            <IconButton
+                              color="primary"
+                              sx={{
+                                color: 'orange.dark',
+                                borderColor: 'orange.main',
+                                '&:hover ': { bgcolor: 'orange.light' },
+                              }}
+                              size="large"
+                              onClick={() => handleOpenReject(row)}
+                            >
+                              <BlockTwoToneIcon sx={{ fontSize: '1.1rem' }} />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={3}>
+                      <Typography variant="h5" align="center" sx={{ pb: 20 }}>
+                        Hiện chưa có yêu cầu nào
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
@@ -202,7 +209,7 @@ const RegisterRequestList = () => {
           Bạn muốn gửi form đăng kí tới email: <span style={{ fontWeight: '600', marginLeft: 10 }}>{expertApprove?.email}</span>
         </DialogContent>
         <DialogActions>
-          <Button color="error" onClick={handleClose}>
+          <Button color="error" onClick={() => setExpertApprove(null)}>
             Đóng
           </Button>
           <LoadingButton loading={isLoading} onClick={handleApprove}>
@@ -218,10 +225,10 @@ const RegisterRequestList = () => {
           Bạn muốn từ chối email: <span style={{ fontWeight: '600', marginLeft: 10 }}>{expertReject?.email}</span>
         </DialogContent>
         <DialogActions>
-          <Button color="error" onClick={handleClose}>
+          <Button color="error" onClick={() => setExpertReject(null)}>
             Đóng
           </Button>
-          <LoadingButton loading={isLoading} onClick={handleReject}>Duyệt</LoadingButton>
+          <LoadingButton loading={isLoading} onClick={handleReject}>Chấp nhận</LoadingButton>
         </DialogActions>
       </Dialog>
     </>
