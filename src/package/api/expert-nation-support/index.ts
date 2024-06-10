@@ -8,7 +8,12 @@ export interface GetExpertNationSupportRequest {
 export interface GetExpertNationResponnse {
   status: string;
   responseText: string;
-  data: [];
+  data: ExpertNation[];
+}
+
+export interface ExpertNation{
+  id:number;
+  nation:string;
 }
 
 export const GetExpertNation = async (params: GetExpertNationSupportRequest, accessToken: string): Promise<GetExpertNationResponnse> => {

@@ -1,6 +1,7 @@
 import { apiServerFetch, errorSystem } from 'package/api/api-fetch';
 
 export interface CreateExpertRequest {
+  expertRegisterRequestId: number;
   email: string;
   firstName: string;
   lastName: string;

@@ -1,7 +1,7 @@
 import { apiServerFetch, errorSystem } from '../api-fetch';
 
 export interface ExpertRegisterRequestRq {
-  page: number;
+  pageNumber: number;
   limit: number;
 }
 

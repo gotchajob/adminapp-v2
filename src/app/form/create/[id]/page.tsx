@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -67,6 +67,8 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const { countries } = useGetCountry();
 
+  const [email, id] = params.id.split('-');
+
   const initialValues = {
     email: '',
     firstName: '',
@@ -110,6 +112,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
       const res = await PostCreateExpertAccount({
         ...value,
+        expertRegisterRequestId: +params.id.split("-")[1],
         portfolioUrl: '',
         address: `${values.street}, Phường xã: ${values.ward}, Quận huyện: ${values.district}, Thành phố: ${values.province}`,
         education,
@@ -139,8 +142,13 @@ export default function Page({ params }: { params: { id: string } }) {
       if (res.status === 'success') {
         setErrors({ email: 'Email đã được đăng kí' });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
+
+  useEffect(() => {
+    console.log("id:", params.id.split("-")[1]);
+    console.log("id2:", id);
+  }, [])
 
   return (
     <Container maxWidth="lg">
@@ -201,7 +209,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     onChange={(newValue: Date | null) => {
                       try {
                         setFieldValue('birthDate', formatDate(newValue?.toISOString() || '', 'yyyy-MM-dd'));
-                      } catch (error) {}
+                      } catch (error) { }
                     }}
                   />
                   {errors.birthDate ? errorText(errors.birthDate as string) : null}

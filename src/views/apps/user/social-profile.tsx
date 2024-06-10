@@ -275,7 +275,7 @@ const SocialProfile = ({ tab }: Props) => {
         <Grid item xs={12}>
           <Box sx={{ p: 0 }}>
             {tab === 'posts' && <Profile />}
-            {t   === 'follower' && <Followers />}
+            {tab === 'follower' && <Followers />}
             {tab === 'friends' && <Friends />}
             {tab === 'gallery' && <Gallery />}
             {tab === 'friend-request' && <FriendRequest />}
