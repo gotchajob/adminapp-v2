@@ -17,9 +17,6 @@ import { gridSpacing } from 'store/constant';
 import { Text } from 'views/forms/input/text/text';
 import ClearIcon from '@mui/icons-material/Clear';
 
-export interface SkillOptionComponent extends SkillOption {
-  certificate: string;
-}
 export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionList: (value: ExpertSkillOption[]) => void }) => {
   const { categories } = useGetCategories({});
   const { skills } = useGetSkill({});
@@ -27,12 +24,12 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
 
   const [addingCategories, setAddingCategories] = useState<Category[]>([]);
   const [addingSkills, setAddingSkills] = useState<Skill[]>([]);
-  const [addingSkillOptions, setAddingSkillOptions] = useState<SkillOptionComponent[]>([]);
+  const [addingSkillOptions, setAddingSkillOptions] = useState<SkillOption[]>([]);
 
   const [isUpdate, setIsUpdate] = useState(0);
   useEffect(() => {
     const data: ExpertSkillOption[] = [];
-    addingSkillOptions.forEach((value) => data.push({ certificate: value.certificate, skillOptionId: value.id }));
+    addingSkillOptions.forEach((value) => data.push({ certificate: '', skillOptionId: value.id }));
     setExpertSkillOptionList(data);
   }, [isUpdate]);
 
@@ -87,7 +84,7 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
   const handleUpdateCategory = (oldCategory?: Category, newCategory?: Category) => {
     let newAddingCategories = addingCategories;
     let newAddingSkills: Skill[] = [];
-    let newAddingSkillOptions: SkillOptionComponent[] = [];
+    let newAddingSkillOptions: SkillOption[] = [];
     if (oldCategory && newCategory && oldCategory.id === newCategory.id) {
       return;
     }
@@ -129,7 +126,7 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
 
   const handleUpdateSkill = (oldSkill?: Skill, newSkill?: Skill) => {
     let newAddingSkills: Skill[] = addingSkills;
-    let newAddingSkillOptions: SkillOptionComponent[] = [];
+    let newAddingSkillOptions: SkillOption[] = [];
     if (oldSkill && newSkill && oldSkill.id === newSkill.id) {
       return;
     }
@@ -150,14 +147,14 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleAddingSkillOption = (skillOption: SkillOptionComponent) => {
+  const handleAddingSkillOption = (skillOption: SkillOption) => {
     if (skillOption) {
       setAddingSkillOptions([...addingSkillOptions, skillOption]);
     }
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleUpdateSkillOption = (oldSkillOption?: SkillOptionComponent, newSkillOption?: SkillOptionComponent) => {
+  const handleUpdateSkillOption = (oldSkillOption?: SkillOption, newSkillOption?: SkillOption) => {
     let newAddingSkillOptions = addingSkillOptions;
     if (oldSkillOption && newSkillOption && oldSkillOption.id === newSkillOption.id) {
       return;
@@ -175,13 +172,6 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleUpdateCertificate = (skillOptionId: number, certificate: string) => {
-    let newAddingSkillOptions = addingSkillOptions;
-    const index = newAddingSkillOptions.findIndex((skillOption) => skillOption.id === skillOptionId);
-    newAddingSkillOptions[index].certificate = certificate;
-    setAddingSkillOptions(newAddingSkillOptions);
-    setIsUpdate(isUpdate + 1);
-  };
   return (
     <Grid container alignItems="center" spacing={gridSpacing}>
       {addingCategories.map((category, index) => {
@@ -212,9 +202,8 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
                                 <Grid item xs={12} key={index}>
                                   <SkillOptionInput
                                     handleUpdateSkillOption={handleUpdateSkillOption}
-                                    handleUpdateCertificate={handleUpdateCertificate}
                                     skillOptions={skillOptionsSelect}
-                                    defaultValue={skillOption as SkillOptionComponent}
+                                    defaultValue={skillOption as SkillOption}
                                   />
                                 </Grid>
                               ))}
@@ -224,8 +213,7 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
                                   variant="outlined"
                                   onClick={(e) => {
                                     handleAddingSkillOption({
-                                      ...filterSkillOptionBySkill(getNotIncludedSkillOptions(), skill.id)[0],
-                                      certificate: ''
+                                      ...filterSkillOptionBySkill(getNotIncludedSkillOptions(), skill.id)[0]
                                     });
                                   }}
                                 >
@@ -368,14 +356,12 @@ const SkillOptionInput = ({
   skillOptions,
   readonly = false,
   defaultValue,
-  handleUpdateSkillOption,
-  handleUpdateCertificate
+  handleUpdateSkillOption
 }: {
   skillOptions: SkillOption[];
   readonly?: boolean;
-  defaultValue: SkillOptionComponent;
-  handleUpdateSkillOption: (oldSkillOption?: SkillOptionComponent, newSkillOption?: SkillOptionComponent) => void;
-  handleUpdateCertificate: (skillOptionId: number, certificate: string) => void;
+  defaultValue: SkillOption;
+  handleUpdateSkillOption: (oldSkillOption?: SkillOption, newSkillOption?: SkillOption) => void;
 }) => {
   return (
     <Box position={'relative'}>
@@ -402,7 +388,7 @@ const SkillOptionInput = ({
             key={option.id}
             value={option.id}
             onClick={(e) => {
-              handleUpdateSkillOption(defaultValue, { ...option, certificate: '' });
+              handleUpdateSkillOption(defaultValue, { ...option });
             }}
           >
             {option.name}
