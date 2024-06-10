@@ -4,7 +4,7 @@ export interface GetUserListRequest {
   pageNumber: number;
   pageSize: number;
   sortBy?: string;
-  search?: string[]
+  search?: string[];
 }
 
 export interface GetUserListResponse {
@@ -34,8 +34,8 @@ export const GetUserList = async (params: GetUserListRequest, accessToken: strin
     searchParams.set('pageSize', params.pageSize + '');
     if (params.search) {
       params.search.forEach((value) => {
-        searchParams.set('search', value + '');
-      })
+        searchParams.append('search', value + '');
+      });
     }
     if (params.sortBy) {
       searchParams.set('sortBy', params.sortBy + '');

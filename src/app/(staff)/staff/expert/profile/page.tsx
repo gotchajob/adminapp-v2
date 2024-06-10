@@ -71,58 +71,59 @@ const ExpertProfile = () => {
     setValue(newValue);
   };
 
-  return (
-    <MainCard>
-      <Grid container spacing={gridSpacing}>
-        <Grid item xs={12}>
-          <Tabs
-            value={value}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={handleChange}
-            aria-label="simple tabs example"
-            variant="scrollable"
-            sx={{
-              mb: 3,
-              '& a': {
-                minHeight: 'auto',
-                minWidth: 10,
-                py: 1.5,
-                px: 1,
-                mr: 2.25,
-                color: theme.palette.mode === ThemeMode.DARK ? 'grey.600' : 'grey.900',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center'
-              },
-              '& a.Mui-selected': {
-                color: 'primary.main'
-              },
-              '& .MuiTabs-indicator': {
-                bottom: 2
-              },
-              '& a > svg': {
-                marginBottom: '0px !important',
-                mr: 1.25
-              }
-            }}
-          >
-            {tabsOption.map((tab, index) => (
-              <Tab key={index} component={Link} href="#" icon={tab.icon} label={tab.label} {...a11yProps(index)} />
-            ))}
-          </Tabs>
-          <TabPanel value={value} index={0}>
-            <Profile></Profile>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            {/* <Billing /> */}
-            <MainCard></MainCard>
-          </TabPanel>
-        </Grid>
-      </Grid>
-    </MainCard>
-  );
-};
+    return (
+        <MainCard>
+            <Grid container spacing={gridSpacing}>
+                <Grid item xs={12}>
+                    <Tabs
+                        value={value}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        onChange={handleChange}
+                        aria-label="simple tabs example"
+                        variant="scrollable"
+                        sx={{
+                            mb: 3,
+                            '& a': {
+                                minHeight: 'auto',
+                                minWidth: 10,
+                                py: 1.5,
+                                px: 1,
+                                mr: 2.25,
+                                color: theme.palette.mode === ThemeMode.DARK ? 'grey.600' : 'grey.900',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            },
+                            '& a.Mui-selected': {
+                                color: 'primary.main'
+                            },
+                            '& .MuiTabs-indicator': {
+                                bottom: 2
+                            },
+                            '& a > svg': {
+                                marginBottom: '0px !important',
+                                mr: 1.25
+                            }
+                        }}>
+                        {tabsOption.map((tab, index) => (
+                            <Tab key={index} component={Link} href="#" icon={tab.icon} label={tab.label} {...a11yProps(index)} />
+                        ))}
+                    </Tabs>
+                    <TabPanel value={value} index={0}>
+                        {/* <Profile></Profile> */}
+                        <ExpertProfile></ExpertProfile>
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        {/* <Billing /> */}
+                        <MainCard></MainCard>
+                    </TabPanel>
+                </Grid>
+            </Grid>
+        </MainCard>
+    )
+}
+
 
 export default ExpertProfile;
