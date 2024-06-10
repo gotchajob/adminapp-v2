@@ -188,17 +188,17 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
         return (
           <Grid item xs={12} key={index}>
             <Grid container spacing={3}>
-              <Grid item xs={2.5}>
+              <Grid item xs={3}>
                 <CategoryInput categories={categories} handleUpdateCategory={handleUpdateCategory} defaultValue={category} />
               </Grid>
-              <Grid item xs={9.5}>
+              <Grid item xs={9}>
                 <Grid container spacing={3}>
                   {filterSkillByCategory(addingSkills, category.id).map((skill, index) => {
                     const skillOptionsSelect = filterSkillOptionBySkill(skillOptions, skill.id);
                     return (
                       <Grid item xs={12} key={index}>
                         <Grid container spacing={3}>
-                          <Grid item xs={3}>
+                          <Grid item xs={4}>
                             <SkillInput
                               defaultValue={skill}
                               handleUpdateSkill={handleUpdateSkill}
@@ -206,7 +206,7 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
                               key={skill.id}
                             />
                           </Grid>
-                          <Grid item xs={9}>
+                          <Grid item xs={8}>
                             <Grid container spacing={3}>
                               {filterSkillOptionBySkill(addingSkillOptions, skill.id).map((skillOption, index) => (
                                 <Grid item xs={12} key={index}>
@@ -378,52 +378,37 @@ const SkillOptionInput = ({
   handleUpdateCertificate: (skillOptionId: number, certificate: string) => void;
 }) => {
   return (
-    <Grid container>
-      <Grid item xs={4}>
-        <Box position={'relative'}>
-          <ClearIcon
-            fontSize={'small'}
-            color="error"
-            onClick={() => {
-              handleUpdateSkillOption(defaultValue);
+    <Box position={'relative'}>
+      <ClearIcon
+        fontSize={'small'}
+        color="error"
+        onClick={() => {
+          handleUpdateSkillOption(defaultValue);
+        }}
+        sx={{
+          position: 'absolute',
+          zIndex: 1,
+          top: -8,
+          right: -8,
+          bgcolor: 'white',
+          ':hover': { color: '#fd0100', boxShadow: '0px 1px 1px gray' },
+          cursor: 'pointer',
+          borderRadius: 10
+        }}
+      />
+      <TextField size="small" select fullWidth label="" disabled={readonly} value={defaultValue.id}>
+        {skillOptions?.map((option) => (
+          <MenuItem
+            key={option.id}
+            value={option.id}
+            onClick={(e) => {
+              handleUpdateSkillOption(defaultValue, { ...option, certificate: '' });
             }}
-            sx={{
-              position: 'absolute',
-              zIndex: 1,
-              top: -8,
-              right: -8,
-              bgcolor: 'white',
-              ':hover': { color: '#fd0100', boxShadow: '0px 1px 1px gray' },
-              cursor: 'pointer',
-              borderRadius: 10
-            }}
-          />
-          <TextField size="small" select fullWidth label="" disabled={readonly} value={defaultValue.id}>
-            {skillOptions?.map((option) => (
-              <MenuItem
-                key={option.id}
-                value={option.id}
-                onClick={(e) => {
-                  handleUpdateSkillOption(defaultValue, { ...option, certificate: '' });
-                }}
-              >
-                {option.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-      </Grid>
-      <Grid item xs={0.5} justifyContent={'center'} alignItems={'center'} display={'flex'}>
-        <Text fontWeight={'bold'}>:</Text>
-      </Grid>
-      <Grid item xs={7.5}>
-        <TextField
-          size="small"
-          fullWidth
-          value={defaultValue.certificate}
-          onChange={(e) => handleUpdateCertificate(defaultValue.id, e.target.value)}
-        />
-      </Grid>
-    </Grid>
+          >
+            {option.name}
+          </MenuItem>
+        ))}
+      </TextField>
+    </Box>
   );
 };
