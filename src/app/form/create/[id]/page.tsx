@@ -68,9 +68,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const { countries } = useGetCountry();
   
   const [email, id] = params.id.split('-');
-  useEffect(() => {
-    console.log(id);
-  }, []);
   const initialValues = {
     email: '',
     firstName: '',
