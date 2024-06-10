@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -66,7 +66,11 @@ export default function Page({ params }: { params: { id: string } }) {
   const { wardOptions } = useGetWard(districtCode);
 
   const { countries } = useGetCountry();
-
+  
+  const [email, id] = params.id.split('-');
+  useEffect(() => {
+    console.log(id);
+  }, []);
   const initialValues = {
     email: '',
     firstName: '',

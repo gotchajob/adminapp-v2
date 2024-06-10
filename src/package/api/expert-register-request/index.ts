@@ -3,6 +3,7 @@ import { apiServerFetch, errorSystem } from '../api-fetch';
 export interface ExpertRegisterRequestRq {
   page: number;
   limit: number;
+  search?: string[];
 }
 
 export interface ExpertRegisterRequestResponse {
@@ -36,8 +37,13 @@ export const GetExpertRegisterRequest = async (
 ): Promise<ExpertRegisterRequestResponse> => {
   try {
     const searchParams = new URLSearchParams();
-    searchParams.set('page', params.page + '');
-    searchParams.set('limit', params.limit + '');
+    searchParams.append('pageNumber', params.page + '');
+    searchParams.append('pageSize', params.limit + '');
+    if (params.search) {
+      params.search.forEach((value) => {
+        searchParams.append('search', value);
+      });
+    }
     const res = await apiServerFetch('/expert-register-request?' + searchParams.toString(), 'GET', undefined, accessToken);
     if (res.status === 'error') {
       throw new Error('');

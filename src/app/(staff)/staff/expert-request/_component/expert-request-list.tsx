@@ -56,7 +56,7 @@ const avatarImage = '/assets/images/experts';
 const ExpertRequestList = () => {
   const theme = useTheme();
 
-  const params = { limit: 10, page: 1 };
+  const params = { limit: 100, page: 1 };
 
   const { refreshTime, refresh } = useRefresh();
 
