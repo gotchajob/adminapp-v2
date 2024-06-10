@@ -211,6 +211,7 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
                                 <Button
                                   fullWidth
                                   variant="outlined"
+                                  size="small"
                                   onClick={(e) => {
                                     handleAddingSkillOption({
                                       ...filterSkillOptionBySkill(getNotIncludedSkillOptions(), skill.id)[0]
@@ -226,9 +227,10 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
                       </Grid>
                     );
                   })}
-                  <Grid item xs={2.5}>
+                  <Grid item xs={3}>
                     <Button
                       fullWidth
+                      size="small"
                       variant="outlined"
                       onClick={(e) => {
                         handleAddingSkill(getNotIncludedSkills()[0]);
@@ -246,6 +248,7 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
       <Grid item xs={2.5}>
         <Button
           fullWidth
+          size="small"
           variant="outlined"
           onClick={(e) => {
             handleAddingCategory(getNotIncludedCategories()[0]);
