@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { gridSpacing } from 'store/constant';
 import { Text } from 'views/forms/input/text/text';
 import ClearIcon from '@mui/icons-material/Clear';
+import Autocomplete from '@mui/material/Autocomplete';
 
 export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionList: (value: ExpertSkillOption[]) => void }) => {
   const { categories } = useGetCategories({});
@@ -147,26 +148,11 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleAddingSkillOption = (skillOption: SkillOption) => {
-    if (skillOption) {
-      setAddingSkillOptions([...addingSkillOptions, skillOption]);
-    }
-    setIsUpdate(isUpdate + 1);
-  };
-
-  const handleUpdateSkillOption = (oldSkillOption?: SkillOption, newSkillOption?: SkillOption) => {
+  const handleUpdateSkillOption = (skillOptionList: SkillOption[]) => {
     let newAddingSkillOptions = addingSkillOptions;
-    if (oldSkillOption && newSkillOption && oldSkillOption.id === newSkillOption.id) {
-      return;
-    }
-    if (newSkillOption && addingSkillOptions.find((skillOption) => skillOption.id === newSkillOption.id)) {
-      return;
-    }
-    if (oldSkillOption) {
-      newAddingSkillOptions = newAddingSkillOptions.filter((addingSkillOption) => addingSkillOption.id !== oldSkillOption.id);
-    }
-    if (newSkillOption) {
-      newAddingSkillOptions.push(newSkillOption);
+    if (skillOptionList.length > 1) {
+      newAddingSkillOptions = newAddingSkillOptions.filter((skillOption) => skillOption.skillId !== skillOptionList[0].id);
+      newAddingSkillOptions = [...newAddingSkillOptions, ...skillOptionList];
     }
     setAddingSkillOptions(newAddingSkillOptions);
     setIsUpdate(isUpdate + 1);
@@ -197,31 +183,11 @@ export const SkillForm = ({ setExpertSkillOptionList }: { setExpertSkillOptionLi
                             />
                           </Grid>
                           <Grid item xs={8}>
-                            <Grid container spacing={3}>
-                              {filterSkillOptionBySkill(addingSkillOptions, skill.id).map((skillOption, index) => (
-                                <Grid item xs={12} key={index}>
-                                  <SkillOptionInput
-                                    handleUpdateSkillOption={handleUpdateSkillOption}
-                                    skillOptions={skillOptionsSelect}
-                                    defaultValue={skillOption as SkillOption}
-                                  />
-                                </Grid>
-                              ))}
-                              <Grid item xs={3}>
-                                <Button
-                                  fullWidth
-                                  variant="outlined"
-                                  size="small"
-                                  onClick={(e) => {
-                                    handleAddingSkillOption({
-                                      ...filterSkillOptionBySkill(getNotIncludedSkillOptions(), skill.id)[0]
-                                    });
-                                  }}
-                                >
-                                  Thêm
-                                </Button>
-                              </Grid>
-                            </Grid>
+                            <SkillOptionInput
+                              handleUpdateSkillOption={handleUpdateSkillOption}
+                              skillOptions={skillOptionsSelect}
+                              defaultValue={filterSkillOptionBySkill(addingSkillOptions, skill.id)}
+                            />
                           </Grid>
                         </Grid>
                       </Grid>
@@ -363,41 +329,22 @@ const SkillOptionInput = ({
 }: {
   skillOptions: SkillOption[];
   readonly?: boolean;
-  defaultValue: SkillOption;
-  handleUpdateSkillOption: (oldSkillOption?: SkillOption, newSkillOption?: SkillOption) => void;
+  defaultValue: SkillOption[];
+  handleUpdateSkillOption: (skillOptionList: SkillOption[]) => void;
 }) => {
   return (
-    <Box position={'relative'}>
-      <ClearIcon
-        fontSize={'small'}
-        color="error"
-        onClick={() => {
-          handleUpdateSkillOption(defaultValue);
-        }}
-        sx={{
-          position: 'absolute',
-          zIndex: 1,
-          top: -8,
-          right: -8,
-          bgcolor: 'white',
-          ':hover': { color: '#fd0100', boxShadow: '0px 1px 1px gray' },
-          cursor: 'pointer',
-          borderRadius: 10
-        }}
-      />
-      <TextField size="small" select fullWidth label="" disabled={readonly} value={defaultValue.id}>
-        {skillOptions?.map((option) => (
-          <MenuItem
-            key={option.id}
-            value={option.id}
-            onClick={(e) => {
-              handleUpdateSkillOption(defaultValue, { ...option });
-            }}
-          >
-            {option.name}
-          </MenuItem>
-        ))}
-      </TextField>
-    </Box>
+    <Autocomplete
+      size="small"
+      multiple
+      sx={{ '.MuiInputBase-root': { height: 40 } }}
+      options={skillOptions}
+      getOptionLabel={(option) => option.name}
+      filterSelectedOptions
+      renderInput={(params) => <TextField {...params} label="Chọn kĩ năng" />}
+      defaultValue={defaultValue}
+      onChange={(e, v) => {
+        handleUpdateSkillOption(v);
+      }}
+    />
   );
 };

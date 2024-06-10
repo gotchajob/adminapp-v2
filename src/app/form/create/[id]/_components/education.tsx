@@ -66,13 +66,19 @@ export const EducationForm = ({ setEducation }: { setEducation: (value: string) 
         {educationList.map((education, index) => (
           <Fragment key={index}>
             <Grid item xs={12} ml={2}>
-              <Grid container spacing={1}>
+              <Grid container>
                 <Grid item xs={4}>
-                  <Stack spacing={2} mr={20}>
+                  <Stack spacing={1} mr={20}>
                     <TextField
                       variant="standard"
                       size="small"
                       placeholder="Thời gian"
+                      sx={{
+                        input: {
+                          fontWeight: 'bold',
+                          fontSize: 14
+                        }
+                      }}
                       value={education.time}
                       onChange={(e) => {
                         const newData = education;
@@ -83,8 +89,11 @@ export const EducationForm = ({ setEducation }: { setEducation: (value: string) 
                     <TextField
                       variant="standard"
                       size="small"
-                      multiline
-                      maxRows={2}
+                      sx={{
+                        input: {
+                          fontSize: 12
+                        }
+                      }}
                       value={education.timeDes}
                       onChange={(e) => {
                         const newData = education;
@@ -95,11 +104,17 @@ export const EducationForm = ({ setEducation }: { setEducation: (value: string) 
                   </Stack>
                 </Grid>
                 <Grid item xs={8}>
-                  <Stack spacing={2} mr={20}>
+                  <Stack spacing={1} mr={20}>
                     <TextField
                       variant="standard"
                       size="small"
                       placeholder="Tiêu đề"
+                      sx={{
+                        input: {
+                          fontWeight: 'bold',
+                          fontSize: 14
+                        }
+                      }}
                       value={education.title}
                       onChange={(e) => {
                         const newData = education;
@@ -110,8 +125,11 @@ export const EducationForm = ({ setEducation }: { setEducation: (value: string) 
                     <TextField
                       variant="standard"
                       size="small"
-                      multiline
-                      maxRows={2}
+                      sx={{
+                        input: {
+                          fontSize: 12
+                        }
+                      }}
                       value={education.titleDes}
                       onChange={(e) => {
                         const newData = education;
