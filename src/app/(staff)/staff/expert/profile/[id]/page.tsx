@@ -83,26 +83,25 @@ function LinearProgressWithLabel({ value, ...others }: LinearProgressProps) {
 }
 
 const ExpertProfile = ({ params }: { params: { id: string } }) => {
-
   const { refreshTime, refresh } = useRefresh();
 
   const { loading, expert } = useGetExpertProfile({ id: +params.id }, refreshTime);
 
-  const { ExperSkillOptions } = useGetExpertSkillOptions({ expertId: +params.id });
+  const { experSkillOptions } = useGetExpertSkillOptions({ expertId: +params.id });
 
   const { nation } = useGetExpertNatonSupport({ expertId: +params.id });
 
   useEffect(() => {
-    console.log("Expert:", expert);
-    console.log("Nation:", nation);
-    console.log("Skill Options :", ExperSkillOptions);
-  }, [nation])
+    console.log('Expert:', expert);
+    console.log('Nation:', nation);
+    console.log('Skill Options :', experSkillOptions);
+  }, [nation]);
 
   const covertNationString = () => {
     const array: string[] = [];
     nation?.forEach((value) => array.push(value.nation));
-    return array?.join(", ")
-  }
+    return array?.join(', ');
+  };
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -116,7 +115,9 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
                     <Avatar alt="User 1" src={expert.avatar} />
                   </Grid>
                   <Grid item xs zeroMinWidth>
-                    <Typography variant="subtitle1">{expert.firstName} {expert.lastName}</Typography>
+                    <Typography variant="subtitle1">
+                      {expert.firstName} {expert.lastName}
+                    </Typography>
                   </Grid>
                 </Grid>
               }
@@ -124,34 +125,28 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
               <Stack spacing={2}>
                 <Grid container item xs={12} spacing={1}>
                   <Grid item xs={12}>
-                    <Typography variant="h4">About</Typography>
+                    <Typography variant="h5">Giới thiệu</Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography variant="body2">
-                      {expert.bio}
-                    </Typography>
+                    <Typography variant="body2">{expert.bio}</Typography>
                   </Grid>
                 </Grid>
 
                 <Grid container item xs={12} spacing={1}>
                   <Grid item xs={12}>
-                    <Typography variant="h4">Quốc gia hỗ trợ</Typography>
+                    <Typography variant="h5">Quốc gia hỗ trợ</Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography variant="body2">
-                      {covertNationString()}
-                    </Typography>
+                    <Typography variant="body2">{covertNationString()}</Typography>
                   </Grid>
                 </Grid>
 
                 <Grid container item xs={12} spacing={1}>
                   <Grid item xs={12}>
-                    <Typography variant="h4">Năm kinh nghiệm</Typography>
+                    <Typography variant="h5">Năm kinh nghiệm</Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography variant="body2">
-                      {expert.yearExperience} năm
-                    </Typography>
+                    <Typography variant="body2">{expert.yearExperience} năm</Typography>
                   </Grid>
                 </Grid>
               </Stack>
@@ -205,11 +200,11 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
               <Grid item xs={12}>
                 <SubCard
                   title="Thông tin cá nhân"
-                // secondary={
-                //   <Button>
-                //     <IconEdit stroke={1.5} size="20px" aria-label="Edit Details" />
-                //   </Button>
-                // }
+                  // secondary={
+                  //   <Button>
+                  //     <IconEdit stroke={1.5} size="20px" aria-label="Edit Details" />
+                  //   </Button>
+                  // }
                 >
                   <Grid container spacing={2}>
                     <Divider sx={{ pt: 1 }} />
@@ -225,14 +220,16 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
                         >
                           <TableBody>
                             <TableRow>
-                              <TableCell variant="head" >Địa chỉ</TableCell>
+                              <TableCell variant="head">Địa chỉ</TableCell>
                               <TableCell>:</TableCell>
                               <TableCell> {expert.address}</TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell variant="head" sx={{ minWidth: 150 }}>Ngày sinh</TableCell>
+                              <TableCell variant="head" sx={{ minWidth: 150 }}>
+                                Ngày sinh
+                              </TableCell>
                               <TableCell>:</TableCell>
-                              <TableCell> {formatDate(expert.birthDate, "dd/MM/yyyy")}</TableCell>
+                              <TableCell> {formatDate(expert.birthDate, 'dd/MM/yyyy')}</TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell variant="head">Liên lạc</TableCell>
@@ -254,49 +251,20 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
               <Grid item xs={12}>
                 <SubCard title="Thời gian">
                   <Grid container spacing={1}>
-                    {JSON.parse(expert.education).map((row: EducationData, index) =>
-                    (<Grid item xs={12} key={index}>
-                      <Grid container>
-                        <Grid item xs={12} sm={4}>
-                          <Typography variant="subtitle1">{row.time}</Typography>
-                          <Typography variant="subtitle2">{row.timeDes}</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={8}>
-                          <Typography variant="subtitle1">{row.title}</Typography>
-                          <Typography variant="subtitle2">{row.titleDes}</Typography>
+                    {JSON.parse(expert.education).map((row: EducationData, index: number) => (
+                      <Grid item xs={12} key={index}>
+                        <Grid container>
+                          <Grid item xs={12} sm={4}>
+                            <Typography variant="subtitle1">{row.time}</Typography>
+                            <Typography variant="subtitle2">{row.timeDes}</Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={8}>
+                            <Typography variant="subtitle1">{row.title}</Typography>
+                            <Typography variant="subtitle2">{row.titleDes}</Typography>
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>))}
-                  </Grid>
-                </SubCard>
-              </Grid>
-              <Grid item xs={12}>
-                <SubCard title="Skills">
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">Junior</Typography>
-                      <LinearProgressWithLabel color="primary" variant="determinate" value={70} aria-label="junior-skill-progress" />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">UX Researcher</Typography>
-                      <LinearProgressWithLabel color="primary" variant="determinate" value={80} aria-label="UX-Researcher-skill-progress" />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">Wordpress</Typography>
-                      <LinearProgressWithLabel color="secondary" variant="determinate" value={25} aria-label="Wordpress-skill-progress" />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">Graphic Designer</Typography>
-                      <LinearProgressWithLabel color="primary" variant="determinate" value={80} aria-label="Designer-skill-progress" />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">HTML</Typography>
-                      <LinearProgressWithLabel color="secondary" variant="determinate" value={45} aria-label="HTML-skill-progress" />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography variant="body2">PHP</Typography>
-                      <LinearProgressWithLabel color="primary" variant="determinate" value={65} aria-label="PHP-skill-progress" />
-                    </Grid>
+                    ))}
                   </Grid>
                 </SubCard>
               </Grid>
@@ -308,6 +276,6 @@ const ExpertProfile = ({ params }: { params: { id: string } }) => {
       )}
     </Grid>
   );
-}
+};
 
 export default ExpertProfile;

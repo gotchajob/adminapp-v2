@@ -2,7 +2,7 @@ import { ExpertSkillOption, ExpertSkillOptionRq, GetExpertSkillOption } from 'pa
 import { useEffect, useState } from 'react';
 
 export const useGetExpertSkillOptions = (params: ExpertSkillOptionRq) => {
-  const [ExperSkillOptions, setExpertSkillOptions] = useState<ExpertSkillOption[]>([]);
+  const [experSkillOptions, setExpertSkillOptions] = useState<ExpertSkillOption[]>([]);
 
   const getExpertSkillOptions = async () => {
     const data = await GetExpertSkillOption(params, '');
@@ -14,6 +14,6 @@ export const useGetExpertSkillOptions = (params: ExpertSkillOptionRq) => {
   }, []);
 
   return {
-    ExperSkillOptions
+    experSkillOptions
   };
 };

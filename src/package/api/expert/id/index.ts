@@ -19,6 +19,7 @@ export interface Expert {
   firstName: string;
   lastName: string;
   address: string;
+  yearExperience: number;
   phone: number;
   birthDate: string;
   bio: string;

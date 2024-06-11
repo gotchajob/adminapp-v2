@@ -18,6 +18,7 @@ export interface getExpertListResponse {
 }
 
 export interface Expert {
+  yearExperience: ReactNode;
   userId: number;
   expertId: number;
   userStatus: number;

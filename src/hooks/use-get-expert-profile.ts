@@ -13,6 +13,7 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
     try {
       setLoading(true);
       const data = await GetExpert(params, '');
+      console.log(data)
       if (data.status == 'error') {
         throw new Error();
       }
