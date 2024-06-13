@@ -30,23 +30,16 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
 import { useGetCountry } from 'hooks/use-address';
-import { formatDate } from 'package/util';
+import { convertNationString, formatDate } from 'package/util';
 import { EducationData } from 'app/form/create/[id]/_components/education';
-const logo = '/assets/images/logo/logo.png';
+import { ReadSkillForm } from './_component/skill';
 
-const ExpertSkillOptionPage = ({ params }: { params: { id: number } }) => {
+const ExpertProfilePage = ({ params }: { params: { id: number } }) => {
   const { loading, expert } = useGetExpertProfile({ id: +params.id }, false);
-
-  const { experSkillOptions } = useGetExpertSkillOptions({ expertId: +params.id });
 
   const { nation } = useGetExpertNatonSupport({ expertId: +params.id });
 
   const { countries } = useGetCountry();
-  const convertNationString = () => {
-    const array: string[] = [];
-    nation?.forEach((value) => array.push(value.nation));
-    return array;
-  };
 
   return (
     <>
@@ -64,12 +57,12 @@ const ExpertSkillOptionPage = ({ params }: { params: { id: number } }) => {
                 </Grid>
                 <Grid item lg={6}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    {/* <DatePicker
+                    <DatePicker
                       slotProps={{ textField: { fullWidth: true } }}
-                      value={formatDate(expert.birthDate, "dd-MM-yyyy")}
+                      value={new Date(expert.birthDate)}
                       format="dd-MM-yyyy"
                       label="Ngày sinh"
-                    /> */}
+                    />
                   </LocalizationProvider>
                 </Grid>
                 <Grid item lg={12}>
@@ -225,15 +218,16 @@ const ExpertSkillOptionPage = ({ params }: { params: { id: number } }) => {
                 <Grid item lg={6} zeroMinWidth>
                   <Autocomplete
                     multiple
+                    disabled={true}
                     options={countries}
                     getOptionLabel={(option) => option}
                     filterSelectedOptions
                     renderInput={(params) => <TextField {...params} label="Quốc gia hỗ trợ" />}
-                    value={convertNationString()}
+                    value={convertNationString(nation)}
                   />
                 </Grid>
                 <Grid item lg={12} zeroMinWidth>
-                  {/* <SkillForm setExpertSkillOptionList={setExpertSkillOptionList} /> */}
+                  <ReadSkillForm expertId={params.id} />
                 </Grid>
               </Grid>
             </SubCard>
@@ -244,4 +238,4 @@ const ExpertSkillOptionPage = ({ params }: { params: { id: number } }) => {
   );
 };
 
-export default ExpertSkillOptionPage;
+export default ExpertProfilePage;

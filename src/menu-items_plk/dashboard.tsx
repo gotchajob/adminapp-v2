@@ -59,13 +59,6 @@ const dashboard: NavItemType = {
           url: '/staff/expert-request',
           breadcrumbs: false
         },
-        {
-          id: 'Request',
-          title: <FormattedMessage id="Yêu cầu" />,
-          type: 'item',
-          url: '/staff/request',
-          breadcrumbs: false
-        }
       ]
     }
   ]

@@ -1,24 +1,24 @@
 
 import { apiServerFetch, errorSystem } from '../api-fetch';
 
-export interface getExpertListRequest {
+export interface GetExpertListRequest {
   page: number;
   limit: number;
   sortBy?: string;
   search?: string[];
 }
 
-export interface getExpertListResponse {
+export interface GetExpertListResponse {
   status: string;
   responseText: string;
   data: {
-    list: Expert[];
+    list: ExpertList[];
     totalPage: number;
   };
 }
 
-export interface Expert {
-  yearExperience: ReactNode;
+export interface ExpertList {
+  yearExperience: number;
   userId: number;
   expertId: number;
   userStatus: number;
@@ -37,7 +37,7 @@ export interface Expert {
   education: string;
 }
 
-export const getExpertList = async (params: getExpertListRequest, accessToken: string): Promise<getExpertListResponse> => {
+export const getExpertList = async (params: GetExpertListRequest, accessToken: string): Promise<GetExpertListResponse> => {
   try {
     const searchParams = new URLSearchParams();
     searchParams.set('page', params.page + '');

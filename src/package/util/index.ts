@@ -1,6 +1,7 @@
 //@ts-ignore
 import numeral from 'numeral';
 import { format, formatDistanceToNow, getTime, parseISO } from 'date-fns';
+import { ExpertNation } from 'package/api/expert-nation-support';
 
 export const formatNumber = (number: number) => {
   if (number !== undefined) {
@@ -87,3 +88,9 @@ export function getAllDaysInMonth(month: number, year: number) {
   }
   return days;
 }
+
+export const convertNationString = (nation: ExpertNation[]) => {
+  const array: string[] = [];
+  nation?.forEach((value) => array.push(value.nation));
+  return array;
+};

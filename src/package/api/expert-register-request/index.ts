@@ -17,8 +17,11 @@ export interface ExpertRegisterRequestResponse {
 
 export interface ExpertRegister {
   id: number;
+  status: number;
+  expertId: number;
   email: string;
   createdAt: string;
+  updatedAt: string
 }
 
 export interface PostExpertRegisterRequest {

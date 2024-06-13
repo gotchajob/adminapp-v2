@@ -9,7 +9,7 @@ export const useGeteExpertRegisterRequest = (params: ExpertRegisterRequestRq, re
   const GetExpertRegisterList = async () => {
     try {
       setLoading(true);
-      const data = await GetExpertRegisterRequest({ ...params, search: ['status:1'] }, '');
+      const data = await GetExpertRegisterRequest({ ...params }, '');
       setExpertRegisterRequest(data.data.list);
     } catch (error: any) {
     } finally {

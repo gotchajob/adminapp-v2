@@ -21,6 +21,7 @@ import { GetUserList } from 'package/api/user';
 // assets
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { IconSearch } from '@tabler/icons-react';
+import ExpertFilter from './_component/filter';
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
 
@@ -38,17 +39,9 @@ const ExpertPage = () => {
   return (
     <>
       {/* Filter Card */}
-
+      <ExpertFilter />
       {/* Layout Table */}
-      <MainCard
-        title={
-          <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
-            <Grid item>
-              <Typography variant="h3">Danh sách chuyên gia</Typography>
-            </Grid>
-          </Grid>
-        }
-      >
+      <MainCard title={<Typography variant="h3">Danh sách chuyên gia</Typography>}>
         {/* Data Table */}
         <ExpertList />
         <Grid item xs={12} sx={{ mt: 1.75 }}>

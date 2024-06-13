@@ -1,7 +1,6 @@
-import { Expert } from 'package/api/expert';
 import { ExpertNation, GetExpertNation, GetExpertNationSupportRequest } from 'package/api/expert-nation-support';
 import { ExpertSkillOption, ExpertSkillOptionRq, GetExpertSkillOption } from 'package/api/expert-skill-option';
-import { GetExpert, GetExpertRequest } from 'package/api/expert/id';
+import { Expert, GetExpert, GetExpertRequest } from 'package/api/expert/id';
 import { useEffect, useState } from 'react';
 
 export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
@@ -12,13 +11,11 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
   const fetchExpertProfile = async () => {
     try {
       setLoading(true);
-      const data = await GetExpert(params, '');
-      console.log(data)
+      const data = await GetExpert(params);
       if (data.status == 'error') {
         throw new Error();
       }
       setExpert(data.data);
-      setLoading(false);
     } catch (error: any) {
     } finally {
       setLoading(false);

@@ -33,28 +33,45 @@ import { ExpertSkillOption, PostCreateExpertAccount } from 'package/api/user/cre
 import { useGetCountry, useGetDistrict, useGetProvince, useGetWard } from 'hooks/use-address';
 import { formatDate } from 'package/util';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { SkillForm } from './_components/skill';
+import { SkillForm } from './skill';
 import DialogActions from '@mui/material/DialogActions';
 import { CheckMail } from 'package/api/user/check-mail/email';
-import { EducationForm } from './_components/education';
+import { EducationForm } from './education';
 import Iconify from 'components/iconify/iconify';
 import InputAdornment from '@mui/material/InputAdornment';
-import { PostCreateExpertForm } from 'package/api/expert-register-request/id/create_form';
+import { idID } from '@mui/material/locale';
+import { PatchUpdateExpertForm } from 'package/api/expert-register-request/id/update-form';
 
 const logo = '/assets/images/logo/logo.png';
 
 // ==============================|| PROFILE 1 - PROFILE ACCOUNT ||============================== //
+export interface UpdateExpertInitValue {
+  firstName: string;
+  lastName: string;
+  requestId: number;
+  avatar: string;
+  phone: string;
+  birthDate: string;
+  bio: string;
+  facebookUrl: string;
+  twitterUrl: string;
+  linkedInUrl: string;
+  yearExperience: number;
+  nation: string[];
+  education: string;
+  expertId: number;
+}
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function ExpertRegisterUpdateForm({ initValueUpdateForm }: { initValueUpdateForm: UpdateExpertInitValue }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [provinceCode, setProvinceCode] = useState<string>('');
 
   const [districtCode, setDistrictCode] = useState<string>('');
 
-  const [education, setEducation] = useState<string>('');
+  const [education, setEducation] = useState<string>(initValueUpdateForm.education);
 
-  const [nation, setNation] = useState<string[]>(['Vietnam']);
+  const [nation, setNation] = useState<string[]>(initValueUpdateForm.nation);
 
   const [expertSkillOptionList, setExpertSkillOptionList] = useState<ExpertSkillOption[]>([]);
 
@@ -68,23 +85,22 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const { countries } = useGetCountry();
 
-  const [email, id] = params.id.split('-');
   const initialValues = {
     email: '',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    avatar: 'https://as2.ftcdn.net/v2/jpg/03/31/69/91/1000_F_331699188_lRpvqxO5QRtwOM05gR50ImaaJgBx68vi.jpg',
+    firstName: initValueUpdateForm.firstName,
+    lastName: initValueUpdateForm.lastName,
+    phone: initValueUpdateForm.phone,
+    avatar: initValueUpdateForm.avatar,
     street: '',
     ward: '',
     district: '',
     province: '',
-    birthDate: '',
-    bio: '',
-    facebookUrl: '',
-    twitterUrl: '',
-    linkedInUrl: '',
-    yearExperience: 1
+    birthDate: initValueUpdateForm.birthDate,
+    bio: initValueUpdateForm.bio,
+    facebookUrl: initValueUpdateForm.facebookUrl,
+    twitterUrl: initValueUpdateForm.twitterUrl,
+    linkedInUrl: initValueUpdateForm.linkedInUrl,
+    yearExperience: initValueUpdateForm.yearExperience
   };
 
   const formSchema = yup.object().shape({
@@ -110,9 +126,9 @@ export default function Page({ params }: { params: { id: string } }) {
       if (expertSkillOptionList.length < 1) {
         throw new Error('Vui lòng thêm ít nhất 1 kĩ năng');
       }
-      const res = await PostCreateExpertForm({
+      const res = await PatchUpdateExpertForm({
         ...value,
-        expertRegisterRequestId: +params.id.split('-')[1],
+        expertRegisterRequestId: initValueUpdateForm.requestId,
         portfolioUrl: '',
         address: `${values.street}, ${values.ward}, ${values.district}, ${values.province}`,
         education,
@@ -136,7 +152,6 @@ export default function Page({ params }: { params: { id: string } }) {
     validationSchema: formSchema
   });
 
-  
   return (
     <Container maxWidth="lg">
       {/* FORM */}
@@ -437,7 +452,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
         {/* Education Subcard */}
         <Grid item lg={12} sx={{ margin: '2%' }}>
-          <EducationForm setEducation={setEducation} />
+          <EducationForm setEducation={setEducation} initValue={education} />
         </Grid>
         <Grid item lg={12} sx={{ margin: '2%' }}>
           <SubCard title="Lĩnh vực đăng kí">
@@ -471,7 +486,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 {nation.length < 1 ? errorText('Ít nhất 1 quốc gia') : null}
               </Grid>
               <Grid item lg={12} zeroMinWidth>
-                <SkillForm setExpertSkillOptionList={setExpertSkillOptionList} />
+                <SkillForm setExpertSkillOptionList={setExpertSkillOptionList} expertId={initValueUpdateForm.expertId} />
               </Grid>
             </Grid>
           </SubCard>
@@ -480,7 +495,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <Button variant="outlined" color="error">
             Xóa
           </Button>
-          <LoadingButton variant="contained" loading={isLoading} type="submit">
+          <LoadingButton variant="contained" type="submit">
             Gửi
           </LoadingButton>
         </DialogActions>
