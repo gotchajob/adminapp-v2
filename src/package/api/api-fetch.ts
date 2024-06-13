@@ -24,6 +24,7 @@ export const apiServerFetch = async (url: string, method: 'GET' | 'POST' | 'PATC
     cache: 'no-cache',
     ...newBody
   });
+
   if (res.status !== 200) {
     throw new Error('Backend error');
   }

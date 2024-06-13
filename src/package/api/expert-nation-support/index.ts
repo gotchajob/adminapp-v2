@@ -16,11 +16,11 @@ export interface ExpertNation{
   nation:string;
 }
 
-export const GetExpertNation = async (params: GetExpertNationSupportRequest, accessToken: string): Promise<GetExpertNationResponnse> => {
+export const GetExpertNation = async (params: GetExpertNationSupportRequest,): Promise<GetExpertNationResponnse> => {
   try {
     const searchParams = new URLSearchParams();
     searchParams.append('expertId', params.expertId + '');
-    const res = await apiServerFetch(`/expert-nation-support?` + searchParams.toString(), 'GET', undefined, accessToken);
+    const res = await apiServerFetch(`/expert-nation-support?` + searchParams.toString(), 'GET');
     if (res.status === 'error') {
       throw new Error('');
     }

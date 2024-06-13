@@ -22,7 +22,7 @@ import Button from '@mui/material/Button';
 
 // assets
 
-const FilterBox = () => {
+const ExpertFilter = () => {
   const [valueBasic, setValueBasic] = React.useState<Date | null>(new Date());
 
   const filter_box_1 = [
@@ -150,4 +150,4 @@ const FilterBox = () => {
   );
 };
 
-export default FilterBox;
+export default ExpertFilter;

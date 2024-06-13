@@ -10,13 +10,12 @@ export interface ExpertRegisterApproveResponse {
   responseText: string;
   data: string;
 }
-
+//Gửi mail
 export const ExpertRegisterApprove = async (
   params: ExpertRegisterApproveRequest,
   accessToken: string
 ): Promise<ExpertRegisterApproveResponse> => {
   try {
-    console.log(accessToken);
     const res = await apiServerFetch(`/expert-register-request/${params.id}/approve`, 'PATCH', { url: params.url }, accessToken);
     if (res.status === 'error') {
       throw new Error('');

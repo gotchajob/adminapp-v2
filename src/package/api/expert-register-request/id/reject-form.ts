@@ -2,7 +2,8 @@ import { apiServerFetch, errorSystem } from 'package/api/api-fetch';
 
 export interface ExpertRegisterRejectRequest {
   id: number;
-  note: string;
+  url: string;
+  reasonReject: string;
 }
 
 export interface ExpertRegisterRejectResponse {
@@ -11,12 +12,14 @@ export interface ExpertRegisterRejectResponse {
   data: string;
 }
 
-export const ExpertRegisterReject = async (
-  params: ExpertRegisterRejectRequest,
-  accessToken: string
+export const ExpertRegisterRejectForm = async (
+  params: ExpertRegisterRejectRequest
 ): Promise<ExpertRegisterRejectResponse> => {
   try {
-    const res = await apiServerFetch(`/expert-register-request/${params.id}/reject`, 'POST', { note: params.note }, accessToken);
+    const res = await apiServerFetch(`/expert-register-request/${params.id}/reject-form`, 'PATCH', {
+      reasonReject: params.reasonReject,
+      url: params.url
+    });
     if (res.status === 'error') {
       throw new Error('');
     }

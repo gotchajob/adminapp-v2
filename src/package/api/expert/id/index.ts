@@ -1,4 +1,3 @@
-import { accessToken } from 'mapbox-gl';
 import { apiServerFetch, errorSystem } from 'package/api/api-fetch';
 export interface GetExpertRequest {
   id: number;
@@ -20,7 +19,7 @@ export interface Expert {
   lastName: string;
   address: string;
   yearExperience: number;
-  phone: number;
+  phone: string;
   birthDate: string;
   bio: string;
   portfolioUrl: string;
@@ -30,9 +29,9 @@ export interface Expert {
   education: string;
 }
 
-export const GetExpert = async (params: GetExpertRequest, accessToken: string): Promise<GetExpertResponse> => {
+export const GetExpert = async (params: GetExpertRequest): Promise<GetExpertResponse> => {
   try {
-    const res = await apiServerFetch(`/expert/${params.id}`, 'GET', undefined, accessToken);
+    const res = await apiServerFetch(`/expert/${params.id}`, 'GET', undefined);
     if (res.status === 'error') {
       throw new Error('');
     }
