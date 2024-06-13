@@ -1,8 +1,16 @@
-import { Expert } from 'package/api/expert';
-import { ExpertNation, GetExpertNation, GetExpertNationSupportRequest } from 'package/api/expert-nation-support';
-import { ExpertSkillOption, ExpertSkillOptionRq, GetExpertSkillOption } from 'package/api/expert-skill-option';
-import { GetExpert, GetExpertRequest } from 'package/api/expert/id';
-import { useEffect, useState } from 'react';
+import { Expert } from "package/api/expert";
+import {
+  ExpertNation,
+  GetExpertNation,
+  GetExpertNationSupportRequest,
+} from "package/api/expert-nation-support";
+import {
+  ExpertSkillOption,
+  ExpertSkillOptionRq,
+  GetExpertSkillOption,
+} from "package/api/expert-skill-option";
+import { GetExpert, GetExpertRequest } from "package/api/expert/id";
+import { useEffect, useState } from "react";
 
 export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -12,9 +20,8 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
   const fetchExpertProfile = async () => {
     try {
       setLoading(true);
-      const data = await GetExpert(params, '');
-      console.log(data)
-      if (data.status == 'error') {
+      const data = await GetExpert(params, "");
+      if (data.status == "error") {
         throw new Error();
       }
       setExpert(data.data);
@@ -31,17 +38,19 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
 
   return {
     expert,
-    loading
+    loading,
   };
 }
 
 export function useGetExpertSkillOption(params: ExpertSkillOptionRq) {
-  const [skillOptions, setSkillOptions] = useState<ExpertSkillOption[] | undefined>(undefined);
+  const [skillOptions, setSkillOptions] = useState<
+    ExpertSkillOption[] | undefined
+  >(undefined);
 
   const fetchExpertProfile = async () => {
     try {
-      const data = await GetExpertSkillOption(params, '');
-      if (data.status == 'error') {
+      const data = await GetExpertSkillOption(params, "");
+      if (data.status == "error") {
         throw new Error();
       }
       setSkillOptions(data.data);
@@ -55,17 +64,19 @@ export function useGetExpertSkillOption(params: ExpertSkillOptionRq) {
   }, []);
 
   return {
-    skillOptions
+    skillOptions,
   };
 }
 
-export function useGetExpertNatonSupport(params: GetExpertNationSupportRequest) {
+export function useGetExpertNatonSupport(
+  params: GetExpertNationSupportRequest
+) {
   const [nation, setNation] = useState<ExpertNation[]>([]);
 
   const fetchExpertProfile = async () => {
     try {
-      const data = await GetExpertNation(params, '');
-      if (data.status == 'error') {
+      const data = await GetExpertNation(params, "");
+      if (data.status == "error") {
         throw new Error();
       }
       setNation(data.data);
@@ -79,6 +90,6 @@ export function useGetExpertNatonSupport(params: GetExpertNationSupportRequest) 
   }, []);
 
   return {
-    nation
+    nation,
   };
 }

@@ -33,6 +33,8 @@ const response = async (params: any, staffToken: string, expertToken: string, ad
         console.log("userlogin:", res);
         if (res.data.roleId && res.data.roleId === 2) {
           setStaffToken(res.data.token, cookies());
+        } else if (res.data.roleId && res.data.roleId === 3) {
+          setExpertToken(res.data.token, cookies());
         } else {
           throw new Error('Sai tài khoản hoặc mật khẩu');
         }
