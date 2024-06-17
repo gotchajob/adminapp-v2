@@ -7,10 +7,6 @@ export default async function Page() {
   const adminToken = await getAdminToken(cookies());
   const expertToken = await getExpertToken(cookies());
 
-  if (staffToken == "") {
-    redirect('/login');
-  }
-
   if (staffToken !== '') {
     redirect('/staff/dashboard');
   }
