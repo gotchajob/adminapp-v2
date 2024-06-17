@@ -208,6 +208,7 @@ export default function ExpertRegisterUpdateForm({ initValueUpdateForm }: { init
                     }}
                     format="dd-MM-yyyy"
                     label="Ngày sinh"
+                    value={new Date(values.birthDate)}
                     onChange={(newValue: Date | null) => {
                       try {
                         setFieldValue('birthDate', formatDate(newValue?.toISOString() || '', 'yyyy-MM-dd'));
@@ -522,3 +523,14 @@ const errorText = (text: string, hide?: boolean) => {
     </Typography>
   );
 };
+
+
+
+
+
+
+
+
+
+
+

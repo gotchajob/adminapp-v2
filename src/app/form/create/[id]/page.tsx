@@ -58,8 +58,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const [expertSkillOptionList, setExpertSkillOptionList] = useState<ExpertSkillOption[]>([]);
 
-  const router = useRouter();
-
   const { provinceOptions } = useGetProvince();
 
   const { districtOptions } = useGetDistrict(provinceCode);
