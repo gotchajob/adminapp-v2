@@ -21,7 +21,7 @@ import Grid from '@mui/material/Grid';
 
 const Dashboard = () => {
   const [isLoading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     setLoading(false);
   }, []);

@@ -21,16 +21,12 @@ import Typography from '@mui/material/Typography';
 // project imports
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
-import { useGetExpertProfile, useGetExpertNatonSupport } from 'hooks/use-get-expert-profile';
+import { useGetExpertProfile, useGetExpertNatonSupport, useGetExpertCurrent } from 'hooks/use-get-expert-profile';
 import { useRefresh } from 'hooks/use-refresh';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { gridSpacing } from 'store/constant';
-
 import SubCard from 'ui-component/cards/SubCard';
 import Avatar from 'ui-component/extended/Avatar';
-
-// assets
-const Avatar1 = '/assets/images/users/avatar-1.png';
 
 // assets
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -44,6 +40,14 @@ import { IconEdit } from '@tabler/icons-react';
 import { useGetExpertSkillOptions } from 'hooks/use-get-expert-skill-option';
 import { Stack } from '@mui/material';
 import { formatDate } from 'package/util';
+import { ExpertNation } from 'package/api/expert-nation-support';
+import { ExpertToken } from 'hooks/use-login';
+import { useGetNationSupportCurrent } from 'hooks/use-get-nation-support';
+import { GetExpertNationSupportCurrent } from 'package/api/expert-nation-support/current';
+import { Expert } from 'package/api/expert/current';
+
+// assets
+const Avatar1 = '/assets/images/users/avatar-1.png';
 
 // ==============================|| PROFILE 2 - Expert PROFILE ||============================== //
 
@@ -82,26 +86,35 @@ function LinearProgressWithLabel({ value, ...others }: LinearProgressProps) {
   );
 }
 
-const Profile = ({ params }: { params: { id: number } }) => {
+const Profile = ({ expert }: { expert?: Expert; }) => {
+
   const { refreshTime, refresh } = useRefresh();
 
-  const { loading, expert } = useGetExpertProfile({ id: params?.id }, refreshTime);
+  const { expertToken } = ExpertToken();
 
-  const { experSkillOptions } = useGetExpertSkillOptions({ expertId: params?.id });
+  const [expertProfile, setExpertProfile] = useState<Expert | undefined>(expert);
 
-  const { nation } = useGetExpertNatonSupport({ expertId: params?.id });
-
-  useEffect(() => {
-    console.log('Expert:', expert);
-    console.log('Nation:', nation);
-    console.log('Skill Options :', experSkillOptions);
-  }, [nation]);
+  const { nationSupportCurrent, loading: nationSupportCurrentLoading } = useGetNationSupportCurrent(expertToken, refreshTime);
 
   const covertNationString = () => {
     const array: string[] = [];
-    nation?.forEach((value) => array.push(value.nation));
+    nationSupportCurrent?.forEach((value) => array.push(value.nation));
     return array?.join(', ');
   };
+
+  // const [nation, setNation] = useState<ExpertNation[] | undefined>();
+
+  // const { loading, expert } = useGetExpertProfile({ id: params?.id }, refreshTime);
+
+  // const { experSkillOptions } = useGetExpertSkillOptions({ expertId: params?.id });
+
+  // const { nation } = useGetExpertNatonSupport({ expertId: params?.id });
+
+  // const covertNationString = () => {
+  //   const array: string[] = [];
+  //   nation?.forEach((value) => array.push(value.nation));
+  //   return array?.join(', ');
+  // };
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -200,11 +213,6 @@ const Profile = ({ params }: { params: { id: number } }) => {
               <Grid item xs={12}>
                 <SubCard
                   title="Thông tin cá nhân"
-                // secondary={
-                //   <Button>
-                //     <IconEdit stroke={1.5} size="20px" aria-label="Edit Details" />
-                //   </Button>
-                // }
                 >
                   <Grid container spacing={2}>
                     <Divider sx={{ pt: 1 }} />
@@ -251,7 +259,7 @@ const Profile = ({ params }: { params: { id: number } }) => {
               <Grid item xs={12}>
                 <SubCard title="Thời gian">
                   <Grid container spacing={1}>
-                    {JSON.parse(expert.education).map((row: EducationData, index: number) => (
+                    {expert.education !== undefined && JSON.parse(expert.education).map((row: EducationData, index: number) => (
                       <Grid item xs={12} key={index}>
                         <Grid container>
                           <Grid item xs={12} sm={4}>

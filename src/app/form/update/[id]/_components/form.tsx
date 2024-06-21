@@ -213,6 +213,7 @@ export default function ExpertRegisterUpdateForm({
           <Grid container spacing={3}>
             {/* Logo Section */}
 
+
             <Grid item lg={12}>
               <FlexCenter my={4}>
                 <Image
@@ -661,6 +662,7 @@ export default function ExpertRegisterUpdateForm({
                 </FlexBox>
               </FlexBetween>
             </Grid>
+
           </Grid>
         </form>
       </MainCard>
