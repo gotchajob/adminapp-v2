@@ -1,7 +1,7 @@
 import { ExpertRegister, ExpertRegisterRequestRq, GetExpertRegisterRequest } from 'package/api/expert-register-request';
 import { useEffect, useState } from 'react';
 
-export const useGeteExpertRegisterRequest = (params: ExpertRegisterRequestRq, refresh: number) => {
+export const useGetExpertRegisterRequest = (params: ExpertRegisterRequestRq, refresh: number) => {
   const [expertRegisterRequest, setExpertRegisterRequest] = useState<ExpertRegister[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);

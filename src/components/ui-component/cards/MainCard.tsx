@@ -65,7 +65,7 @@ const MainCard = React.forwardRef(
         ref={ref}
         {...others}
         sx={{
-          border: border ? '1px solid' : 'none',
+          border: border ? '1px solid black' : 'none',
           borderColor: 'divider',
           ':hover': { boxShadow: boxShadow ? shadow || defaultShadow : 'inherit' },
           ...sx

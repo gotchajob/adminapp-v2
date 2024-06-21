@@ -1,27 +1,29 @@
-'use client';
+"use client";
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import { useGetCategories } from 'hooks/use-get-category';
-import { useGetSkill } from 'hooks/use-get-skill';
-import { useGetSkillOptions } from 'hooks/use-get-skill-option';
-import { Category } from 'package/api/category';
-import { Skill } from 'package/api/skill';
-import { SkillOption } from 'package/api/skill-option';
-import { ExpertSkillOption } from 'package/api/user/create-expert-account';
-import { useEffect, useMemo, useState } from 'react';
-import { gridSpacing } from 'store/constant';
-import { Text } from 'views/forms/input/text/text';
-import ClearIcon from '@mui/icons-material/Clear';
-import Autocomplete from '@mui/material/Autocomplete';
-import { useGetExpertSkillOptions } from 'hooks/use-get-expert-skill-option';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import { useGetCategories } from "hooks/use-get-category";
+import { useGetSkill } from "hooks/use-get-skill";
+import { useGetSkillOptions } from "hooks/use-get-skill-option";
+import { Category } from "package/api/category";
+import { Skill } from "package/api/skill";
+import { SkillOption } from "package/api/skill-option";
+import { ExpertSkillOption } from "package/api/user/create-expert-account";
+import { useEffect, useMemo, useState } from "react";
+import { gridSpacing } from "store/constant";
+
+import ClearIcon from "@mui/icons-material/Clear";
+import Autocomplete from "@mui/material/Autocomplete";
+import { useGetExpertSkillOptions } from "hooks/use-get-expert-skill-option";
+import { ExpertFormRequirePopup } from "components/common/require-popup/form-require-popup";
+
 
 export const SkillForm = ({
   setExpertSkillOptionList,
-  expertId
+  expertId,
 }: {
   setExpertSkillOptionList: (value: ExpertSkillOption[]) => void;
   expertId: number;
@@ -32,26 +34,35 @@ export const SkillForm = ({
 
   const [addingCategories, setAddingCategories] = useState<Category[]>([]);
   const [addingSkills, setAddingSkills] = useState<Skill[]>([]);
-  const [addingSkillOptions, setAddingSkillOptions] = useState<SkillOption[]>([]);
+  const [addingSkillOptions, setAddingSkillOptions] = useState<SkillOption[]>(
+    []
+  );
 
   const [isUpdate, setIsUpdate] = useState(0);
 
-  const { expertSkillOptions, newCategoryList, newSkillList, newSkillOptionList, isLoading } = useGetExpertSkillOptions(
-    { expertId },
-    categories,
-    skills,
-    skillOptions
-  );
+  const {
+    expertSkillOptions,
+    newCategoryList,
+    newSkillList,
+    newSkillOptionList,
+    isLoading,
+  } = useGetExpertSkillOptions({ expertId }, categories, skills, skillOptions);
 
   useEffect(() => {
     setAddingCategories(newCategoryList || []);
     setAddingSkills(newSkillList || []);
     setAddingSkillOptions(newSkillOptionList || []);
+    setIsUpdate(isUpdate + 1);
   }, [isLoading, expertId]);
 
+
+
+  
   useEffect(() => {
     const data: ExpertSkillOption[] = [];
-    addingSkillOptions.forEach((value) => data.push({ certificate: '', skillOptionId: value.id }));
+    addingSkillOptions.forEach((value) =>
+      data.push({ certificate: "", skillOptionId: value.id })
+    );
     setExpertSkillOptionList(data);
   }, [isUpdate]);
 
@@ -77,22 +88,14 @@ export const SkillForm = ({
     return array;
   };
 
-  const getNotIncludedSkillOptions = () => {
-    let array: SkillOption[] = [];
-    skillOptions.forEach((skillOption) => {
-      if (addingSkillOptions.find((value) => value.id === skillOption.id)) {
-      } else {
-        array.push(skillOption);
-      }
-    });
-    return array;
-  };
-
   const filterSkillByCategory = (skills: Skill[], categoryId: number) => {
     return skills.filter((value) => value.categoryId === categoryId);
   };
 
-  const filterSkillOptionBySkill = (skillOptions: SkillOption[], skillId: number) => {
+  const filterSkillOptionBySkill = (
+    skillOptions: SkillOption[],
+    skillId: number
+  ) => {
     return skillOptions.filter((value) => value.skillId === skillId);
   };
 
@@ -103,14 +106,20 @@ export const SkillForm = ({
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleUpdateCategory = (oldCategory?: Category, newCategory?: Category) => {
+  const handleUpdateCategory = (
+    oldCategory?: Category,
+    newCategory?: Category
+  ) => {
     let newAddingCategories = addingCategories;
     let newAddingSkills: Skill[] = [];
     let newAddingSkillOptions: SkillOption[] = [];
     if (oldCategory && newCategory && oldCategory.id === newCategory.id) {
       return;
     }
-    if (newCategory && newAddingCategories.find((category) => category.id === newCategory.id)) {
+    if (
+      newCategory &&
+      newAddingCategories.find((category) => category.id === newCategory.id)
+    ) {
       return;
     }
     if (oldCategory) {
@@ -119,7 +128,9 @@ export const SkillForm = ({
         .forEach((skill) => {
           addingSkillOptions
             .filter((skillOption) => skillOption.skillId !== skill.id)
-            .forEach((skillOption) => newAddingSkillOptions.push({ ...skillOption }));
+            .forEach((skillOption) =>
+              newAddingSkillOptions.push({ ...skillOption })
+            );
         });
       addingSkills
         .filter((skill) => skill.categoryId !== oldCategory.id)
@@ -127,7 +138,9 @@ export const SkillForm = ({
           newAddingSkills.push(skill);
         });
 
-      newAddingCategories = newAddingCategories.filter((category) => category.id !== oldCategory.id);
+      newAddingCategories = newAddingCategories.filter(
+        (category) => category.id !== oldCategory.id
+      );
     }
 
     if (newCategory) {
@@ -159,7 +172,9 @@ export const SkillForm = ({
       addingSkillOptions
         .filter((skillOptions) => skillOptions.skillId !== oldSkill.id)
         .forEach((skillOptions) => newAddingSkillOptions.push(skillOptions));
-      newAddingSkills = newAddingSkills.filter((skill) => skill.id !== oldSkill.id);
+      newAddingSkills = newAddingSkills.filter(
+        (skill) => skill.id !== oldSkill.id
+      );
     }
     if (newSkill) {
       newAddingSkills.push(newSkill);
@@ -169,51 +184,74 @@ export const SkillForm = ({
     setIsUpdate(isUpdate + 1);
   };
 
-  const handleUpdateSkillOption = (skillOptionList: SkillOption[]) => {
+  const handleUpdateSkillOption = (
+    skillOptionList: SkillOption[],
+    skillId: number
+  ) => {
     let newAddingSkillOptions = addingSkillOptions;
-    if (skillOptionList.length > 1) {
-      newAddingSkillOptions = newAddingSkillOptions.filter((skillOption) => skillOption.skillId !== skillOptionList[0].id);
-      newAddingSkillOptions = [...newAddingSkillOptions, ...skillOptionList];
-    }
+    newAddingSkillOptions = newAddingSkillOptions.filter(
+      (skillOption) => skillOption.skillId !== skillId
+    );
+    newAddingSkillOptions = [...newAddingSkillOptions, ...skillOptionList];
     setAddingSkillOptions(newAddingSkillOptions);
     setIsUpdate(isUpdate + 1);
   };
 
   return (
     <Grid container alignItems="center" spacing={gridSpacing}>
+       <Grid item xs={12}>
+       <ExpertFormRequirePopup categories={addingCategories}/>
+      </Grid>
       {addingCategories.map((category, index) => {
         return (
           <Grid item xs={12} key={index}>
             <Grid container spacing={3}>
               <Grid item xs={3}>
-                <CategoryInput categories={categories} handleUpdateCategory={handleUpdateCategory} defaultValue={category} />
+                <CategoryInput
+                  categories={categories}
+                  handleUpdateCategory={handleUpdateCategory}
+                  defaultValue={category}
+                />
               </Grid>
               <Grid item xs={9}>
                 <Grid container spacing={3}>
-                  {filterSkillByCategory(addingSkills, category.id).map((skill, index) => {
-                    const skillOptionsSelect = filterSkillOptionBySkill(skillOptions, skill.id);
-                    return (
-                      <Grid item xs={12} key={index}>
-                        <Grid container spacing={3}>
-                          <Grid item xs={4}>
-                            <SkillInput
-                              defaultValue={skill}
-                              handleUpdateSkill={handleUpdateSkill}
-                              skills={filterSkillByCategory(skills, category.id)}
-                              key={skill.id}
-                            />
-                          </Grid>
-                          <Grid item xs={8}>
-                            <SkillOptionInput
-                              handleUpdateSkillOption={handleUpdateSkillOption}
-                              skillOptions={skillOptionsSelect}
-                              defaultValue={filterSkillOptionBySkill(addingSkillOptions, skill.id)}
-                            />
+                  {filterSkillByCategory(addingSkills, category.id).map(
+                    (skill, index) => {
+                      const skillOptionsSelect = filterSkillOptionBySkill(
+                        skillOptions,
+                        skill.id
+                      );
+                      return (
+                        <Grid item xs={12} key={index}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={4}>
+                              <SkillInput
+                                defaultValue={skill}
+                                handleUpdateSkill={handleUpdateSkill}
+                                skills={filterSkillByCategory(
+                                  skills,
+                                  category.id
+                                )}
+                                key={skill.id}
+                              />
+                            </Grid>
+                            <Grid item xs={8}>
+                              <SkillOptionInput
+                                handleUpdateSkillOption={
+                                  handleUpdateSkillOption
+                                }
+                                skillOptions={skillOptionsSelect}
+                                defaultValue={filterSkillOptionBySkill(
+                                  addingSkillOptions,
+                                  skill.id
+                                )}
+                              />
+                            </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    );
-                  })}
+                      );
+                    }
+                  )}
                   <Grid item xs={3}>
                     <Button
                       fullWidth
@@ -252,33 +290,43 @@ const CategoryInput = ({
   categories,
   handleUpdateCategory,
   defaultValue,
-  readonly = false
+  readonly = false,
 }: {
   categories: Category[];
   readonly?: boolean;
   defaultValue: Category;
-  handleUpdateCategory: (oldCategory?: Category, newCategory?: Category) => void;
+  handleUpdateCategory: (
+    oldCategory?: Category,
+    newCategory?: Category
+  ) => void;
 }) => {
   return (
-    <Box position={'relative'}>
+    <Box position={"relative"}>
       <ClearIcon
         onClick={() => {
           handleUpdateCategory(defaultValue);
         }}
-        fontSize={'small'}
+        fontSize={"small"}
         color="error"
         sx={{
-          position: 'absolute',
+          position: "absolute",
           zIndex: 1,
           top: -8,
           right: -8,
-          bgcolor: 'white',
-          ':hover': { color: '#fd0100', boxShadow: '0px 1px 1px gray' },
-          cursor: 'pointer',
-          borderRadius: 10
+          bgcolor: "white",
+          ":hover": { color: "#fd0100", boxShadow: "0px 1px 1px gray" },
+          cursor: "pointer",
+          borderRadius: 10,
         }}
       />
-      <TextField size="small" select fullWidth label="Ngành nghề" disabled={readonly} value={defaultValue.id}>
+      <TextField
+        size="small"
+        select
+        fullWidth
+        label="Ngành nghề"
+        disabled={readonly}
+        value={defaultValue.id}
+      >
         {categories?.map((option) => (
           <MenuItem
             key={option.id}
@@ -299,7 +347,7 @@ const SkillInput = ({
   skills,
   handleUpdateSkill,
   defaultValue,
-  readonly = false
+  readonly = false,
 }: {
   skills: Skill[];
   readonly?: boolean;
@@ -307,25 +355,32 @@ const SkillInput = ({
   handleUpdateSkill: (oldSkill?: Skill, newSkill?: Skill) => void;
 }) => {
   return (
-    <Box position={'relative'}>
+    <Box position={"relative"}>
       <ClearIcon
-        fontSize={'small'}
+        fontSize={"small"}
         onClick={() => {
           handleUpdateSkill(defaultValue);
         }}
         color="error"
         sx={{
-          position: 'absolute',
+          position: "absolute",
           zIndex: 1,
           top: -8,
           right: -8,
-          bgcolor: 'white',
-          ':hover': { color: '#fd0100', boxShadow: '0px 1px 1px gray' },
-          cursor: 'pointer',
-          borderRadius: 10
+          bgcolor: "white",
+          ":hover": { color: "#fd0100", boxShadow: "0px 1px 1px gray" },
+          cursor: "pointer",
+          borderRadius: 10,
         }}
       />
-      <TextField size="small" select fullWidth label="Kĩ năng" disabled={readonly} value={defaultValue.id}>
+      <TextField
+        size="small"
+        select
+        fullWidth
+        label="Kĩ năng"
+        disabled={readonly}
+        value={defaultValue.id}
+      >
         {skills?.map((option) => (
           <MenuItem
             key={option.id}
@@ -346,25 +401,29 @@ const SkillOptionInput = ({
   skillOptions,
   readonly = false,
   defaultValue,
-  handleUpdateSkillOption
+  handleUpdateSkillOption,
 }: {
   skillOptions: SkillOption[];
   readonly?: boolean;
   defaultValue: SkillOption[];
-  handleUpdateSkillOption: (skillOptionList: SkillOption[]) => void;
+  handleUpdateSkillOption: (
+    skillOptionList: SkillOption[],
+    skillId: number
+  ) => void;
 }) => {
   return (
     <Autocomplete
       size="small"
       multiple
-      sx={{ '.MuiInputBase-root': { height: 40 } }}
+      sx={{ ".MuiInputBase-root": { height: 40 } }}
       options={skillOptions}
       getOptionLabel={(option) => option.name}
       filterSelectedOptions
       renderInput={(params) => <TextField {...params} label="Chọn kĩ năng" />}
       defaultValue={defaultValue}
       onChange={(e, v) => {
-        handleUpdateSkillOption(v);
+        console.log(v);
+        handleUpdateSkillOption(v, skillOptions[0].skillId);
       }}
     />
   );

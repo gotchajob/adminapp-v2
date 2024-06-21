@@ -1,27 +1,28 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { SyntheticEvent, useEffect, useState } from 'react';
+import Link from "next/link";
+import { SyntheticEvent, useEffect, useState } from "react";
 
 // material-ui
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import { useTheme } from '@mui/material/styles';
-import { gridSpacing } from 'store/constant';
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import { useTheme } from "@mui/material/styles";
+import { gridSpacing } from "store/constant";
 
 // project imports
-import MainCard from 'ui-component/cards/MainCard';
+import MainCard from "ui-component/cards/MainCard";
 
 // assets
-import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
-import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
-import LibraryBooksTwoToneIcon from '@mui/icons-material/LibraryBooksTwoTone';
-import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
-import MailTwoToneIcon from '@mui/icons-material/MailTwoTone';
+import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
+import DescriptionTwoToneIcon from "@mui/icons-material/DescriptionTwoTone";
+import LibraryBooksTwoToneIcon from "@mui/icons-material/LibraryBooksTwoTone";
+import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
+import MailTwoToneIcon from "@mui/icons-material/MailTwoTone";
 
 // types
+
 import { TabsProps } from 'types';
 import { ThemeMode } from 'types/config';
 import MyAccount from './_components/MyAccount';
@@ -36,45 +37,52 @@ import { GetExpertCurrent } from 'package/api/expert/current';
 import { useRefresh } from 'hooks/use-refresh';
 import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
 
+
 // tabs panel
 function TabPanel({ children, value, index, ...other }: TabsProps) {
-    return (
-        <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
-            {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
-        </div>
-    );
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
+    </div>
+  );
 }
 
 // ally props
 function a11yProps(index: number) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`
-    };
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
 }
 
 // tabs option
 const tabsOption = [
-    {
-        label: 'Profile',
-        icon: <AccountCircleTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-    },
-    {
-        label: 'Personal Details',
-        icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-    },
-    {
-        label: 'My Account',
-        icon: <LibraryBooksTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-    },
-    {
-        label: 'Change Password',
-        icon: <LockTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-    },
-    {
-        label: 'Settings',
-        icon: <MailTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-    }
+  {
+    label: "Profile",
+    icon: <AccountCircleTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
+  },
+  {
+    label: "Personal Details",
+    icon: <DescriptionTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
+  },
+  {
+    label: "My Account",
+    icon: <LibraryBooksTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
+  },
+  {
+    label: "Change Password",
+    icon: <LockTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
+  },
+  {
+    label: "Settings",
+    icon: <MailTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
+  },
 ];
 
 // ==============================|| PROFILE 1 ||============================== //
