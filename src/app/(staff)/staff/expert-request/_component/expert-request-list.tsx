@@ -29,7 +29,7 @@ import { enqueueSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
 import { formatDate } from "package/util";
 import TextField from "@mui/material/TextField";
-import { useGeteExpertRegisterRequest } from "hooks/use-get-expert-register-request";
+import { useGetExpertRegisterRequest } from "hooks/use-get-expert-register-request";
 import Chip from "ui-component/extended/Chip";
 import { ExpertRegisterApprove } from "package/api/expert-register-request/id/approve";
 import { StaffToken } from "hooks/use-login";
@@ -40,11 +40,8 @@ import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
 import { ExpertRegisterRejectForm } from "package/api/expert-register-request/id/reject-form";
 import { PatchExpertRegisterBan } from "package/api/expert-register-request/id/ban";
 import { ExpertRegisterApproveForm } from "package/api/expert-register-request/id/approve-form";
-import { StyledLink } from "components/common/link/styled-link";
-import { routeros } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useRouter } from "next/navigation";
 import CircularLoader from "ui-component/CircularLoader";
-import { IconNumber0Small } from "@tabler/icons-react";
 
 const avatarImage = "/assets/images/experts";
 
@@ -86,7 +83,7 @@ const ExpertRequestList = () => {
   //State loading button dialog
   const [isLoading, setIsLoading] = useState(false);
 
-  const { expertRegisterRequest, loading } = useGeteExpertRegisterRequest(
+  const { expertRegisterRequest, loading } = useGetExpertRegisterRequest(
     { limit: 100, page: 1, search: ["id>32"] },
     refreshTime
   );
@@ -165,14 +162,14 @@ const ExpertRequestList = () => {
         throw new Error("Hãy chọn đơn muốn xác nhận từ chối");
       }
 
-      const action = await ExpertRegisterRejectForm({
-        id: expertReject.id,
-        reasonReject: rejectReason,
-        url: `${currentHost}:3000/form/update/${expertReject.email}-${expertReject.id}`,
-      });
-      if (action.status === "error") {
-        throw new Error("");
-      }
+      // const action = await ExpertRegisterRejectForm({
+      //   id: expertReject.id,
+      //   reasonReject: rejectReason,
+      //   url: `${currentHost}:3000/form/update/${expertReject.email}-${expertReject.id}`,
+      // });
+      // if (action.status === "error") {
+      //   throw new Error("");
+      // }
       enqueueSnackbar(`Từ chối đơn đăng kí thành công`, {
         variant: "success",
       });
@@ -285,7 +282,7 @@ const ExpertRequestList = () => {
             </IconButton>
           </Tooltip>
         ) : null}
-        {!(
+        {/* {!(
           row.status === 5 ||
           row.status === 0 ||
           row.status === 1 ||
@@ -303,7 +300,7 @@ const ExpertRequestList = () => {
               <ErrorTwoToneIcon sx={{ fontSize: "1.1rem" }} />
             </IconButton>
           </Tooltip>
-        ) : null}
+        ) : null} */}
 
         <Tooltip placement="top" title="Chặn">
           <IconButton
@@ -325,7 +322,7 @@ const ExpertRequestList = () => {
         <TableHead>
           <TableRow>
             <TableCell sx={{ pl: 3 }}>#</TableCell>
-            <TableCell>Email</TableCell>
+            <TableCell>Email đăng kí</TableCell>
             <TableCell>Ngày tạo</TableCell>
             <TableCell>Ngày cập nhật</TableCell>
             <TableCell>Trạng thái</TableCell>
@@ -368,7 +365,7 @@ const ExpertRequestList = () => {
                       disabled={row.status === 1 || row.status === 2}
                       onClick={() => {
                         router.push(
-                          `/staff/expert-request/expert-detail/${row.expertId}`
+                          `/staff/expert-request/expert-detail/${row.id}-${row.expertId}`
                         );
                       }}
                     >

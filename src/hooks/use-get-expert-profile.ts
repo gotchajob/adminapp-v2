@@ -1,8 +1,15 @@
-
-import { ExpertNation, GetExpertNation, GetExpertNationSupportRequest } from 'package/api/expert-nation-support';
-import { ExpertSkillOption, ExpertSkillOptionRq, GetExpertSkillOption } from 'package/api/expert-skill-option';
-import { Expert, GetExpert, GetExpertRequest } from 'package/api/expert/id';
-import { useEffect, useState } from 'react';
+import {
+  ExpertNation,
+  GetExpertNation,
+  GetExpertNationSupportRequest,
+} from "package/api/expert-nation-support";
+import {
+  ExpertSkillOption,
+  ExpertSkillOptionRq,
+  GetExpertSkillOption,
+} from "package/api/expert-skill-option";
+import { Expert, GetExpert, GetExpertRequest } from "package/api/expert/id";
+import { useEffect, useState } from "react";
 
 export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,7 +21,7 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
       setLoading(true);
 
       const data = await GetExpert(params);
-      if (data.status == 'error') {
+      if (data.status == "error") {
         throw new Error();
       }
       setExpert(data.data);
@@ -67,7 +74,7 @@ export function useGetExpertNatonSupport(
 
   const fetchExpertProfile = async () => {
     try {
-      const data = await GetExpertNation(params, "");
+      const data = await GetExpertNation(params);
       if (data.status == "error") {
         throw new Error();
       }

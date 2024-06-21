@@ -14,10 +14,12 @@ import { SkillOption } from "package/api/skill-option";
 import { ExpertSkillOption } from "package/api/user/create-expert-account";
 import { useEffect, useMemo, useState } from "react";
 import { gridSpacing } from "store/constant";
-import { Text } from "views/forms/input/text/text";
+
 import ClearIcon from "@mui/icons-material/Clear";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useGetExpertSkillOptions } from "hooks/use-get-expert-skill-option";
+import { ExpertFormRequirePopup } from "components/common/require-popup/form-require-popup";
+
 
 export const SkillForm = ({
   setExpertSkillOptionList,
@@ -50,8 +52,12 @@ export const SkillForm = ({
     setAddingCategories(newCategoryList || []);
     setAddingSkills(newSkillList || []);
     setAddingSkillOptions(newSkillOptionList || []);
+    setIsUpdate(isUpdate + 1);
   }, [isLoading, expertId]);
 
+
+
+  
   useEffect(() => {
     const data: ExpertSkillOption[] = [];
     addingSkillOptions.forEach((value) =>
@@ -193,6 +199,9 @@ export const SkillForm = ({
 
   return (
     <Grid container alignItems="center" spacing={gridSpacing}>
+       <Grid item xs={12}>
+       <ExpertFormRequirePopup categories={addingCategories}/>
+      </Grid>
       {addingCategories.map((category, index) => {
         return (
           <Grid item xs={12} key={index}>

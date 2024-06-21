@@ -1,4 +1,4 @@
-import { apiServerFetch, errorSystem } from 'package/api/api-fetch';
+import { apiServerFetch, errorSystem } from "package/api/api-fetch";
 export interface GetExpertRequest {
   id: number;
 }
@@ -21,6 +21,7 @@ export interface Expert {
   yearExperience: number;
   phone: string;
   birthDate: string;
+  emailContact: string;
   bio: string;
   portfolioUrl: string;
   facebookUrl: string;
@@ -29,14 +30,16 @@ export interface Expert {
   education: string;
 }
 
-export const GetExpert = async (params: GetExpertRequest): Promise<GetExpertResponse> => {
+export const GetExpert = async (
+  params: GetExpertRequest
+): Promise<GetExpertResponse> => {
   try {
-    const res = await apiServerFetch(`/expert/${params.id}`, 'GET', undefined);
-    if (res.status === 'error') {
-      throw new Error('');
+    const res = await apiServerFetch(`/expert/${params.id}`, "GET", undefined);
+    if (res.status === "error") {
+      throw new Error("");
     }
     return res;
   } catch (error: any) {
-    return errorSystem('Không thẻ lấy thông tin', {});
+    return errorSystem("Không thẻ lấy thông tin", {});
   }
 };

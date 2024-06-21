@@ -18,6 +18,7 @@ export interface ExpertNation{
 
 export const GetExpertNation = async (params: GetExpertNationSupportRequest,): Promise<GetExpertNationResponnse> => {
   try {
+    console.log(params)
     const searchParams = new URLSearchParams();
     searchParams.append('expertId', params.expertId + '');
     const res = await apiServerFetch(`/expert-nation-support?` + searchParams.toString(), 'GET');

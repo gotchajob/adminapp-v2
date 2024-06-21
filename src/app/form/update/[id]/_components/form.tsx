@@ -58,6 +58,7 @@ import {
 import { StyledLink } from "components/common/link/styled-link";
 import { Text } from "views/forms/input/text/text";
 import MainCard from "ui-component/cards/MainCard";
+import { RequireForm } from "./require";
 
 const logo = "/assets/images/logo/logo.png";
 
@@ -77,6 +78,10 @@ export interface UpdateExpertInitValue {
   nation: string[];
   education: string;
   expertId: number;
+  emailContact: string;
+  portfolioUrl: string;
+  address: string;
+  note: string;
 }
 
 export default function ExpertRegisterUpdateForm({
@@ -84,13 +89,19 @@ export default function ExpertRegisterUpdateForm({
 }: {
   initValueUpdateForm: UpdateExpertInitValue;
 }) {
+  const [provinceInitCode, districtInitCode] =
+    initValueUpdateForm.portfolioUrl.split("-");
+
+  const [street, ward, district, province] =
+    initValueUpdateForm.address.split(", ");
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const [provinceCode, setProvinceCode] = useState<string>("");
+  const [provinceCode, setProvinceCode] = useState<string>(provinceInitCode);
 
   const [isAgree, setIsAgree] = useState<boolean>(false);
 
-  const [districtCode, setDistrictCode] = useState<string>("");
+  const [districtCode, setDistrictCode] = useState<string>(districtInitCode);
 
   const [education, setEducation] = useState<string>(
     initValueUpdateForm.education
@@ -102,26 +113,25 @@ export default function ExpertRegisterUpdateForm({
     ExpertSkillOption[]
   >([]);
 
-  const router = useRouter();
-
   const { provinceOptions } = useGetProvince();
 
-  const { districtOptions } = useGetDistrict(provinceCode);
+  const { districtOptions} =
+    useGetDistrict(provinceCode);
 
   const { wardOptions } = useGetWard(districtCode);
 
   const { countries } = useGetCountry();
 
   const initialValues = {
-    email: "",
+    email: initValueUpdateForm.emailContact,
     firstName: initValueUpdateForm.firstName,
     lastName: initValueUpdateForm.lastName,
     phone: initValueUpdateForm.phone,
     avatar: initValueUpdateForm.avatar,
-    street: "",
-    ward: "",
-    district: "",
-    province: "",
+    street,
+    ward,
+    district,
+    province,
     birthDate: initValueUpdateForm.birthDate,
     bio: initValueUpdateForm.bio,
     facebookUrl: initValueUpdateForm.facebookUrl,
@@ -162,7 +172,7 @@ export default function ExpertRegisterUpdateForm({
       const res = await PatchUpdateExpertForm({
         ...value,
         expertRegisterRequestId: initValueUpdateForm.requestId,
-        portfolioUrl: "",
+        portfolioUrl: `${provinceCode}-${districtCode}`,
         address: `${values.street}, ${values.ward}, ${values.district}, ${values.province}`,
         education,
         nationSupport: nation,
@@ -196,12 +206,13 @@ export default function ExpertRegisterUpdateForm({
   });
 
   return (
-    <Container maxWidth="lg" sx={{py: 10}}>
+    <Container maxWidth="lg" sx={{ py: 10 }}>
       <MainCard border={true}>
         {/* FORM */}
         <form autoComplete="on" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             {/* Logo Section */}
+
             <Grid item lg={12}>
               <FlexCenter my={4}>
                 <Image
@@ -219,6 +230,14 @@ export default function ExpertRegisterUpdateForm({
             </Grid>
 
             {/* Personal Information Subcard */}
+            <Grid item lg={12}>
+              <SubCard title="Thông tin cần bổ sung">
+                <RequireForm
+                  requestId={initValueUpdateForm.requestId}
+                  note={initValueUpdateForm.note}
+                />
+              </SubCard>
+            </Grid>
             <Grid item lg={12}>
               <SubCard title="Thông tin cá nhân">
                 <Grid container spacing={gridSpacing}>
@@ -307,52 +326,52 @@ export default function ExpertRegisterUpdateForm({
                     </TextField>
                   </Grid>
                   <Grid item lg={6}>
-                    <TextField
-                      select
-                      name="district"
-                      fullWidth
-                      label="Quận / huyện"
-                      value={values.district}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      disabled={values.province === ""}
-                      error={!!touched.district && !!errors.district}
-                      helperText={
-                        (touched.district && errors.district) as string
-                      }
-                    >
-                      {districtOptions?.map((option) => (
-                        <MenuItem
-                          key={option.idDistrict}
-                          value={option.name}
-                          onClick={() => {
-                            setDistrictCode(option.idDistrict);
-                          }}
-                        >
-                          {option.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      <TextField
+                        select
+                        name="district"
+                        fullWidth
+                        label="Quận / huyện"
+                        value={values.district}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        disabled={values.province === ""}
+                        error={!!touched.district && !!errors.district}
+                        helperText={
+                          (touched.district && errors.district) as string
+                        }
+                      >
+                        {districtOptions?.map((option) => (
+                          <MenuItem
+                            key={option.idDistrict}
+                            value={option.name}
+                            onClick={() => {
+                              setDistrictCode(option.idDistrict);
+                            }}
+                          >
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                   </Grid>
                   <Grid item lg={6}>
-                    <TextField
-                      select
-                      name="ward"
-                      fullWidth
-                      label="Phường / Xã"
-                      value={values.ward}
-                      disabled={values.district === ""}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.ward && !!errors.ward}
-                      helperText={(touched.ward && errors.ward) as string}
-                    >
-                      {wardOptions?.map((option) => (
-                        <MenuItem key={option.name} value={option.name}>
-                          {option.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      <TextField
+                        select
+                        name="ward"
+                        fullWidth
+                        label="Phường / Xã"
+                        value={values.ward}
+                        disabled={values.district === ""}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        error={!!touched.ward && !!errors.ward}
+                        helperText={(touched.ward && errors.ward) as string}
+                      >
+                        {wardOptions?.map((option) => (
+                          <MenuItem key={option.name} value={option.name}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                   </Grid>
                   <Grid item lg={12}>
                     <TextField

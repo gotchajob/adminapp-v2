@@ -12,11 +12,19 @@ import { Category } from "package/api/category";
 import { Skill } from "package/api/skill";
 import { SkillOption } from "package/api/skill-option";
 import { ExpertSkillOption } from "package/api/user/create-expert-account";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { gridSpacing } from "store/constant";
 import { Text } from "views/forms/input/text/text";
 import ClearIcon from "@mui/icons-material/Clear";
 import Autocomplete from "@mui/material/Autocomplete";
+import { useGetExpertFormRequire } from "hooks/use-get-expert-form-require";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import Divider from "@mui/material/Divider";
+import DialogContent from "@mui/material/DialogContent";
+import { PRIMARYCOLOR } from "views/forms/input/config";
+import { ExpertFormRequirePopup } from "components/common/require-popup/form-require-popup";
 
 export const SkillForm = ({
   setExpertSkillOptionList,
@@ -34,6 +42,7 @@ export const SkillForm = ({
   );
 
   const [isUpdate, setIsUpdate] = useState(0);
+
   useEffect(() => {
     const data: ExpertSkillOption[] = [];
     addingSkillOptions.forEach((value) =>
@@ -54,12 +63,14 @@ export const SkillForm = ({
     return array;
   };
 
-  const getNotIncludedSkills = () => {
+  const getNotIncludedSkills = (categoryId: number) => {
     let array: Skill[] = [];
     skills.forEach((skill) => {
       if (addingSkills.find((value) => value.id === skill.id)) {
       } else {
-        array.push(skill);
+        if (skill.categoryId === categoryId) {
+          array.push(skill);
+        }
       }
     });
     return array;
@@ -176,6 +187,9 @@ export const SkillForm = ({
 
   return (
     <Grid container alignItems="center" spacing={gridSpacing}>
+      <Grid item xs={12}>
+        <ExpertFormRequirePopup categories={addingCategories}/>
+      </Grid>
       {addingCategories.map((category, index) => {
         return (
           <Grid item xs={12} key={index}>
@@ -232,7 +246,7 @@ export const SkillForm = ({
                       size="small"
                       variant="outlined"
                       onClick={(e) => {
-                        handleAddingSkill(getNotIncludedSkills()[0]);
+                        handleAddingSkill(getNotIncludedSkills(category.id)[0]);
                       }}
                     >
                       Thêm kĩ năng

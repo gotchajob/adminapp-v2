@@ -43,15 +43,11 @@ import {
 import { formatDate } from "package/util";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SkillForm } from "./_components/skill";
-import DialogActions from "@mui/material/DialogActions";
-import { CheckMail } from "package/api/user/check-mail/email";
 import { EducationForm } from "./_components/education";
 import Iconify from "components/iconify/iconify";
 import InputAdornment from "@mui/material/InputAdornment";
 import { PostCreateExpertForm } from "package/api/expert-register-request/id/create_form";
-import Paper from "@mui/material/Paper";
 import MainCard from "ui-component/cards/MainCard";
-import Stack from "@mui/material/Stack";
 import { StyledLink } from "components/common/link/styled-link";
 import {
   FlexBetween,
@@ -59,7 +55,6 @@ import {
   FlexCenter,
 } from "components/common/box/flex-box";
 import { Text } from "views/forms/input/text/text";
-import { PRIMARYCOLOR } from "views/forms/input/config";
 
 const logo = "/assets/images/logo/logo.png";
 
@@ -150,8 +145,8 @@ export default function Page({ params }: { params: { id: string } }) {
       const res = await PostCreateExpertForm({
         ...value,
         expertRegisterRequestId: +params.id.split("-")[1],
-        portfolioUrl: "",
-        address: `${values.street}, ${values.ward}, ${values.district}, ${values.province}`,
+        portfolioUrl: provinceCode + "-" + districtCode,
+        address: `${values.street.replace(", ", "")}, ${values.ward}, ${values.district}, ${values.province}`,
         education,
         nationSupport: nation,
         expertSKillOptionList: expertSkillOptionList,
@@ -427,7 +422,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       </Grid>
                       <Grid item lg={12}>
                         <TextField
-                          label="Email"
+                          label="Email liên lạc"
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
@@ -442,7 +437,10 @@ export default function Page({ params }: { params: { id: string } }) {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={!!touched.email && !!errors.email}
-                          helperText={(touched.email && errors.email) as string}
+                          helperText={
+                            ((touched.email && errors.email) as string) ||
+                            "Email dùng để liên lạc khi cần thiết"
+                          }
                         />
                       </Grid>
                     </Grid>

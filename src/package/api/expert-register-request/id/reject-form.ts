@@ -4,6 +4,7 @@ export interface ExpertRegisterRejectRequest {
   id: number;
   url: string;
   reasonReject: string;
+  criteriaList: Criteria[]
 }
 
 export interface ExpertRegisterRejectResponse {
@@ -11,15 +12,17 @@ export interface ExpertRegisterRejectResponse {
   responseText: string;
   data: string;
 }
+export interface Criteria {
+  criteria: string;
+  description: string;
+  status: number
+}
 
 export const ExpertRegisterRejectForm = async (
   params: ExpertRegisterRejectRequest
 ): Promise<ExpertRegisterRejectResponse> => {
   try {
-    const res = await apiServerFetch(`/expert-register-request/${params.id}/reject-form`, 'PATCH', {
-      reasonReject: params.reasonReject,
-      url: params.url
-    });
+    const res = await apiServerFetch(`/expert-register-request/${params.id}/reject-form`, 'PATCH', params);
     if (res.status === 'error') {
       throw new Error('');
     }
