@@ -211,7 +211,7 @@ export default function ExpertRegisterUpdateForm({ initValueUpdateForm }: { init
                     onChange={(newValue: Date | null) => {
                       try {
                         setFieldValue('birthDate', formatDate(newValue?.toISOString() || '', 'yyyy-MM-dd'));
-                      } catch (error) {}
+                      } catch (error) { }
                     }}
                   />
                   {errors.birthDate ? errorText(errors.birthDate as string) : null}
@@ -495,7 +495,7 @@ export default function ExpertRegisterUpdateForm({ initValueUpdateForm }: { init
           <Button variant="outlined" color="error">
             Xóa
           </Button>
-          <LoadingButton variant="contained" type="submit">
+          <LoadingButton variant="contained" type="submit" loading={isLoading}>
             Gửi
           </LoadingButton>
         </DialogActions>

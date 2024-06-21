@@ -41,6 +41,8 @@ import EmailTwoToneIcon from '@mui/icons-material/EmailTwoTone';
 import { ExpertRegisterRejectForm } from 'package/api/expert-register-request/id/reject-form';
 import { PatchExpertRegisterBan } from 'package/api/expert-register-request/id/ban';
 import { ExpertRegisterApproveForm } from 'package/api/expert-register-request/id/approve-form';
+import Link from 'next/link';
+import { StyledLink } from 'components/common/link/styled-link';
 
 const avatarImage = '/assets/images/experts';
 
@@ -296,13 +298,15 @@ const ExpertRequestList = () => {
         <TableBody>
           {expertRegisterRequest.length > 0 ? (
             expertRegisterRequest.map((row, index) => (
-              <TableRow hover key={index}>
+              <TableRow hover key={index} >
                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
-                <TableCell>
-                  <Typography variant="subtitle2" noWrap>
-                    {row.email}
-                  </Typography>
-                </TableCell>
+                <StyledLink href={`/staff/expert-request/expert-skill-option/${row.expertId}`}>
+                  <TableCell>
+                    <Typography variant="subtitle2" noWrap>
+                      {row.email}
+                    </Typography>
+                  </TableCell>
+                </StyledLink>
                 <TableCell>
                   <Typography variant="subtitle2" noWrap>
                     {formatDate(row.createdAt, 'dd-MM-yyyy')}
