@@ -32,6 +32,9 @@ import { AdminToken, CustomerToken, ExpertToken, StaffToken } from 'hooks/use-lo
 import { useGetCustomer } from 'hooks/use-get-current-user';
 import { Expert, GetUserExpert } from 'package/api/user/expert/id';
 import ChangePassword from './_components/ChangePassword';
+import { GetExpertCurrent } from 'package/api/expert/current';
+import { useRefresh } from 'hooks/use-refresh';
+import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
 
 // tabs panel
 function TabPanel({ children, value, index, ...other }: TabsProps) {
@@ -79,30 +82,30 @@ const tabsOption = [
 const ExpertProfile = () => {
     const theme = useTheme();
 
+    const [value, setValue] = useState<number>(0);
+
+    const { refreshTime, refresh } = useRefresh();
+
+    const { expertToken } = ExpertToken();
+
+    const { expertCurrent, loading: expertCurrentLoading } = useGetExpertCurrent(expertToken, refreshTime);
+
     const handleChange = (event: SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
 
-    const [value, setValue] = useState<number>(0);
+    // const { customer } = useGetCustomer(expertToken);
 
-    const [expert, setExpert] = useState<Expert | undefined>(undefined);
+    // const [expert, setExpert] = useState<Expert | undefined>();
 
-    const { expertToken } = ExpertToken();
+    // const fetchExpert = async () => {
+    //     const data = await GetUserExpert({ userId: customer?.id }, '');
+    //     setExpert(data.data);
+    // }
 
-    const { customer } = useGetCustomer(expertToken);
-
-    const fetchExpert = async () => {
-        const data = await GetUserExpert({ userId: customer?.id }, '');
-        // console.log("data.data:", data.data);
-        setExpert(data.data);
-    }
-
-    useEffect(() => {
-        fetchExpert();
-        console.log("token:", expertToken);
-        console.log("expert:", customer);
-    }, [expertToken]);
-
+    // useEffect(() => {
+    //     fetchExpert();
+    // }, [customer]);
     return (
         <MainCard>
             <Grid container spacing={gridSpacing}>
@@ -145,7 +148,7 @@ const ExpertProfile = () => {
                         ))}
                     </Tabs>
                     <TabPanel value={value} index={0}>
-                        <Profile id={customer?.id}></Profile>
+                        <Profile expert={expertCurrent}></Profile>
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         <PersonalAccount></PersonalAccount>
