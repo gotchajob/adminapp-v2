@@ -22,21 +22,21 @@ import LockTwoToneIcon from "@mui/icons-material/LockTwoTone";
 import MailTwoToneIcon from "@mui/icons-material/MailTwoTone";
 
 // types
-import { TabsProps } from "types";
-import { ThemeMode } from "types/config";
-import MyAccount from "./_components/MyAccount";
-import PersonalAccount from "./_components/PersonalAccount";
-import Profile from "./_components/Profile";
-import Settings from "./_components/Settings";
-import {
-  AdminToken,
-  CustomerToken,
-  ExpertToken,
-  StaffToken,
-} from "hooks/use-login";
-import { useGetCustomer } from "hooks/use-get-current-user";
-import { Expert, GetUserExpert } from "package/api/user/expert/id";
-import ChangePassword from "./_components/ChangePassword";
+
+import { TabsProps } from 'types';
+import { ThemeMode } from 'types/config';
+import MyAccount from './_components/MyAccount';
+import PersonalAccount from './_components/PersonalAccount';
+import Profile from './_components/Profile';
+import Settings from './_components/Settings';
+import { AdminToken, CustomerToken, ExpertToken, StaffToken } from 'hooks/use-login';
+import { useGetCustomer } from 'hooks/use-get-current-user';
+import { Expert, GetUserExpert } from 'package/api/user/expert/id';
+import ChangePassword from './_components/ChangePassword';
+import { GetExpertCurrent } from 'package/api/expert/current';
+import { useRefresh } from 'hooks/use-refresh';
+import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
+
 
 // tabs panel
 function TabPanel({ children, value, index, ...other }: TabsProps) {
@@ -88,102 +88,92 @@ const tabsOption = [
 // ==============================|| PROFILE 1 ||============================== //
 
 const ExpertProfile = () => {
-  const theme = useTheme();
+    const theme = useTheme();
 
-  const handleChange = (event: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+    const [value, setValue] = useState<number>(0);
 
-  const [value, setValue] = useState<number>(0);
+    const { refreshTime, refresh } = useRefresh();
 
-  const [expert, setExpert] = useState<Expert | undefined>(undefined);
+    const { expertToken } = ExpertToken();
 
-  const { expertToken } = ExpertToken();
+    const { expertCurrent, loading: expertCurrentLoading } = useGetExpertCurrent(expertToken, refreshTime);
 
-  const { customer } = useGetCustomer(expertToken);
+    const handleChange = (event: SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
 
-  const fetchExpert = async () => {
-    const data = await GetUserExpert({ userId: customer?.id }, "");
-    // console.log("data.data:", data.data);
-    setExpert(data.data);
-  };
+    // const { customer } = useGetCustomer(expertToken);
 
-  useEffect(() => {
-    fetchExpert();
-    console.log("token:", expertToken);
-    console.log("expert:", customer);
-  }, [expertToken]);
+    // const [expert, setExpert] = useState<Expert | undefined>();
 
-  return (
-    <MainCard border>
-      <Grid container spacing={gridSpacing}>
-        <Grid item xs={12}>
-          <Tabs
-            value={value}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={handleChange}
-            aria-label="simple tabs example"
-            variant="scrollable"
-            sx={{
-              mb: 3,
-              "& a": {
-                minHeight: "auto",
-                minWidth: 10,
-                py: 1.5,
-                px: 1,
-                mr: 2.25,
-                color:
-                  theme.palette.mode === ThemeMode.DARK
-                    ? "grey.600"
-                    : "grey.900",
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              },
-              "& a.Mui-selected": {
-                color: "primary.main",
-              },
-              "& .MuiTabs-indicator": {
-                bottom: 2,
-              },
-              "& a > svg": {
-                marginBottom: "0px !important",
-                mr: 1.25,
-              },
-            }}
-          >
-            {tabsOption.map((tab, index) => (
-              <Tab
-                key={index}
-                component={Link}
-                href="#"
-                icon={tab.icon}
-                label={tab.label}
-                {...a11yProps(index)}
-              />
-            ))}
-          </Tabs>
-          <TabPanel value={value} index={0}>
-            <Profile id={customer?.id}></Profile>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <PersonalAccount></PersonalAccount>
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <MyAccount></MyAccount>
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <ChangePassword></ChangePassword>
-          </TabPanel>
-          <TabPanel value={value} index={4}>
-            <Settings></Settings>
-          </TabPanel>
-        </Grid>
-      </Grid>
-    </MainCard>
-  );
+    // const fetchExpert = async () => {
+    //     const data = await GetUserExpert({ userId: customer?.id }, '');
+    //     setExpert(data.data);
+    // }
+
+    // useEffect(() => {
+    //     fetchExpert();
+    // }, [customer]);
+    return (
+        <MainCard>
+            <Grid container spacing={gridSpacing}>
+                <Grid item xs={12}>
+                    <Tabs
+                        value={value}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        onChange={handleChange}
+                        aria-label="simple tabs example"
+                        variant="scrollable"
+                        sx={{
+                            mb: 3,
+                            '& a': {
+                                minHeight: 'auto',
+                                minWidth: 10,
+                                py: 1.5,
+                                px: 1,
+                                mr: 2.25,
+                                color: theme.palette.mode === ThemeMode.DARK ? 'grey.600' : 'grey.900',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            },
+                            '& a.Mui-selected': {
+                                color: 'primary.main'
+                            },
+                            '& .MuiTabs-indicator': {
+                                bottom: 2
+                            },
+                            '& a > svg': {
+                                marginBottom: '0px !important',
+                                mr: 1.25
+                            }
+                        }}
+                    >
+                        {tabsOption.map((tab, index) => (
+                            <Tab key={index} component={Link} href="#" icon={tab.icon} label={tab.label} {...a11yProps(index)} />
+                        ))}
+                    </Tabs>
+                    <TabPanel value={value} index={0}>
+                        <Profile expert={expertCurrent}></Profile>
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        <PersonalAccount></PersonalAccount>
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        <MyAccount></MyAccount>
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        <ChangePassword></ChangePassword>
+                    </TabPanel>
+                    <TabPanel value={value} index={4}>
+                        <Settings></Settings>
+                    </TabPanel>
+                </Grid>
+            </Grid>
+        </MainCard>
+    );
 };
 
 export default ExpertProfile;
