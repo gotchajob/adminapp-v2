@@ -102,18 +102,6 @@ const ExpertProfile = () => {
         setValue(newValue);
     };
 
-    // const { customer } = useGetCustomer(expertToken);
-
-    // const [expert, setExpert] = useState<Expert | undefined>();
-
-    // const fetchExpert = async () => {
-    //     const data = await GetUserExpert({ userId: customer?.id }, '');
-    //     setExpert(data.data);
-    // }
-
-    // useEffect(() => {
-    //     fetchExpert();
-    // }, [customer]);
     return (
         <MainCard>
             <Grid container spacing={gridSpacing}>

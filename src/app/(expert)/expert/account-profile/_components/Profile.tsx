@@ -92,8 +92,6 @@ const Profile = ({ expert }: { expert?: Expert; }) => {
 
   const { expertToken } = ExpertToken();
 
-  const [expertProfile, setExpertProfile] = useState<Expert | undefined>(expert);
-
   const { nationSupportCurrent, loading: nationSupportCurrentLoading } = useGetNationSupportCurrent(expertToken, refreshTime);
 
   const covertNationString = () => {
@@ -102,19 +100,7 @@ const Profile = ({ expert }: { expert?: Expert; }) => {
     return array?.join(', ');
   };
 
-  // const [nation, setNation] = useState<ExpertNation[] | undefined>();
-
-  // const { loading, expert } = useGetExpertProfile({ id: params?.id }, refreshTime);
-
-  // const { experSkillOptions } = useGetExpertSkillOptions({ expertId: params?.id });
-
-  // const { nation } = useGetExpertNatonSupport({ expertId: params?.id });
-
-  // const covertNationString = () => {
-  //   const array: string[] = [];
-  //   nation?.forEach((value) => array.push(value.nation));
-  //   return array?.join(', ');
-  // };
+  useEffect(() => { console.log("expert:", expert) }, [expert]);
 
   return (
     <Grid container spacing={gridSpacing}>
