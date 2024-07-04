@@ -1,5 +1,6 @@
 // third-party
 import { FormattedMessage } from 'react-intl';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 // assets
 import { IconDashboard, IconChartDots, IconUserCheck, IconBasket, IconFileInvoice, IconMail, IconUser } from '@tabler/icons-react';
@@ -23,6 +24,14 @@ const dashboard: NavItemType = {
       icon: IconChartDots,
       breadcrumbs: false
     },
+    {
+      id: 'expert-calendar',
+      title: <FormattedMessage id="Lịch phỏng vấn" />,
+      icon: CalendarMonthIcon,
+      type: 'item',
+      url: '/expert/expert-calendar',
+      breadcrumbs: false
+    }
   ]
 };
 
