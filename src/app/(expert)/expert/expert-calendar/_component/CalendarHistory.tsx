@@ -19,49 +19,52 @@ import timelinePlugin from '@fullcalendar/timeline';
 import { FormikValues } from 'formik';
 
 // project imports
+import { useRouter } from 'next/navigation';
 import { dispatch, useSelector } from 'store';
 import { addEvent, getEvents, removeEvent, updateEvent } from 'store/slices/calendar';
 import { DateRange } from 'types';
 import { useEffect, useRef, useState } from "react";
-import CustomerToolbar from "./CustomerCalendarToolbar";
+import CustomerToolbar from "./CustomerBookingToolbar";
 
 const fakeEvents = [
     {
-        title: 'Đặt lịch thành công',
-        description: 'Đặt lịch thành công với Anshan Handgun',
-        color: '#198754',
+        title: 'Hoàn tất phỏng vấn',
+        description: 'Kỹ năng chuyên môn tốt',
+        color: '#2196F3',
         textColor: '#ffffff',
         start: '2024-07-02T09:00:00',
         end: '2024-07-02T10:00:00'
     },
     {
-        title: 'Đã đặt lịch',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-07-04T09:00:00',
-        end: '2024-07-04T10:00:00'
-    },
-    {
-        title: 'Đã hủy đặt lịch',
+        title: 'Hủy đặt lịch',
         description: 'Hủy lịch do cần chọn chuyên gia khác',
         color: '#ED4337',
         textColor: '#ffffff',
-        start: '2024-07-03T14:00:00',
-        end: '2024-07-03T15:00:00'
+        start: '2024-07-04T09:00:00',
+        end: '2024-07-04T10:00:00'
     },
     {
         title: 'Hoàn tất phỏng vấn',
         description: 'Kỹ năng chuyên môn tốt',
         color: '#2196F3',
         textColor: '#ffffff',
+        start: '2024-07-03T14:00:00',
+        end: '2024-07-03T15:00:00'
+    },
+    {
+        title: 'Hủy đặt lịch',
+        description: 'Hủy lịch do cần chọn chuyên gia khác',
+        color: '#ED4337',
+        textColor: '#ffffff',
         start: '2024-07-05T14:00:00',
         end: '2024-07-05T15:00:00'
     },
 ];
 
-const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, onSelectEvent: (event: any) => void }) => {
+const CalendarHistoryPage = ({ onNext, onSelectEvent }: { onNext: () => void, onSelectEvent: (event: any) => void }) => {
     const calendarRef = useRef<FullCalendar>(null);
+
+    const route = useRouter();
 
     const matchSm = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
@@ -162,14 +165,18 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
     };
 
     const handleEventSelect = (arg: EventClickArg) => {
+        // if (arg) {
+        //     const selectEvent = fakeEvents.find((_event) => _event.title === arg.event._def.title);
+        //     if (onSelectEvent) {
+        //         onSelectEvent(selectEvent);
+        //     }
+        // }
+        // if (onNext) {
+        //     onNext();
+        // }
         if (arg) {
-            const selectEvent = fakeEvents.find((_event) => _event.title === arg.event._def.title);
-            if (onSelectEvent) {
-                onSelectEvent(selectEvent);
-            }
-        }
-        if (onNext) {
-            onNext();
+            route.push(`http://localhost:3000/expert/expert-calendar/${arg.event}`);
+            localStorage.setItem("PanelValue", JSON.stringify("CalendarHistory"));
         }
     };
 
@@ -257,7 +264,7 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
     )
 }
 
-export default CustomerCalendarPage;
+export default CalendarHistoryPage;
 
 {/* Dialog sửa sự kiện
             <Dialog maxWidth="sm" fullWidth onClose={handleModalClose} open={isModalOpen} sx={{ '& .MuiDialog-paper': { p: 0 } }}>

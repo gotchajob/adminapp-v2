@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 
 // material-ui
 import Box from '@mui/material/Box';
@@ -26,7 +26,8 @@ import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { TabsProps } from 'types';
 import { ThemeMode } from 'types/config';
 import ExpertCalendarPage from './_component/ExpertCalendar';
-import CustomerCalendarPage from './_component/CustomerCalendar';
+import CustomerCalendarPage from './_component/CustomerBooking';
+import CalendarHistoryPage from './_component/CalendarHistory';
 
 // tabs panel
 function TabPanel({ children, value, index, ...other }: TabsProps) {
@@ -55,17 +56,17 @@ const tabsOption = [
     {
         label: 'Lịch phỏng vấn',
         icon: <CalendarMonthIcon sx={{ fontSize: '1.3rem' }} />,
-        caption: 'Cài đặt thời gian phỏng vấn'
+        caption: 'Lịch phỏng vấn của bạn'
     },
     {
-        label: 'Đặt lịch',
+        label: 'Danh sách đặt lịch',
         icon: <ContactMailIcon sx={{ fontSize: '1.3rem' }} />,
         caption: 'Danh sách khách hàng đặt lịch'
     },
     {
-        label: 'Thông tin đặt lịch',
+        label: 'Lịch sử đặt lịch',
         icon: <FeedIcon sx={{ fontSize: '1.3rem' }} />,
-        caption: 'Thông tin chi tiết buổi đặt lịch'
+        caption: 'Lịch sử đặt lịch của bạn'
     },
 ];
 
@@ -73,6 +74,8 @@ const tabsOption = [
 
 const ExpertBookingPage = () => {
     const theme = useTheme();
+
+    const [panelValue, setPanelValue] = useState<string | null>(JSON.parse(localStorage.getItem("PanelValue")));
 
     const [value, setValue] = useState<number>(0);
 
@@ -87,6 +90,23 @@ const ExpertBookingPage = () => {
     const handlePrevStep = () => {
         setValue(0);
     }
+
+    const renderPanelTabs = () => {
+        if (!panelValue) {
+            setValue(0);
+        }
+        if (panelValue == "ExpertCalendar") {
+            setValue(0);
+        } else if (panelValue == "CustomerBooking") {
+            setValue(1);
+        } else if (panelValue == "CalendarHistory") {
+            setValue(2);
+        }
+    }
+
+    useEffect(() => {
+        renderPanelTabs();
+    }, [panelValue]);
 
     return (
         <Box sx={{ boxShadow: 3 }}>
@@ -137,7 +157,8 @@ const ExpertBookingPage = () => {
                                         </Grid>
                                     }
                                     sx={{
-                                        color: value >= index ? 'primary.main' : 'grey.900',
+                                        color: value === index ? 'primary.main' : 'grey.900',
+                                        bgcolor: value === index ? (theme.palette.mode === ThemeMode.DARK ? 'dark.main' : 'grey.50') : 'transparent',
                                         minHeight: 'auto',
                                         minWidth: { xs: '100%', md: 250 },
                                         padding: 2,
@@ -172,6 +193,9 @@ const ExpertBookingPage = () => {
                         </TabPanel>
                         <TabPanel value={value} index={1}>
                             <CustomerCalendarPage onNext={() => { }} onSelectEvent={() => { }} />
+                        </TabPanel>
+                        <TabPanel value={value} index={2}>
+                            <CalendarHistoryPage onNext={() => { }} onSelectEvent={() => { }} />
                         </TabPanel>
                     </Grid>
                 </Grid>
