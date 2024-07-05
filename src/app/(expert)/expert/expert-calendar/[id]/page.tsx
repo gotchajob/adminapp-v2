@@ -220,7 +220,7 @@ const BookingDetailPage = ({ event, onBack }: { event: any, onBack: () => void }
                                                 height={1000}
                                                 objectFit="cover"
                                                 objectPosition="top"
-                                                style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+                                                style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
                                             />
                                         </Stack>
                                     </Stack>
@@ -237,7 +237,7 @@ const BookingDetailPage = ({ event, onBack }: { event: any, onBack: () => void }
                                         height={1000}
                                         objectFit="cover"
                                         objectPosition="top"
-                                        style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+                                        style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
                                     />
                                 </DialogContent>
                             </Dialog>
