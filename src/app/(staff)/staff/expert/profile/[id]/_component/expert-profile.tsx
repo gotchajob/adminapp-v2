@@ -54,34 +54,6 @@ export interface EducationData {
   titleDes: string;
 }
 
-// progress
-function LinearProgressWithLabel({ value, ...others }: LinearProgressProps) {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center'
-      }}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          mr: 1
-        }}
-      >
-        <LinearProgress value={value} {...others} />
-      </Box>
-      <Box
-        sx={{
-          minWidth: 35
-        }}
-      >
-        <Typography variant="body2" color="textSecondary">{`${Math.round(value!)}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
 const ExpertProfile = ({ params }: { params: { id: string } }) => {
   const { refreshTime, refresh } = useRefresh();
 
