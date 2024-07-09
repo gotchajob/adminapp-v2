@@ -132,7 +132,7 @@ const AddEventOnExpertCalendar = ({ event, range, handleDelete, handleCreate, ha
     <FormikProvider value={formik}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-          <DialogTitle>{event ? 'Sửa lịch phỏng vấn' : 'Thêm lịch rảnh phỏng vấn'}</DialogTitle>
+          <DialogTitle>{event ? 'Sửa lịch phỏng vấn' : 'Thêm lịch phỏng vấn'}</DialogTitle>
           <Divider />
           <DialogContent sx={{ p: 3 }}>
             <Grid container spacing={gridSpacing}>

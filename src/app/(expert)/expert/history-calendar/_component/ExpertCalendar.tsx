@@ -16,7 +16,6 @@ import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import { FormikValues } from 'formik';
-import AddAlarmTwoToneIcon from '@mui/icons-material/AddAlarmTwoTone';
 
 // project imports
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from '@mui/material';
@@ -224,23 +223,11 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         }
     };
 
-    const handleAddClick = () => {
-        setIsModalOpen(true);
-    }
-
     if (loading) return <Loader />;
 
     return (
         <Box px={2} py={1}>
             <CalendarStyled>
-                <Grid item xs={12}>
-                    <Grid container justifyContent="flex-end">
-                        <Button color="primary" variant="contained" onClick={handleAddClick}>
-                            <AddAlarmTwoToneIcon fontSize="small" sx={{ mr: 0.75 }} />
-                            Thêm lịch phỏng vấn
-                        </Button>
-                    </Grid>
-                </Grid>
                 <ExpertToolbar
                     date={date}
                     view={view}

@@ -34,6 +34,9 @@ export const ReadSkillForm = ({
     []
   );
 
+  const { newCategoryList, newSkillList, newSkillOptionList, isLoading } =
+    useGetExpertSkillOptions({ expertId }, categories, skills, skillOptions);
+
   const { expertFormRequire } = useGetExpertFormRequire({
     categoryId: addingCategories[0]?.id || 0,
   });
@@ -53,14 +56,12 @@ export const ReadSkillForm = ({
     return skillOptions.filter((value) => value.skillId === skillId);
   };
 
-  const { newCategoryList, newSkillList, newSkillOptionList, isLoading } =
-    useGetExpertSkillOptions({ expertId }, categories, skills, skillOptions);
-
   useEffect(() => {
     setAddingCategories(newCategoryList || []);
     setAddingSkills(newSkillList || []);
     setAddingSkillOptions(newSkillOptionList || []);
   }, [isLoading, expertId]);
+
   return (
     <Grid container alignItems="center" spacing={gridSpacing}>
       {addingCategories.map((category, index) => {

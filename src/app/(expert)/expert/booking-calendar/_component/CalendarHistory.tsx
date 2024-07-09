@@ -1,9 +1,11 @@
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
+"use client";
 
 // material-ui
-import Dialog from '@mui/material/Dialog';
+import FullCalendar from "@fullcalendar/react";
+import { Box, Dialog } from "@mui/material";
+import CalendarStyled from 'components/application/calendar/CalendarStyled';
+import Loader from "ui-component/Loader";
+import SubCard from "ui-component/cards/SubCard";
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -12,69 +14,54 @@ import { DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { EventResizeDoneArg } from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import { FormikValues } from 'formik';
-import AddAlarmTwoToneIcon from '@mui/icons-material/AddAlarmTwoTone';
 
 // project imports
-import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from '@mui/material';
-import CalendarStyled from 'components/application/calendar/CalendarStyled';
+import { useRouter } from 'next/navigation';
 import { dispatch, useSelector } from 'store';
 import { addEvent, getEvents, removeEvent, updateEvent } from 'store/slices/calendar';
 import { DateRange } from 'types';
-import Loader from 'ui-component/Loader';
-import SubCard from 'ui-component/cards/SubCard';
-import { StyledLink } from 'components/common/link/styled-link';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
-import ExpertToolbar from './ExpertCalendarToolbar';
-import AddEventOnExpertCalendar from './AddEventForm';
-import { useRouter } from 'next/navigation';
-
-// ==============================|| APPLICATION CALENDAR ||============================== //
+import { useEffect, useRef, useState } from "react";
+import CustomerToolbar from "./CustomerBookingToolbar";
 
 const fakeEvents = [
     {
-        id: 1,
-        title: 'Available Slot',
-        description: 'This slot is available',
-        color: '#697586',
+        title: 'Hoàn tất phỏng vấn',
+        description: 'Kỹ năng chuyên môn tốt',
+        color: '#2196F3',
         textColor: '#ffffff',
-        start: '2024-07-10T09:00:00',
-        end: '2024-07-10T10:00:00'
+        start: '2024-07-02T09:00:00',
+        end: '2024-07-02T10:00:00'
     },
     {
-        id: 2,
-        title: 'Available Slot',
-        description: 'This slot is available',
-        color: '#697586',
+        title: 'Hủy đặt lịch',
+        description: 'Hủy lịch do cần chọn chuyên gia khác',
+        color: '#ED4337',
         textColor: '#ffffff',
-        start: '2024-07-11T09:00:00',
-        end: '2024-07-11T10:00:00'
+        start: '2024-07-04T09:00:00',
+        end: '2024-07-04T10:00:00'
     },
     {
-        id: 3,
-        title: 'Interview - CV Review',
-        description: 'Reviewing CVs for interviews',
-        color: '#00E676',
+        title: 'Hoàn tất phỏng vấn',
+        description: 'Kỹ năng chuyên môn tốt',
+        color: '#2196F3',
         textColor: '#ffffff',
-        start: '2024-07-09T14:00:00',
-        end: '2024-07-09T15:00:00'
+        start: '2024-07-03T14:00:00',
+        end: '2024-07-03T15:00:00'
     },
     {
-        id: 4,
-        title: 'Interview - CV Review',
-        description: 'Reviewing CVs for interviews',
-        color: '#00E676',
+        title: 'Hủy đặt lịch',
+        description: 'Hủy lịch do cần chọn chuyên gia khác',
+        color: '#ED4337',
         textColor: '#ffffff',
-        start: '2024-07-08T14:00:00',
-        end: '2024-07-08T15:00:00'
+        start: '2024-07-05T14:00:00',
+        end: '2024-07-05T15:00:00'
     },
 ];
 
-const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
+const CalendarHistoryPage = ({ onNext, onSelectEvent }: { onNext: () => void, onSelectEvent: (event: any) => void }) => {
     const calendarRef = useRef<FullCalendar>(null);
 
     const route = useRouter();
@@ -97,6 +84,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     }, [calendarState]);
 
     const [date, setDate] = useState(new Date());
+
     const [view, setView] = useState(matchSm ? 'listWeek' : 'dayGridMonth');
 
     // calendar toolbar events
@@ -150,7 +138,9 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [selectedRange, setSelectedRange] = useState<DateRange | null>(null);
+
     const [selectedEvent, setSelectedEvent] = useState<FormikValues | null>(null);
 
     // calendar event select/add/edit/delete
@@ -175,17 +165,19 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     };
 
     const handleEventSelect = (arg: EventClickArg) => {
-        if (arg.event._def.publicId == 3 || arg.event._def.publicId == 4) {
-            route.push(`http://localhost:3000/expert/expert-calendar/${arg.event._def.publicId}`);
-            localStorage.setItem("PanelValue", JSON.stringify("ExpertCalendar"));
-        }
-        // if (arg.event.id) {
-        //     const selectEvent = events.find((_event: FormikValues) => _event.id === arg.event.id);
-        //     setSelectedEvent(selectEvent as FormikValues[]);
-        // } else {
-        //     setSelectedEvent(null);
+        // if (arg) {
+        //     const selectEvent = fakeEvents.find((_event) => _event.title === arg.event._def.title);
+        //     if (onSelectEvent) {
+        //         onSelectEvent(selectEvent);
+        //     }
         // }
-        // setIsModalOpen(true);
+        // if (onNext) {
+        //     onNext();
+        // }
+        if (arg) {
+            route.push(`http://localhost:3000/expert/expert-calendar/${arg.event}`);
+            localStorage.setItem("PanelValue", JSON.stringify("CalendarHistory"));
+        }
     };
 
     const handleEventUpdate = async ({ event }: EventResizeDoneArg | EventDropArg) => {
@@ -224,24 +216,18 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         }
     };
 
-    const handleAddClick = () => {
-        setIsModalOpen(true);
-    }
-
     if (loading) return <Loader />;
 
     return (
-        <Box px={2} py={1}>
+        <Box
+            sx={{
+                height: '100%',
+                paddingX: 5,
+                paddingY: 1
+            }}
+        >
             <CalendarStyled>
-                <Grid item xs={12}>
-                    <Grid container justifyContent="flex-end">
-                        <Button color="primary" variant="contained" onClick={handleAddClick}>
-                            <AddAlarmTwoToneIcon fontSize="small" sx={{ mr: 0.75 }} />
-                            Thêm lịch phỏng vấn
-                        </Button>
-                    </Grid>
-                </Grid>
-                <ExpertToolbar
+                <CustomerToolbar
                     date={date}
                     view={view}
                     onClickNext={handleDateNext}
@@ -259,7 +245,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                         ref={calendarRef}
                         rerenderDelay={10}
                         initialDate={date}
-                        initialView={view}
+                        initialView={"listWeek"}
                         dayMaxEventRows={3}
                         eventDisplay="block"
                         headerToolbar={false}
@@ -269,16 +255,21 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                         eventDrop={handleEventUpdate}
                         eventClick={handleEventSelect}
                         eventResize={handleEventUpdate}
-                        height={matchSm ? 'auto' : 720}
+                        height={"auto"}
                         plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
                     />
                 </SubCard>
             </CalendarStyled>
+        </Box>
+    )
+}
 
-            {/* Dialog thêm sự kiện */}
+export default CalendarHistoryPage;
+
+{/* Dialog sửa sự kiện
             <Dialog maxWidth="sm" fullWidth onClose={handleModalClose} open={isModalOpen} sx={{ '& .MuiDialog-paper': { p: 0 } }}>
                 {isModalOpen && (
-                    <AddEventOnExpertCalendar
+                    <CustomerCalendarAddEvent
                         event={selectedEvent}
                         range={selectedRange}
                         onCancel={handleModalClose}
@@ -287,11 +278,4 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                         handleUpdate={handleUpdateEvent}
                     />
                 )}
-            </Dialog>
-        </Box>
-    );
-};
-
-export default ExpertCalendarPage;
-
-
+            </Dialog> */}

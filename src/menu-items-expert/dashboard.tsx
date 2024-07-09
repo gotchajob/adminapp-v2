@@ -1,6 +1,8 @@
 // third-party
 import { FormattedMessage } from 'react-intl';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import FeedIcon from '@mui/icons-material/Feed';
 
 // assets
 import { IconDashboard, IconChartDots, IconUserCheck, IconBasket, IconFileInvoice, IconMail, IconUser } from '@tabler/icons-react';
@@ -25,13 +27,29 @@ const dashboard: NavItemType = {
       breadcrumbs: false
     },
     {
-      id: 'expert-calendar',
+      id: 'interview-calendar',
       title: <FormattedMessage id="Lịch phỏng vấn" />,
-      icon: CalendarMonthIcon,
       type: 'item',
       url: '/expert/expert-calendar',
+      icon: CalendarMonthIcon,
       breadcrumbs: false
-    }
+    },
+    {
+      id: 'booking-calendar',
+      title: <FormattedMessage id="Danh sách đặt lịch" />,
+      type: 'item',
+      url: '/expert/booking-calendar',
+      icon: ContactMailIcon,
+      breadcrumbs: false
+    },
+    {
+      id: 'history-calendar',
+      title: <FormattedMessage id="Lịch sủ đặt lịch" />,
+      type: 'item',
+      url: '/expert/history-calendar',
+      icon: FeedIcon,
+      breadcrumbs: false
+    },
   ]
 };
 

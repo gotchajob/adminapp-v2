@@ -1,26 +1,34 @@
-import { Category } from 'package/api/category';
-import { ExpertSkillOption, ExpertSkillOptionRq, GetExpertSkillOption } from 'package/api/expert-skill-option';
-import { Skill } from 'package/api/skill';
-import { SkillOption } from 'package/api/skill-option';
-import { useEffect, useState } from 'react';
+import { Category } from "package/api/category";
+import {
+  ExpertSkillOption,
+  ExpertSkillOptionRq,
+  GetExpertSkillOption,
+} from "package/api/expert-skill-option";
+import { Skill } from "package/api/skill";
+import { SkillOption } from "package/api/skill-option";
+import { useEffect, useState } from "react";
 
 export const useGetExpertSkillOptions = (
-  params: ExpertSkillOptionRq,
+  params: { expertId?: number },
   categories?: Category[],
   skills?: Skill[],
   skillOptions?: SkillOption[]
 ) => {
-  const [expertSkillOptions, setExpertSkillOptions] = useState<ExpertSkillOption[]>([]);
+  const [expertSkillOptions, setExpertSkillOptions] = useState<
+    ExpertSkillOption[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getExpertSkillOptions = async () => {
-    try {
-      setIsLoading(true);
-      const data = await GetExpertSkillOption(params, '');
-      setExpertSkillOptions(data.data);
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
+    if (params.expertId) {
+      try {
+        setIsLoading(true);
+        const data = await GetExpertSkillOption(params as ExpertSkillOptionRq, "");
+        setExpertSkillOptions(data.data);
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -31,11 +39,16 @@ export const useGetExpertSkillOptions = (
       let newCategoryList: Category[] = [];
 
       newSkillOptionList = skillOptions.filter((skillOption) => {
-        return expertSkillOptions.find((expertSkillOption) => expertSkillOption.skillOptionId === skillOption.id);
+        return expertSkillOptions.find(
+          (expertSkillOption) =>
+            expertSkillOption.skillOptionId === skillOption.id
+        );
       });
 
       newSkillList = skills.filter((skill) => {
-        return newSkillOptionList.find((skillOption) => skillOption.skillId === skill.id);
+        return newSkillOptionList.find(
+          (skillOption) => skillOption.skillId === skill.id
+        );
       });
 
       newCategoryList = categories.filter((category) => {
@@ -44,7 +57,7 @@ export const useGetExpertSkillOptions = (
       return {
         newCategoryList,
         newSkillList,
-        newSkillOptionList
+        newSkillOptionList,
       };
     }
   };
@@ -55,6 +68,6 @@ export const useGetExpertSkillOptions = (
   return {
     isLoading,
     expertSkillOptions,
-    ...getMoreData()
+    ...getMoreData(),
   };
 };
