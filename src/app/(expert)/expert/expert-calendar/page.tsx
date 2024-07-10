@@ -30,6 +30,10 @@ import ExpertCalendarPage from './_component/ExpertCalendar';
 import CustomerCalendarPage from './_component/CustomerBooking';
 import CalendarHistoryPage from './_component/CalendarHistory';
 import { Button } from '@mui/material';
+import { useRefresh } from 'hooks/use-refresh';
+import { ExpertToken } from 'hooks/use-login';
+import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
+import { useGetAvailability } from 'hooks/use-get-availability';
 
 // tabs panel
 function TabPanel({ children, value, index, ...other }: TabsProps) {
@@ -60,24 +64,12 @@ const tabsOption = [
         icon: <CalendarMonthIcon sx={{ fontSize: '1.3rem' }} />,
         caption: 'Lịch phỏng vấn của bạn'
     },
-    // {
-    //     label: 'Danh sách đặt lịch',
-    //     icon: <ContactMailIcon sx={{ fontSize: '1.3rem' }} />,
-    //     caption: 'Danh sách khách hàng đặt lịch'
-    // },
-    // {
-    //     label: 'Lịch sử đặt lịch',
-    //     icon: <FeedIcon sx={{ fontSize: '1.3rem' }} />,
-    //     caption: 'Lịch sử đặt lịch của bạn'
-    // },
 ];
 
 // ==============================|| EXPERT BOOKING PAGE ||============================== //
 
 const ExpertBookingPage = () => {
     const theme = useTheme();
-
-    // const [panelValue, setPanelValue] = useState<string | null>(JSON.parse(localStorage.getItem("PanelValue")));
 
     const [value, setValue] = useState<number>(0);
 
@@ -94,23 +86,6 @@ const ExpertBookingPage = () => {
     const handlePrevStep = () => {
         setValue(0);
     }
-
-    // const renderPanelTabs = () => {
-    //     if (!panelValue) {
-    //         setValue(0);
-    //     }
-    //     if (panelValue == "ExpertCalendar") {
-    //         setValue(0);
-    //     } else if (panelValue == "CustomerBooking") {
-    //         setValue(1);
-    //     } else if (panelValue == "CalendarHistory") {
-    //         setValue(2);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     renderPanelTabs();
-    // }, [panelValue]);
 
     return (
         <Box sx={{ boxShadow: 3 }}>
