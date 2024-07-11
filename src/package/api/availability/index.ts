@@ -48,6 +48,6 @@ export const PostAvailability = async (params: PostAvailabilityRequest, accessTo
         const res = await apiServerFetch(`/availability`, 'POST', params, accessToken);
         return res;
     } catch (error: any) {
-        return errorSystem('Lấy danh sách thất bại', []);
+        return errorSystem('Lấy danh sách thất bại', '');
     }
 };

@@ -15,69 +15,46 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
-import { FormikValues } from 'formik';
 import AddAlarmTwoToneIcon from '@mui/icons-material/AddAlarmTwoTone';
+import { FormikValues } from 'formik';
 
 // project imports
-import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from '@mui/material';
 import CalendarStyled from 'components/application/calendar/CalendarStyled';
+import { useGetAvailability } from 'hooks/use-get-availability';
+import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
+import { ExpertToken } from 'hooks/use-login';
+import { useRefresh } from 'hooks/use-refresh';
+import { useRouter } from 'next/navigation';
+import { PostAvailability } from 'package/api/availability';
 import { dispatch, useSelector } from 'store';
-import { addEvent, getEvents, removeEvent, updateEvent } from 'store/slices/calendar';
+import { getEvents, removeEvent } from 'store/slices/calendar';
 import { DateRange } from 'types';
 import Loader from 'ui-component/Loader';
 import SubCard from 'ui-component/cards/SubCard';
-import { StyledLink } from 'components/common/link/styled-link';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import ExpertToolbar from './ExpertCalendarToolbar';
-import AddEventOnExpertCalendar from './AddEventForm';
-import { useRouter } from 'next/navigation';
-import { useRefresh } from 'hooks/use-refresh';
-import { ExpertToken } from 'hooks/use-login';
-import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
-import { useGetAvailability } from 'hooks/use-get-availability';
-import { Availability, PostAvailability } from 'package/api/availability';
+import { DelAvailability } from 'package/api/availability/id';
 
 // ==============================|| APPLICATION CALENDAR ||============================== //
 
-const fakeEvents = [
-    // {
-    //     id: 1,
-    //     title: 'Available Slot',
-    //     description: 'This slot is available',
-    //     color: '#697586',
-    //     textColor: '#ffffff',
-    //     start: '2024-07-10T09:00:00',
-    //     end: '2024-07-10T10:00:00'
-    // },
-    // {
-    //     id: 2,
-    //     title: 'Available Slot',
-    //     description: 'This slot is available',
-    //     color: '#697586',
-    //     textColor: '#ffffff',
-    //     start: '2024-07-11T09:00:00',
-    //     end: '2024-07-11T10:00:00'
-    // },
-    // {
-    //     id: 3,
-    //     title: 'Interview - CV Review',
-    //     description: 'Reviewing CVs for interviews',
-    //     color: '#00E676',
-    //     textColor: '#ffffff',
-    //     start: '2024-07-09T14:00:00',
-    //     end: '2024-07-09T15:00:00'
-    // },
-    // {
-    //     id: 4,
-    //     title: 'Interview - CV Review',
-    //     description: 'Reviewing CVs for interviews',
-    //     color: '#00E676',
-    //     textColor: '#ffffff',
-    //     start: '2024-07-08T14:00:00',
-    //     end: '2024-07-08T15:00:00'
-    // },
-];
+const convertEvents = (data: any) => {
+    return data.map((event: any) => ({
+        id: event.id.toString(),
+        title: `Đã đặt lịch ${event.id}`, //Can check status
+        color: "#00E676", //Can check status
+        start: `${event.date}T${event.startTime}`,
+        end: `${event.date}T${event.endTime}`
+    }));
+};
+
+const reverseConvertEvents = (event: any) => {
+    return {
+        id: event.id.toString(),
+        date: event.start.slice(0, 10),
+        start: event.start.slice(11, 19),
+        end: event.end.slice(11, 19),
+    };
+};
 
 const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     const calendarRef = useRef<FullCalendar>(null);
@@ -94,71 +71,82 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
 
     // calendar toolbar events
     const handleDateToday = () => {
-        const calendarEl = calendarRef.current;
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-            calendarApi.today();
-            setDate(calendarApi.getDate());
-        }
+        // const calendarEl = calendarRef.current;
+        // if (calendarEl) {
+        //     const calendarApi = calendarEl.getApi();
+        //     calendarApi.today();
+        //     setDate(calendarApi.getDate());
+        // }
     };
 
     const handleViewChange = (newView: string) => {
-        const calendarEl = calendarRef.current;
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-            calendarApi.changeView(newView);
-            setView(newView);
-        }
+        // const calendarEl = calendarRef.current;
+        // if (calendarEl) {
+        //     const calendarApi = calendarEl.getApi();
+        //     calendarApi.changeView(newView);
+        //     setView(newView);
+        // }
     };
 
     const handleDatePrev = () => {
-        const calendarEl = calendarRef.current;
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-            calendarApi.prev();
-            setDate(calendarApi.getDate());
-        }
+        // const calendarEl = calendarRef.current;
+        // if (calendarEl) {
+        //     const calendarApi = calendarEl.getApi();
+        //     calendarApi.prev();
+        //     setDate(calendarApi.getDate());
+        // }
     };
 
     const handleDateNext = () => {
-        const calendarEl = calendarRef.current;
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-            calendarApi.next();
-            setDate(calendarApi.getDate());
-        }
+        // const calendarEl = calendarRef.current;
+        // if (calendarEl) {
+        //     const calendarApi = calendarEl.getApi();
+        //     calendarApi.next();
+        //     setDate(calendarApi.getDate());
+        // }
     };
 
     const handleEventUpdate = async ({ event }: EventResizeDoneArg | EventDropArg) => {
-        try {
-            dispatch(
-                updateEvent({
-                    eventId: event.id,
-                    update: {
-                        allDay: event.allDay,
-                        start: event.start,
-                        end: event.end
-                    }
-                })
-            );
-        } catch (err) {
-            console.error(err);
-        }
+        // try {
+        //     dispatch(
+        //         updateEvent({
+        //             eventId: event.id,
+        //             update: {
+        //                 allDay: event.allDay,
+        //                 start: event.start,
+        //                 end: event.end
+        //             }
+        //         })
+        //     );
+        // } catch (err) {
+        //     console.error(err);
+        // }
     };
 
-    const handleEventCreate = async (data: FormikValues) => {
-        dispatch(addEvent(data));
-        handleModalClose();
-    };
+    // const handleEventDelete = async (id: string) => {
+    //     try {
+    //         dispatch(removeEvent(id));
+    //         handleEditModalClose();
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // };
 
     const handleUpdateEvent = async (eventId: string, update: FormikValues) => {
-        dispatch(updateEvent({ eventId, update }));
-        handleModalClose();
     };
 
-    const handleAddClick = () => {
-        setIsAddModalOpen(true);
-    };
+    // const handleRangeSelect = (arg: DateSelectArg) => {
+    //     const calendarEl = calendarRef.current;
+    //     if (calendarEl) {
+    //         const calendarApi = calendarEl.getApi();
+    //         calendarApi.unselect();
+    //     }
+    //     setSelectedRange({
+    //         start: arg.start,
+    //         end: arg.end
+    //     });
+    //     setIsAddModalOpen(true);
+    // };
 
     useEffect(() => {
         dispatch(getEvents()).then(() => setLoading(false));
@@ -168,14 +156,24 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         setEvents(calendarState.events);
     }, [calendarState]);
 
-    // set calendar view
-    useEffect(() => {
-        handleViewChange(matchSm ? 'listWeek' : 'dayGridMonth');
-    }, [matchSm]);
+    // // set calendar view
+    // useEffect(() => {
+    //     handleViewChange(matchSm ? 'listWeek' : 'dayGridMonth');
+    // }, [matchSm]);
 
     // ==============================|| MY ||============================== //
     // ==============================|| CODE ||============================== //
     // ==============================|| BELOW ||============================== //
+
+    const isTimeOverlap = (newEvent: FormikValues) => {
+        return events.some(event =>
+            newEvent.date === event.date && (
+                (newEvent.startTime >= event.startTime && newEvent.startTime < event.endTime) ||
+                (newEvent.endTime > event.startTime && newEvent.endTime <= event.endTime) ||
+                (newEvent.startTime <= event.startTime && newEvent.endTime >= event.endTime)
+            )
+        );
+    };
 
     const { expertToken } = ExpertToken();
 
@@ -183,6 +181,8 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         expertToken,
         refreshTime
     );
+
+    const { availabilities } = useGetAvailability({ expertId: expertCurrent?.expertId ?? 0 });
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -196,42 +196,34 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
 
     const [selectEvent, setSelectEvent] = useState<any>();
 
-    const handleModalClose = () => {
+    const handleEditModalClose = () => {
         setIsEditModalOpen(false);
         setSelectedEvent(null);
         setSelectedRange(null);
     };
 
-    const handleRangeSelect = (arg: DateSelectArg) => {
-        const calendarEl = calendarRef.current;
 
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-            console.log("handleRangeSelect:", calendarApi);
-            calendarApi.unselect();
-        }
-        setSelectedRange({
-            start: arg.start,
-            end: arg.end
+    const handleAddModalClose = () => {
+        setIsAddModalOpen(false);
+        setNewEvent({
+            date: '',
+            startTime: '',
+            endTime: ''
         });
+    };
+
+    const handleAddClick = () => {
         setIsAddModalOpen(true);
     };
 
-    const isTimeOverlap = (newEvent: FormikValues) => {
-        return events.some(event =>
-            newEvent.date === event.date && (
-                (newEvent.startTime >= event.startTime && newEvent.startTime < event.endTime) ||
-                (newEvent.endTime > event.startTime && newEvent.endTime <= event.endTime) ||
-                (newEvent.startTime <= event.startTime && newEvent.endTime >= event.endTime)
-            )
-        );
+    const handleRangeSelect = (arg: DateSelectArg) => {
+        setIsAddModalOpen(true);
     };
 
     const handleEventSelect = (arg: EventClickArg) => {
         if (arg) {
             const selectedArg = events.find(data => data.id === arg.event.id);
             const reversedArg = reverseConvertEvents(selectedArg);
-            console.log("reversedArg:", reversedArg);
             setSelectEvent(reversedArg);
             setIsEditModalOpen(true);
         }
@@ -243,60 +235,35 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                 const res = await PostAvailability(newEvent, expertToken);
                 console.log("handleCreateNewEvent", res);
             }
+            refresh();
         } catch (error) {
             throw new Error();
         }
     };
 
-    const handleAddModalClose = () => {
-        setIsAddModalOpen(false);
-        setNewEvent({
-            date: '',
-            startTime: '',
-            endTime: ''
-        });
-    };
-
     const handleEventDelete = async (id: string) => {
         try {
-            dispatch(removeEvent(id));
-            handleModalClose();
-        } catch (err) {
-            console.error(err);
+            if (id) {
+                const res = await DelAvailability({ id: +id }, expertToken);
+                console.log("handleEventDelete:", res);
+            }
+            refresh();
+            setIsEditModalOpen(false);
+        } catch (error) {
+            throw new Error();
         }
     };
 
-    const { availabilities } = useGetAvailability({ expertId: expertCurrent?.expertId });
-
-    const convertEvents = (data: any) => {
-        return data.map((event: any) => ({
-            id: event.id.toString(),
-            title: `Đã đặt lịch ${event.id}`, //Can check status
-            color: "#00E676", //Can check status
-            start: `${event.date}T${event.startTime}`,
-            end: `${event.date}T${event.endTime}`
-        }));
-    };
-
-    const reverseConvertEvents = (event: any) => {
-        return {
-            id: event.id.toString(),
-            date: event.start.slice(0, 10),
-            start: event.start.slice(11, 19),
-            end: event.end.slice(11, 19),
-        };
-    };
-
     useEffect(() => {
-        setLoading(true);
         const convertedEvents = convertEvents(availabilities);
         setEvents(convertedEvents);
-        setLoading(false);
-    }, [expertCurrent, availabilities, expertToken]);
+    }, [expertCurrent, availabilities, expertToken, refreshTime]);
 
     // useEffect(() => { console.log("selectEvent:", selectEvent) }, [selectEvent]);
 
     // useEffect(() => { console.log("newEvent:", newEvent) }, [newEvent]);
+
+    useEffect(() => { console.log("expertToken:", expertToken) }, [expertToken]);
 
     if (loading) return <Loader />;
 
@@ -348,12 +315,13 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
 
 
             {/* Dialog chỉnh sửa sự kiện */}
-            <Dialog maxWidth="sm" fullWidth onClose={handleModalClose} open={isEditModalOpen} sx={{ '& .MuiDialog-paper': { p: 0 } }}>
-                <DialogTitle>Chỉnh sửa lịch phỏng vấn</DialogTitle>
+            <Dialog maxWidth="sm" fullWidth onClose={handleEditModalClose} open={isEditModalOpen} sx={{ '& .MuiDialog-paper': { p: 0 } }}>
+                <DialogTitle color="primary">Xóa lịch phỏng vấn</DialogTitle>
                 <DialogContent>
                     {selectEvent && (
                         <>
                             <TextField
+                                disabled
                                 margin="dense"
                                 label="Ngày"
                                 type="date"
@@ -365,6 +333,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                                 onChange={(e) => setSelectEvent({ ...selectEvent, date: e.target.value })}
                             />
                             <TextField
+                                disabled
                                 margin="dense"
                                 label="Giờ bắt đầu"
                                 type="time"
@@ -376,6 +345,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                                 onChange={(e) => setSelectEvent({ ...selectEvent, start: e.target.value })}
                             />
                             <TextField
+                                disabled
                                 margin="dense"
                                 label="Giờ kết thúc"
                                 type="time"
@@ -388,13 +358,10 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                             />
                             <Typography sx={{ fontStyle: 'italic', pt: 1 }}>Lưu ý: SA là sáng, CH là chiều</Typography>
                             <DialogActions>
-                                <Button onClick={handleModalClose} color="primary">
+                                <Button onClick={handleEditModalClose} color="primary">
                                     Đóng
                                 </Button>
-                                <Button onClick={() => handleUpdateEvent(selectEvent.id, selectEvent)} color="primary">
-                                    Sửa
-                                </Button>
-                                <Button onClick={() => handleEventDelete(selectEvent.id)} color="secondary">
+                                <Button onClick={() => handleEventDelete(selectEvent.id)} color="error">
                                     Xóa
                                 </Button>
                             </DialogActions>
@@ -405,7 +372,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
 
             {/* Dialog thêm sự kiện */}
             <Dialog maxWidth="sm" fullWidth onClose={handleAddModalClose} open={isAddModalOpen} sx={{ '& .MuiDialog-paper': { p: 0 } }}>
-                <DialogTitle>Thêm lịch phỏng vấn mới</DialogTitle>
+                <DialogTitle color="primary">Thêm lịch phỏng vấn mới</DialogTitle>
                 <DialogContent>
                     <TextField
                         margin="dense"
@@ -444,7 +411,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                         <Button onClick={handleAddModalClose} color="primary">
                             Đóng
                         </Button>
-                        <Button onClick={handleCreateNewEvent} color="primary">
+                        <Button onClick={handleCreateNewEvent} color="success">
                             Thêm
                         </Button>
                     </DialogActions>

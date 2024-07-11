@@ -25,39 +25,41 @@ import { addEvent, getEvents, removeEvent, updateEvent } from 'store/slices/cale
 import { DateRange } from 'types';
 import { useEffect, useRef, useState } from "react";
 import CustomerToolbar from "./CustomerBookingToolbar";
+import { useGetBooking } from "hooks/use-get-booking";
+import { Booking } from "package/api/booking";
 
 const fakeEvents = [
     {
-        title: 'Đã đặt lịch',
+        title: 'Đã đặt lịch1',
         description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
         color: '#FFC107',
         textColor: '#ffffff',
-        start: '2024-07-02T09:00:00',
-        end: '2024-07-02T10:00:00'
+        start: '2024-08-02T09:00:00',
+        end: '2024-08-02T10:00:00'
+    },
+    {
+        title: 'Đã đặt lịch2',
+        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
+        color: '#FFC107',
+        textColor: '#ffffff',
+        start: '2024-08-04T09:00:00',
+        end: '2024-08-04T10:00:00'
+    },
+    {
+        title: 'Đã đặt lịch3',
+        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
+        color: '#FFC107',
+        textColor: '#ffffff',
+        start: '2024-08-03T14:00:00',
+        end: '2024-08-03T15:00:00'
     },
     {
         title: 'Đã đặt lịch',
         description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
         color: '#FFC107',
         textColor: '#ffffff',
-        start: '2024-07-04T09:00:00',
-        end: '2024-07-04T10:00:00'
-    },
-    {
-        title: 'Đã đặt lịch',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-07-03T14:00:00',
-        end: '2024-07-03T15:00:00'
-    },
-    {
-        title: 'Đã đặt lịch',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-07-05T14:00:00',
-        end: '2024-07-05T15:00:00'
+        start: '2024-08-05T14:00:00',
+        end: '2024-08-05T15:00:00'
     },
 ];
 
@@ -165,18 +167,8 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
     };
 
     const handleEventSelect = (arg: EventClickArg) => {
-        // if (arg) {
-        //     const selectEvent = fakeEvents.find((_event) => _event.title === arg.event._def.title);
-        //     if (onSelectEvent) {
-        //         onSelectEvent(selectEvent);
-        //     }
-        // }
-        // if (onNext) {
-        //     onNext();
-        // }
         if (arg) {
-            route.push(`http://localhost:3000/expert/expert-calendar/${arg.event}`);
-            localStorage.setItem("PanelValue", JSON.stringify("CustomerBooking"));
+            route.push(`http://localhost:3000/expert/expert-calendar/1`);
         }
     };
 
@@ -215,6 +207,12 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
             console.error(err);
         }
     };
+
+    const { bookings } = useGetBooking();
+
+    useEffect(() => {
+        console.log("bookings:", bookings);
+    }, [bookings]);
 
     if (loading) return <Loader />;
 

@@ -25,41 +25,8 @@ import { addEvent, getEvents, removeEvent, updateEvent } from 'store/slices/cale
 import { DateRange } from 'types';
 import { useEffect, useRef, useState } from "react";
 import CustomerToolbar from "./CustomerBookingToolbar";
-
-const fakeEvents = [
-    {
-        title: 'Đã đặt lịch',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-07-02T09:00:00',
-        end: '2024-07-02T10:00:00'
-    },
-    {
-        title: 'Đã đặt lịch',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-07-04T09:00:00',
-        end: '2024-07-04T10:00:00'
-    },
-    {
-        title: 'Đã đặt lịch',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-07-03T14:00:00',
-        end: '2024-07-03T15:00:00'
-    },
-    {
-        title: 'Đã đặt lịch',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-07-05T14:00:00',
-        end: '2024-07-05T15:00:00'
-    },
-];
+import { useGetBooking } from "hooks/use-get-booking";
+import { Booking } from "package/api/booking";
 
 const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, onSelectEvent: (event: any) => void }) => {
     const calendarRef = useRef<FullCalendar>(null);
@@ -69,9 +36,6 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
     const matchSm = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     const [loading, setLoading] = useState<boolean>(true);
-
-    // fetch events data
-    const [events, setEvents] = useState<FormikValues[]>([]);
 
     const calendarState = useSelector((state) => state.calendar);
 
@@ -164,21 +128,7 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
         setIsModalOpen(true);
     };
 
-    const handleEventSelect = (arg: EventClickArg) => {
-        // if (arg) {
-        //     const selectEvent = fakeEvents.find((_event) => _event.title === arg.event._def.title);
-        //     if (onSelectEvent) {
-        //         onSelectEvent(selectEvent);
-        //     }
-        // }
-        // if (onNext) {
-        //     onNext();
-        // }
-        if (arg) {
-            route.push(`http://localhost:3000/expert/expert-calendar/${arg.event}`);
-            localStorage.setItem("PanelValue", JSON.stringify("CustomerBooking"));
-        }
-    };
+
 
     const handleEventUpdate = async ({ event }: EventResizeDoneArg | EventDropArg) => {
         try {
@@ -216,12 +166,45 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
         }
     };
 
+    // ==============================|| MY ||============================== //
+    // ==============================|| CODE ||============================== //
+    // ==============================|| BELOW ||============================== //
+
+    const [events, setEvents] = useState<FormikValues[]>([]);
+
+    const handleEventSelect = (arg: EventClickArg) => {
+        if (arg) {
+            route.push(`http://localhost:3000/expert/booking-calendar/${arg.event._def.publicId}`);
+        }
+    };
+
+    const { bookings } = useGetBooking();
+
+    function formattedBookings(bookings: any) {
+        return bookings.map((booking: any) => ({
+            id: booking.id,
+            title: booking.rejectReason ? 'Bị từ chối' : 'Đã đặt lịch',
+            description: booking.rejectReason ? 'Lý do từ chối: ' + booking.rejectReason : 'Chờ phản hồi từ chuyên gia',
+            start: booking.startInterviewDate,
+            end: booking.endInterviewDate,
+            color: booking.rejectReason ? '#f44336' : '#FFC107',
+            textColor: '#ffffff',
+        }));
+    }
+
+    useEffect(() => {
+        const bookingEvents = formattedBookings(bookings);
+        console.log(bookingEvents);
+        setEvents(bookingEvents);
+        console.log("bookings:", bookingEvents);
+    }, [bookings]);
+
     if (loading) return <Loader />;
 
     return (
         <Box
             sx={{
-                height: '100%',
+                height: '100vh',
                 paddingX: 5,
                 paddingY: 1
             }}
@@ -241,7 +224,7 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
                         editable
                         droppable
                         selectable
-                        events={fakeEvents}
+                        events={events}
                         ref={calendarRef}
                         rerenderDelay={10}
                         initialDate={date}
