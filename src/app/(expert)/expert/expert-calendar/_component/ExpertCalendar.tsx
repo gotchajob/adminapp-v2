@@ -259,12 +259,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         setEvents(convertedEvents);
     }, [expertCurrent, availabilities, expertToken, refreshTime]);
 
-    // useEffect(() => { console.log("selectEvent:", selectEvent) }, [selectEvent]);
-
-    // useEffect(() => { console.log("newEvent:", newEvent) }, [newEvent]);
-
-    useEffect(() => { console.log("expertToken:", expertToken) }, [expertToken]);
-
     if (loading) return <Loader />;
 
     return (
@@ -311,8 +305,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                     />
                 </SubCard>
             </CalendarStyled>
-
-
 
             {/* Dialog chỉnh sửa sự kiện */}
             <Dialog maxWidth="sm" fullWidth onClose={handleEditModalClose} open={isEditModalOpen} sx={{ '& .MuiDialog-paper': { p: 0 } }}>
@@ -407,6 +399,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                         }}
                         onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
                     />
+                    <Typography sx={{ fontStyle: 'italic', pt: 1 }}>Lưu ý: SA là sáng, CH là chiều</Typography>
                     <DialogActions>
                         <Button onClick={handleAddModalClose} color="primary">
                             Đóng
