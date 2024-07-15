@@ -1,67 +1,83 @@
 // third-party
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl";
 
 // assets
-import { IconDashboard, IconChartDots, IconUserCheck, IconBasket, IconFileInvoice, IconMail, IconUser } from '@tabler/icons-react';
+import {
+  IconDashboard,
+  IconChartDots,
+  IconUserCheck,
+  IconBasket,
+  IconFileInvoice,
+  IconMail,
+  IconUser,
+} from "@tabler/icons-react";
 
 // type
-import { NavItemType } from 'types';
+import { NavItemType } from "types";
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
 const dashboard: NavItemType = {
-  id: 'dashboard',
+  id: "dashboard",
   title: <FormattedMessage id="Staff CMS" />,
   icon: IconDashboard,
-  type: 'group',
+  type: "group",
   children: [
     {
-      id: 'dashboard',
+      id: "dashboard",
       title: <FormattedMessage id="Thống kê" />,
-      type: 'item',
-      url: '/staff/dashboard',
+      type: "item",
+      url: "/staff/dashboard",
       icon: IconChartDots,
-      breadcrumbs: false
+      breadcrumbs: false,
     },
     {
-      id: 'user',
+      id: "cv",
+      title: <FormattedMessage id="Quản lí CV" />,
+      type: "item",
+      url: "/staff/cv",
+      icon: IconChartDots,
+      breadcrumbs: false,
+    },
+    {
+      id: "user",
       title: <FormattedMessage id="Người dùng" />,
-      type: 'item',
-      url: '/staff/user',
+      type: "item",
+      url: "/staff/user",
       icon: IconUser,
-      breadcrumbs: false
+      breadcrumbs: false,
     },
     {
-      id: 'transaction',
+      id: "transaction",
       title: <FormattedMessage id="Giao dịch" />,
-      type: 'item',
-      url: '/staff/transaction',
+      type: "item",
+      url: "/staff/transaction",
       icon: IconFileInvoice,
-      breadcrumbs: false
+      breadcrumbs: false,
     },
     {
-      id: 'expert-manager',
+      id: "expert-manager",
       title: <FormattedMessage id="Quản lí chuyên gia" />,
       icon: IconUserCheck,
-      type: 'collapse',
+      type: "collapse",
       children: [
         {
-          id: 'Expert',
+          id: "Expert",
           title: <FormattedMessage id="Chuyên gia" />,
-          type: 'item',
-          url: '/staff/expert',
-          breadcrumbs: false
+          type: "item",
+          url: "/staff/expert",
+          breadcrumbs: false,
         },
         {
-          id: 'requests',
+          id: "requests",
           title: <FormattedMessage id="Chuyên gia gửi yêu cầu" />,
-          type: 'item',
-          url: '/staff/expert-request',
-          breadcrumbs: false
+          type: "item",
+          url: "/staff/expert-request",
+          breadcrumbs: false,
         },
-      ]
-    }
-  ]
+      ],
+    },
+  ],
 };
 
 export default dashboard;
