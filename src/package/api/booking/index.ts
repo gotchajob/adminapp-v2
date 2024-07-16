@@ -22,7 +22,7 @@ export interface Booking {
 
 export const GetBooking = async (): Promise<GetBookingResponse> => {
     try {
-        const res = await apiServerFetch(`/booking`, 'GET');
+        const res = await apiServerFetch(`/booking`, 'GET', undefined, undefined);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', []);

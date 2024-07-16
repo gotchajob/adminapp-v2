@@ -16,6 +16,8 @@ export interface ExpertSkillOption {
   skillOptionName: string;
   defaultPoint?: number;
   certificate: string;
+  sumPoint: number;
+  totalRating: number;
 }
 
 export const GetExpertSkillOption = async (params: ExpertSkillOptionRq, accessToken: string): Promise<ExpertSkillOptionResponse> => {

@@ -41,6 +41,7 @@ import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-re
 import useConfig from 'hooks/useConfig';
 import { apiClientFetch } from 'package/api/api-fetch';
 import { enqueueSnackbar } from 'notistack';
+import WalletCard from './_component/WalletCard';
 // import { redirect } from 'next/dist/server/api-utils';
 
 const User1 = '/assets/images/users/user-round.svg';
@@ -187,12 +188,13 @@ const ProfileSection = () => {
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                             {user?.name}
                           </Typography>
+                          <Typography variant="subtitle2">Gotchajob Staff</Typography>
                         </Stack>
-                        <Typography variant="subtitle2">Gotchajob Staff</Typography>
                       </Stack>
                     </Box>
                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                       <Box sx={{ p: 2, pt: 0 }}>
+                        <WalletCard />
                         <Divider />
                         <List
                           component="nav"

@@ -41,6 +41,7 @@ import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-re
 import useConfig from 'hooks/useConfig';
 import { apiClientFetch } from 'package/api/api-fetch';
 import { enqueueSnackbar } from 'notistack';
+import WalletCard from '../../../MainLayout_plk/Header/ProfileSection/_component/WalletCard';
 // import { redirect } from 'next/dist/server/api-utils';
 
 const User1 = '/assets/images/users/user-round.svg';
@@ -95,10 +96,6 @@ const ProfileSection = () => {
   const handleListItemClick = (event: React.MouseEvent<HTMLDivElement>, index: number, route: string = '') => {
     setSelectedIndex(index);
     handleClose(event);
-
-    // if (route && route !== '') {
-    //     navigate(route);
-    // }
   };
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -187,8 +184,8 @@ const ProfileSection = () => {
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                             {user?.name}
                           </Typography>
+                          <Typography variant="subtitle2">Gotchajob Staff</Typography>
                         </Stack>
-                        <Typography variant="subtitle2">Gotchajob Staff</Typography>
                       </Stack>
                     </Box>
                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
