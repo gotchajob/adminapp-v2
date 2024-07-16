@@ -9,14 +9,14 @@ export const CVUploadImage = ({
 }: {
   column?: number;
   avatar: string;
-  handleChangeAvatar?: (value: string) => void;
+  handleChangeAvatar: (value: string) => void;
 }) => {
   const columnWidth = ((900 - 16) / 12) * column;
   const imageWidth = (columnWidth / 4) * 2;
   const imageHeight = (columnWidth / 4) * 2.2;
   return (
-    <Box justifyContent={'center'} alignItems={'center'} display={'flex'} py={6} position={'relative'}>
-      <UploadImageButton setImage={() => {}} />
+    <Box justifyContent={'center'} alignItems={'center'} display={'flex'} py={5} position={'relative'}>
+      <UploadImageButton setImage={handleChangeAvatar} />
       <Image
         src={avatar}
         alt="avatar"
