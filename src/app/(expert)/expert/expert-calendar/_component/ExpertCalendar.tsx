@@ -26,7 +26,7 @@ import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
 import { ExpertToken } from 'hooks/use-login';
 import { useRefresh } from 'hooks/use-refresh';
 import { useRouter } from 'next/navigation';
-import { PostAvailability } from 'package/api/availability';
+import { PostAvailability, PostAvailabilityData, PostAvailabilityRequest } from 'package/api/availability';
 import { dispatch, useSelector } from 'store';
 import { getEvents, removeEvent } from 'store/slices/calendar';
 import { DateRange } from 'types';
@@ -40,10 +40,10 @@ import { DelAvailability } from 'package/api/availability/id';
 const convertEvents = (data: any) => {
     return data.map((event: any) => ({
         id: event.id.toString(),
-        title: `Đã đặt lịch ${event.id}`, //Can check status
-        color: "#00E676", //Can check status
-        start: `${event.date}T${event.startTime}`,
-        end: `${event.date}T${event.endTime}`
+        title: `Đã đặt lịch ${event.id}`,
+        color: "#00E676",
+        start: event.startTime,
+        end: event.endTime
     }));
 };
 
@@ -67,7 +67,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     const calendarState = useSelector((state) => state.calendar);
     const [date, setDate] = useState(new Date());
     const [view, setView] = useState(matchSm ? 'listWeek' : 'dayGridMonth');
-    const { refreshTime, refresh } = useRefresh();
 
     // calendar toolbar events
     const handleDateToday = () => {
@@ -175,6 +174,8 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         );
     };
 
+    const { refresh, refreshTime } = useRefresh();
+
     const { expertToken } = ExpertToken();
 
     const { expertCurrent, loading: expertCurrentLoading } = useGetExpertCurrent(
@@ -182,17 +183,13 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         refreshTime
     );
 
-    const { availabilities } = useGetAvailability({ expertId: expertCurrent?.expertId ?? 0 });
+    const { availabilities, loading: availabilitiesLoadings } = useGetAvailability({ expertId: expertCurrent?.expertId ?? 0 }, refreshTime);
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-    const [newEvent, setNewEvent] = useState({
-        date: '',
-        startTime: '',
-        endTime: ''
-    });
+    const [newEvent, setNewEvent] = useState<PostAvailabilityData | undefined>();
 
     const [selectEvent, setSelectEvent] = useState<any>();
 
@@ -218,6 +215,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
 
     const handleRangeSelect = (arg: DateSelectArg) => {
         setIsAddModalOpen(true);
+
     };
 
     const handleEventSelect = (arg: EventClickArg) => {
@@ -230,11 +228,13 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     };
 
     const handleCreateNewEvent = async () => {
+        console.log("newEvent:", newEvent);
         try {
             if (newEvent) {
-                const res = await PostAvailability(newEvent, expertToken);
+                const res = await PostAvailability({ request: [{ date: newEvent.date, startTime: newEvent.startTime, endTime: newEvent.endTime }] }, expertToken);
                 console.log("handleCreateNewEvent", res);
             }
+            setIsAddModalOpen(false);
             refresh();
         } catch (error) {
             throw new Error();
@@ -247,8 +247,8 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                 const res = await DelAvailability({ id: +id }, expertToken);
                 console.log("handleEventDelete:", res);
             }
-            refresh();
             setIsEditModalOpen(false);
+            refresh();
         } catch (error) {
             throw new Error();
         }
@@ -257,6 +257,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     useEffect(() => {
         const convertedEvents = convertEvents(availabilities);
         setEvents(convertedEvents);
+        console.log("expertCurrent?.expertId:", expertCurrent?.expertId);
     }, [expertCurrent, availabilities, expertToken, refreshTime]);
 
     if (loading) return <Loader />;
@@ -371,7 +372,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                         label="Ngày"
                         type="date"
                         fullWidth
-                        value={newEvent.date}
+                        value={newEvent?.date}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -382,7 +383,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                         label="Giờ bắt đầu"
                         type="time"
                         fullWidth
-                        value={newEvent.startTime}
+                        value={newEvent?.startTime}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -393,7 +394,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                         label="Giờ kết thúc"
                         type="time"
                         fullWidth
-                        value={newEvent.endTime}
+                        value={newEvent?.endTime}
                         InputLabelProps={{
                             shrink: true,
                         }}

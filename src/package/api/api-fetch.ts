@@ -18,7 +18,7 @@ export const apiServerFetch = async (url: string, method: 'GET' | 'POST' | 'PATC
   if (body) {
     newBody = { body: JSON.stringify(body) };
   }
-  const res = await fetch('https://gcjob.azurewebsites.net' + url, {
+  const res = await fetch('https://gcj2.azurewebsites.net' + url, {
     method,
     headers,
     cache: 'no-cache',

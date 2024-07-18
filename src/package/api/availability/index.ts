@@ -32,6 +32,10 @@ export const GetAvailability = async (params: GetAvailabilityRequest): Promise<G
 };
 
 export interface PostAvailabilityRequest {
+    request: PostAvailabilityData[],
+}
+
+export interface PostAvailabilityData {
     date: string,
     startTime: string,
     endTime: string
