@@ -17,7 +17,7 @@ export interface Booking {
     rejectReason: string,
     status: number,
     createdAt: string,
-    expertSkillOptionId: []
+    expertSkillOptionIds: number[]
 }
 
 export const GetBooking = async (): Promise<GetBookingResponse> => {

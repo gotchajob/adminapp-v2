@@ -1,4 +1,5 @@
 import { Booking, GetBooking } from 'package/api/booking';
+import { BookingCurrent, GetBookingCurrent } from 'package/api/booking/expert/current';
 import { GetBookingById, GetBookingByIdRequest } from 'package/api/booking/id';
 import { useEffect, useState } from 'react';
 
@@ -45,3 +46,28 @@ export const useGetBookingById = (params: GetBookingByIdRequest) => {
     };
 }
 
+export const useGetBookingCurrent = (accessToken: string, refreshTime: any) => {
+    const [bookings, setBookings] = useState<BookingCurrent[] | undefined>();
+
+    const [loading, setLoading] = useState<boolean>();
+
+    const fetchBookingsCurrent = async () => {
+        try {
+            setLoading(true);
+            const data = await GetBookingCurrent(accessToken);
+            setBookings(data.data);
+            setLoading(false);
+        } catch (error) {
+        }
+    }
+
+    useEffect(() => {
+        if (accessToken) {
+            fetchBookingsCurrent();
+        }
+    }, [accessToken, refreshTime]);
+
+    return {
+        bookings, loading
+    }
+}

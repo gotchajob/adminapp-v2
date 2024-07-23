@@ -19,40 +19,57 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { Button, Dialog, DialogContent, TextField } from '@mui/material';
 import { StyledLink } from 'components/common/link/styled-link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGetBookingById } from 'hooks/use-get-booking';
+import { useGetExpertSkillOptions } from 'hooks/use-get-expert-skill-option';
+import { formatDate } from 'package/util';
+import { ExpertSkillOption } from 'package/api/expert-skill-option';
+import { PatchBookingReject } from 'package/api/booking/id/reject';
+import { ExpertToken } from 'hooks/use-login';
 
-// table data
-function createData(product: string, description: string, quantity: string, amount: string, total: string) {
-    return { product, description, quantity, amount, total };
-}
-
-const formatDate = (isoString: any) => {
-    return format(new Date(isoString), 'HH:mm dd/MM/yyyy');
+const getStatusLabel = (status: number) => {
+    switch (status) {
+        case 1:
+            return { label: "Chờ xác nhận của chuyên gia", color: 'warning' };
+        default:
+            return { label: "Trạng thái không xác định", color: 'default' };
+    }
 };
+
 
 const BookingDetailPage = ({ event, onBack, params }: { event: any, onBack: () => void, params: { id: string } }) => {
     const theme = useTheme();
 
     const [open, setOpen] = useState(false);
 
+    const { expertToken } = ExpertToken();
+
     const [isCancel, setIsCancel] = useState(() => {
         return event?.title === "Đặt lịch thành công" || event?.title === "Đã đặt lịch";
     });
 
-    useEffect(() => {
-        console.log("BookingDetailPage :", event)
-    }, [event])
-
     const [cancelReason, setCancelReason] = useState('');
+
     const [showCancelForm, setShowCancelForm] = useState(false);
+
+    const { booking } = useGetBookingById({ id: +params.id });
+
+    const { label, color } = booking?.status !== undefined ? getStatusLabel(booking.status) : { label: "Chưa có trạng thái", color: 'default' };
+
+    const { expertSkillOptions } = useGetExpertSkillOptions({ expertId: booking?.expertId });
 
     const handleCancelClick = () => {
         setShowCancelForm(true);
     };
 
-    const handleConfirmCancel = () => {
+    const handleConfirmCancel = async () => {
         console.log('Cancelled with reason:', cancelReason);
+        try {
+            const res = await PatchBookingReject({ id: +params?.id, reason: cancelReason }, expertToken);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
         setCancelReason('');
         setShowCancelForm(false);
     };
@@ -70,9 +87,17 @@ const BookingDetailPage = ({ event, onBack, params }: { event: any, onBack: () =
         setOpen(false);
     };
 
-    const { booking } = useGetBookingById({ id: +params.id });
+    useEffect(() => {
+        console.log("booking:", booking);
+        console.log("expertSkillOptions:", expertSkillOptions);
+    }, [params, booking, expertSkillOptions]);
 
-    useEffect(() => { console.log("booking:", booking) }, [booking]);
+    const filteredSkillOptions = useMemo(() => {
+        if (!booking?.expertSkillOptionIds) return [];
+        return expertSkillOptions.filter((skill: ExpertSkillOption) =>
+            booking?.expertSkillOptionIds.includes(skill.id)
+        );
+    }, [booking, expertSkillOptions]);
 
     return (
         <SubCard>
@@ -81,12 +106,12 @@ const BookingDetailPage = ({ event, onBack, params }: { event: any, onBack: () =
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <Typography variant="body2">
-                                Thông tin buổi phỏng vấn vào :
+                                Thông tin buổi phỏng vấn vào thời điểm :
                             </Typography>
                             <Typography variant="body2">
-                                {formatDate(booking.startInterviewDate)}
+                                {formatDate(booking.startInterviewDate, "yyyy-MM-dd hh:mm")}
                                 {' - '}
-                                {formatDate(booking.endInterviewDate)}
+                                {formatDate(booking.endInterviewDate, "yyyy-MM-dd hh:mm")}
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
@@ -114,7 +139,11 @@ const BookingDetailPage = ({ event, onBack, params }: { event: any, onBack: () =
                                         <Typography variant="h4">Buổi phỏng vấn</Typography>
                                         <Stack spacing={1}>
                                             <Typography variant="subtitle1">Kỹ năng khách hàng chọn phỏng vấn:</Typography>
-                                            <Typography variant="body2">{booking.expertSkillOptionId?.join(', ')}</Typography>
+                                            <Stack direction="row" spacing={1}>
+                                                {filteredSkillOptions?.map(skill => (
+                                                    <Chip key={skill.id} label={skill.skillOptionName} />
+                                                ))}
+                                            </Stack>
                                         </Stack>
                                     </Stack>
                                 </Grid>
@@ -126,10 +155,11 @@ const BookingDetailPage = ({ event, onBack, params }: { event: any, onBack: () =
                                                 <Typography variant="subtitle1">Tổng tiền :</Typography>
                                                 <Typography variant="body2">375.000vnđ</Typography>
                                             </Stack>
-                                            <Stack direction="row" spacing={1}>
-                                                <Typography variant="subtitle1">Trạng thái :</Typography>
-                                                <Chip label="Đã đặt lịch" variant="outlined" size="small" chipcolor='warning'
-                                                />
+                                            <Stack spacing={1}>
+                                                <Stack direction="row" spacing={1}>
+                                                    <Typography variant="subtitle1">Trạng thái :</Typography>
+                                                    <Chip label={label} variant="outlined" size="small" chipcolor={color} />
+                                                </Stack>
                                             </Stack>
                                         </Stack>
                                     </Stack>
@@ -164,7 +194,7 @@ const BookingDetailPage = ({ event, onBack, params }: { event: any, onBack: () =
                         <Grid item xs={12}>
                             <Grid container spacing={3} alignItems="center" justifyContent="space-between">
                                 <Grid item>
-                                    <StyledLink href="/expert/expert-calendar">
+                                    <StyledLink href="/expert/booking-calendar">
                                         <Button variant="outlined" startIcon={<KeyboardBackspaceIcon />}>
                                             Quay lại
                                         </Button>
@@ -180,7 +210,7 @@ const BookingDetailPage = ({ event, onBack, params }: { event: any, onBack: () =
                             <Grid item xs={12}>
                                 <SubCard>
                                     <Stack spacing={2}>
-                                        <Typography variant="subtitle1">Nhập lý do hủy đặt lịch:</Typography>
+                                        <Typography variant="subtitle1">Nhập lý do từ chối:</Typography>
                                         <TextField
                                             fullWidth
                                             multiline

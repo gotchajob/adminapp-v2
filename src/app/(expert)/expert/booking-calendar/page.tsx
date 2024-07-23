@@ -25,9 +25,7 @@ import ContactMailIcon from '@mui/icons-material/ContactMail';
 // types
 import { TabsProps } from 'types';
 import { ThemeMode } from 'types/config';
-import ExpertCalendarPage from './_component/ExpertCalendar';
 import CustomerCalendarPage from './_component/CustomerBooking';
-import CalendarHistoryPage from './_component/CalendarHistory';
 import { useRefresh } from 'hooks/use-refresh';
 import { ExpertToken } from 'hooks/use-login';
 import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
@@ -58,7 +56,7 @@ const tabsOption = [
 
 // ==============================|| EXPERT BOOKING PAGE ||============================== //
 
-const ExpertBookingPage = () => {
+const ExpertBookingPage = ({ params }: { params: { id: string } }) => {
     const theme = useTheme();
 
     const [value, setValue] = useState<number>(0);
@@ -156,7 +154,7 @@ const ExpertBookingPage = () => {
                     </Grid>
                     <Grid item xs={12}>
                         <TabPanel value={value} index={0}>
-                            <CustomerCalendarPage onNext={() => { }} onSelectEvent={() => { }} />
+                            <CustomerCalendarPage onNext={() => { }} onSelectEvent={() => { }} params={params} />
                         </TabPanel>
                     </Grid>
                 </Grid>

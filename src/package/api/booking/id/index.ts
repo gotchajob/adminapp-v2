@@ -18,7 +18,7 @@ export interface Booking {
     startInterviewDate: string,
     endInterviewDate: string,
     note: string,
-    rejectReason: string, 
+    rejectReason: string,
     status: number,
     createdAt: string,
     expertSkillOptionId: []
@@ -26,7 +26,7 @@ export interface Booking {
 
 export const GetBookingById = async (params: GetBookingByIdRequest): Promise<GetBookingByIdResponse> => {
     try {
-        const res = await apiServerFetch(`/booking/${params.id}`, 'GET');
+        const res = await apiServerFetch(`/booking/${params.id}`, 'GET', undefined, undefined);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', []);
