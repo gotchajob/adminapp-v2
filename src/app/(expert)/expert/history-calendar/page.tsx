@@ -43,20 +43,12 @@ function TabPanel({ children, value, index, ...other }: TabsProps) {
         </div>
     );
 }
-
-function a11yProps(index: number) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-
 // tabs option
 const tabsOption = [
     {
-        label: 'Lịch sử đặt lịch',
+        label: 'Lịch sử các buổi phỏng vấn',
         icon: <FeedIcon sx={{ fontSize: '1.3rem' }} />,
-        caption: 'Lịch sử đặt lịch của bạn'
+        caption: 'Lịch sử các buổi phỏng vấn của bạn'
     },
 ];
 

@@ -44,7 +44,7 @@ const dashboard: NavItemType = {
     },
     {
       id: 'history-calendar',
-      title: <FormattedMessage id="Lịch sủ đặt lịch" />,
+      title: <FormattedMessage id="Lịch sủ các buổi phỏng vấn" />,
       type: 'item',
       url: '/expert/history-calendar',
       icon: FeedIcon,

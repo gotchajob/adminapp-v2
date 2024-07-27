@@ -207,17 +207,18 @@ const BookingDetailPage = ({ event, onBack, params }: { event: any, onBack: () =
                         <Grid item xs={12}>
                             <Grid container spacing={3} alignItems="center" justifyContent="space-between">
                                 <Grid item>
-                                    <StyledLink href="/expert/booking-calendar">
+                                    <StyledLink href="/expert/history-calendar">
                                         <Button variant="outlined" startIcon={<KeyboardBackspaceIcon />}>
                                             Quay lại
                                         </Button>
                                     </StyledLink>
                                 </Grid>
-                                <Grid item>
+                                {/* <Grid item>
                                     <Button variant="contained" onClick={handleCancelClick}>Hủy đặt lịch</Button>
-                                </Grid>
+                                </Grid> */}
                             </Grid>
                         </Grid>
+
                         {/* Lý do hủy đặt lịch */}
                         {showCancelForm && (
                             <Grid item xs={12}>

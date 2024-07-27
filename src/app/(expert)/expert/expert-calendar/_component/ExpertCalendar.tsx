@@ -1,13 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-
-// material-ui
 import Dialog from '@mui/material/Dialog';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
-// third-party
 import { DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { EventResizeDoneArg } from '@fullcalendar/interaction';
@@ -17,8 +13,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import AddAlarmTwoToneIcon from '@mui/icons-material/AddAlarmTwoTone';
 import { FormikValues } from 'formik';
-
-// project imports
 import { Box, Button, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from '@mui/material';
 import CalendarStyled from 'components/application/calendar/CalendarStyled';
 import { useGetAvailability } from 'hooks/use-get-availability';
@@ -26,14 +20,18 @@ import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
 import { ExpertToken } from 'hooks/use-login';
 import { useRefresh } from 'hooks/use-refresh';
 import { useRouter } from 'next/navigation';
-import { PostAvailability, PostAvailabilityData, PostAvailabilityRequest } from 'package/api/availability';
-import { dispatch, useSelector } from 'store';
-import { getEvents, removeEvent } from 'store/slices/calendar';
-import { DateRange } from 'types';
-import Loader from 'ui-component/Loader';
-import SubCard from 'ui-component/cards/SubCard';
-import ExpertToolbar from './ExpertCalendarToolbar';
+import { PostAvailability, PostAvailabilityData } from 'package/api/availability';
 import { DelAvailability } from 'package/api/availability/id';
+import { dispatch, useSelector } from 'store';
+import { getEvents } from 'store/slices/calendar';
+import { DateRange } from 'types';
+import SubCard from 'ui-component/cards/SubCard';
+import Loader from 'ui-component/Loader';
+import ExpertToolbar from './ExpertCalendarToolbar';
+import { DatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { formatDate, getDatesBetween } from 'package/util';
 
 // ==============================|| APPLICATION CALENDAR ||============================== //
 
@@ -56,6 +54,23 @@ const reverseConvertEvents = (event: any) => {
     };
 };
 
+// const formatDate = (date: Date): string => {
+//     const day = String(date.getDate()).padStart(2, '0');
+//     const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+//     const year = date.getFullYear();
+//     return `${day}/${month}/${year}`;
+// };
+
+// const isTimeOverlap = (newEvent: FormikValues) => {
+//     return events.some((event: any) =>
+//         newEvent.date === event.date && (
+//             (newEvent.startTime >= event.startTime && newEvent.startTime < event.endTime) ||
+//             (newEvent.endTime > event.startTime && newEvent.endTime <= event.endTime) ||
+//             (newEvent.startTime <= event.startTime && newEvent.endTime >= event.endTime)
+//         )
+//     );
+// };
+
 const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     const calendarRef = useRef<FullCalendar>(null);
     const route = useRouter();
@@ -70,39 +85,39 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
 
     // calendar toolbar events
     const handleDateToday = () => {
-        // const calendarEl = calendarRef.current;
-        // if (calendarEl) {
-        //     const calendarApi = calendarEl.getApi();
-        //     calendarApi.today();
-        //     setDate(calendarApi.getDate());
-        // }
+        const calendarEl = calendarRef.current;
+        if (calendarEl) {
+            const calendarApi = calendarEl.getApi();
+            calendarApi.today();
+            setDate(calendarApi.getDate());
+        }
     };
 
     const handleViewChange = (newView: string) => {
-        // const calendarEl = calendarRef.current;
-        // if (calendarEl) {
-        //     const calendarApi = calendarEl.getApi();
-        //     calendarApi.changeView(newView);
-        //     setView(newView);
-        // }
+        const calendarEl = calendarRef.current;
+        if (calendarEl) {
+            const calendarApi = calendarEl.getApi();
+            calendarApi.changeView(newView);
+            setView(newView);
+        }
     };
 
     const handleDatePrev = () => {
-        // const calendarEl = calendarRef.current;
-        // if (calendarEl) {
-        //     const calendarApi = calendarEl.getApi();
-        //     calendarApi.prev();
-        //     setDate(calendarApi.getDate());
-        // }
+        const calendarEl = calendarRef.current;
+        if (calendarEl) {
+            const calendarApi = calendarEl.getApi();
+            calendarApi.prev();
+            setDate(calendarApi.getDate());
+        }
     };
 
     const handleDateNext = () => {
-        // const calendarEl = calendarRef.current;
-        // if (calendarEl) {
-        //     const calendarApi = calendarEl.getApi();
-        //     calendarApi.next();
-        //     setDate(calendarApi.getDate());
-        // }
+        const calendarEl = calendarRef.current;
+        if (calendarEl) {
+            const calendarApi = calendarEl.getApi();
+            calendarApi.next();
+            setDate(calendarApi.getDate());
+        }
     };
 
     const handleEventUpdate = async ({ event }: EventResizeDoneArg | EventDropArg) => {
@@ -151,9 +166,9 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         dispatch(getEvents()).then(() => setLoading(false));
     }, []);
 
-    useEffect(() => {
-        setEvents(calendarState.events);
-    }, [calendarState]);
+    // useEffect(() => {
+    //     setEvents(calendarState.events);
+    // }, [calendarState]);
 
     // // set calendar view
     // useEffect(() => {
@@ -164,15 +179,11 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     // ==============================|| CODE ||============================== //
     // ==============================|| BELOW ||============================== //
 
-    const isTimeOverlap = (newEvent: FormikValues) => {
-        return events.some(event =>
-            newEvent.date === event.date && (
-                (newEvent.startTime >= event.startTime && newEvent.startTime < event.endTime) ||
-                (newEvent.endTime > event.startTime && newEvent.endTime <= event.endTime) ||
-                (newEvent.startTime <= event.startTime && newEvent.endTime >= event.endTime)
-            )
-        );
-    };
+    const [startDate, setStartDate] = useState<Date | null>(null);
+
+    const [endDate, setEndDate] = useState<Date | null>(null);
+
+    const [datesBetween, setDatesBetween] = useState<Date[]>([]);
 
     const { refresh, refreshTime } = useRefresh();
 
@@ -185,11 +196,13 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
 
     const { availabilities, loading: availabilitiesLoadings } = useGetAvailability({ expertId: expertCurrent?.expertId ?? 0 }, refreshTime);
 
+    const [isAddDateRangeOpen, setIsAddDateRangeOpen] = useState(false);
+
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-    const [newEvent, setNewEvent] = useState<PostAvailabilityData | undefined>();
+    const [newEvent, setNewEvent] = useState<PostAvailabilityData>();
 
     const [selectEvent, setSelectEvent] = useState<any>();
 
@@ -215,7 +228,10 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
 
     const handleRangeSelect = (arg: DateSelectArg) => {
         setIsAddModalOpen(true);
+    };
 
+    const handleAddDateRangeOpen = () => {
+        setIsAddDateRangeOpen(true)
     };
 
     const handleEventSelect = (arg: EventClickArg) => {
@@ -241,6 +257,38 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         }
     };
 
+    const handleCreateDateRange = async () => {
+        if (!startDate || !endDate || !newEvent?.startTime || !newEvent?.endTime) {
+            console.error("Vui lòng điền đầy đủ thông tin.");
+            return;
+        }
+        const datesArray = [];
+        let currentDate = startDate;
+        while (currentDate <= endDate) {
+            const dateString = formatDate(currentDate.toISOString(), "yyyy-MM-dd");
+            console.log(" dateString", dateString);
+            datesArray.push({
+                date: dateString,
+                startTime: newEvent?.startTime,
+                endTime: newEvent?.endTime
+            });
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        try {
+            if (datesArray) {
+                const res = await PostAvailability({ request: datesArray }, expertToken);
+                console.log("handleCreateNewEvent", res);
+                if (res.status !== "success") {
+                    return;
+                }
+            }
+            setIsAddDateRangeOpen(false);
+            refresh();
+        } catch (error) {
+            throw new Error();
+        }
+    };
+
     const handleEventDelete = async (id: string) => {
         try {
             if (id) {
@@ -254,11 +302,24 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         }
     };
 
+    useEffect(() => { setEvents([]); }, [])
+
     useEffect(() => {
         const convertedEvents = convertEvents(availabilities);
         setEvents(convertedEvents);
         console.log("expertCurrent?.expertId:", expertCurrent?.expertId);
     }, [expertCurrent, availabilities, expertToken, refreshTime]);
+
+    useEffect(() => {
+        if (startDate && endDate) {
+            try {
+                const dates = getDatesBetween([startDate, endDate]);
+                setDatesBetween(dates);
+            } catch (error) {
+                console.error('Lỗi khi tính toán các ngày giữa:', error);
+            }
+        }
+    }, [startDate, endDate]);
 
     if (loading) return <Loader />;
 
@@ -267,9 +328,9 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
             <CalendarStyled>
                 <Grid item xs={12}>
                     <Grid container justifyContent="flex-end">
-                        <Button color="primary" variant="contained" onClick={handleAddClick}>
+                        <Button color="primary" variant="contained" onClick={handleAddDateRangeOpen}>
                             <AddAlarmTwoToneIcon fontSize="small" sx={{ mr: 0.75 }} />
-                            Thêm lịch phỏng vấn
+                            Thêm nhiều lịch phỏng vấn
                         </Button>
                     </Grid>
                 </Grid>
@@ -307,7 +368,89 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                 </SubCard>
             </CalendarStyled>
 
-            {/* Dialog chỉnh sửa sự kiện */}
+            {/* Dialog thêm khoảng ngày */}
+            <Dialog
+                maxWidth="sm"
+                fullWidth
+                onClose={() => setIsAddDateRangeOpen(false)}
+                open={isAddDateRangeOpen}
+                sx={{ '& .MuiDialog-paper': { p: 2 } }}
+            >
+                <DialogTitle color="primary">Thêm nhiều lịch phỏng vấn</DialogTitle>
+                <DialogContent>
+                    <Grid container spacing={2}>
+                        <Grid item lg={6}>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    disablePast
+                                    slotProps={{ textField: { fullWidth: true } }}
+                                    label="Từ ngày"
+                                    value={startDate}
+                                    onChange={(newValue: Date | null) => {
+                                        setStartDate(newValue);
+                                    }}
+                                    renderInput={(params: any) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid item lg={6}>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    disablePast
+                                    slotProps={{ textField: { fullWidth: true } }}
+                                    label="Đến ngày"
+                                    value={endDate}
+                                    onChange={(newValue: Date | null) => {
+                                        setEndDate(newValue);
+                                    }}
+                                    renderInput={(params: any) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid item lg={12}>
+                            <TextField
+                                margin="dense"
+                                label="Giờ bắt đầu"
+                                type="time"
+                                fullWidth
+                                value={newEvent?.startTime}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item lg={12}>
+                            <TextField
+                                margin="dense"
+                                label="Giờ kết thúc"
+                                type="time"
+                                fullWidth
+                                value={newEvent?.endTime}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography sx={{ fontStyle: 'italic', pt: 1 }}>
+                                Lưu ý: SA là sáng, CH là chiều
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsAddDateRangeOpen(false)} color="primary">
+                        Đóng
+                    </Button>
+                    <Button onClick={handleCreateDateRange} color="success">
+                        Thêm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Dialog xóa sự kiện */}
             <Dialog maxWidth="sm" fullWidth onClose={handleEditModalClose} open={isEditModalOpen} sx={{ '& .MuiDialog-paper': { p: 0 } }}>
                 <DialogTitle color="primary">Xóa lịch phỏng vấn</DialogTitle>
                 <DialogContent>

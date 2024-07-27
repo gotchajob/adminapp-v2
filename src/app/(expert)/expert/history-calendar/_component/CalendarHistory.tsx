@@ -1,281 +1,322 @@
 "use client";
 
 // material-ui
-import FullCalendar from "@fullcalendar/react";
-import { Box, Dialog } from "@mui/material";
-import CalendarStyled from 'components/application/calendar/CalendarStyled';
+import BlockIcon from '@mui/icons-material/Block';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
+import CircularLoader from "ui-component/CircularLoader";
 import Loader from "ui-component/Loader";
-import SubCard from "ui-component/cards/SubCard";
-import { Theme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-
-// third-party
-import { DateSelectArg, EventClickArg, EventDropArg } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { EventResizeDoneArg } from '@fullcalendar/interaction';
-import listPlugin from '@fullcalendar/list';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import timelinePlugin from '@fullcalendar/timeline';
-import { FormikValues } from 'formik';
 
 // project imports
+import { useGetBookingCurrent } from "hooks/use-get-booking";
+import { ExpertToken } from "hooks/use-login";
+import { useRefresh } from "hooks/use-refresh";
 import { useRouter } from 'next/navigation';
-import { dispatch, useSelector } from 'store';
-import { addEvent, getEvents, removeEvent, updateEvent } from 'store/slices/calendar';
-import { DateRange } from 'types';
-import { useEffect, useRef, useState } from "react";
-import CustomerToolbar from "./CustomerBookingToolbar";
+import { PatchBookingAccept } from "package/api/booking/id/accept";
+import { PatchBookingReject } from "package/api/booking/id/reject";
+import { formatDate } from "package/util";
+import { useEffect, useState } from "react";
 
-const fakeEvents = [
-    {
-        title: 'Hoàn tất phỏng vấn',
-        description: 'Kỹ năng chuyên môn tốt',
-        color: '#2196F3',
-        textColor: '#ffffff',
-        start: '2024-07-02T09:00:00',
-        end: '2024-07-02T10:00:00'
-    },
-    {
-        title: 'Hủy đặt lịch',
-        description: 'Hủy lịch do cần chọn chuyên gia khác',
-        color: '#ED4337',
-        textColor: '#ffffff',
-        start: '2024-07-04T09:00:00',
-        end: '2024-07-04T10:00:00'
-    },
-    {
-        title: 'Hoàn tất phỏng vấn',
-        description: 'Kỹ năng chuyên môn tốt',
-        color: '#2196F3',
-        textColor: '#ffffff',
-        start: '2024-07-03T14:00:00',
-        end: '2024-07-03T15:00:00'
-    },
-    {
-        title: 'Hủy đặt lịch',
-        description: 'Hủy lịch do cần chọn chuyên gia khác',
-        color: '#ED4337',
-        textColor: '#ffffff',
-        start: '2024-07-05T14:00:00',
-        end: '2024-07-05T15:00:00'
-    },
-];
+const getStatusLabel = (status: any) => {
+    switch (status) {
+        case 1:
+            return { label: "Chờ xác nhận của chuyên gia", color: 'warning' };
+        case 2:
+            return { label: "Chờ phỏng vấn", color: 'info' };
+        case 3:
+            return { label: "Đang phỏng vấn", color: 'primary' };
+        case 4:
+            return { label: "Chờ phản hồi", color: 'default' };
+        case 5:
+            return { label: "Hoàn thành", color: 'success' };
+        case 6:
+            return { label: "Hủy bởi khách hàng", color: 'error' };
+        case 7:
+            return { label: "Hủy bởi chuyên gia", color: 'error' };
+        case 8:
+            return { label: "Từ chối", color: 'error' };
+        default:
+            return { label: "Trạng thái không xác định", color: 'default' };
+    }
+};
 
-const CalendarHistoryPage = ({ onNext, onSelectEvent }: { onNext: () => void, onSelectEvent: (event: any) => void }) => {
-    const calendarRef = useRef<FullCalendar>(null);
+const isToday = (date: string) => {
+    const today = new Date();
+    const formattedToday = formatDate(today.toISOString(), "dd-MM-yyyy");
+    const formattedDate = formatDate(date, "dd-MM-yyyy");
+    return formattedDate === formattedToday;
+};
 
-    const route = useRouter();
+const CustomerCalendarPage = ({ onNext, onSelectEvent, params }: { onNext: () => void, params: { id: string }, onSelectEvent: (event: any) => void }) => {
+    const router = useRouter();
 
-    const matchSm = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const { refreshTime, refresh } = useRefresh();
 
     const [loading, setLoading] = useState<boolean>(true);
 
-    // fetch events data
-    const [events, setEvents] = useState<FormikValues[]>([]);
+    const { expertToken } = ExpertToken();
 
-    const calendarState = useSelector((state) => state.calendar);
+    const { bookings } = useGetBookingCurrent(expertToken, refreshTime);
 
-    useEffect(() => {
-        dispatch(getEvents()).then(() => setLoading(false));
-    }, []);
+    const [selectedBooking, setSelectedBooking] = useState<{ id: number; type: 'accept' | 'reject' | "ban" } | null>(null);
 
-    useEffect(() => {
-        setEvents(calendarState.events);
-    }, [calendarState]);
+    const [cancelReason, setCancelReason] = useState<string>('');
 
-    const [date, setDate] = useState(new Date());
-
-    const [view, setView] = useState(matchSm ? 'listWeek' : 'dayGridMonth');
-
-    // calendar toolbar events
-    const handleDateToday = () => {
-        const calendarEl = calendarRef.current;
-
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-
-            calendarApi.today();
-            setDate(calendarApi.getDate());
-        }
+    const handleOpenDialog = (bookingId: number, type: 'accept' | 'reject' | 'ban') => {
+        setSelectedBooking({ id: bookingId, type });
     };
 
-    const handleViewChange = (newView: string) => {
-        const calendarEl = calendarRef.current;
-
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-
-            calendarApi.changeView(newView);
-            setView(newView);
-        }
+    const handleCloseDialog = () => {
+        setSelectedBooking(null);
+        setCancelReason('');
     };
 
-    // set calendar view
-    useEffect(() => {
-        handleViewChange(matchSm ? 'listWeek' : 'dayGridMonth');
-    }, [matchSm]);
-
-    const handleDatePrev = () => {
-        const calendarEl = calendarRef.current;
-
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-
-            calendarApi.prev();
-            setDate(calendarApi.getDate());
-        }
-    };
-
-    const handleDateNext = () => {
-        const calendarEl = calendarRef.current;
-
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-
-            calendarApi.next();
-            setDate(calendarApi.getDate());
-        }
-    };
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const [selectedRange, setSelectedRange] = useState<DateRange | null>(null);
-
-    const [selectedEvent, setSelectedEvent] = useState<FormikValues | null>(null);
-
-    // calendar event select/add/edit/delete
-    const handleModalClose = () => {
-        setIsModalOpen(false);
-        setSelectedEvent(null);
-        setSelectedRange(null);
-    };
-
-    const handleRangeSelect = (arg: DateSelectArg) => {
-        const calendarEl = calendarRef.current;
-        if (calendarEl) {
-            const calendarApi = calendarEl.getApi();
-            calendarApi.unselect();
-        }
-
-        setSelectedRange({
-            start: arg.start,
-            end: arg.end
-        });
-        setIsModalOpen(true);
-    };
-
-    const handleEventSelect = (arg: EventClickArg) => {
-        // if (arg) {
-        //     const selectEvent = fakeEvents.find((_event) => _event.title === arg.event._def.title);
-        //     if (onSelectEvent) {
-        //         onSelectEvent(selectEvent);
-        //     }
-        // }
-        // if (onNext) {
-        //     onNext();
-        // }
-        if (arg) {
-            route.push(`http://localhost:3000/expert/expert-calendar/${arg.event}`);
-            localStorage.setItem("PanelValue", JSON.stringify("CalendarHistory"));
-        }
-    };
-
-    const handleEventUpdate = async ({ event }: EventResizeDoneArg | EventDropArg) => {
+    const handleConfirmAccept = async () => {
         try {
-            dispatch(
-                updateEvent({
-                    eventId: event.id,
-                    update: {
-                        allDay: event.allDay,
-                        start: event.start,
-                        end: event.end
-                    }
-                })
-            );
-        } catch (err) {
-            console.error(err);
+            const res = await PatchBookingAccept({ id: selectedBooking ? selectedBooking.id : 0 }, expertToken);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
         }
+        handleCloseDialog();
     };
 
-    const handleEventCreate = async (data: FormikValues) => {
-        dispatch(addEvent(data));
-        handleModalClose();
-    };
-
-    const handleUpdateEvent = async (eventId: string, update: FormikValues) => {
-        dispatch(updateEvent({ eventId, update }));
-        handleModalClose();
-    };
-
-    const handleEventDelete = async (id: string) => {
+    const handleConfirmCancel = async () => {
+        console.log('Cancelled with reason:', cancelReason);
         try {
-            dispatch(removeEvent(id));
-            handleModalClose();
-        } catch (err) {
-            console.error(err);
+            const res = await PatchBookingReject({ id: selectedBooking ? selectedBooking.id : 0, reason: cancelReason }, expertToken);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
         }
+        handleCloseDialog();
     };
+
+    useEffect(() => {
+        if (bookings) {
+            setLoading(false);
+        }
+    }, [bookings]);
 
     if (loading) return <Loader />;
 
     return (
-        <Box
-            sx={{
-                height: '100%',
-                paddingX: 5,
-                paddingY: 1
-            }}
-        >
-            <CalendarStyled>
-                <CustomerToolbar
-                    date={date}
-                    view={view}
-                    onClickNext={handleDateNext}
-                    onClickPrev={handleDatePrev}
-                    onClickToday={handleDateToday}
-                    onChangeView={handleViewChange}
-                />
-                <SubCard>
-                    <FullCalendar
-                        weekends
-                        editable
-                        droppable
-                        selectable
-                        events={fakeEvents}
-                        ref={calendarRef}
-                        rerenderDelay={10}
-                        initialDate={date}
-                        initialView={"listWeek"}
-                        dayMaxEventRows={3}
-                        eventDisplay="block"
-                        headerToolbar={false}
-                        allDayMaintainDuration
-                        eventResizableFromStart
-                        select={handleRangeSelect}
-                        eventDrop={handleEventUpdate}
-                        eventClick={handleEventSelect}
-                        eventResize={handleEventUpdate}
-                        height={"auto"}
-                        plugins={[listPlugin, dayGridPlugin, timelinePlugin, timeGridPlugin, interactionPlugin]}
+        <Box sx={{ height: '100vh', paddingX: 5, paddingY: 1 }}>
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ pl: 3 }}>#</TableCell>
+                            <TableCell sx={{ pl: 3 }}>Tên khách hàng</TableCell>
+                            <TableCell>Thời điểm bắt đầu</TableCell>
+                            <TableCell>Thời điểm kết thúc</TableCell>
+                            <TableCell>Thời điểm tạo</TableCell>
+                            <TableCell>Chú thích</TableCell>
+                            <TableCell align="center">Trạng thái</TableCell>
+                            <TableCell align="center" sx={{ pr: 3 }}>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {bookings && bookings.length > 0 ? (
+                            bookings.filter((row) => row.status == 4 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8).map((row) => (
+                                <TableRow hover key={row.id} >
+                                    <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
+                                    <TableCell sx={{ pl: 3 }}>{row.customerId}</TableCell>
+                                    <TableCell >
+                                        <Typography variant="subtitle2" noWrap>
+                                            {formatDate(row.startInterviewDate, "dd/MM/yyyy - hh:mm")}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Typography variant="subtitle2" noWrap>
+                                            {formatDate(row.endInterviewDate, "dd/MM/yyyy - hh:mm")}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Typography variant="subtitle2" noWrap>
+                                            {formatDate(row.createdAt, "dd/MM/yyyy")}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell >{row.note}</TableCell>
+                                    <TableCell align="center">
+                                        <Chip label={getStatusLabel(row.status).label} color={getStatusLabel(row.status).color} />
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ pr: 3 }}>
+                                        <Tooltip title="Xem chi tiết">
+                                            <IconButton
+                                                color="default"
+                                                size="large"
+                                                onClick={() => {
+                                                    router.push(`/expert/history-calendar/${row.id}`);
+                                                }}
+                                            >
+                                                <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        {/* <Tooltip title="Chấp nhận">
+                                            <IconButton
+                                                color="primary"
+                                                size="large"
+                                                onClick={() => handleOpenDialog(row.id, 'accept')}
+                                            >
+                                                <CheckIcon sx={{ fontSize: "1.1rem" }} />
+                                            </IconButton>
+                                        </Tooltip> */}
+                                        {/* <Tooltip title="Từ chối">
+                                            <IconButton
+                                                color="secondary"
+                                                size="large"
+                                                disabled={!row.canCancel}
+                                                onClick={() => handleOpenDialog(row.id, 'reject')}
+                                            >
+                                                <CloseIcon sx={{ fontSize: "1.1rem" }} />
+                                            </IconButton>
+                                        </Tooltip> */}
+                                        {/* <Tooltip title="Chặn">
+                                            <IconButton
+                                                color="error"
+                                                size="large"
+                                                onClick={() => handleOpenDialog(row.id, 'ban')}
+                                            >
+                                                <BlockIcon sx={{ fontSize: "1.1rem" }} />
+                                            </IconButton>
+                                        </Tooltip> */}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            !loading && (
+                                <TableRow>
+                                    <TableCell colSpan={7}>
+                                        <Typography variant="h5" align="center" sx={{ pb: 20 }}>
+                                            Hiện chưa người dùng nào đặt lịch
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        )}
+                        {loading && (
+                            <TableRow>
+                                <TableCell colSpan={7}>
+                                    <CircularLoader />
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            <Dialog
+                open={selectedBooking?.type === 'reject'}
+                onClose={handleCloseDialog}
+                maxWidth="sm"
+                fullWidth
+                sx={{ borderRadius: '10px' }}
+            >
+                <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
+                    Nhập lý do từ chối
+                </DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="cancelReason"
+                        label="Lý do từ chối"
+                        type="text"
+                        fullWidth
+                        variant="outlined"
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
+                        sx={{ marginTop: 1, marginBottom: 2 }}
                     />
-                </SubCard>
-            </CalendarStyled>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleCloseDialog}
+                        color="secondary"
+                        sx={{ marginRight: 1, fontWeight: 'bold' }}
+                    >
+                        Đóng
+                    </Button>
+                    <Button
+                        onClick={handleConfirmCancel}
+                        color="primary"
+                        sx={{ fontWeight: 'bold' }}
+                    >
+                        Từ chối
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={selectedBooking?.type === 'accept'}
+                onClose={handleCloseDialog}
+                maxWidth="sm"
+                fullWidth
+                sx={{ borderRadius: '10px' }}
+            >
+                <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
+                    Xác nhận chấp nhận phỏng vấn
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="body1">
+                        Bạn có chắc chắn muốn chấp nhận lịch phỏng vấn này không?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleCloseDialog}
+                        color="secondary"
+                        sx={{ marginRight: 1, fontWeight: 'bold' }}
+                    >
+                        Đóng
+                    </Button>
+                    <Button
+                        onClick={handleConfirmAccept}
+                        color="primary"
+                        sx={{ fontWeight: 'bold' }}
+                    >
+                        Chấp nhận
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={selectedBooking?.type === 'ban'}
+                onClose={handleCloseDialog}
+                maxWidth="sm"
+                fullWidth
+                sx={{ borderRadius: '10px' }}
+            >
+                <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.25rem' }}>
+                    Xác nhận chặn khách hàng
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="body1">
+                        Bạn có chắc chắn muốn chặn đặt lịch phỏng từ khách hàng này không?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={handleCloseDialog}
+                        color="secondary"
+                        sx={{ marginRight: 1, fontWeight: 'bold' }}
+                    >
+                        Đóng
+                    </Button>
+                    <Button
+                        onClick={handleConfirmAccept}
+                        color="primary"
+                        sx={{ fontWeight: 'bold' }}
+                    >
+                        Chặn
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
-    )
-}
+    );
+};
 
-export default CalendarHistoryPage;
-
-{/* Dialog sửa sự kiện
-            <Dialog maxWidth="sm" fullWidth onClose={handleModalClose} open={isModalOpen} sx={{ '& .MuiDialog-paper': { p: 0 } }}>
-                {isModalOpen && (
-                    <CustomerCalendarAddEvent
-                        event={selectedEvent}
-                        range={selectedRange}
-                        onCancel={handleModalClose}
-                        handleDelete={handleEventDelete}
-                        handleCreate={handleEventCreate}
-                        handleUpdate={handleUpdateEvent}
-                    />
-                )}
-            </Dialog> */}
+export default CustomerCalendarPage;

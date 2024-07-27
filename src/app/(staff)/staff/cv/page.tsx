@@ -62,7 +62,7 @@ const UserPage = () => {
           </Grid>
         }
       >
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DemoContainer components={["SingleInputDateRangeField"]}>
             <SingleInputDateRangeField
               label="Chọn ngày giờ"
@@ -73,7 +73,7 @@ const UserPage = () => {
               }}
             />
           </DemoContainer>
-        </LocalizationProvider>
+        </LocalizationProvider> */}
 
         {/* Data Table */}
         {/* <UserList /> */}
