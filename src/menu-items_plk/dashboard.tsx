@@ -12,6 +12,10 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+
+import ContactsIcon from '@mui/icons-material/Contacts';
+
 // type
 import { NavItemType } from "types";
 
@@ -36,7 +40,15 @@ const dashboard: NavItemType = {
       title: <FormattedMessage id="Quản lí CV" />,
       type: "item",
       url: "/staff/cv",
-      icon: IconChartDots,
+      icon: ContactsIcon,
+      breadcrumbs: false,
+    },
+    {
+      id: "Q&A",
+      title: <FormattedMessage id="Quản lí câu hỏi phỏng vấn" />,
+      type: "item",
+      url: "/staff/interview-question",
+      icon: QuestionAnswerIcon,
       breadcrumbs: false,
     },
     {
