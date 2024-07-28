@@ -6,6 +6,7 @@ import FeedIcon from '@mui/icons-material/Feed';
 
 // assets
 import { IconDashboard, IconChartDots, IconUserCheck, IconBasket, IconFileInvoice, IconMail, IconUser } from '@tabler/icons-react';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 // type
 import { NavItemType } from 'types';
@@ -25,6 +26,14 @@ const dashboard: NavItemType = {
       url: '/expert/account-profile',
       icon: IconChartDots,
       breadcrumbs: false
+    },
+    {
+      id: "Q&A",
+      title: <FormattedMessage id="Quản lí câu hỏi phỏng vấn" />,
+      type: "item",
+      url: "/staff/interview-question",
+      icon: QuestionAnswerIcon,
+      breadcrumbs: false,
     },
     {
       id: 'interview-calendar',
