@@ -8,7 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, Dialog, DialogTitle, DialogContent, Grid, MenuItem, TextField, FormControl, RadioGroup, FormControlLabel, Radio, Rating } from '@mui/material';
+import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, Dialog, DialogTitle, DialogContent, Grid, MenuItem, TextField, FormControl, RadioGroup, FormControlLabel, Radio, Rating, Button, DialogActions } from '@mui/material';
 import { useMemo, useState } from 'react';
 import Iconify from 'components/iconify/iconify';
 import SubCard from 'ui-component/cards/SubCard';
@@ -125,7 +125,7 @@ function InterviewQuestionPage() {
                                     </Tooltip>
                                     <Tooltip title="Sửa">
                                         <IconButton onClick={() => handleEdit(q.id)}>
-                                            <EditIcon sx={{ fontSize: 16 }} />  
+                                            <EditIcon sx={{ fontSize: 16 }} />
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="Xóa">
@@ -179,6 +179,7 @@ function InterviewQuestionPage() {
 
     const RenderAnswer = (props: FeedbackQuestion) => {
         let input = <></>;
+        console.log("RenderAnswer", props);
         switch (props.type) {
             case 'Text':
                 input = <TextField fullWidth />;
@@ -213,7 +214,14 @@ function InterviewQuestionPage() {
                 break;
         }
 
-        return <SubCard title={props.question}>{input}</SubCard>;
+        return <SubCard title={
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                {props.question}
+                <IconButton onClick={() => handleDelete(props.id)}>
+                    <DeleteIcon />
+                </IconButton>
+            </Box>
+        }>{input}</SubCard>;
     };
 
     const DialogAddFeedbackQuestion = (
@@ -243,6 +251,16 @@ function InterviewQuestionPage() {
                     </TreeView>
                 </Box>
             </DialogContent>
+            <DialogActions>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ backgroundColor: PRIMARYCOLOR, '&:hover': { backgroundColor: '#1c54b2' } }}
+                    startIcon={<Iconify icon="ic:baseline-save" />}
+                >
+                    Lưu
+                </Button>
+            </DialogActions>
         </Dialog>
     );
 
