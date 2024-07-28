@@ -7,7 +7,11 @@ export interface GetBookingCustomerFeedbackResponse {
 }
 
 export interface BookingCustomerFeedback {
-
+    id: number,
+    question: string,
+    type: string,
+    categoryId: number,
+    category: string
 }
 
 export const GetBookingCustomerFeedback = async (): Promise<GetBookingCustomerFeedbackResponse> => {

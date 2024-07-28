@@ -218,7 +218,9 @@ function InterviewQuestionPage() {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {props.question}
                 <IconButton onClick={() => handleDelete(props.id)}>
-                    <DeleteIcon />
+                    <Tooltip title="Xóa câu hỏi">
+                        <DeleteIcon />
+                    </Tooltip>
                 </IconButton>
             </Box>
         }>{input}</SubCard>;
@@ -228,7 +230,7 @@ function InterviewQuestionPage() {
         <Dialog open={openAddFeedbackQuestion} maxWidth="md" fullWidth onClose={handleOpenAddFeedbackQuestion}>
             <DialogTitle textAlign={'center'}>Các câu hỏi đã chọn để phỏng vấn</DialogTitle>
             <DialogContent>
-                <Box sx={{ mb: 3 }}>
+                <Box sx={{ p: 1 }}>
                     <TreeView
                         defaultCollapseIcon={<ExpandMoreIcon />}
                         defaultExpandIcon={<ChevronRightIcon />}
@@ -241,7 +243,7 @@ function InterviewQuestionPage() {
                             return (
                                 <TreeItem key={category.id} nodeId={category.id} label={category.name}>
                                     {filteredQuestions.map((question, index) => (
-                                        <Box sx={{ p: 2 }} key={index}>
+                                        <Box sx={{ p: 1 }} key={index}>
                                             {RenderAnswer(question)}
                                         </Box>
                                     ))}

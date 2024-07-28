@@ -30,7 +30,6 @@ export interface PostBookingCustomerFeedbackQuestionResponse {
     responseText: string;
 }
 
-
 export const PostBookingCustomerFeedbackQuestion = async (params: PostBookingCustomerFeedbackQuestionRequest): Promise<PostBookingCustomerFeedbackQuestionResponse> => {
     try {
         const res = await apiServerFetch(`/booking-customer-feedback-question`, 'POST', params, undefined);

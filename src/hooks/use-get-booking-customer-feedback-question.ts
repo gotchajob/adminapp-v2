@@ -2,7 +2,7 @@
 import { BookingCustomerFeedbackQuestion, GetBookingCustomerFeedbackQuestion } from "package/api/booking-customer-feedback-question-controller";
 import { useEffect, useState } from "react";
 
-export const UseGetBookingCustomerFeedbackQuestion = () => {
+export const UseGetBookingCustomerFeedbackQuestion = (refresh: number) => {
     const [bookingCustomerFeedbackQuestion, setBookingCustomerFeedbackQuestion] = useState<BookingCustomerFeedbackQuestion[]>([]);
 
     const [loading, setLoading] = useState();
@@ -19,7 +19,7 @@ export const UseGetBookingCustomerFeedbackQuestion = () => {
         }
     }
 
-    useEffect(() => { fetchGetBookingCustomerFeedbackQuestion(); }, []);
+    useEffect(() => { fetchGetBookingCustomerFeedbackQuestion(); }, [refresh]);
 
     return {
         bookingCustomerFeedbackQuestion
