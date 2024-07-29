@@ -16,9 +16,11 @@ import TextField from '@mui/material/TextField';
 import { Text } from '../text/text';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { BookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question-controller';
+import { QuestionCategoryCurrent } from 'package/api/expert-question-category/current';
 
-interface MappedFeedbackQuestion extends FeedbackQuestionType {
-  questionList: FeedbackQuestion[];
+interface MappedFeedbackQuestion extends QuestionCategoryCurrent {
+  questionList: BookingExpertFeedbackQuestion[];
 }
 
 export const Feedback = ({
@@ -27,10 +29,10 @@ export const Feedback = ({
   selectFeedbackQuestionList,
   setSelectAddFeedbackQuestion
 }: {
-  feedbackQuestionList: FeedbackQuestion[];
-  feedbackQuestionType: FeedbackQuestionType[];
-  selectFeedbackQuestionList: FeedbackQuestion[];
-  setSelectAddFeedbackQuestion: (value: FeedbackQuestion[]) => void;
+  feedbackQuestionList: BookingExpertFeedbackQuestion[];
+  feedbackQuestionType: QuestionCategoryCurrent[];
+  selectFeedbackQuestionList: BookingExpertFeedbackQuestion[];
+  setSelectAddFeedbackQuestion: (value: BookingExpertFeedbackQuestion[]) => void;
 }) => {
   const [openAddFeedbackQuestion, setOpenAddFeedbackQuestion] = useState(false);
 
@@ -39,15 +41,15 @@ export const Feedback = ({
     feedbackQuestionType.forEach((value) =>
       data.push({
         ...value,
-        questionList: feedbackQuestionList.filter((question) => question.typeId === value.typeId)
+        questionList: feedbackQuestionList.filter((question) => question.categoryId === value.id)
       })
     );
     return data;
   };
 
-  const handleSelectFeedbackQuestion = (feedbackQuestion: FeedbackQuestion) => {
-    if (selectFeedbackQuestionList.find((value) => value.questionId === feedbackQuestion.questionId)) {
-      setSelectAddFeedbackQuestion(selectFeedbackQuestionList.filter((value) => value.questionId !== feedbackQuestion.questionId));
+  const handleSelectFeedbackQuestion = (feedbackQuestion: BookingExpertFeedbackQuestion) => {
+    if (selectFeedbackQuestionList.find((value) => value.id === feedbackQuestion.id)) {
+      setSelectAddFeedbackQuestion(selectFeedbackQuestionList.filter((value) => value.id !== feedbackQuestion.id));
     } else {
       setSelectAddFeedbackQuestion([...selectFeedbackQuestionList, feedbackQuestion]);
     }
@@ -68,9 +70,9 @@ export const Feedback = ({
     </IconButton>
   );
 
-  const RenderFeedbackQuestion = (question: FeedbackQuestion) => {
+  const RenderFeedbackQuestion = (question: BookingExpertFeedbackQuestion) => {
     let isSelected = false;
-    if (selectFeedbackQuestionList.find((value) => value.questionId === question.questionId)) {
+    if (selectFeedbackQuestionList.find((value) => value.id === question.id)) {
       isSelected = true;
     }
     return (
@@ -99,10 +101,10 @@ export const Feedback = ({
           }}
         >
           {mappedFeedbackQuestion().map((type, index) => (
-            <TreeItem key={index} nodeId={type.typeId + ''} label={type.description}>
+            <TreeItem key={index} nodeId={type.id + ''} label={type.description}>
               <Grid container spacing={1} sx={{ my: 1 }}>
                 {type.questionList.map((question) => (
-                  <Grid item key={question.questionId} xs={12}>
+                  <Grid item key={question.id} xs={12}>
                     {RenderFeedbackQuestion(question)}
                   </Grid>
                 ))}

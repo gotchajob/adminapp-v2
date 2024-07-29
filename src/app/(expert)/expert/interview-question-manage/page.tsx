@@ -24,6 +24,7 @@ import { accessToken } from 'mapbox-gl';
 import { QuestionCategoryById } from 'package/api/expert-question-category/id';
 import { BookingExpertFeedbackQuestion, PostBookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question-controller';
 import { PostExpertQuestionCategory } from 'package/api/expert-question-category';
+import { expertTypeInputList } from 'components/common/feedback/interface';
 
 function CategoryTable({ refresh, refreshTime, token }: { refresh: () => void, refreshTime: number, token: string }) {
 
@@ -168,7 +169,6 @@ function InterviewQuestionTable({ refresh, refreshTime, token }: { refresh: () =
 
     const { expertQuestionCategory } = UseGetExpertQuestionCategory(refreshTime);
     const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestion(refreshTime);
-
     const [selectedQuestion, setSelectedQuestion] = useState<BookingExpertFeedbackQuestion | undefined>(undefined);
     const [openAddDialog, setOpenAddDialog] = useState(false);
     const [newQuestion, setNewQuestion] = useState({ question: '', type: '', categoryId: 0 });
@@ -239,7 +239,7 @@ function InterviewQuestionTable({ refresh, refreshTime, token }: { refresh: () =
                             {bookingExpertFeedbackQuestion?.map((question, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{question.question}</TableCell>
-                                    <TableCell>{question.type}</TableCell>
+                                    <TableCell>{expertTypeInputList.find((value) => value.name === question.type)?.description}</TableCell>
                                     <TableCell>{question.category}</TableCell>
                                     <TableCell>
                                         <Tooltip title="Sửa">
@@ -292,19 +292,20 @@ function InterviewQuestionTable({ refresh, refreshTime, token }: { refresh: () =
                     <FormControl fullWidth margin="dense">
                         <InputLabel>Chọn kiểu phỏng vấn</InputLabel>
                         <Select
-                            label="Chọn kiểu phỏng vấn"
+                            label="Chọn kiểu câu hỏi"
                             value={newQuestion.type}
                             onChange={(e) => setNewQuestion({ ...newQuestion, type: e.target.value as string })}
                             sx={{ mb: 2 }}
                         >
-                            <MenuItem value="text">Trả lời dạng văn bản</MenuItem>
-                            <MenuItem value="number">Trả lời dạng số</MenuItem>
-                            <MenuItem value="rating">Trả lời dạng đánh giá</MenuItem>
+                            {expertTypeInputList.map((data, index) => (
+                                <MenuItem value={data.name} key={index}>{data.description}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                     <FormControl fullWidth margin="dense">
                         <InputLabel>Chọn danh mục</InputLabel>
                         <Select
+                            label="Chọn danh mục"
                             value={newQuestion.categoryId}
                             onChange={(e) => setNewQuestion({ ...newQuestion, categoryId: e.target.value as number })}
                         >

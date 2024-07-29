@@ -1,4 +1,5 @@
 import { GetExpertQuestionCategory, QuestionCategory } from "package/api/expert-question-category";
+import { GetExpertQuestionCategoryCurrent, QuestionCategoryCurrent } from "package/api/expert-question-category/current";
 import { useEffect, useState } from "react";
 
 export const UseGetExpertQuestionCategory = (refresh: number) => {
@@ -24,3 +25,28 @@ export const UseGetExpertQuestionCategory = (refresh: number) => {
         expertQuestionCategory
     }
 }
+
+export const UseGetExpertQuestionCategoryCurrent = (accessToken: string, refresh: number) => {
+    const [expertQuestionCategoryCurrent, setExpertQuestionCategoryCurrent] = useState<QuestionCategoryCurrent[]>([]);
+
+    const [loading, setLoading] = useState(true);
+
+    const fetchGetBookingExpertFeedbackQuestionCurrent = async () => {
+        try {
+            const res = await GetExpertQuestionCategoryCurrent(accessToken);
+            if (res.status !== "success") {
+                return;
+            }
+            setExpertQuestionCategoryCurrent(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => { fetchGetBookingExpertFeedbackQuestionCurrent(); }, [refresh, accessToken]);
+
+    return {
+        expertQuestionCategoryCurrent
+    }
+}
+

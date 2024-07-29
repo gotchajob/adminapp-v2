@@ -3,7 +3,7 @@ import { apiServerFetch, errorSystem } from "package/api/api-fetch";
 export interface GetExpertQuestionCategoryCurrentResponse {
     status: string;
     responseText: string;
-    data: QuestionCategoryCurrent;
+    data: QuestionCategoryCurrent[];
 }
 
 export interface QuestionCategoryCurrent {
@@ -17,6 +17,6 @@ export const GetExpertQuestionCategoryCurrent = async (accessToken: string): Pro
         const res = await apiServerFetch(`/expert-question-category/current`, 'GET', undefined, accessToken);
         return res;
     } catch (error: any) {
-        return errorSystem('Lấy danh sách thất bại', {});
+        return errorSystem('Lấy danh sách thất bại', []);
     }
 };

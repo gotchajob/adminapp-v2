@@ -9,6 +9,10 @@ export interface FeedbackQuestion {
   input: 'text' | 'number' | 'rating' | 'attitude' | 'experience';
 }
 
+export const expertTypeInputList = [{ id: 1, name: "text", description: "Dạng văn bản" }, { id: 2, name: "number", description: "Dạng số" }, { id: 3, name: "rating", description: "Đánh giá" }, { id: 4, name: "attitude", description: "Thái độ" }]
+
+export const customerTypeInputList = { id: 1, name: "experience", description: "Trải nghiệm" }
+
 export interface FeedbackQuestionType {
   typeId: number;
   description: string;
