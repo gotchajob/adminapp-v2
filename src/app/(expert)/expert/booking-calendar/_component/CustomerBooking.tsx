@@ -123,7 +123,7 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent, params }: { onNext: () =>
                     </TableHead>
                     <TableBody>
                         {bookings && bookings.length > 0 ? (
-                            bookings.filter((row) => row.status == 1 || row.status == 3).map((row) => (
+                            bookings.filter((row) => row.status == 1 || row.status == 2 || row.status == 3).map((row) => (
                                 <TableRow hover key={row.id} >
                                     <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
                                     <TableCell sx={{ pl: 3 }}>{row.customerId}</TableCell>
@@ -151,7 +151,7 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent, params }: { onNext: () =>
                                     </TableCell>
                                     <TableCell >{row.note}</TableCell>
                                     <TableCell align="center">
-                                        <Chip label={getStatusLabel(row.status).label} color={getStatusLabel(row.status).color} />
+                                        <Chip label={getStatusLabel(row.status).label} color={getStatusLabel(row.status).color as any} />
                                     </TableCell>
                                     <TableCell align="center" sx={{ pr: 3 }}>
                                         <Tooltip title="Xem chi tiết">
