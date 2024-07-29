@@ -96,6 +96,11 @@ const BookingDetailPage = ({
 
   const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(expertToken, refreshTime);
 
+  useEffect(() => {
+    console.log(expertQuestionCategoryCurrent);
+    console.log(bookingExpertFeedbackQuestion);
+  }, [expertQuestionCategoryCurrent])
+
   const [feedbackQuestionType] =
     useState<QuestionCategoryCurrent[]>([]);
 
