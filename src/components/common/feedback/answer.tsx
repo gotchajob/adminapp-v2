@@ -8,9 +8,10 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Grid from '@mui/material/Grid';
-import { ReactNode } from 'react';
+import { Fragment, ReactNode } from 'react';
 import { FlexBox } from '../box/flex-box';
 import { Text } from '../text/text';
+import Stack from '@mui/material/Stack';
 interface QuestionAnswer extends FeedbackQuestion {
   answer?: FeedbackAnwer;
 }
@@ -50,7 +51,7 @@ export const Answer = ({
     let input = <></>;
     switch (props.input) {
       case 'text':
-        input = <TextField fullWidth />;
+        input = <TextField fullWidth minRows={5} multiline/>;
         break;
       case 'attitude':
         input = (
@@ -100,12 +101,12 @@ export const Answer = ({
   };
 
   return (
-    <Grid container spacing={3}>
+    <Stack spacing={3}>
       {mappedFeedbackQuestionAnswer().map((questionAnswer, index) => (
-        <Grid item xs={12} key={index}>
+        <Fragment key={index}>
           {RenderAnswer(questionAnswer)}
-        </Grid>
+        </Fragment>
       ))}
-    </Grid>
+    </Stack>
   );
 };

@@ -12,12 +12,12 @@ export interface GetExpertListResponse {
   status: string;
   responseText: string;
   data: {
-    list: ExpertList[];
+    list: ExpertListType[];
     totalPage: number;
   };
 }
 
-export interface ExpertList {
+export interface ExpertListType {
   yearExperience: number;
   userId: number;
   expertId: number;
