@@ -43,14 +43,16 @@ import BlockTwoToneIcon from "@mui/icons-material/BlockTwoTone";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetCVTemplate } from "hooks/use-get-cv-template";
+import { useGetCVCategory } from "hooks/use-get-cv-category";
 
 const avatarImage = "/assets/images/users";
 
 // ==============================|| USER LIST 1 ||============================== //
 
-const UserList = () => {
+export const CVList = () => {
   const theme = useTheme();
   const { cvTemplateList } = useGetCVTemplate({});
+  const { cvCategory } = useGetCVCategory();
   return (
     <TableContainer>
       <Table>
@@ -58,10 +60,7 @@ const UserList = () => {
           <TableRow>
             <TableCell sx={{ pl: 3 }}>#</TableCell>
             <TableCell>Tên</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Số điện thoại</TableCell>
-            <TableCell>Địa chỉ</TableCell>
-            <TableCell>Trạng thái</TableCell>
+            <TableCell align="center">Danh mục</TableCell>
             <TableCell align="center" sx={{ pr: 3 }}>
               Actions
             </TableCell>
@@ -74,51 +73,21 @@ const UserList = () => {
                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
                 <TableCell>
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <NextLink href={`/staff/user/profile`} passHref>
-                      <Avatar
-                        alt="User 1"
-                        src={`${avatarImage}/${row.avatar}`}
-                      />
+                    <NextLink href={`/staff/cv/` + row.id} passHref>
+                      <Avatar alt="User 1" src={row.image} />
                     </NextLink>
                     <Stack direction="row" alignItems="center" spacing={0.25}>
                       <Typography variant="subtitle1">{row.name}</Typography>
                     </Stack>
                   </Stack>
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   <Typography variant="subtitle2" noWrap>
-                    {row.email}
+                    {
+                      cvCategory.find((value) => value.id === row.cvCategoryId)
+                        ?.name
+                    }
                   </Typography>
-                </TableCell>
-                <TableCell>{row.phone}</TableCell>
-                <TableCell>{row.location}</TableCell>
-                {/* <TableCell>
-                  {row.status === "Active" && (
-                    <Chip
-                      label="Active"
-                      size="small"
-                      sx={{
-                        bgcolor:
-                          theme.palette.mode === ThemeMode.DARK
-                            ? "dark.main"
-                            : alpha(theme.palette.success.light, 0.6),
-                        color: "success.dark",
-                      }}
-                    />
-                  )}
-                  {row.status === "Ban" && (
-                    <Chip
-                      label="Ban"
-                      size="small"
-                      sx={{
-                        bgcolor:
-                          theme.palette.mode === ThemeMode.DARK
-                            ? "dark.main"
-                            : alpha(theme.palette.orange.light, 0.8),
-                        color: "orange.dark",
-                      }}
-                    />
-                  )}
                 </TableCell>
                 <TableCell align="center" sx={{ pr: 3 }}>
                   <Stack
@@ -126,7 +95,7 @@ const UserList = () => {
                     justifyContent="center"
                     alignItems="center"
                   >
-                    {row.status === "Ban" && (
+                    {/* {row.status === "Ban" && (
                       <Tooltip placement="top" title="Active">
                         <IconButton
                           color="primary"
@@ -136,24 +105,24 @@ const UserList = () => {
                           <LockOpenIcon sx={{ fontSize: "1.1rem" }} />
                         </IconButton>
                       </Tooltip>
-                    )}
-                    {row.status === "Active" && (
-                      <Tooltip placement="top" title="Ban">
-                        <IconButton
-                          color="primary"
-                          sx={{
-                            color: "orange.dark",
-                            borderColor: "orange.main",
-                            "&:hover ": { bgcolor: "orange.light" },
-                          }}
-                          size="large"
-                        >
-                          <BlockTwoToneIcon sx={{ fontSize: "1.1rem" }} />
-                        </IconButton>
-                      </Tooltip>
-                    )}
+                    )} */}
+                    {/* {row.status === "Active" && ( */}
+                    <Tooltip placement="top" title="Ban">
+                      <IconButton
+                        color="primary"
+                        sx={{
+                          color: "orange.dark",
+                          borderColor: "orange.main",
+                          "&:hover ": { bgcolor: "orange.light" },
+                        }}
+                        size="large"
+                      >
+                        <BlockTwoToneIcon sx={{ fontSize: "1.1rem" }} />
+                      </IconButton>
+                    </Tooltip>
+                    {/* )} */}
                   </Stack>
-                </TableCell> */}
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>
@@ -161,5 +130,3 @@ const UserList = () => {
     </TableContainer>
   );
 };
-
-export default UserList;
