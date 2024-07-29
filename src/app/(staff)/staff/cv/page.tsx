@@ -24,6 +24,7 @@ import {
 } from "@mui/x-date-pickers-pro";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { getDatesBetween } from "package/util";
+import { CVList } from "./_component/cv-list";
 // import UserList from './_component/UserList';
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
@@ -62,21 +63,8 @@ const UserPage = () => {
           </Grid>
         }
       >
-        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DemoContainer components={["SingleInputDateRangeField"]}>
-            <SingleInputDateRangeField
-              label="Chọn ngày giờ"
-              format="dd/MM/yyyy"
-              onChange={(value) => {
-              
-                console.log(getDatesBetween(value as Date[]));
-              }}
-            />
-          </DemoContainer>
-        </LocalizationProvider> */}
-
         {/* Data Table */}
-        {/* <UserList /> */}
+        <CVList />
         <Grid item xs={12} sx={{ mt: 1.75 }}>
           <Grid container justifyContent="space-between" spacing={gridSpacing}>
             <Grid item>

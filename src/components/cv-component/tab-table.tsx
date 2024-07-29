@@ -111,7 +111,7 @@ const TabsTable = ({ cv, onChangeCV }: { cv: CVTemplate; onChangeCV: (cv: CVTemp
         <Grid item xs={9}>
           <TabPanel value={value} index={0}>
             <SubCard title={'Hướng dẫn viết CV'} sx={{ width: '100%', boxShadow: defaultShadow }} contentSX={{ py: 0, px: 1 }}>
-              <div dangerouslySetInnerHTML={{ __html: introduction }}></div>
+              <></>
             </SubCard>
           </TabPanel>
           <TabPanel value={value} index={1}>
@@ -187,16 +187,6 @@ const TabsTable = ({ cv, onChangeCV }: { cv: CVTemplate; onChangeCV: (cv: CVTemp
                 </FlexCenter>
               </Button>
             ))}
-            <StyledLink href="/share-cv">
-              <Button fullWidth sx={{ textTransform: 'none' }} variant={'outlined'}>
-                <FlexCenter>
-                  <Iconify width={24} icon="tabler:user-search" color={PRIMARYCOLOR} />
-                  <Text fontSize={10} mt={1}>
-                    Tìm kiếm
-                  </Text>
-                </FlexCenter>
-              </Button>
-            </StyledLink>
           </Stack>
         </Grid>
       </Grid>
