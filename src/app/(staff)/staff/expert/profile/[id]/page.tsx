@@ -21,6 +21,7 @@ import Profile from '../../_component/Profile';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
 import ExpertProfile from './_component/expert-profile';
+import ExpertCalendarPage from './_component/ExpertCalendar';
 
 //tabs panel
 function TabPanel({ children, value, index, ...other }: TabsProps) {
@@ -45,22 +46,10 @@ const tabsOption = [
     label: 'Profile',
     icon: <AccountCircleTwoToneIcon sx={{ fontSize: '1.3rem' }} />
   },
-  // {
-  //   label: 'Billing',
-  //   icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-  // }
-  // {
-  //     label: 'My Account',
-  //     icon: <LibraryBooksTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-  // },
-  // {
-  //     label: 'Change Password',
-  //     icon: <LockTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-  // },
-  // {
-  //     label: 'Settings',
-  //     icon: <MailTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-  // }
+  {
+    label: 'Lịch phỏng vấn',
+    icon: <DescriptionTwoToneIcon sx={{ fontSize: '1.3rem' }} />
+  }
 ];
 
 const Page = ({ params }: { params: { id: string } }) => {
@@ -115,6 +104,9 @@ const Page = ({ params }: { params: { id: string } }) => {
           </Tabs>
           <TabPanel value={value} index={0}>
             <ExpertProfile params={params} />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <ExpertCalendarPage params={params} />
           </TabPanel>
         </Grid>
       </Grid>

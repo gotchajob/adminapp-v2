@@ -7,7 +7,7 @@ export const apiClientFetch = async (path: string, body?: any): Promise<any> => 
   return await res.json();
 };
 
-export const apiServerFetch = async (url: string, method: 'GET' | 'POST' | 'PATCH' | 'PUT', body?: any, accessToken?: string): Promise<any> => {
+export const apiServerFetch = async (url: string, method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE', body?: any, accessToken?: string): Promise<any> => {
   let headers: any = {
     'Content-type': 'application/json'
   };
@@ -18,7 +18,7 @@ export const apiServerFetch = async (url: string, method: 'GET' | 'POST' | 'PATC
   if (body) {
     newBody = { body: JSON.stringify(body) };
   }
-  const res = await fetch('https://gcjob.azurewebsites.net' + url, {
+  const res = await fetch('https://gcj2.azurewebsites.net' + url, {
     method,
     headers,
     cache: 'no-cache',

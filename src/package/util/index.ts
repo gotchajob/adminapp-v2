@@ -35,8 +35,8 @@ export function fTimestamp(date: string) {
 export function fToNow(date: string) {
   return date
     ? formatDistanceToNow(new Date(date), {
-        addSuffix: true,
-      })
+      addSuffix: true,
+    })
     : "";
 }
 
@@ -98,15 +98,14 @@ export const convertNationString = (nation: ExpertNation[]) => {
   return array;
 };
 
-export const getDatesBetween = (dates: Date[]) => {
-  const startDate = new Date(dates[0]);
-  const endDate = new Date(dates[1]);
+export const getDatesBetween = (dates: [Date, Date]): Date[] => {
+  const [startDate, endDate] = dates;
   const dateArray = [];
+  let currentDate = new Date(startDate);
 
-  // Lặp qua các ngày từ startDate đến endDate
-  while (startDate <= endDate) {
-    dateArray.push(new Date(startDate));
-    startDate.setDate(startDate.getDate() + 1);
+  while (currentDate <= endDate) {
+    dateArray.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
   }
 
   return dateArray;

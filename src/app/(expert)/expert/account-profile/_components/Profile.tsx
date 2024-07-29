@@ -78,16 +78,9 @@ const Profile = ({ expert }: { expert?: Expert }) => {
     return array?.join(", ");
   };
 
-  const { categories } = useGetCategories({});
-  const { skills } = useGetSkill({});
-  const { skillOptions } = useGetSkillOptions({});
-
-  const { newCategoryList, newSkillList, newSkillOptionList, isLoading } =
+  const { expertSkillOptions } =
     useGetExpertSkillOptions(
-      { expertId: expert?.expertId },
-      categories,
-      skills,
-      skillOptions
+      { expertId: expert?.expertId }
     );
 
   return (
@@ -282,36 +275,16 @@ const Profile = ({ expert }: { expert?: Expert }) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <SubCard title={"Kĩ năng 1"}>
+          {expertSkillOptions?.map((skillOptions, index) => (<> <Grid item xs={4}>
+            <SubCard title={skillOptions.skillOptionName} key={index}>
               <FlexBetween>
-                <Rating value={5} size="small" readOnly/>
+                <Rating value={skillOptions.sumPoint} size="small" readOnly />
                 <Text fontSize={13}>
-                  <span style={{ fontWeight: "bold" }}>175</span> lượt đánh giá
+                  <span style={{ fontWeight: "bold" }}>{skillOptions.totalRating}</span> lượt đánh giá
                 </Text>
               </FlexBetween>
             </SubCard>
-          </Grid>
-          <Grid item xs={4}>
-            <SubCard title={"Kĩ năng 1"}>
-              <FlexBetween>
-                <Rating value={5} size="small" readOnly/>
-                <Text fontSize={13}>
-                  <span style={{ fontWeight: "bold" }}>175</span> lượt đánh giá
-                </Text>
-              </FlexBetween>
-            </SubCard>
-          </Grid>
-          <Grid item xs={4}>
-            <SubCard title={"Kĩ năng 1"}>
-              <FlexBetween>
-                <Rating value={5} size="small" readOnly/>
-                <Text fontSize={13}>
-                  <span style={{ fontWeight: "bold" }}>175</span> lượt đánh giá
-                </Text>
-              </FlexBetween>
-            </SubCard>
-          </Grid>
+          </Grid></>))}
         </>
       ) : (
         <Typography variant="h6">Loading...</Typography>

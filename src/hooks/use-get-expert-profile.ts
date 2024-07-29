@@ -110,7 +110,7 @@ export function useGetExpertNatonSupport(
 
   useEffect(() => {
     fetchExpertProfile();
-  }, [params]);
+  }, [params.expertId]);
 
   return {
     nation,
