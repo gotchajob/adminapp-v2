@@ -62,8 +62,7 @@ const getStatusLabel = (status: any) => {
 
 const isToday = (date: string) => {
   const today = new Date();
-  //   const formattedToday = formatDate(today.toISOString(), "dd-MM-yyyy");
-  const formattedToday = "24-07-2024";
+  const formattedToday = formatDate(today.toISOString(), "dd-MM-yyyy");
   const formattedDate = formatDate(date, "dd-MM-yyyy");
   return formattedDate === formattedToday;
 };
@@ -141,132 +140,10 @@ const CustomerCalendarPage = ({
 
   if (loading) return <Loader />;
 
-<<<<<<< HEAD
-    return (
-        <Box sx={{ height: '100vh', paddingX: 5, paddingY: 1 }}>
-            <Typography variant="body1" color="primary" sx={{ fontStyle: 'italic', mt: 2 }}>
-                Bạn chỉ có thể từ chối những buổi đặt lịch từ khách hàng cách 3 ngày hiện tại.
-            </Typography>
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ pl: 3 }}>#</TableCell>
-                            <TableCell sx={{ pl: 3 }}>Tên khách hàng</TableCell>
-                            <TableCell>Thời điểm bắt đầu</TableCell>
-                            <TableCell>Thời điểm kết thúc</TableCell>
-                            <TableCell>Thời điểm tạo</TableCell>
-                            <TableCell>Chú thích</TableCell>
-                            <TableCell align="center">Trạng thái</TableCell>
-                            <TableCell align="center" sx={{ pr: 3 }}>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {bookings && bookings.length > 0 ? (
-                            bookings.filter((row) => row.status == 1 || row.status == 2 || row.status == 3).map((row) => (
-                                <TableRow hover key={row.id} >
-                                    <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
-                                    <TableCell sx={{ pl: 3 }}>{row.customerId}</TableCell>
-                                    <TableCell >
-                                        <Typography variant="subtitle2" noWrap
-                                            sx={{
-                                                color: isToday(row.startInterviewDate) ? 'success.main' : 'black'
-                                            }}
-                                        >
-                                            {formatDate(row.startInterviewDate, "dd/MM/yyyy - hh:mm")}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="subtitle2" noWrap
-                                            sx={{
-                                                color: isToday(row.startInterviewDate) ? 'success.main' : 'black'
-                                            }}>
-                                            {formatDate(row.endInterviewDate, "dd/MM/yyyy - hh:mm")}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="subtitle2" noWrap>
-                                            {formatDate(row.createdAt, "dd/MM/yyyy")}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell >{row.note}</TableCell>
-                                    <TableCell align="center">
-                                        <Chip label={getStatusLabel(row.status).label} color={getStatusLabel(row.status).color as any} />
-                                    </TableCell>
-                                    <TableCell align="center" sx={{ pr: 3 }}>
-                                        <Tooltip title="Xem chi tiết">
-                                            <IconButton
-                                                color="default"
-                                                size="large"
-                                                onClick={() => {
-                                                    router.push(`/expert/booking-calendar/${row.id}`);
-                                                }}
-                                            >
-                                                <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Chấp nhận">
-                                            <IconButton
-                                                color="primary"
-                                                size="large"
-                                                onClick={() => handleOpenDialog(row.id, 'accept')}
-                                            >
-                                                <CheckIcon sx={{ fontSize: "1.1rem" }} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Từ chối">
-                                            <IconButton
-                                                color="secondary"
-                                                size="large"
-                                                disabled={!row.canCancel}
-                                                onClick={() => handleOpenDialog(row.id, 'reject')}
-                                            >
-                                                <CloseIcon sx={{ fontSize: "1.1rem" }} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Chặn">
-                                            <IconButton
-                                                color="error"
-                                                size="large"
-                                                onClick={() => handleOpenDialog(row.id, 'ban')}
-                                            >
-                                                <BlockIcon sx={{ fontSize: "1.1rem" }} />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            !loading && (
-                                <TableRow>
-                                    <TableCell colSpan={7}>
-                                        <Typography variant="h5" align="center" sx={{ pb: 20 }}>
-                                            Hiện chưa người dùng nào đặt lịch
-                                        </Typography>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        )}
-                        {loading && (
-                            <TableRow>
-                                <TableCell colSpan={7}>
-                                    <CircularLoader />
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-=======
   return (
-    <Box sx={{ height: "100vh", paddingX: 5, paddingY: 1 }}>
-      <Typography
-        variant="body1"
-        color="primary"
-        sx={{ fontStyle: "italic", mt: 2 }}
-      >
-        Bạn chỉ có thể từ chối những buổi đặt lịch từ khách hàng cách 3 ngày
-        hiện tại.
+    <Box sx={{ height: '100vh', paddingX: 5, paddingY: 1 }}>
+      <Typography variant="body1" color="primary" sx={{ fontStyle: 'italic', mt: 2 }}>
+        Bạn chỉ có thể từ chối những buổi đặt lịch từ khách hàng cách 3 ngày hiện tại.
       </Typography>
       <TableContainer>
         <Table>
@@ -279,118 +156,95 @@ const CustomerCalendarPage = ({
               <TableCell>Thời điểm tạo</TableCell>
               <TableCell>Chú thích</TableCell>
               <TableCell align="center">Trạng thái</TableCell>
-              <TableCell align="center" sx={{ pr: 3 }}>
-                Actions
-              </TableCell>
+              <TableCell align="center" sx={{ pr: 3 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {bookings && bookings.length > 0
-              ? bookings
-                  .filter(
-                    (row) =>
-                      row.status == 1 || row.status == 2 || row.status == 3
-                  )
-                  .map((row) => (
-                    <TableRow hover key={row.id}>
-                      <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
-                      <TableCell sx={{ pl: 3 }}>{row.customerId}</TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="subtitle2"
-                          noWrap
-                          sx={{
-                            color: isToday(row.startInterviewDate)
-                              ? "success.main"
-                              : "black",
-                          }}
-                        >
-                          {formatDate(
-                            row.startInterviewDate,
-                            "dd/MM/yyyy - hh:mm"
-                          )}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography
-                          variant="subtitle2"
-                          noWrap
-                          sx={{
-                            color: isToday(row.startInterviewDate)
-                              ? "success.main"
-                              : "black",
-                          }}
-                        >
-                          {formatDate(
-                            row.endInterviewDate,
-                            "dd/MM/yyyy - hh:mm"
-                          )}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="subtitle2" noWrap>
-                          {formatDate(row.createdAt, "dd/MM/yyyy")}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>{row.note}</TableCell>
-                      <TableCell align="center">
-                        <Chip
-                          label={getStatusLabel(row.status).label}
-                          color={getStatusLabel(row.status).color as any}
-                        />
-                      </TableCell>
-                      <TableCell align="center" sx={{ pr: 3 }}>
-                        <Tooltip title="Xem chi tiết">
-                          <IconButton
-                            color="default"
-                            size="large"
-                            onClick={() => {
-                              router.push(`/expert/booking-calendar/${row.id}`);
-                            }}
-                          >
-                            <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Chấp nhận">
-                          <IconButton
-                            color="primary"
-                            size="large"
-                            onClick={() => handleOpenDialog(row.id, "accept")}
-                          >
-                            <CheckIcon sx={{ fontSize: "1.1rem" }} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Từ chối">
-                          <IconButton
-                            color="secondary"
-                            size="large"
-                            disabled={!row.canCancel}
-                            onClick={() => handleOpenDialog(row.id, "reject")}
-                          >
-                            <CloseIcon sx={{ fontSize: "1.1rem" }} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Chặn">
-                          <IconButton
-                            color="error"
-                            size="large"
-                            onClick={() => handleOpenDialog(row.id, "ban")}
-                          >
-                            <BlockIcon sx={{ fontSize: "1.1rem" }} />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))
-              : !loading && (
-                  <TableRow>
-                    <TableCell colSpan={7}>
-                      <Typography variant="h5" align="center" sx={{ pb: 20 }}>
-                        Hiện chưa người dùng nào đặt lịch
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                )}
+            {bookings && bookings.length > 0 ? (
+              bookings.filter((row) => row.status == 1 || row.status == 2 || row.status == 3).map((row) => (
+                <TableRow hover key={row.id} >
+                  <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
+                  <TableCell sx={{ pl: 3 }}>{row.customerId}</TableCell>
+                  <TableCell >
+                    <Typography variant="subtitle2" noWrap
+                      sx={{
+                        color: isToday(row.startInterviewDate) ? 'success.main' : 'black'
+                      }}
+                    >
+                      {formatDate(row.startInterviewDate, "dd/MM/yyyy - hh:mm")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" noWrap
+                      sx={{
+                        color: isToday(row.startInterviewDate) ? 'success.main' : 'black'
+                      }}>
+                      {formatDate(row.endInterviewDate, "dd/MM/yyyy - hh:mm")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" noWrap>
+                      {formatDate(row.createdAt, "dd/MM/yyyy")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell >{row.note}</TableCell>
+                  <TableCell align="center">
+                    <Chip label={getStatusLabel(row.status).label} color={getStatusLabel(row.status).color as any} />
+                  </TableCell>
+                  <TableCell align="center" sx={{ pr: 3 }}>
+                    <Tooltip title="Xem chi tiết">
+                      <IconButton
+                        color="default"
+                        size="large"
+                        onClick={() => {
+                          router.push(`/expert/booking-calendar/${row.id}`);
+                        }}
+                      >
+                        <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Chấp nhận">
+                      <IconButton
+                        color="primary"
+                        size="large"
+                        onClick={() => handleOpenDialog(row.id, 'accept')}
+                      >
+                        <CheckIcon sx={{ fontSize: "1.1rem" }} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Từ chối">
+                      <IconButton
+                        color="secondary"
+                        size="large"
+                        disabled={!row.canCancel}
+                        onClick={() => handleOpenDialog(row.id, 'reject')}
+                      >
+                        <CloseIcon sx={{ fontSize: "1.1rem" }} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Chặn">
+                      <IconButton
+                        color="error"
+                        size="large"
+                        onClick={() => handleOpenDialog(row.id, 'ban')}
+                      >
+                        <BlockIcon sx={{ fontSize: "1.1rem" }} />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              !loading && (
+                <TableRow>
+                  <TableCell colSpan={7}>
+                    <Typography variant="h5" align="center" sx={{ pb: 20 }}>
+                      Hiện chưa người dùng nào đặt lịch
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )
+            )}
             {loading && (
               <TableRow>
                 <TableCell colSpan={7}>
@@ -401,7 +255,6 @@ const CustomerCalendarPage = ({
           </TableBody>
         </Table>
       </TableContainer>
->>>>>>> origin/main
 
       <Dialog
         open={selectedBooking?.type === "reject"}
