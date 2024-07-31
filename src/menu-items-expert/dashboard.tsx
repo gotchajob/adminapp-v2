@@ -31,7 +31,7 @@ const dashboard: NavItemType = {
       id: "Q&A",
       title: <FormattedMessage id="Quản lí câu hỏi phỏng vấn" />,
       type: "item",
-      url: "/staff/interview-question",
+      url: "/expert/interview-question-manage",
       icon: QuestionAnswerIcon,
       breadcrumbs: false,
     },
