@@ -44,8 +44,8 @@ const dashboard: NavItemType = {
       breadcrumbs: false,
     },
     {
-      id: "Q&A",
-      title: <FormattedMessage id="Quản lí câu hỏi phỏng vấn" />,
+      id: "feedback",
+      title: <FormattedMessage id="Quản lí feedback phỏng vấn" />,
       type: "item",
       url: "/staff/interview-question",
       icon: QuestionAnswerIcon,

@@ -37,6 +37,11 @@ import {
 import { Feedback } from "components/common/feedback/question";
 import { FlexBox, FlexCenter } from "components/common/box/flex-box";
 import Avatar from "ui-component/extended/Avatar";
+import { UseGetBookingExpertFeedbackQuestion } from "hooks/use-get-booking-expert-feedback-question";
+import { useRefresh } from "hooks/use-refresh";
+import { UseGetExpertQuestionCategory, UseGetExpertQuestionCategoryCurrent } from "hooks/use-get-expert-question-category";
+import { BookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question-controller";
+import { QuestionCategoryCurrent } from "package/api/expert-question-category/current";
 
 const getStatusLabel = (status: number) => {
   switch (status) {
@@ -70,6 +75,9 @@ const BookingDetailPage = ({
   onBack: () => void;
   params: { id: string };
 }) => {
+
+  const { refresh, refreshTime } = useRefresh();
+
   const [open, setOpen] = useState(false);
 
   const { expertToken } = ExpertToken();
@@ -84,14 +92,20 @@ const BookingDetailPage = ({
     setOpen(false);
   };
 
-  const [feedbackQuestionList] = useState<FeedbackQuestion[]>(
-    SampleFeedbackQuestion
-  );
+  const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestion(refreshTime);
+
+  const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(expertToken, refreshTime);
+
+  useEffect(() => {
+    console.log(expertQuestionCategoryCurrent);
+    console.log(bookingExpertFeedbackQuestion);
+  }, [expertQuestionCategoryCurrent])
+
   const [feedbackQuestionType] =
-    useState<FeedbackQuestionType[]>(SampleFeedbackType);
-    
+    useState<QuestionCategoryCurrent[]>([]);
+
   const [selectFeedbackQuestionList, setSelectAddFeedbackQuestion] = useState<
-    FeedbackQuestion[]
+    BookingExpertFeedbackQuestion[]
   >([]);
 
   const [answerList, setAnswerList] = useState<FeedbackAnwer[]>([]);
@@ -107,7 +121,7 @@ const BookingDetailPage = ({
                   <Typography variant="h4">Thông tin khách hàng</Typography>
                   <Stack spacing={1}>
                     <FlexBox>
-                      <Avatar alt="User 1"  src={booking.customerInfo.avatar} />
+                      <Avatar alt="User 1" src={booking.customerInfo.avatar} />
                       <Typography variant="body2" ml={1}>
                         {booking.customerInfo.fullName}
                       </Typography>
@@ -190,7 +204,6 @@ const BookingDetailPage = ({
           <Grid item xs={12}>
             <Stack spacing={2} minHeight={100}>
               <Typography variant="h4">Câu hỏi phỏng vấn</Typography>
-
               <Answer
                 answerList={answerList}
                 feedbackQuestionList={selectFeedbackQuestionList}
@@ -198,8 +211,8 @@ const BookingDetailPage = ({
               />
             </Stack>
             <Feedback
-              feedbackQuestionList={feedbackQuestionList}
-              feedbackQuestionType={feedbackQuestionType}
+              feedbackQuestionList={bookingExpertFeedbackQuestion}
+              feedbackQuestionType={expertQuestionCategoryCurrent}
               selectFeedbackQuestionList={selectFeedbackQuestionList}
               setSelectAddFeedbackQuestion={setSelectAddFeedbackQuestion}
             />

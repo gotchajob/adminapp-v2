@@ -180,8 +180,8 @@ function InterviewQuestionPage() {
     const RenderAnswer = (props: FeedbackQuestion) => {
         let input = <></>;
         console.log("RenderAnswer", props);
-        switch (props.type) {
-            case 'Text':
+        switch (props.input) {
+            case 'text':
                 input = <TextField fullWidth />;
                 break;
             case 'attitude':
@@ -195,10 +195,10 @@ function InterviewQuestionPage() {
                     </FormControl>
                 );
                 break;
-            case 'Number':
+            case 'number':
                 input = <TextField type="number" />;
                 break;
-            case 'Rating':
+            case 'rating':
                 input = <Rating />;
                 break;
             case 'experience':
@@ -217,7 +217,7 @@ function InterviewQuestionPage() {
         return <SubCard title={
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {props.question}
-                <IconButton onClick={() => handleDelete(props.id)}>
+                <IconButton onClick={() => handleDelete(props.questionId)}>
                     <Tooltip title="Xóa câu hỏi">
                         <DeleteIcon />
                     </Tooltip>

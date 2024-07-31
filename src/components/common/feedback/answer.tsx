@@ -12,7 +12,9 @@ import { Fragment, ReactNode } from 'react';
 import { FlexBox } from '../box/flex-box';
 import { Text } from '../text/text';
 import Stack from '@mui/material/Stack';
-interface QuestionAnswer extends FeedbackQuestion {
+import { BookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question-controller';
+
+interface QuestionAnswer extends BookingExpertFeedbackQuestion {
   answer?: FeedbackAnwer;
 }
 
@@ -34,7 +36,7 @@ export const Answer = ({
 }: {
   answerList: FeedbackAnwer[];
   setAnswerList: (value: FeedbackAnwer[]) => void;
-  feedbackQuestionList: FeedbackQuestion[];
+  feedbackQuestionList: BookingExpertFeedbackQuestion[];
 }) => {
   const handleUpdateAnwser = ({ questionId, value }: { questionId: number; value: any }) => {
     const newAnswer = [...answerList];
@@ -49,9 +51,9 @@ export const Answer = ({
 
   const RenderAnswer = (props: QuestionAnswer) => {
     let input = <></>;
-    switch (props.input) {
+    switch (props.type) {
       case 'text':
-        input = <TextField fullWidth minRows={5} multiline/>;
+        input = <TextField fullWidth minRows={5} multiline />;
         break;
       case 'attitude':
         input = (
@@ -90,7 +92,7 @@ export const Answer = ({
     const data: QuestionAnswer[] = [];
 
     feedbackQuestionList.forEach((value) => {
-      const answer = answerList.find((e) => e.questionId === value.questionId);
+      const answer = answerList.find((e) => e.questionId === value.id);
       data.push({
         ...value,
         answer

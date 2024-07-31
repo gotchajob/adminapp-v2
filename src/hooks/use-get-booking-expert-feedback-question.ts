@@ -2,7 +2,7 @@
 import { BookingExpertFeedbackQuestion, GetBookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question-controller";
 import { useEffect, useState } from "react";
 
-export const UseGetBookingExpertFeedbackQuestion = () => {
+export const UseGetBookingExpertFeedbackQuestion = (refresh: number) => {
     const [bookingExpertFeedbackQuestion, setBookingExpertFeedbackQuestion] = useState<BookingExpertFeedbackQuestion[]>([]);
 
     const [loading, setLoading] = useState();
@@ -19,7 +19,7 @@ export const UseGetBookingExpertFeedbackQuestion = () => {
         }
     }
 
-    useEffect(() => { fetchGetBookingExpertFeedbackQuestion(); }, []);
+    useEffect(() => { fetchGetBookingExpertFeedbackQuestion(); }, [refresh]);
 
     return {
         bookingExpertFeedbackQuestion

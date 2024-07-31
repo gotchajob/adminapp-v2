@@ -7,7 +7,11 @@ export interface GetBookingExpertFeedbackQuestionResponse {
 }
 
 export interface BookingExpertFeedbackQuestion {
-
+    id: number,
+    question: string,
+    type: string,
+    categoryId: number,
+    category: string
 }
 
 export const GetBookingExpertFeedbackQuestion = async (): Promise<GetBookingExpertFeedbackQuestionResponse> => {

@@ -1,99 +1,75 @@
 "use client";
 
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { TreeView } from '@mui/x-tree-view/TreeView';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Rating, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import { UseGetBookingCustomerFeedback } from 'hooks/use-get-booking-customer-feedback';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, DialogContentText, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import SubCard from 'ui-component/cards/SubCard';
 import { UseGetBookingCustomerFeedbackQuestion } from 'hooks/use-get-booking-customer-feedback-question';
-import { UseGetBookingExpertFeedbackQuestion } from 'hooks/use-get-booking-expert-feedback-question';
-import { DelBookingExpertFeedbackQuestionById } from 'package/api/booking-expert-feedback-question-controller/id';
-import { DelBookingCustomerFeedbackQuestionById } from 'package/api/booking-customer-feedback-question-controller/id';
 import { useRefresh } from 'hooks/use-refresh';
 import { PostBookingCustomerFeedbackQuestion } from 'package/api/booking-customer-feedback-question-controller';
+import { DelBookingCustomerFeedbackQuestionById } from 'package/api/booking-customer-feedback-question-controller/id';
 
+const feedbackTypes = [
+    { value: 'text', label: 'Dạng văn bản' },
+    { value: 'number', label: 'Dạng số' },
+    { value: 'rating', label: 'Đánh giá' },
+    { value: 'experience', label: 'Trải nghiệm' }
+];
 
 function InterviewQuestionPage() {
-
     const { refresh, refreshTime } = useRefresh();
-
-    const [open, setOpen] = useState(false);
 
     const { bookingCustomerFeedbackQuestion } = UseGetBookingCustomerFeedbackQuestion(refreshTime);
 
-    const [newQuestion, setNewQuestion] = useState('');
+    const [selectedQuestion, setSelectedQuestion] = useState<any>(null);
 
-    const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestion();
-
-    const questionMap = useMemo(() => {
-        const map = new Map();
-        bookingCustomerFeedbackQuestion.forEach((question: any) => {
-            map.set(question.id, question);
-        });
-        bookingExpertFeedbackQuestion.forEach((question: any) => {
-            map.set(question.id, question);
-        });
-        return map;
-    }, [bookingCustomerFeedbackQuestion, bookingExpertFeedbackQuestion]);
+    const [openAddDialog, setOpenAddDialog] = useState(false);
+    
+    const [newQuestion, setNewQuestion] = useState({ question: '', type: '' });
 
     const handleEdit = (id: any) => {
-        const question = questionMap.get(id);
+        const question = bookingCustomerFeedbackQuestion.find((q: any) => q.id === id);
         if (question) {
-            console.log('Edit', question);
-        } else {
-            console.log('Question not found');
+            console.log('Edit question:', question);
         }
-    };
-
-    const handleClickOpen = () => {
-        setOpen(true);
     };
 
     const handleDelete = async (id: any) => {
-        const question = questionMap.get(id);
-        if (!question) {
-            return;
-        }
         try {
-            const res = await DelBookingCustomerFeedbackQuestionById({ id: question.id });
+            const res = await DelBookingCustomerFeedbackQuestionById({ id });
             if (res.status !== "success") {
-                return
+                return;
             }
             refresh();
+            setSelectedQuestion(null);
         } catch (error) {
             console.log(error);
         }
     };
 
     const handleAddQuestion = async () => {
-        console.log("Added Question:", newQuestion);
         try {
+            if (newQuestion.question === "" || newQuestion.type === "") {
+                return;
+            }
             const res = await PostBookingCustomerFeedbackQuestion({
-                question: newQuestion,
-                type: "string",
-                categoryId: 1
+                question: newQuestion.question,
+                type: newQuestion.type,
+                categoryId: 1,
             });
             if (res.status !== "success") {
                 return;
             }
-            console.log(res);
+            refresh();
+            setOpenAddDialog(false);
+            setNewQuestion({ question: '', type: '' });
         } catch (error) {
             console.log(error);
         }
-        setOpen(false);
-        setNewQuestion('');
     };
-
-    useEffect(() => {
-        console.log("bookingCustomerFeedbackQuestion :", bookingCustomerFeedbackQuestion);
-        console.log("bookingExpertFeedbackQuestion :", bookingExpertFeedbackQuestion);
-    }, [bookingCustomerFeedbackQuestion, bookingExpertFeedbackQuestion]);
 
     const renderTable = (questions: any) => (
         <TableContainer component={Paper} sx={{ mt: 2, boxShadow: '0 3px 5px rgba(0, 0, 0, 0.2)' }}>
@@ -101,6 +77,7 @@ function InterviewQuestionPage() {
                 <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
                     <TableRow>
                         <TableCell>Câu hỏi</TableCell>
+                        <TableCell>Kiểu câu hỏi</TableCell>
                         <TableCell>Quản lý</TableCell>
                     </TableRow>
                 </TableHead>
@@ -108,6 +85,7 @@ function InterviewQuestionPage() {
                     {questions.map((q: any) => (
                         <TableRow key={q.id}>
                             <TableCell>{q.question}</TableCell>
+                            <TableCell>{feedbackTypes.find((value) => value.value === q.type)?.label}</TableCell>
                             <TableCell>
                                 <Tooltip title="Sửa">
                                     <IconButton onClick={() => handleEdit(q.id)} >
@@ -115,7 +93,7 @@ function InterviewQuestionPage() {
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Xóa">
-                                    <IconButton onClick={() => handleDelete(q.id)} >
+                                    <IconButton onClick={() => setSelectedQuestion(q)} >
                                         <DeleteIcon sx={{ fontSize: 16 }} />
                                     </IconButton>
                                 </Tooltip>
@@ -128,71 +106,72 @@ function InterviewQuestionPage() {
     );
 
     return (
-        <Box sx={{ width: "100%", background: "#FFFFFF", p: 3, borderRadius: 2, boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)' }}>
-            <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>Quản lý Câu hỏi phỏng vấn và feedback</Typography>
-            <TreeView
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                defaultExpanded={["interviewQuestions", "feedbackQuestions"]}
-                sx={{
-                    '& .MuiTreeItem-root': {
-                        margin: '8px 0',
-                        '& .MuiTreeItem-content': {
-                            borderRadius: 1,
-                            '&:hover': {
-                                backgroundColor: '#e0e0e0',
-                            },
-                        },
-                        '& .MuiTreeItem-label': {
-                            fontSize: '1rem',
-                            fontWeight: 'bold',
-                        },
-                    },
-                }}
-            >
-                <TreeItem nodeId="feedbackQuestions" label="Câu hỏi feedback buổi phỏng vấn" sx={{ color: '#b39ddb' }}>
-                    <TreeItem nodeId='customerFeedback' label={
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Typography>Feedback từ người dùng</Typography>
-                            <Button
-                                variant="contained"
-                                startIcon={<AddIcon />}
-                                onClick={() => setOpen(true)}
-                                sx={{ ml: 2 }}
-                            >
-                                Thêm câu hỏi
-                            </Button>
-                        </Box>
-                    }>
-                        {renderTable(bookingCustomerFeedbackQuestion)}
-                    </TreeItem>
-                    <TreeItem nodeId='expertFeedback' label="Feedback từ chuyên gia">
-                        {renderTable(bookingExpertFeedbackQuestion)}
-                    </TreeItem>
-                </TreeItem>
-            </TreeView>
+        <SubCard
+            title={
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="h4" color="primary">Quản lý câu hỏi feedback từ người dùng</Typography>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpenAddDialog(true)}>
+                        Thêm câu hỏi
+                    </Button>
+                </Box>
+            }
+            sx={{ mb: 3 }}
+        >
+            {renderTable(bookingCustomerFeedbackQuestion)}
 
-            <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogTitle>Thêm câu hỏi feedback mới cho người dùng</DialogTitle>
+            <Dialog open={Boolean(selectedQuestion)} onClose={() => setSelectedQuestion(null)}>
+                <DialogTitle>Xác nhận xóa câu hỏi</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Bạn có chắc chắn muốn xóa câu hỏi <Typography component="span" color="primary">{selectedQuestion?.question}</Typography> ?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSelectedQuestion(null)} color="primary">
+                        Đóng
+                    </Button>
+                    <Button onClick={() => handleDelete(selectedQuestion?.id)} color="primary" autoFocus>
+                        Xóa
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>
+                <DialogTitle>Thêm câu hỏi</DialogTitle>
                 <DialogContent>
                     <TextField
                         autoFocus
                         margin="dense"
                         label="Câu hỏi"
-                        type="text"
                         fullWidth
-                        variant="standard"
-                        value={newQuestion}
-                        onChange={(e) => setNewQuestion(e.target.value)}
+                        value={newQuestion.question}
+                        onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
+                        sx={{ mb: 2 }}
                     />
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel>Chọn kiểu câu hỏi</InputLabel>
+                        <Select
+                            label="Chọn kiểu câu hỏi"
+                            value={newQuestion.type}
+                            onChange={(e) => setNewQuestion({ ...newQuestion, type: e.target.value as string })}
+                            sx={{ mb: 2 }}
+                        >
+                            {feedbackTypes.map((type, index) => (
+                                <MenuItem value={type.value} key={index}>{type.label}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpen(false)}>Hủy</Button>
-                    <Button onClick={handleAddQuestion}>Thêm</Button>
+                    <Button onClick={() => setOpenAddDialog(false)} color="primary">
+                        Đóng
+                    </Button>
+                    <Button onClick={handleAddQuestion} color="primary">
+                        Thêm
+                    </Button>
                 </DialogActions>
             </Dialog>
-
-        </Box>
+        </SubCard>
     );
 }
 
