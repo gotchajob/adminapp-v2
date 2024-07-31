@@ -6,7 +6,7 @@ export const EnchantInput = ({ initValue, onChange }: { initValue: string; onCha
       inline={true}
       //@ts-ignore
       onEditorChange={onChange}
-      apiKey="e2f3pntb5ogxx9hu1lba5p8ef4c29vnogx4n8lid5dw71i4v"
+      apiKey="gvvfxt64x0hg3cpxxu16ftwrn23hiz8u4hm9s6rto4d65mdl"
       initialValue={initValue}
       init={{
         width: 500,
