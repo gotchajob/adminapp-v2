@@ -225,6 +225,13 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   };
 
   const handleRangeSelect = (arg: DateSelectArg) => {
+    if (arg) {
+      setNewEvent({
+        date: arg.startStr,
+        startTime: '',
+        endTime: '',
+      });
+    }
     setIsAddModalOpen(true);
   };
 
@@ -242,7 +249,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   };
 
   const handleCreateNewEvent = async () => {
-    console.log("newEvent:", newEvent);
     try {
       if (newEvent) {
         const res = await PostAvailability(
@@ -257,7 +263,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
           },
           expertToken
         );
-        console.log("handleCreateNewEvent", res);
       }
       setIsAddModalOpen(false);
       refresh();
@@ -288,7 +293,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
           { request: datesArray },
           expertToken
         );
-        console.log("handleCreateNewEvent", res);
         if (res.status !== "success") {
           return;
         }
@@ -304,7 +308,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     try {
       if (id) {
         const res = await DelAvailability({ id: +id }, expertToken);
-        console.log("handleEventDelete:", res);
       }
       setIsEditModalOpen(false);
       refresh();
@@ -316,7 +319,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   useEffect(() => {
     const convertedEvents = convertEvents(availabilities);
     setEvents(convertedEvents);
-    console.log("expertCurrent?.expertId:", expertCurrent?.expertId);
   }, [expertCurrent, availabilities, expertToken, refreshTime]);
 
   useEffect(() => {
