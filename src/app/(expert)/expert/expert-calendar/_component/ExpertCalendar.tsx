@@ -68,23 +68,6 @@ const reverseConvertEvents = (event: any) => {
   };
 };
 
-// const formatDate = (date: Date): string => {
-//     const day = String(date.getDate()).padStart(2, '0');
-//     const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
-//     const year = date.getFullYear();
-//     return `${day}/${month}/${year}`;
-// };
-
-// const isTimeOverlap = (newEvent: FormikValues) => {
-//     return events.some((event: any) =>
-//         newEvent.date === event.date && (
-//             (newEvent.startTime >= event.startTime && newEvent.startTime < event.endTime) ||
-//             (newEvent.endTime > event.startTime && newEvent.endTime <= event.endTime) ||
-//             (newEvent.startTime <= event.startTime && newEvent.endTime >= event.endTime)
-//         )
-//     );
-// };
-
 const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   const calendarRef = useRef<FullCalendar>(null);
   const route = useRouter();
@@ -162,7 +145,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   //     }
   // };
 
-  const handleUpdateEvent = async (eventId: string, update: FormikValues) => {};
+  const handleUpdateEvent = async (eventId: string, update: FormikValues) => { };
 
   // const handleRangeSelect = (arg: DateSelectArg) => {
   //     const calendarEl = calendarRef.current;
@@ -242,6 +225,13 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   };
 
   const handleRangeSelect = (arg: DateSelectArg) => {
+    if (arg) {
+      setNewEvent({
+        date: arg.startStr,
+        startTime: '',
+        endTime: '',
+      });
+    }
     setIsAddModalOpen(true);
   };
 
@@ -259,7 +249,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   };
 
   const handleCreateNewEvent = async () => {
-    console.log("newEvent:", newEvent);
     try {
       if (newEvent) {
         const res = await PostAvailability(
@@ -274,7 +263,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
           },
           expertToken
         );
-        console.log("handleCreateNewEvent", res);
       }
       setIsAddModalOpen(false);
       refresh();
@@ -292,7 +280,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     let currentDate = startDate;
     while (currentDate <= endDate) {
       const dateString = formatDate(currentDate.toISOString(), "yyyy-MM-dd");
-      console.log(" dateString", dateString);
       datesArray.push({
         date: dateString,
         startTime: newEvent?.startTime,
@@ -306,7 +293,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
           { request: datesArray },
           expertToken
         );
-        console.log("handleCreateNewEvent", res);
         if (res.status !== "success") {
           return;
         }
@@ -322,7 +308,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     try {
       if (id) {
         const res = await DelAvailability({ id: +id }, expertToken);
-        console.log("handleEventDelete:", res);
       }
       setIsEditModalOpen(false);
       refresh();
@@ -332,13 +317,8 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   };
 
   useEffect(() => {
-    setEvents([]);
-  }, []);
-
-  useEffect(() => {
     const convertedEvents = convertEvents(availabilities);
     setEvents(convertedEvents);
-    console.log("expertCurrent?.expertId:", expertCurrent?.expertId);
   }, [expertCurrent, availabilities, expertToken, refreshTime]);
 
   useEffect(() => {

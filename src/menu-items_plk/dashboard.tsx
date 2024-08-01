@@ -14,6 +14,8 @@ import {
 
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
+
 import ContactsIcon from '@mui/icons-material/Contacts';
 
 // type
@@ -59,6 +61,14 @@ const dashboard: NavItemType = {
       icon: IconUser,
       breadcrumbs: false,
     },
+    // {
+    //   id: "serviceprice",
+    //   title: <FormattedMessage id="Quản lí dịch vụ" />,
+    //   type: "item",
+    //   url: "/staff/service-config",
+    //   icon: PriceChangeIcon,
+    //   breadcrumbs: false,
+    // },
     {
       id: "transaction",
       title: <FormattedMessage id="Giao dịch" />,
