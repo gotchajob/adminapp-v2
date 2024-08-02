@@ -35,19 +35,18 @@ export const GetBookingExpertFeedback = async (params: GetBookingExpertFeedbackR
 export interface PostBookingExpertFeedbackRequest {
     bookingId: number,
     comment: string,
-    answerList: Answers[]
+    answerList: BookingFeedbackAnwer[]
 }
 
-export interface Answers {
+export interface BookingFeedbackAnwer {
     questionId: number,
-    answer: string
+    answer: string | number
 }
 
 export interface PostBookingExpertFeedbackResponse {
     status: string;
     responseText: string;
 }
-
 
 export const PostBookingExpertFeedback = async (params: PostBookingExpertFeedbackRequest, accessToken: string): Promise<PostBookingExpertFeedbackResponse> => {
     try {
