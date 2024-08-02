@@ -207,6 +207,8 @@ export default function BookingDetailPage({
     );
   };
 
+  useEffect(() => { console.log("booking:", booking) }, [booking]);
+
   return (
     <SubCard>
       {booking && (
@@ -293,66 +295,76 @@ export default function BookingDetailPage({
             <Stack spacing={2} minHeight={100}>
               <Typography variant="h4">Thông tin tư vấn</Typography>
               {mappedExpertSkillOption()}
+              <TextField label="Chú thích của khách hàng" multiline minRows={3} value={booking.note} >
+              </TextField>
             </Stack>
+
           </Grid>
+
           <Grid item xs={12}>
             <Divider />
           </Grid>
-          <Grid item xs={12}>
-            <Stack spacing={3} minHeight={100}>
-              <Typography variant="h4">Câu hỏi phỏng vấn</Typography>
-              <Answer
-                answerList={answerList}
-                feedbackQuestionList={selectFeedbackQuestionList}
-                setAnswerList={setAnswerList}
-              />
+          {(booking.status === 3 || booking.status === 4) && (
+            <>
               <Grid item xs={12}>
-                <SubCard
-                  title="Đánh giá chung về ứng viên"
-                  sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
-                >
-                  <TextField
-                    multiline
-                    rows={3}
-                    value={comment}
-                    fullWidth
-                    onChange={(e) => setComment(e.target.value)}
-                  ></TextField>
-                </SubCard>
+                <Stack spacing={3} minHeight={100}>
+                  <Typography variant="h4">Câu hỏi phỏng vấn</Typography>
+                  <Answer
+                    answerList={answerList}
+                    feedbackQuestionList={selectFeedbackQuestionList}
+                    setAnswerList={setAnswerList}
+                  />
+                  <Grid item xs={12}>
+                    <SubCard
+                      title="Đánh giá chung về ứng viên"
+                      sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
+                    >
+                      <TextField
+                        multiline
+                        rows={3}
+                        value={comment}
+                        fullWidth
+                        onChange={(e) => setComment(e.target.value)}
+                      ></TextField>
+                    </SubCard>
+                  </Grid>
+                </Stack>
+                <Feedback
+                  feedbackQuestionList={bookingExpertFeedbackQuestion}
+                  feedbackQuestionType={expertQuestionCategoryCurrent}
+                  selectFeedbackQuestionList={selectFeedbackQuestionList}
+                  setSelectAddFeedbackQuestion={setSelectAddFeedbackQuestion}
+                />
+
+
               </Grid>
-            </Stack>
-            <Feedback
-              feedbackQuestionList={bookingExpertFeedbackQuestion}
-              feedbackQuestionType={expertQuestionCategoryCurrent}
-              selectFeedbackQuestionList={selectFeedbackQuestionList}
-              setSelectAddFeedbackQuestion={setSelectAddFeedbackQuestion}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item xs={12} textAlign="center">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleGradeSubmission}
-              sx={{
-                padding: "10px 20px",
-                fontSize: "16px",
-                borderRadius: "8px",
-                backgroundColor: "#1976d2",
-                "&:hover": { backgroundColor: "#115293" },
-              }}
-              disabled={loadingSubmit}
-            >
-              {loadingSubmit ? (
-                <CircularProgress size={24} sx={{ color: "white" }} />
-              ) : (
-                "Chấm điểm"
-              )}
-            </Button>
-          </Grid>
-        </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} textAlign="center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleGradeSubmission}
+                  sx={{
+                    padding: "10px 20px",
+                    fontSize: "16px",
+                    borderRadius: "8px",
+                    backgroundColor: "#1976d2",
+                    "&:hover": { backgroundColor: "#115293" },
+                  }}
+                  disabled={loadingSubmit}
+                >
+                  {loadingSubmit ? (
+                    <CircularProgress size={24} sx={{ color: "white" }} />
+                  ) : (
+                    "Chấm điểm"
+                  )}
+                </Button>
+              </Grid>
+              </>
+            )}
+            </Grid>
       )}
 
       <Dialog open={open} onClose={handleClose} fullWidth>
