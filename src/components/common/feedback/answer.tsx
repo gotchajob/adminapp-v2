@@ -13,9 +13,10 @@ import { FlexBox } from '../box/flex-box';
 import { Text } from '../text/text';
 import Stack from '@mui/material/Stack';
 import { BookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question-controller';
+import { BookingFeedbackAnwer } from 'package/api/booking-expert-feedback-controller';
 
 interface QuestionAnswer extends BookingExpertFeedbackQuestion {
-  answer?: FeedbackAnwer;
+  answer?: BookingFeedbackAnwer;
 }
 
 const renderLabel = (option: string, icon: ReactNode) => {
@@ -34,17 +35,18 @@ export const Answer = ({
   setAnswerList,
   feedbackQuestionList
 }: {
-  answerList: FeedbackAnwer[];
-  setAnswerList: (value: FeedbackAnwer[]) => void;
+  answerList: BookingFeedbackAnwer[];
+  setAnswerList: (value: BookingFeedbackAnwer[]) => void;
   feedbackQuestionList: BookingExpertFeedbackQuestion[];
 }) => {
+
   const handleUpdateAnwser = ({ questionId, value }: { questionId: number; value: any }) => {
     const newAnswer = [...answerList];
     const index = newAnswer.findIndex((value) => value.questionId === questionId);
     if (index >= 0) {
-      newAnswer[index].value = value;
+      newAnswer[index].answer = value;
     } else {
-      newAnswer.push({ questionId, value });
+      newAnswer.push({ questionId, answer: value });
     }
     setAnswerList(newAnswer);
   };
@@ -53,31 +55,47 @@ export const Answer = ({
     let input = <></>;
     switch (props.type) {
       case 'text':
-        input = <TextField fullWidth minRows={5} multiline />;
+        input = <TextField onChange={(e) => {
+          handleUpdateAnwser({ questionId: props.id, value: e.target.value })
+        }} fullWidth minRows={5} multiline />;
         break;
       case 'attitude':
         input = (
           <FormControl>
             <RadioGroup>
-              {attitudeOption.map((e, index) => (
-                <FormControlLabel value={e.value} control={<Radio />} key={index} label={renderLabel(e.option, e.icon)} />
+              {attitudeOption.map((option, index) => (
+                <FormControlLabel onChange={(e, checked) => {
+                  if (checked) {
+                    handleUpdateAnwser({ questionId: props.id, value: option.value })
+                  }
+                }} value={option.value} control={<Radio />} key={index} label={renderLabel(option.option, option.icon)} />
               ))}
             </RadioGroup>
           </FormControl>
         );
         break;
       case 'number':
-        input = <TextField type="number" />;
+        input = <TextField onChange={(e) => {
+          handleUpdateAnwser({ questionId: props.id, value: e.target.value })
+        }} type="number" />;
         break;
       case 'rating':
-        input = <Rating />;
+        input = <Rating onChange={(e, value) => {
+          if (value) {
+            handleUpdateAnwser({ questionId: props.id, value })
+          }
+        }} />;
         break;
       case 'experience':
         input = (
           <FormControl>
             <RadioGroup>
-              {experienceOption.map((e, index) => (
-                <FormControlLabel value={e.value} control={<Radio />} key={index} label={renderLabel(e.option, e.icon)} />
+              {experienceOption.map((option, index) => (
+                <FormControlLabel onChange={(e, checked) => {
+                  if (checked) {
+                    handleUpdateAnwser({ questionId: props.id, value: option.value })
+                  }
+                }} value={option.value} control={<Radio />} key={index} label={renderLabel(option.option, option.icon)} />
               ))}
             </RadioGroup>
           </FormControl>

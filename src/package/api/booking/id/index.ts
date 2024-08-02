@@ -10,10 +10,30 @@ export interface GetBookingByIdResponse {
   data: BookingById;
 }
 
+export interface CustomerInfo {
+  avatar: string;
+  fullName: string;
+  email: string;
+}
+
+export interface CustomerCV {
+  id: string;
+  name: string;
+  image: string;
+}
+
+export interface SkillOptions {
+  skillId: number,
+  skillName: string,
+  skillOptionId: number,
+  skillOptionName: string
+}
+
 export interface BookingById {
   id: number;
   expertId: number;
-  customerInfo: CustomerInfo;
+  customerId: number;
+  customerCV: CustomerCV;
   availabilityId: number;
   startInterviewDate: string;
   endInterviewDate: string;
@@ -21,13 +41,8 @@ export interface BookingById {
   rejectReason: string;
   status: number;
   createdAt: string;
-  expertSkillOptionIds: number[];
-}
-
-export interface CustomerInfo {
-    fullName: string;
-    email: string;
-    avatar: string;
+  expertSkillOptionIds: SkillOptions[];
+  customerInfo: CustomerInfo;
 }
 
 export const GetBookingById = async (
@@ -42,6 +57,6 @@ export const GetBookingById = async (
     );
     return res;
   } catch (error: any) {
-    return errorSystem("Lấy danh sách thất bại", []);
+    return errorSystem("Lấy danh sách thất bại", {});
   }
 };

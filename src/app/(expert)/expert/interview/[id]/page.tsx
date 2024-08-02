@@ -16,7 +16,7 @@ import Chip from "ui-component/extended/Chip";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 // types
-import { Button, Dialog, DialogContent, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogContent, TextField } from "@mui/material";
 import { StyledLink } from "components/common/link/styled-link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
@@ -42,6 +42,8 @@ import { useRefresh } from "hooks/use-refresh";
 import { UseGetExpertQuestionCategory, UseGetExpertQuestionCategoryCurrent } from "hooks/use-get-expert-question-category";
 import { BookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question-controller";
 import { QuestionCategoryCurrent } from "package/api/expert-question-category/current";
+import { BookingFeedbackAnwer, PostBookingExpertFeedback } from "package/api/booking-expert-feedback-controller";
+import { enqueueSnackbar } from "notistack";
 
 const getStatusLabel = (status: number) => {
   switch (status) {
@@ -66,23 +68,23 @@ const getStatusLabel = (status: number) => {
   }
 };
 
-const BookingDetailPage = ({
-  event,
-  onBack,
+export default function BookingDetailPage({
   params,
 }: {
-  event: any;
-  onBack: () => void;
   params: { id: string };
-}) => {
+}) {
 
   const { refresh, refreshTime } = useRefresh();
 
   const [open, setOpen] = useState(false);
 
+  const [comment, setComment] = useState<string>("");
+
   const { expertToken } = ExpertToken();
 
   const { booking } = useGetBookingById({ id: +params.id });
+
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -108,7 +110,31 @@ const BookingDetailPage = ({
     BookingExpertFeedbackQuestion[]
   >([]);
 
-  const [answerList, setAnswerList] = useState<FeedbackAnwer[]>([]);
+
+  const [answerList, setAnswerList] = useState<BookingFeedbackAnwer[]>([]);
+
+  const handleGradeSubmission = async () => {
+    if (!answerList) {
+      return;
+    }
+    setLoadingSubmit(true);
+    try {
+      if (!expertToken) {
+        throw new Error("Cần đăng nhập");
+      }
+      const res = await PostBookingExpertFeedback({ bookingId: +params.id, comment, answerList }, expertToken);
+      if (res.status !== "success") {
+        throw new Error();
+      }
+      enqueueSnackbar("Đánh giá ứng viên thành công", { variant: 'success' });
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar("Đánh giá ứng viên thất bại", { variant: 'error' });
+    } finally {
+      setLoadingSubmit(false);
+    }
+
+  };
 
   return (
     <SubCard>
@@ -138,7 +164,6 @@ const BookingDetailPage = ({
               <Grid item xs={12} sm={6} md={4}>
                 <Stack spacing={2}>
                   <Typography variant="h4">Thông tin đặt lịch</Typography>
-
                   <Stack spacing={1}>
                     <Stack direction="row" spacing={1}>
                       <Typography variant="subtitle1">
@@ -202,13 +227,27 @@ const BookingDetailPage = ({
             <Divider />
           </Grid>
           <Grid item xs={12}>
-            <Stack spacing={2} minHeight={100}>
+            <Stack spacing={3} minHeight={100}>
               <Typography variant="h4">Câu hỏi phỏng vấn</Typography>
               <Answer
                 answerList={answerList}
                 feedbackQuestionList={selectFeedbackQuestionList}
                 setAnswerList={setAnswerList}
               />
+              <Grid item xs={12}>
+                <SubCard
+                  title="Đánh giá chung về ứng viên"
+                  sx={{ boxShadow: '0 3px 5px rgba(0, 0, 0, 0.2)' }}>
+                  <TextField
+                    multiline
+                    rows={3}
+                    value={comment}
+                    fullWidth
+                    onChange={(e) => setComment(e.target.value)}
+                  >
+                  </TextField>
+                </SubCard>
+              </Grid>
             </Stack>
             <Feedback
               feedbackQuestionList={bookingExpertFeedbackQuestion}
@@ -216,6 +255,30 @@ const BookingDetailPage = ({
               selectFeedbackQuestionList={selectFeedbackQuestionList}
               setSelectAddFeedbackQuestion={setSelectAddFeedbackQuestion}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12} textAlign="center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleGradeSubmission}
+              sx={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                borderRadius: '8px',
+                backgroundColor: '#1976d2',
+                '&:hover': { backgroundColor: '#115293' }
+              }}
+              disabled={loadingSubmit}
+            >
+              {loadingSubmit ? (
+                <CircularProgress size={24} sx={{ color: 'white' }} />
+              ) : (
+                'Chấm điểm'
+              )}
+            </Button>
           </Grid>
         </Grid>
       )}
@@ -240,4 +303,4 @@ const BookingDetailPage = ({
   );
 };
 
-export default BookingDetailPage;
+

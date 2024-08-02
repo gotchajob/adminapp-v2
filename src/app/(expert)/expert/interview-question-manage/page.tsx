@@ -15,7 +15,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { UseGetExpertQuestionCategory } from 'hooks/use-get-expert-question-category';
+import { UseGetExpertQuestionCategory, UseGetExpertQuestionCategoryCurrent } from 'hooks/use-get-expert-question-category';
 import { useRefresh } from 'hooks/use-refresh';
 import { UseGetBookingExpertFeedbackQuestion } from 'hooks/use-get-booking-expert-feedback-question';
 import { ExpertToken } from 'hooks/use-login';
@@ -28,7 +28,9 @@ import { expertTypeInputList } from 'components/common/feedback/interface';
 
 function CategoryTable({ refresh, refreshTime, token }: { refresh: () => void, refreshTime: number, token: string }) {
 
-    const { expertQuestionCategory } = UseGetExpertQuestionCategory(refreshTime);
+    const { expertToken } = ExpertToken();
+
+    const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(expertToken, refreshTime);
 
     const [selectedCategory, setSelectedCategory] = useState<QuestionCategoryById | null>(null);
 
@@ -98,7 +100,7 @@ function CategoryTable({ refresh, refreshTime, token }: { refresh: () => void, r
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {expertQuestionCategory?.map((category) => (
+                            {expertQuestionCategoryCurrent?.map((category) => (
                                 <TableRow key={category.id} >
                                     <TableCell sx={{
                                         opacity: categoryStatus[category.id] ? 1 : 0.5,
@@ -168,9 +170,13 @@ function CategoryTable({ refresh, refreshTime, token }: { refresh: () => void, r
 function InterviewQuestionTable({ refresh, refreshTime, token }: { refresh: () => void, refreshTime: number, token: string }) {
 
     const { expertQuestionCategory } = UseGetExpertQuestionCategory(refreshTime);
+
     const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestion(refreshTime);
+
     const [selectedQuestion, setSelectedQuestion] = useState<BookingExpertFeedbackQuestion | undefined>(undefined);
+
     const [openAddDialog, setOpenAddDialog] = useState(false);
+    
     const [newQuestion, setNewQuestion] = useState({ question: '', type: '', categoryId: 0 });
 
     const handleAdd = async () => {

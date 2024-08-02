@@ -76,6 +76,7 @@ const CustomerCalendarPage = ({
   params: { id: string };
   onSelectEvent: (event: any) => void;
 }) => {
+  
   const router = useRouter();
 
   const { refreshTime, refresh } = useRefresh();
@@ -133,6 +134,7 @@ const CustomerCalendarPage = ({
   };
 
   useEffect(() => {
+    console.log("bookings:", bookings);
     if (bookings) {
       setLoading(false);
     }
@@ -177,7 +179,7 @@ const CustomerCalendarPage = ({
                   <TableCell>
                     <Typography variant="subtitle2" noWrap
                       sx={{
-                        color: isToday(row.startInterviewDate) ? 'success.main' : 'black'
+                        color: isToday(row.endInterviewDate) ? 'success.main' : 'black'
                       }}>
                       {formatDate(row.endInterviewDate, "dd/MM/yyyy - hh:mm")}
                     </Typography>
