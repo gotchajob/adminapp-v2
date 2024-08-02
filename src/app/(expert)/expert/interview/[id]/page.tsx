@@ -335,8 +335,6 @@ export default function BookingDetailPage({
                   selectFeedbackQuestionList={selectFeedbackQuestionList}
                   setSelectAddFeedbackQuestion={setSelectAddFeedbackQuestion}
                 />
-
-
               </Grid>
               <Grid item xs={12}>
                 <Divider />
@@ -362,9 +360,9 @@ export default function BookingDetailPage({
                   )}
                 </Button>
               </Grid>
-              </>
-            )}
-            </Grid>
+            </>
+          )}
+        </Grid>
       )}
 
       <Dialog open={open} onClose={handleClose} fullWidth>
