@@ -76,7 +76,7 @@ const CustomerCalendarPage = ({
   params: { id: string };
   onSelectEvent: (event: any) => void;
 }) => {
-  
+
   const router = useRouter();
 
   const { refreshTime, refresh } = useRefresh();

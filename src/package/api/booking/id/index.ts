@@ -41,7 +41,7 @@ export interface BookingById {
   rejectReason: string;
   status: number;
   createdAt: string;
-  expertSkillOptionIds: SkillOptions[];
+  skillOptionBooking: SkillOptions[];
   customerInfo: CustomerInfo;
 }
 
