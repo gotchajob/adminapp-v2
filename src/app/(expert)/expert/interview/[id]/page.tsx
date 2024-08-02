@@ -10,13 +10,21 @@ import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import { gridSpacing } from "store/constant";
 import SubCard from "ui-component/cards/SubCard";
-import Chip from "ui-component/extended/Chip";
 
 // assets
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 
 // types
-import { Button, CircularProgress, Dialog, DialogContent, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  styled,
+  TextField,
+} from "@mui/material";
 import { StyledLink } from "components/common/link/styled-link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
@@ -27,23 +35,23 @@ import { ExpertSkillOption } from "package/api/expert-skill-option";
 import { PatchBookingReject } from "package/api/booking/id/reject";
 import { ExpertToken } from "hooks/use-login";
 import { Answer } from "components/common/feedback/answer";
-import {
-  FeedbackQuestion,
-  SampleFeedbackQuestion,
-  FeedbackQuestionType,
-  SampleFeedbackType,
-  FeedbackAnwer,
-} from "components/common/feedback/interface";
 import { Feedback } from "components/common/feedback/question";
 import { FlexBox, FlexCenter } from "components/common/box/flex-box";
 import Avatar from "ui-component/extended/Avatar";
 import { UseGetBookingExpertFeedbackQuestion } from "hooks/use-get-booking-expert-feedback-question";
 import { useRefresh } from "hooks/use-refresh";
-import { UseGetExpertQuestionCategory, UseGetExpertQuestionCategoryCurrent } from "hooks/use-get-expert-question-category";
+import {
+  UseGetExpertQuestionCategory,
+  UseGetExpertQuestionCategoryCurrent,
+} from "hooks/use-get-expert-question-category";
 import { BookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question-controller";
 import { QuestionCategoryCurrent } from "package/api/expert-question-category/current";
-import { BookingFeedbackAnwer, PostBookingExpertFeedback } from "package/api/booking-expert-feedback-controller";
+import {
+  BookingFeedbackAnwer,
+  PostBookingExpertFeedback,
+} from "package/api/booking-expert-feedback-controller";
 import { enqueueSnackbar } from "notistack";
+import { Text } from "components/common/text/text";
 
 const getStatusLabel = (status: number) => {
   switch (status) {
@@ -68,12 +76,21 @@ const getStatusLabel = (status: number) => {
   }
 };
 
+interface MappedSkill {
+  skill: string;
+  skillOption: string[];
+}
+
+const StyledChip = styled(Chip)({
+  color: "white",
+  borderRadius: 10,
+  minWidth: "100px",
+});
 export default function BookingDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-
   const { refresh, refreshTime } = useRefresh();
 
   const [open, setOpen] = useState(false);
@@ -94,22 +111,21 @@ export default function BookingDetailPage({
     setOpen(false);
   };
 
-  const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestion(refreshTime);
+  const { bookingExpertFeedbackQuestion } =
+    UseGetBookingExpertFeedbackQuestion(refreshTime);
 
-  const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(expertToken, refreshTime);
+  const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(
+    expertToken,
+    refreshTime
+  );
 
   useEffect(() => {
-    console.log(expertQuestionCategoryCurrent);
-    console.log(bookingExpertFeedbackQuestion);
-  }, [expertQuestionCategoryCurrent])
-
-  const [feedbackQuestionType] =
-    useState<QuestionCategoryCurrent[]>([]);
+    console.log(booking);
+  }, [booking]);
 
   const [selectFeedbackQuestionList, setSelectAddFeedbackQuestion] = useState<
     BookingExpertFeedbackQuestion[]
   >([]);
-
 
   const [answerList, setAnswerList] = useState<BookingFeedbackAnwer[]>([]);
 
@@ -122,18 +138,73 @@ export default function BookingDetailPage({
       if (!expertToken) {
         throw new Error("Cần đăng nhập");
       }
-      const res = await PostBookingExpertFeedback({ bookingId: +params.id, comment, answerList }, expertToken);
+      const res = await PostBookingExpertFeedback(
+        { bookingId: +params.id, comment, answerList },
+        expertToken
+      );
       if (res.status !== "success") {
         throw new Error();
       }
-      enqueueSnackbar("Đánh giá ứng viên thành công", { variant: 'success' });
+      enqueueSnackbar("Đánh giá ứng viên thành công", { variant: "success" });
     } catch (error) {
       console.log(error);
-      enqueueSnackbar("Đánh giá ứng viên thất bại", { variant: 'error' });
+      enqueueSnackbar("Đánh giá ứng viên thất bại", { variant: "error" });
     } finally {
       setLoadingSubmit(false);
     }
+  };
 
+  const mappedExpertSkillOption = () => {
+    const mappedSkill: MappedSkill[] = [];
+
+    if (booking) {
+      booking.skillOptionBooking.forEach((e) => {
+        const index = mappedSkill.findIndex((v) => v.skill === e.skillName);
+        if (index > -1) {
+          mappedSkill[index].skillOption.push(e.skillOptionName);
+        } else {
+          mappedSkill.push({
+            skill: e.skillName,
+            skillOption: [e.skillOptionName],
+          });
+        }
+      });
+    }
+
+    return (
+      <Box
+        sx={{
+          position: "relative",
+          "&:before": {
+            content: '""',
+            position: "absolute",
+            top: "0",
+            left: 0,
+            width: "0.5px",
+            height: "100%",
+            bgcolor: "divider",
+            zIndex: "1",
+          },
+        }}
+      >
+        {mappedSkill.map((value, index) => (
+          <Stack
+            ml={3}
+            my={2}
+            key={index}
+            direction={"row"}
+            spacing={3}
+            alignItems={"center"}
+          >
+            <StyledChip label={value.skill} color="warning" />
+            <Text>:</Text>
+            {value.skillOption.map((data, index) => (
+              <StyledChip label={data} key={index} color="info" />
+            ))}
+          </Stack>
+        ))}
+      </Box>
+    );
   };
 
   return (
@@ -221,6 +292,7 @@ export default function BookingDetailPage({
           <Grid item xs={12}>
             <Stack spacing={2} minHeight={100}>
               <Typography variant="h4">Thông tin tư vấn</Typography>
+              {mappedExpertSkillOption()}
             </Stack>
           </Grid>
           <Grid item xs={12}>
@@ -237,15 +309,15 @@ export default function BookingDetailPage({
               <Grid item xs={12}>
                 <SubCard
                   title="Đánh giá chung về ứng viên"
-                  sx={{ boxShadow: '0 3px 5px rgba(0, 0, 0, 0.2)' }}>
+                  sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
+                >
                   <TextField
                     multiline
                     rows={3}
                     value={comment}
                     fullWidth
                     onChange={(e) => setComment(e.target.value)}
-                  >
-                  </TextField>
+                  ></TextField>
                 </SubCard>
               </Grid>
             </Stack>
@@ -265,18 +337,18 @@ export default function BookingDetailPage({
               color="primary"
               onClick={handleGradeSubmission}
               sx={{
-                padding: '10px 20px',
-                fontSize: '16px',
-                borderRadius: '8px',
-                backgroundColor: '#1976d2',
-                '&:hover': { backgroundColor: '#115293' }
+                padding: "10px 20px",
+                fontSize: "16px",
+                borderRadius: "8px",
+                backgroundColor: "#1976d2",
+                "&:hover": { backgroundColor: "#115293" },
               }}
               disabled={loadingSubmit}
             >
               {loadingSubmit ? (
-                <CircularProgress size={24} sx={{ color: 'white' }} />
+                <CircularProgress size={24} sx={{ color: "white" }} />
               ) : (
-                'Chấm điểm'
+                "Chấm điểm"
               )}
             </Button>
           </Grid>
@@ -301,6 +373,4 @@ export default function BookingDetailPage({
       </Dialog>
     </SubCard>
   );
-};
-
-
+}
