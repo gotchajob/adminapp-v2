@@ -17,7 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { UseGetExpertQuestionCategory, UseGetExpertQuestionCategoryCurrent } from 'hooks/use-get-expert-question-category';
 import { useRefresh } from 'hooks/use-refresh';
-import { UseGetBookingExpertFeedbackQuestion } from 'hooks/use-get-booking-expert-feedback-question';
+import { UseGetBookingExpertFeedbackQuestion, UseGetBookingExpertFeedbackQuestionCurrent } from 'hooks/use-get-booking-expert-feedback-question';
 import { ExpertToken } from 'hooks/use-login';
 import { DelBookingExpertFeedbackQuestionById } from 'package/api/booking-expert-feedback-question-controller/id';
 import { accessToken } from 'mapbox-gl';
@@ -28,9 +28,7 @@ import { expertTypeInputList } from 'components/common/feedback/interface';
 
 function CategoryTable({ refresh, refreshTime, token }: { refresh: () => void, refreshTime: number, token: string }) {
 
-    const { expertToken } = ExpertToken();
-
-    const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(expertToken, refreshTime);
+    const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(token, refreshTime);
 
     const [selectedCategory, setSelectedCategory] = useState<QuestionCategoryById | null>(null);
 
@@ -169,14 +167,14 @@ function CategoryTable({ refresh, refreshTime, token }: { refresh: () => void, r
 
 function InterviewQuestionTable({ refresh, refreshTime, token }: { refresh: () => void, refreshTime: number, token: string }) {
 
-    const { expertQuestionCategory } = UseGetExpertQuestionCategory(refreshTime);
+    const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(token, refreshTime);
 
-    const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestion(refreshTime);
+    const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestionCurrent(token, refreshTime);
 
     const [selectedQuestion, setSelectedQuestion] = useState<BookingExpertFeedbackQuestion | undefined>(undefined);
 
     const [openAddDialog, setOpenAddDialog] = useState(false);
-    
+
     const [newQuestion, setNewQuestion] = useState({ question: '', type: '', categoryId: 0 });
 
     const handleAdd = async () => {
@@ -315,7 +313,7 @@ function InterviewQuestionTable({ refresh, refreshTime, token }: { refresh: () =
                             value={newQuestion.categoryId}
                             onChange={(e) => setNewQuestion({ ...newQuestion, categoryId: e.target.value as number })}
                         >
-                            {expertQuestionCategory?.map((category) => (
+                            {expertQuestionCategoryCurrent?.map((category) => (
                                 <MenuItem key={category.id} value={category.id}>
                                     {category.category}
                                 </MenuItem>

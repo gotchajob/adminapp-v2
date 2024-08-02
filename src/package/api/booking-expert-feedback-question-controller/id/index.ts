@@ -1,6 +1,5 @@
 import { apiServerFetch, errorSystem } from "package/api/api-fetch";
 
-
 export interface GetBookingExpertFeedbackQuestionByIdRequest {
     id: number;
 }

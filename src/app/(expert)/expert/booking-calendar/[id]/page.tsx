@@ -118,20 +118,20 @@ const BookingDetailPage = ({
     setOpen(false);
   };
 
+  const filteredSkillOptions = useMemo(() => {
+    if (!booking || !booking.skillOptionBooking || !expertSkillOptions) return [];
+    return expertSkillOptions.filter((expertSkill) =>
+      booking.skillOptionBooking.some(
+        (bookingSkill) => bookingSkill.skillOptionId === expertSkill.skillOptionId
+      )
+    );
+  }, [booking, expertSkillOptions]);
+
   useEffect(() => {
     console.log("booking:", booking);
     console.log("expertSkillOptions:", expertSkillOptions);
-  }, [params, booking, expertSkillOptions]);
-
-  const filteredSkillOptions = useMemo(() => {
-    let returnList: ExpertSkillOption[] = [];
-    if (booking && booking.expertSkillOptionIds ) {
-      returnList = expertSkillOptions.filter((skill: ExpertSkillOption) =>
-        booking.expertSkillOptionIds.includes(skill.id)
-      );
-    }
-    return returnList;
-  }, [booking, expertSkillOptions]);
+    console.log("filteredSkillOptions:", filteredSkillOptions);
+  }, [params, booking, expertSkillOptions, filteredSkillOptions]);
 
   return (
     <SubCard>
