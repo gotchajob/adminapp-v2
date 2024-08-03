@@ -46,14 +46,16 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { formatDate, getDatesBetween } from "package/util";
+import { enqueueSnackbar } from "notistack";
 
 // ==============================|| APPLICATION CALENDAR ||============================== //
 
 const convertEvents = (data: any) => {
   return data.map((event: any) => ({
     id: event.id.toString(),
-    title: `Đã đặt lịch ${event.id}`,
-    color: "#00E676",
+    title: event.status === 2 ? "Đã đặt lịch" : "Chưa đặt lịch",
+    color: event.status === 2 ? "#697586" : "#00E676",
+    status: event.status,
     start: event.startTime,
     end: event.endTime,
   }));
@@ -65,6 +67,7 @@ const reverseConvertEvents = (event: any) => {
     date: event.start.slice(0, 10),
     start: event.start.slice(11, 19),
     end: event.end.slice(11, 19),
+    status: event.status,
   };
 };
 
@@ -240,8 +243,12 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   };
 
   const handleEventSelect = (arg: EventClickArg) => {
+    // if (arg.event._def.extendedProps.status !== 1) {
+    //   return;
+    // }
     if (arg) {
       const selectedArg = events.find((data) => data.id === arg.event.id);
+      console.log(selectedArg);
       const reversedArg = reverseConvertEvents(selectedArg);
       setSelectEvent(reversedArg);
       setIsEditModalOpen(true);
@@ -263,11 +270,15 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
           },
           expertToken
         );
+        if (res.status !== "success") {
+          throw new Error(res.responseText);
+        }
       }
+      enqueueSnackbar("Thêm lịch thành công", { variant: "success" });
       setIsAddModalOpen(false);
       refresh();
-    } catch (error) {
-      throw new Error();
+    } catch (error: any) {
+      enqueueSnackbar(error.message, { variant: "error" });
     }
   };
 
@@ -294,13 +305,14 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
           expertToken
         );
         if (res.status !== "success") {
-          return;
+          throw new Error(res.responseText);
         }
       }
+      enqueueSnackbar("Thêm lịch phỏng vấn thành công", { variant: "success" });
       setIsAddDateRangeOpen(false);
       refresh();
-    } catch (error) {
-      throw new Error();
+    } catch (error: any) {
+      enqueueSnackbar(error.message, { variant: "error" });
     }
   };
 
@@ -308,15 +320,20 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     try {
       if (id) {
         const res = await DelAvailability({ id: +id }, expertToken);
+        if (res.status !== "success") {
+          throw new Error(res.responseText);
+        }
       }
+      enqueueSnackbar("Xóa lịch phỏng vấn thành công", { variant: "success" });
       setIsEditModalOpen(false);
       refresh();
-    } catch (error) {
-      throw new Error();
+    } catch (error: any) {
+      enqueueSnackbar(error.message, { variant: "error" });
     }
   };
 
   useEffect(() => {
+    console.log("availabilities:", availabilities);
     const convertedEvents = convertEvents(availabilities);
     setEvents(convertedEvents);
   }, [expertCurrent, availabilities, expertToken, refreshTime]);
@@ -326,11 +343,14 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
       try {
         const dates = getDatesBetween([startDate, endDate]);
         setDatesBetween(dates);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Lỗi khi tính toán các ngày giữa:", error);
+        enqueueSnackbar("Lỗi khi tính toán các ngày giữa:", { variant: "error" });
       }
     }
   }, [startDate, endDate]);
+
+  useEffect(() => { console.log("select Event:", selectEvent) }, [selectEvent])
 
   if (loading) return <Loader />;
 
@@ -360,8 +380,8 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         <SubCard>
           <FullCalendar
             weekends
-            editable
-            droppable
+            editable={false}
+            droppable={false}
             selectable
             events={events}
             ref={calendarRef}
@@ -483,7 +503,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         open={isEditModalOpen}
         sx={{ "& .MuiDialog-paper": { p: 0 } }}
       >
-        <DialogTitle color="primary">Xóa lịch phỏng vấn</DialogTitle>
+        <DialogTitle color="primary"> {(selectEvent?.status == 2) ? "Thông tin buổi phỏng vấn" : "Xóa lịch phỏng vấn"}</DialogTitle>
         <DialogContent>
           {selectEvent && (
             <>
@@ -536,12 +556,12 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                 <Button onClick={handleEditModalClose} color="primary">
                   Đóng
                 </Button>
-                <Button
+                {(selectEvent.status !== 2) && (<Button
                   onClick={() => handleEventDelete(selectEvent.id)}
                   color="error"
                 >
                   Xóa
-                </Button>
+                </Button>)}
               </DialogActions>
             </>
           )}

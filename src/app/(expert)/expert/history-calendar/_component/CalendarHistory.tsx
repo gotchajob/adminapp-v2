@@ -18,6 +18,8 @@ import { PatchBookingAccept } from "package/api/booking/id/accept";
 import { PatchBookingReject } from "package/api/booking/id/reject";
 import { formatDate } from "package/util";
 import { useEffect, useState } from "react";
+import Link from 'next/link';
+import { StyledLink } from 'components/common/link/styled-link';
 
 const getStatusLabel = (status: any) => {
     switch (status) {
@@ -143,17 +145,19 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent, params }: { onNext: () =>
                                     <TableCell align="center">
                                         <Chip label={getStatusLabel(row.status).label} color={getStatusLabel(row.status).color} />
                                     </TableCell>
-                                    <TableCell align="center" sx={{ pr: 3 }}>
+                                    <TableCell align="center" sx={{ pr: 3 }} >
                                         <Tooltip title="Xem chi tiết">
-                                            <IconButton
-                                                color="default"
-                                                size="large"
-                                                onClick={() => {
-                                                    router.push(`/expert/history-calendar/${row.id}`);
-                                                }}
-                                            >
-                                                <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
-                                            </IconButton>
+                                            <StyledLink href={`/expert/interview/${row.id}`}>
+                                                <IconButton
+                                                    color="default"
+                                                    size="large"
+                                                    onClick={() => {
+                                                        router.push(`/expert/history-calendar/${row.id}`);
+                                                    }}
+                                                >
+                                                    <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
+                                                </IconButton>
+                                            </StyledLink>
                                         </Tooltip>
                                         {/* <Tooltip title="Chấp nhận">
                                             <IconButton

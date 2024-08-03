@@ -15,7 +15,8 @@ export interface Availability {
     expertId: number,
     date: string,
     startTime: string,
-    endTime: string
+    endTime: string,
+    status: number;
 }
 
 export const GetAvailability = async (params: GetAvailabilityRequest): Promise<GetAvailabilityResponse> => {

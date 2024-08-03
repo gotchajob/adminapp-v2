@@ -36,6 +36,7 @@ import { PatchBookingAccept } from "package/api/booking/id/accept";
 import { PatchBookingReject } from "package/api/booking/id/reject";
 import { formatDate } from "package/util";
 import { useEffect, useState } from "react";
+import { enqueueSnackbar } from "notistack";
 
 const getStatusLabel = (status: any) => {
   switch (status) {
@@ -112,9 +113,14 @@ const CustomerCalendarPage = ({
         { id: selectedBooking ? selectedBooking.id : 0 },
         expertToken
       );
-      console.log(res);
-    } catch (error) {
+      if (res.status !== "success") {
+        throw new Error(res.responseText);
+      }
+      enqueueSnackbar("Chấp nhận thành công", { variant: "success" });
+      refresh();
+    } catch (error: any) {
       console.log(error);
+      enqueueSnackbar(error.message, { variant: "error" });
     }
     handleCloseDialog();
   };
@@ -126,9 +132,15 @@ const CustomerCalendarPage = ({
         { id: selectedBooking ? selectedBooking.id : 0, reason: cancelReason },
         expertToken
       );
+      if (res.status !== "success") {
+        throw new Error(res.responseText);
+      }
+      enqueueSnackbar("Hủy phỏng vấn thành công", { variant: "success" });
+      refresh();
       console.log(res);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      enqueueSnackbar(error.message, { variant: "error" });
     }
     handleCloseDialog();
   };
@@ -199,7 +211,7 @@ const CustomerCalendarPage = ({
                         color="default"
                         size="large"
                         onClick={() => {
-                          router.push(`/expert/booking-calendar/${row.id}`);
+                          router.push(`/expert/interview/${row.id}`);
                         }}
                       >
                         <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
@@ -357,7 +369,7 @@ const CustomerCalendarPage = ({
             Đóng
           </Button>
           <Button
-            onClick={handleConfirmAccept}
+            onClick={() => { }}
             color="primary"
             sx={{ fontWeight: "bold" }}
           >
