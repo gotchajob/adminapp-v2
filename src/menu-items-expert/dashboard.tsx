@@ -3,6 +3,8 @@ import { FormattedMessage } from 'react-intl';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import FeedIcon from '@mui/icons-material/Feed';
+import PersonIcon from '@mui/icons-material/Person';
+import PaidIcon from '@mui/icons-material/Paid';
 
 // assets
 import { IconDashboard, IconChartDots, IconUserCheck, IconBasket, IconFileInvoice, IconMail, IconUser } from '@tabler/icons-react';
@@ -15,7 +17,7 @@ import { NavItemType } from 'types';
 
 const dashboard: NavItemType = {
   id: 'dashboard',
-  title: <FormattedMessage id="Staff CMS" />,
+  title: <FormattedMessage id="Hệ thống quản lý của chuyên gia" />,
   icon: IconDashboard,
   type: 'group',
   children: [
@@ -24,7 +26,7 @@ const dashboard: NavItemType = {
       title: <FormattedMessage id="Thiết lập tài khoản" />,
       type: 'item',
       url: '/expert/account-profile',
-      icon: IconChartDots,
+      icon: PersonIcon,
       breadcrumbs: false
     },
     {
@@ -57,6 +59,14 @@ const dashboard: NavItemType = {
       type: 'item',
       url: '/expert/history-calendar',
       icon: FeedIcon,
+      breadcrumbs: false
+    },
+    {
+      id: 'history-transaction',
+      title: <FormattedMessage id="Lịch sủ giao dịch" />,
+      type: 'item',
+      url: '/expert/transaction',
+      icon: PaidIcon,
       breadcrumbs: false
     },
   ]

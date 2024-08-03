@@ -1,20 +1,10 @@
 "use client";
-// material-ui
+
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-
-// project imports
-import { format } from "date-fns";
-import { gridSpacing } from "store/constant";
 import SubCard from "ui-component/cards/SubCard";
-
-// assets
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-
-// types
 import {
   Box,
   Button,
@@ -25,33 +15,26 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-import { StyledLink } from "components/common/link/styled-link";
-import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
 import { useGetBookingById } from "hooks/use-get-booking";
-import { useGetExpertSkillOptions } from "hooks/use-get-expert-skill-option";
+import Image from "next/image";
 import { formatDate } from "package/util";
-import { ExpertSkillOption } from "package/api/expert-skill-option";
-import { PatchBookingReject } from "package/api/booking/id/reject";
-import { ExpertToken } from "hooks/use-login";
+import { useEffect, useState } from "react";
+import { FlexBox, FlexCenter } from "components/common/box/flex-box";
 import { Answer } from "components/common/feedback/answer";
 import { Feedback } from "components/common/feedback/question";
-import { FlexBox, FlexCenter } from "components/common/box/flex-box";
-import Avatar from "ui-component/extended/Avatar";
-import { UseGetBookingExpertFeedbackQuestion } from "hooks/use-get-booking-expert-feedback-question";
-import { useRefresh } from "hooks/use-refresh";
-import {
-  UseGetExpertQuestionCategory,
-  UseGetExpertQuestionCategoryCurrent,
-} from "hooks/use-get-expert-question-category";
-import { BookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question-controller";
-import { QuestionCategoryCurrent } from "package/api/expert-question-category/current";
-import {
-  BookingFeedbackAnwer,
-  PostBookingExpertFeedback,
-} from "package/api/booking-expert-feedback-controller";
-import { enqueueSnackbar } from "notistack";
+import { ReadOnlyAnswer } from "components/common/feedback/read-only-answer";
 import { Text } from "components/common/text/text";
+import { BookingFeedbackAnwer, PostBookingExpertFeedback } from "hooks/api copy/booking-expert-feedback-controller";
+import { BookingExpertFeedbackQuestion } from "hooks/api copy/booking-expert-feedback-question-controller";
+import { UseGetBookingExpertFeedbackByBooking } from "hooks/use-get-booking-expert-feedback";
+import { UseGetBookingExpertFeedbackQuestion } from "hooks/use-get-booking-expert-feedback-question";
+import {
+  UseGetExpertQuestionCategoryCurrent
+} from "hooks/use-get-expert-question-category";
+import { ExpertToken } from "hooks/use-login";
+import { useRefresh } from "hooks/use-refresh";
+import { enqueueSnackbar } from "notistack";
+import Avatar from "ui-component/extended/Avatar";
 
 const getStatusLabel = (status: number) => {
   switch (status) {
@@ -98,6 +81,8 @@ export default function BookingDetailPage({
   const [comment, setComment] = useState<string>("");
 
   const { expertToken } = ExpertToken();
+
+  const { bookingExpertFeedbackByBooking } = UseGetBookingExpertFeedbackByBooking({ bookingId: +params.id }, refreshTime);
 
   const { booking } = useGetBookingById({ id: +params.id });
 
@@ -158,7 +143,7 @@ export default function BookingDetailPage({
     const mappedSkill: MappedSkill[] = [];
 
     if (booking) {
-      booking.skillOptionBooking.forEach((e) => {
+      booking.skillOptionBooking.forEach((e: any) => {
         const index = mappedSkill.findIndex((v) => v.skill === e.skillName);
         if (index > -1) {
           mappedSkill[index].skillOption.push(e.skillOptionName);
@@ -298,9 +283,7 @@ export default function BookingDetailPage({
               <TextField label="Chú thích của khách hàng" multiline minRows={3} value={booking.note} >
               </TextField>
             </Stack>
-
           </Grid>
-
           <Grid item xs={12}>
             <Divider />
           </Grid>
@@ -314,20 +297,6 @@ export default function BookingDetailPage({
                     feedbackQuestionList={selectFeedbackQuestionList}
                     setAnswerList={setAnswerList}
                   />
-                  <Grid item xs={12}>
-                    <SubCard
-                      title="Đánh giá chung về ứng viên"
-                      sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
-                    >
-                      <TextField
-                        multiline
-                        rows={3}
-                        value={comment}
-                        fullWidth
-                        onChange={(e) => setComment(e.target.value)}
-                      ></TextField>
-                    </SubCard>
-                  </Grid>
                 </Stack>
                 <Feedback
                   feedbackQuestionList={bookingExpertFeedbackQuestion}
@@ -338,6 +307,20 @@ export default function BookingDetailPage({
               </Grid>
               <Grid item xs={12}>
                 <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <SubCard
+                  title="Đánh giá chung về ứng viên"
+                  sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
+                >
+                  <TextField
+                    multiline
+                    rows={3}
+                    value={comment}
+                    fullWidth
+                    onChange={(e) => setComment(e.target.value)}
+                  ></TextField>
+                </SubCard>
               </Grid>
               <Grid item xs={12} textAlign="center">
                 <Button
@@ -362,6 +345,34 @@ export default function BookingDetailPage({
               </Grid>
             </>
           )}
+          {!(booking.status == 3 || booking.status == 4) && (
+            <>
+              <Grid item xs={12}>
+                <Stack spacing={3} minHeight={100}>
+                  <Typography variant="h4">Câu hỏi phỏng vấn</Typography>
+                  <ReadOnlyAnswer
+                    answerList={bookingExpertFeedbackByBooking.answer}
+                  />
+                </Stack>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <SubCard
+                  title="Đánh giá chung về ứng viên"
+                  sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
+                >
+                  <TextField
+                    multiline
+                    rows={3}
+                    value={bookingExpertFeedbackByBooking?.comment}
+                    fullWidth
+                    disabled
+                  ></TextField>
+                </SubCard>
+              </Grid>
+            </>)}
         </Grid>
       )}
 
