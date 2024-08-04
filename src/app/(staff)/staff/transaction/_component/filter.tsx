@@ -23,7 +23,7 @@ import Stack from "@mui/material/Stack";
 
 // assets
 
-const CustomerFilter = () => {
+const TransactionFilter = () => {
   const [valueBasic, setValueBasic] = React.useState<Date | null>(new Date());
 
   const filter_box_1 = [
@@ -148,12 +148,7 @@ const CustomerFilter = () => {
           <Grid item lg={12} xs={12}>
             <Stack justifyContent={"right"} spacing={1} flexDirection={"row"}>
               <Button color="error">Xóa</Button>
-              <LoadingButton
-                variant="contained"
-                sx={{ marginTop: "0px !important" }}
-              >
-                Lọc
-              </LoadingButton>
+              <LoadingButton variant="contained"  sx={{marginTop: "0px !important"}}>Lọc</LoadingButton>
             </Stack>
           </Grid>
         </Grid>
@@ -162,4 +157,4 @@ const CustomerFilter = () => {
   );
 };
 
-export default CustomerFilter;
+export default TransactionFilter;

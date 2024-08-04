@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 // project imports
 import { gridSpacing } from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
-import FilterBox from './_component/filter';
+import CustomerFilter from './_component/filter';
 
 // assets
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
@@ -35,14 +35,14 @@ const UserPage = () => {
   return (
     <>
       {/* Filter Card */}
-      <FilterBox />
+      <CustomerFilter />
 
       {/* Layout Table */}
       <MainCard
         title={
           <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
             <Grid item>
-              <Typography variant="h3">User List</Typography>
+              <Typography variant="h3">Danh sách khách hàng</Typography>
             </Grid>
             <Grid item>
             </Grid>
