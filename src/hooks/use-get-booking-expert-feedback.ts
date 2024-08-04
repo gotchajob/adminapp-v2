@@ -1,6 +1,7 @@
 
-import { BookingExpertFeedback, GetBookingExpertFeedback, GetBookingExpertFeedbackRequest } from "package/api/booking-expert-feedback-controller";
 import { useEffect, useState } from "react";
+import { BookingExpertFeedback, GetBookingExpertFeedback, GetBookingExpertFeedbackRequest } from "./api copy/booking-expert-feedback-controller";
+import { BookingExpertFeedbackByBooking, GetBookingExpertFeedbackByBooking, GetBookingExpertFeedbackByBookingRequest } from "package/api/booking-expert-feedback-controller/by-booking";
 
 export const UseGetBookingExpertFeedback = (params: GetBookingExpertFeedbackRequest) => {
     const [bookingExpertFeedback, setBookingExpertFeedback] = useState<BookingExpertFeedback[]>([]);
@@ -23,5 +24,35 @@ export const UseGetBookingExpertFeedback = (params: GetBookingExpertFeedbackRequ
 
     return {
         bookingExpertFeedback
+    }
+}
+
+export const UseGetBookingExpertFeedbackByBooking = (params: GetBookingExpertFeedbackByBookingRequest, refresh: number) => {
+    const [bookingExpertFeedbackByBooking, setBookingExpertFeedbackByBooking] = useState<BookingExpertFeedbackByBooking>({
+        id: 0,
+        bookingId: 0,
+        comment: "",
+        createdAt: "",
+        answer: []
+    });
+
+    const [loading, setLoading] = useState();
+
+    const fetchGetBookingExpertFeedbackByBooking = async () => {
+        try {
+            const res = await GetBookingExpertFeedbackByBooking(params);
+            if (res.status !== "success") {
+                return;
+            }
+            setBookingExpertFeedbackByBooking(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => { fetchGetBookingExpertFeedbackByBooking(); }, [params.bookingId]);
+
+    return {
+        bookingExpertFeedbackByBooking
     }
 }
