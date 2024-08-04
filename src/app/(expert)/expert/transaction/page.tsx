@@ -13,9 +13,11 @@ import SubCard from 'ui-component/cards/SubCard';
 
 export default function TransactionPage() {
     const { refresh, refreshTime } = useRefresh();
+
     const { expertToken } = ExpertToken();
 
     const [page, setPage] = useState(1);
+    
     const [rowsPerPage, setRowsPerPage] = useState(6);
 
     const { transactionCurrent, loading: transactionCurrentLoading } = useGetTransactionCurrent(
