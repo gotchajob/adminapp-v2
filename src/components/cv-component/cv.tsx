@@ -1,7 +1,5 @@
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import CreateCVHeader from 'app/(user)/create-cv/[id]/_component/CreateCVHeader';
-import TabsTable from 'app/(user)/create-cv/[id]/_component/TabsTable';
 import { CVComponent, CVTemplate, Column, PersonalComponent } from 'components/cv-component/interface';
 import { ReactNode, useState } from 'react';
 import { CVUploadImage } from './avatar';

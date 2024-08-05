@@ -81,21 +81,12 @@ const formatDate = (isoString: any) => {
 };
 
 const BookingDetailPage = ({
-  event,
-  onBack,
 }: {
-  event: any;
-  onBack: () => void;
 }) => {
   const theme = useTheme();
 
   const [open, setOpen] = useState(false);
 
-  const [isCancel, setIsCancel] = useState(() => {
-    return (
-      event?.title === "Đặt lịch thành công" || event?.title === "Đã đặt lịch"
-    );
-  });
 
   useEffect(() => {
     console.log("BookingDetailPage :", event);
@@ -139,7 +130,7 @@ const BookingDetailPage = ({
                     Thông tin buổi phỏng vấn vào :
                   </Typography>
                 </Grid>
-                {event && (
+                {/* {event && (
                   <>
                     <Grid item>
                       <Typography variant="body2">
@@ -155,7 +146,7 @@ const BookingDetailPage = ({
                       </Typography>
                     </Grid>
                   </>
-                )}
+                )} */}
               </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -197,7 +188,7 @@ const BookingDetailPage = ({
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
                   <Stack spacing={0} sx={{ mt: { xs: 0, md: 3 } }}>
-                    {event?.title === "Đã đặt lịch" && (
+                    {/* {event?.title === "Đã đặt lịch" && (
                       <Stack direction="row" spacing={1}>
                         <Typography variant="subtitle1">Tổng tiền :</Typography>
                         <Typography variant="body2">375.000vnđ</Typography>
@@ -246,7 +237,7 @@ const BookingDetailPage = ({
                           }}
                         />
                       </Stack>
-                    )}
+                    )} */}
                     <Stack direction="row" spacing={1}>
                       <Typography variant="subtitle1">Trạng thái :</Typography>
                       <Chip

@@ -1,7 +1,7 @@
 
 import { ExpertNation, GetExpertNation, GetExpertNationSupportRequest } from 'package/api/expert-nation-support';
 import { ExpertSkillOption, ExpertSkillOptionRq, GetExpertSkillOption } from 'package/api/expert-skill-option';
-import { GetExpertCurrent } from 'package/api/expert/current';
+import { GetExpertCurrent, ExpertCurrent } from 'package/api/expert/current';
 import { Expert, GetExpert, GetExpertRequest } from 'package/api/expert/id';
 import { useEffect, useState } from 'react';
 
@@ -39,7 +39,7 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
 export function useGetExpertCurrent(params: string, refresh: any) {
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [expertCurrent, setExpertCurrent] = useState<Expert | undefined>(undefined);
+  const [expertCurrent, setExpertCurrent] = useState<ExpertCurrent | undefined>(undefined);
 
   const fetchExpertCurrent = async () => {
     try {

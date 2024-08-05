@@ -49,7 +49,7 @@ export const InformationComponent = ({
         >
           <Iconify icon={e.icon} width={20} color={primaryColor} />
           <Box pl={1}>
-            <EnchantInput initValue={e.title} onBlur={(value) => handleChangePersonalComponent(value, index)} />
+            <EnchantInput initValue={e.title} onBlur={(value: string) => handleChangePersonalComponent(value, index)} />
           </Box>
         </FlexBox>
       ))}

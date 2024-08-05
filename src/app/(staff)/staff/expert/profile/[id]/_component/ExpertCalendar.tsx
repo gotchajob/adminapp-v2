@@ -213,10 +213,10 @@ const ExpertCalendarPage = ({ params }: { params: { id: string } }) => {
         setIsModalOpen(true);
     }
 
-    const { availabilities } = useGetAvailability({ expertId: params?.id });
+    const { availabilities } = useGetAvailability({ expertId: +params?.id }, refreshTime);
 
     const convertEvents = (data: any) => {
-        return data.map(event => ({
+        return data.map((event: any) => ({
             id: event.id.toString(),
             title: `Event ${event.id}`,
             start: `${event.date}T${event.startTime}`,
