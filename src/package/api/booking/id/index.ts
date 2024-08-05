@@ -30,6 +30,7 @@ export interface SkillOptions {
 }
 
 export interface BookingById {
+  canCancel: boolean;
   id: number;
   expertId: number;
   customerId: number;

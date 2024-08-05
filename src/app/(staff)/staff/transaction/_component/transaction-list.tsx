@@ -1,10 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material-ui
 import { alpha, useTheme } from '@mui/material/styles';
-import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -15,29 +14,87 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
+import Pagination from '@mui/material/Pagination';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
-// project imports
-import Avatar from 'ui-component/extended/Avatar';
+// hooks
+import { useGetTransaction } from 'hooks/use-get-transaction';
+import { useRefresh } from 'hooks/use-refresh';
 
-import { dispatch, useSelector } from 'store';
-import { getUsersListStyle1 } from 'store/slices/user';
-
-// types
-import { ThemeMode } from 'types/config';
-import { UserProfile } from 'types/user-profile';
-
-// assets
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ChatBubbleTwoToneIcon from '@mui/icons-material/ChatBubbleTwoTone';
-import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
-
-const avatarImage = '/assets/images/users';
-
-// ==============================|| USER LIST 1 ||============================== //
+// utils
+import { formatDate } from 'package/util';
 
 const TransactionList = () => {
   const theme = useTheme();
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
 
+  const { refresh, refreshTime } = useRefresh();
+
+  const { transaction, loading: transactionLoading } = useGetTransaction({ pageSize: pageSize, pageNumber: page }, refreshTime);
+
+  useEffect(() => {
+    console.log("Transaction Data", transaction);
+  }, [transaction]);
+
+  // const handleChangeTransactionType=  (typeId:number) =>{
+  //   switch()
+  // }
+
+  const transactionType = (status: number) => {
+    switch (status) {
+      case 1:
+        return (
+          <Chip
+            label="Thành công"
+            sx={{
+              bgcolor: theme.palette.success.light,
+              color: theme.palette.success.dark,
+              fontWeight: 'bold'
+            }}
+          />
+        );
+      case 2:
+        return (
+          <Chip
+            label="Đang xử lý"
+            sx={{
+              bgcolor: theme.palette.warning.light,
+              color: theme.palette.warning.dark,
+              fontWeight: 'bold'
+            }}
+          />
+        );
+      case 3:
+        return (
+          <Chip
+            label="Thất bại"
+            sx={{
+              bgcolor: theme.palette.error.light,
+              color: theme.palette.error.dark,
+              fontWeight: 'bold'
+            }}
+          />
+        );
+      default:
+        return (
+          <Chip
+            label="Không xác định"
+            sx={{
+              bgcolor: theme.palette.grey[300],
+              color: theme.palette.text.primary,
+              fontWeight: 'bold'
+            }}
+          />
+        );
+    }
+  }
+
+  const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    setPage(newPage);
+  };
 
   return (
     <TableContainer>
@@ -45,96 +102,62 @@ const TransactionList = () => {
         <TableHead>
           <TableRow>
             <TableCell sx={{ pl: 3 }}>Mã giao dịch</TableCell>
-            <TableCell>Khách hàng</TableCell>
-            <TableCell>Số tiền thanh toán</TableCell>
+            <TableCell>Số tiền giao dịch</TableCell>
             <TableCell>Loại giao dịch</TableCell>
             <TableCell>Mô tả</TableCell>
             <TableCell>Ngày giờ tạo</TableCell>
             <TableCell align="center" sx={{ pr: 3 }}>
-              Actions
+              Hành động
             </TableCell>
           </TableRow>
         </TableHead>
-        {/* <TableBody>
-          {data &&
-            data.map((row, index) => (
-              <TableRow hover key={index}>
+        <TableBody>
+          {transactionLoading ? (
+            <TableRow hover>
+              <TableCell colSpan={6} align="center">
+                <CircularProgress />
+              </TableCell>
+            </TableRow>
+          ) : transaction?.list?.length > 0 ? (
+            transaction.list.map((row) => (
+              <TableRow hover key={row.id}>
                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
+                <TableCell>{row.amount.toLocaleString()} VND</TableCell>
+                <TableCell>{transactionType(row.status)}</TableCell>
+                <TableCell>{row.description}</TableCell>
                 <TableCell>
-                  <Stack direction="row" alignItems="center" spacing={2}>
-                    <Avatar alt="User 1" src={`${avatarImage}/${row.avatar}`} />
-                    <Stack>
-                      <Stack direction="row" alignItems="center" spacing={0.25}>
-                        <Typography variant="subtitle1">{row.name}</Typography>
-                        {row.status === 'Active' && <CheckCircleIcon sx={{ color: 'success.dark', width: 14, height: 14 }} />}
-                      </Stack>
-                      <Typography variant="subtitle2" noWrap>
-                        {row.email}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </TableCell>
-                <TableCell>{row.location}</TableCell>
-                <TableCell>{row.friends}</TableCell>
-                <TableCell>{row.followers}</TableCell>
-                <TableCell>
-                  {row.status === 'Active' && (
-                    <Chip
-                      label="Active"
-                      size="small"
-                      sx={{
-                        bgcolor: theme.palette.mode === ThemeMode.DARK ? 'dark.main' : alpha(theme.palette.success.light, 0.6),
-                        color: 'success.dark'
-                      }}
-                    />
-                  )}
-                  {row.status === 'Rejected' && (
-                    <Chip
-                      label="Rejected"
-                      size="small"
-                      sx={{
-                        bgcolor: theme.palette.mode === ThemeMode.DARK ? 'dark.main' : alpha(theme.palette.orange.light, 0.8),
-                        color: 'orange.dark'
-                      }}
-                    />
-                  )}
-                  {row.status === 'Pending' && (
-                    <Chip
-                      label="Pending"
-                      size="small"
-                      sx={{
-                        bgcolor: theme.palette.mode === ThemeMode.DARK ? 'dark.main' : 'warning.light',
-                        color: 'warning.dark'
-                      }}
-                    />
-                  )}
+                  <Typography variant="subtitle2" noWrap>
+                    {formatDate(row.createdAt, "dd/MM/yyyy - hh:mm")}
+                  </Typography>
                 </TableCell>
                 <TableCell align="center" sx={{ pr: 3 }}>
-                  <Stack direction="row" justifyContent="center" alignItems="center">
-                    <Tooltip placement="top" title="Message">
-                      <IconButton color="primary" aria-label="delete" size="large">
-                        <ChatBubbleTwoToneIcon sx={{ fontSize: '1.1rem' }} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip placement="top" title="Block">
-                      <IconButton
-                        color="primary"
-                        sx={{
-                          color: 'orange.dark',
-                          borderColor: 'orange.main',
-                          '&:hover ': { bgcolor: 'orange.light' }
-                        }}
-                        size="large"
-                      >
-                        <BlockTwoToneIcon sx={{ fontSize: '1.1rem' }} />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
+                  <Tooltip title="Xem Chi Tiết">
+                    <IconButton color="primary">
+                      <VisibilityIcon sx={{ fontSize: '1.1rem' }} />
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
-            ))}
-        </TableBody> */}
+            ))
+          ) : (
+            <TableRow hover>
+              <TableCell colSpan={6} align="center">
+                Hiện chưa có giao dịch nào.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
       </Table>
+      <Stack spacing={2} sx={{ mt: 2 }} alignItems="center">
+        <Pagination
+          count={transaction?.totalPage || 0}
+          page={page}
+          onChange={handleChangePage}
+          shape="rounded"
+          variant="outlined"
+          color="primary"
+        />
+      </Stack>
     </TableContainer>
   );
 };
