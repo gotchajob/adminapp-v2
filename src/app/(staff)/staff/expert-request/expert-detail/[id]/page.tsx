@@ -157,7 +157,7 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
       const action = await ExpertRegisterRejectForm({
         id: expertRegisterRequest[0].id,
         reasonReject: rejectReason,
-        url: `${currentHost}:3000/form/update/${expertRegisterRequest[0].email}-${expertRegisterRequest[0].id}`,
+        url: `${currentHost}/form/update/${expertRegisterRequest[0].email}-${expertRegisterRequest[0].id}`,
         criteriaList,
       });
       if (action.status === "error") {

@@ -195,7 +195,7 @@ const ExpertRequestList = () => {
       const data = await ExpertRegisterApprove(
         {
           id: expertSendForm.id,
-          url: `${currentHost}:3000/form/create/${expertSendForm.email}-${expertSendForm.id}`,
+          url: `${currentHost}/form/create/${expertSendForm.email}-${expertSendForm.id}`,
         },
         staffToken
       );

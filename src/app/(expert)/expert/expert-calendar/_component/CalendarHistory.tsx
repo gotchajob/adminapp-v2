@@ -175,7 +175,7 @@ const CalendarHistoryPage = ({ onNext, onSelectEvent }: { onNext: () => void, on
         //     onNext();
         // }
         if (arg) {
-            route.push(`http://localhost:3000/expert/expert-calendar/${arg.event}`);
+            route.push(`/expert/expert-calendar/${arg.event}`);
             localStorage.setItem("PanelValue", JSON.stringify("CalendarHistory"));
         }
     };

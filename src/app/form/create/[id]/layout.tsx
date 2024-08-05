@@ -11,7 +11,7 @@ export default function Layout({ params, children }: { params: { id: string }; c
   const router = useRouter();
   useEffect(() => {
     if (!isLoading && !isValid) {
-      router.push('localhost:3000/not-found');
+      router.push('/not-found');
     }
   }, [isValid, isLoading]);
   return (

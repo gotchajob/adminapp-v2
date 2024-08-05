@@ -168,7 +168,7 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
 
     const handleEventSelect = (arg: EventClickArg) => {
         if (arg) {
-            route.push(`http://localhost:3000/expert/expert-calendar/1`);
+            route.push(`/expert/expert-calendar/1`);
         }
     };
 

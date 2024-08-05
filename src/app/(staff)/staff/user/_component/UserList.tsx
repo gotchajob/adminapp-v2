@@ -61,7 +61,7 @@ const UserList = () => {
 
   //Fetch API get uset list
   const FetchUserList = async () => {
-    const data = await GetUserList({ pageNumber: 1, pageSize: 4 }, "");
+    const data = await GetUserList({ pageNumber: 1, pageSize: 100,search: ['roleId:4'] }, "");
     if (data) {
       setUserList(data.data.list);
     }
