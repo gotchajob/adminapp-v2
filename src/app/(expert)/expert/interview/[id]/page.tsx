@@ -357,8 +357,8 @@ export default function BookingDetailPage({
                     multiline
                     rows={3}
                     value={bookingExpertFeedbackByBooking?.comment}
+                    onChange={(event) => {setComment(event.target.value)}}
                     fullWidth
-                    disabled
                   ></TextField>
                 </SubCard>
               </Grid>
