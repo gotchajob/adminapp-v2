@@ -50,26 +50,14 @@ const getStatusLabel = (status: number) => {
   }
 };
 
-const BookingDetailPage = ({
-  event,
-  onBack,
+export default function BookingDetailPage({
   params,
 }: {
-  event: any;
-  onBack: () => void;
   params: { id: string };
-}) => {
-  const theme = useTheme();
-
+}) {
   const [open, setOpen] = useState(false);
 
   const { expertToken } = ExpertToken();
-
-  const [isCancel, setIsCancel] = useState(() => {
-    return (
-      event?.title === "Đặt lịch thành công" || event?.title === "Đã đặt lịch"
-    );
-  });
 
   const [cancelReason, setCancelReason] = useState("");
 
@@ -119,10 +107,12 @@ const BookingDetailPage = ({
   };
 
   const filteredSkillOptions = useMemo(() => {
-    if (!booking || !booking.skillOptionBooking || !expertSkillOptions) return [];
+    if (!booking || !booking.skillOptionBooking || !expertSkillOptions)
+      return [];
     return expertSkillOptions.filter((expertSkill) =>
       booking.skillOptionBooking.some(
-        (bookingSkill) => bookingSkill.skillOptionId === expertSkill.skillOptionId
+        (bookingSkill) =>
+          bookingSkill.skillOptionId === expertSkill.skillOptionId
       )
     );
   }, [booking, expertSkillOptions]);
@@ -328,6 +318,4 @@ const BookingDetailPage = ({
       </Dialog>
     </SubCard>
   );
-};
-
-export default BookingDetailPage;
+}

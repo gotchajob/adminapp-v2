@@ -4,10 +4,10 @@ import { apiServerFetch, errorSystem } from "package/api/api-fetch";
 export interface GetExpertResponse {
     status: string;
     responseText: string;
-    data: Expert;
+    data: ExpertCurrent;
 }
 
-export interface Expert {
+export interface ExpertCurrent {
     userId: number;
     expertId: number;
     userStatus: number;

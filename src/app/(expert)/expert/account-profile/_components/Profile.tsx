@@ -46,7 +46,7 @@ import { formatDate } from "package/util";
 import { ExpertNation } from "package/api/expert-nation-support";
 import { ExpertToken } from "hooks/use-login";
 import { useGetNationSupportCurrent } from "hooks/use-get-nation-support";
-import { Expert } from "package/api/expert/current";
+import { ExpertCurrent } from "package/api/expert/current";
 import { useGetCategories } from "hooks/use-get-category";
 import { useGetSkill } from "hooks/use-get-skill";
 import { useGetSkillOptions } from "hooks/use-get-skill-option";
@@ -64,7 +64,7 @@ export interface EducationData {
   titleDes: string;
 }
 
-const Profile = ({ expert }: { expert?: Expert }) => {
+const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
   const { refreshTime, refresh } = useRefresh();
 
   const { expertToken } = ExpertToken();
