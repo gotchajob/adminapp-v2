@@ -63,8 +63,8 @@ const ListStylePage2 = () => {
         }
       >
         {/* Truyền rowsPerPage và currentPage vào TransactionList */}
-        <TransactionList rowsPerPage={rowsPerPage} currentPage={currentPage} totalPage={totalPage} />
-        <Grid item xs={12} sx={{ mt: 1.75 }}>
+        <TransactionList />
+        {/* <Grid item xs={12} sx={{ mt: 1.75 }}>
           <Grid container justifyContent="space-between" spacing={gridSpacing}>
             <Grid item>
               <Pagination
@@ -108,7 +108,7 @@ const ListStylePage2 = () => {
               </Menu>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </MainCard>
     </>
   );
