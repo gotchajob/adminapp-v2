@@ -35,6 +35,9 @@ import { ExpertToken } from "hooks/use-login";
 import { useRefresh } from "hooks/use-refresh";
 import { enqueueSnackbar } from "notistack";
 import Avatar from "ui-component/extended/Avatar";
+import { PatchBookingReject } from "package/api/booking/id/reject";
+import { PatchBookingCancelByExpert } from "package/api/booking/id/cancel-by-expert";
+import { useRouter } from "next/navigation";
 
 const getStatusLabel = (status: number) => {
   switch (status) {
@@ -74,9 +77,16 @@ export default function BookingDetailPage({
 }: {
   params: { id: string };
 }) {
+
+  const route = useRouter();
+
   const { refresh, refreshTime } = useRefresh();
 
   const [open, setOpen] = useState(false);
+
+  const [cancelReason, setCancelReason] = useState('');
+
+  const [isCanceling, setIsCanceling] = useState(false);
 
   const [comment, setComment] = useState<string>("");
 
@@ -137,6 +147,32 @@ export default function BookingDetailPage({
     } finally {
       setLoadingSubmit(false);
     }
+  };
+
+  const handleCancelBooking = async () => {
+    setIsCanceling(false);
+    try {
+      if (!booking) {
+        return;
+      }
+      if (booking.status === 1) {
+        const res = await PatchBookingReject({ id: +params.id, reason: cancelReason }, expertToken);
+        if (res.status !== "success") {
+          throw new Error(res.responseText);
+        }
+        enqueueSnackbar("Hủy đặt lịch thành công", { variant: "success" });
+      } else if (booking.canCancel) {
+        const res = await PatchBookingCancelByExpert({ id: +params.id, reason: cancelReason }, expertToken);
+        if (res.status !== "success") {
+          throw new Error(res.responseText);
+        }
+        enqueueSnackbar("Hủy đặt lịch thành công", { variant: "success" });
+      }
+    } catch (error: any) {
+      console.log(error);
+      enqueueSnackbar(error, { variant: "error" });
+    }
+
   };
 
   const mappedExpertSkillOption = () => {
@@ -205,7 +241,7 @@ export default function BookingDetailPage({
                   <Typography variant="h4">Thông tin khách hàng</Typography>
                   <Stack spacing={1}>
                     <FlexBox>
-                      <Avatar alt="User 1" src={booking.customerInfo.avatar} />
+                      <Avatar alt="User 1" src={booking.customerInfo ? booking.customerInfo.avatar : ""} />
                       <Typography variant="body2" ml={1}>
                         {booking.customerInfo.fullName}
                       </Typography>
@@ -280,15 +316,19 @@ export default function BookingDetailPage({
             <Stack spacing={2} minHeight={100}>
               <Typography variant="h4">Thông tin tư vấn</Typography>
               {mappedExpertSkillOption()}
-              <TextField label="Chú thích của khách hàng" multiline minRows={3} value={booking.note} >
-              </TextField>
+              <SubCard
+                title="Chú thích của khách hàng"
+                sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
+              >
+                <TextField multiline minRows={3} value={booking.note} fullWidth disabled></TextField>
+              </SubCard>
             </Stack>
           </Grid>
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          {(booking.status === 3 || booking.status === 4) && (
+          {(booking.status === 4 || booking.status === 5 || booking.status === 6 || booking.status === 7 || booking.status === 8) && (
             <>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
               <Grid item xs={12}>
                 <Stack spacing={3} minHeight={100}>
                   <Typography variant="h4">Câu hỏi phỏng vấn</Typography>
@@ -297,13 +337,13 @@ export default function BookingDetailPage({
                     feedbackQuestionList={selectFeedbackQuestionList}
                     setAnswerList={setAnswerList}
                   />
+                  <Feedback
+                    feedbackQuestionList={bookingExpertFeedbackQuestion}
+                    feedbackQuestionType={expertQuestionCategoryCurrent}
+                    selectFeedbackQuestionList={selectFeedbackQuestionList}
+                    setSelectAddFeedbackQuestion={setSelectAddFeedbackQuestion}
+                  />
                 </Stack>
-                <Feedback
-                  feedbackQuestionList={bookingExpertFeedbackQuestion}
-                  feedbackQuestionType={expertQuestionCategoryCurrent}
-                  selectFeedbackQuestionList={selectFeedbackQuestionList}
-                  setSelectAddFeedbackQuestion={setSelectAddFeedbackQuestion}
-                />
               </Grid>
               <Grid item xs={12}>
                 <Divider />
@@ -316,9 +356,9 @@ export default function BookingDetailPage({
                   <TextField
                     multiline
                     rows={3}
-                    value={comment}
+                    value={bookingExpertFeedbackByBooking?.comment}
                     fullWidth
-                    onChange={(e) => setComment(e.target.value)}
+                    disabled
                   ></TextField>
                 </SubCard>
               </Grid>
@@ -343,10 +383,12 @@ export default function BookingDetailPage({
                   )}
                 </Button>
               </Grid>
-            </>
-          )}
-          {!(booking.status == 3 || booking.status == 4) && (
+            </>)}
+          {!(booking.status === 4 || booking.status === 5 || booking.status === 6 || booking.status === 7 || booking.status === 8) && (
             <>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
               <Grid item xs={12}>
                 <Stack spacing={3} minHeight={100}>
                   <Typography variant="h4">Câu hỏi phỏng vấn</Typography>
@@ -373,8 +415,57 @@ export default function BookingDetailPage({
                 </SubCard>
               </Grid>
             </>)}
+          {booking && (booking.status === 7) && (<Grid item xs={12}>
+            <SubCard
+              title="Lý do từ chối của bạn"
+              sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
+            >
+              <TextField
+                multiline
+                rows={3}
+                value={booking.rejectReason}
+                fullWidth
+                disabled
+              ></TextField>
+            </SubCard>
+          </Grid>)}
+          <Grid item xs={12}>
+            <Stack direction="row" spacing={2} justifyContent="space-between" mt={4}>
+              <Button variant="outlined" onClick={() => route.push("/expert/booking-calendar")}>
+                Quay lại
+              </Button>
+              {booking && booking.canCancel && (<Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsCanceling(!isCanceling)}
+              >
+                Hủy đặt lịch
+              </Button>)}
+            </Stack>
+          </Grid>
+          {isCanceling && (
+            <Grid item xs={12} mt={3}>
+              <TextField
+                label="Lý do"
+                multiline
+                rows={3}
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                fullWidth
+              />
+              <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
+                <Button variant="outlined" onClick={() => setIsCanceling(false)}>
+                  Đóng
+                </Button>
+                <Button variant="contained" color="primary" onClick={handleCancelBooking}>
+                  Xác nhận
+                </Button>
+              </Stack>
+            </Grid>
+          )}
         </Grid>
-      )}
+      )
+      }
 
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogContent>
@@ -392,6 +483,6 @@ export default function BookingDetailPage({
           />
         </DialogContent>
       </Dialog>
-    </SubCard>
+    </SubCard >
   );
 }
