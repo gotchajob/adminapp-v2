@@ -23,8 +23,8 @@ export interface Transaction {
     accountId: number;
     amount: number;
     balanceAfterTransaction: number;
-    typeId: string;
-    status: string;
+    typeId: number;
+    status: number;
     description: string;
     createdAt: string;
     referId: number;

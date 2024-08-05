@@ -1,14 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 // material-ui
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import InputAdornment from "@mui/material/InputAdornment";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
 
@@ -17,17 +15,27 @@ import MainCard from "ui-component/cards/MainCard";
 import { gridSpacing } from "store/constant";
 
 // assets
-import { IconSearch } from "@tabler/icons-react";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import TransactionFilter from "./_component/filter";
 import TransactionList from "./_component/transaction-list";
 
-// ==============================|| USER LIST STYLE 2 ||============================== //
-
 const ListStylePage2 = () => {
-  const [anchorEl, setAnchorEl] = React.useState<
-    Element | (() => Element) | null | undefined
-  >(null);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const [totalPage, setTotalPage] = useState<number>(0);
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
+    console.log(`Current Page: ${page}`);
+  };
+
+  const handleRowsChange = (rows: number) => {
+    setRowsPerPage(rows);
+    setCurrentPage(1);
+    handleClose();
+    console.log(`Rows per Page: ${rows}`);
+  };
 
   const handleClick = (event: React.MouseEvent) => {
     setAnchorEl(event.currentTarget);
@@ -39,7 +47,7 @@ const ListStylePage2 = () => {
 
   return (
     <>
-      <TransactionFilter></TransactionFilter>
+      <TransactionFilter />
       <MainCard
         title={
           <Grid
@@ -54,11 +62,17 @@ const ListStylePage2 = () => {
           </Grid>
         }
       >
+        {/* Truyền rowsPerPage và currentPage vào TransactionList */}
         <TransactionList />
-        <Grid item xs={12} sx={{ mt: 1.75 }}>
+        {/* <Grid item xs={12} sx={{ mt: 1.75 }}>
           <Grid container justifyContent="space-between" spacing={gridSpacing}>
             <Grid item>
-              <Pagination count={10} color="primary" />
+              <Pagination
+                count={totalPage}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+              />
             </Grid>
             <Grid item>
               <Button
@@ -69,7 +83,7 @@ const ListStylePage2 = () => {
                 endIcon={<ExpandMoreRoundedIcon />}
                 onClick={handleClick}
               >
-                10 Rows
+                {rowsPerPage} Rows
               </Button>
               <Menu
                 id="menu-user-list-style2"
@@ -87,13 +101,14 @@ const ListStylePage2 = () => {
                   horizontal: "right",
                 }}
               >
-                <MenuItem onClick={handleClose}> 10 Rows</MenuItem>
-                <MenuItem onClick={handleClose}> 20 Rows</MenuItem>
-                <MenuItem onClick={handleClose}> 30 Rows </MenuItem>
+                <MenuItem onClick={() => handleRowsChange(5)}>5 Rows</MenuItem>
+                <MenuItem onClick={() => handleRowsChange(10)}>10 Rows</MenuItem>
+                <MenuItem onClick={() => handleRowsChange(15)}>15 Rows</MenuItem>
+                <MenuItem onClick={() => handleRowsChange(20)}>20 Rows</MenuItem>
               </Menu>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </MainCard>
     </>
   );
