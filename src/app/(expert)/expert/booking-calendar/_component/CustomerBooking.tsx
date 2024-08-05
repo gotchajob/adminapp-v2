@@ -124,6 +124,7 @@ const CustomerCalendarPage = ({
     }
     handleCloseDialog();
   };
+  const { policyById } = useGetPolicyById({ id: 6 }, 0);
 
   const handleConfirmCancel = async () => {
     console.log("Cancelled with reason:", cancelReason);
@@ -154,7 +155,6 @@ const CustomerCalendarPage = ({
 
   if (loading) return <Loader />;
 
-  const {policyById} = useGetPolicyById({ id: 6 }, 0);
   return (
     <Box sx={{ height: "100vh", paddingX: 5, paddingY: 1 }}>
       <Typography
@@ -162,8 +162,8 @@ const CustomerCalendarPage = ({
         color="primary"
         sx={{ fontStyle: "italic", mt: 2 }}
       >
-        Bạn chỉ có thể từ chối những buổi đặt lịch từ khách hàng cách {policyById.value} phút
-        hiện tại.
+        Bạn chỉ có thể từ chối những buổi đặt lịch từ khách hàng cách{" "}
+        {policyById.value} phút hiện tại.
       </Typography>
       <TableContainer>
         <Table>

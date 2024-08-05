@@ -324,7 +324,7 @@ export default function BookingDetailPage({
               </SubCard>
             </Stack>
           </Grid>
-          {(booking.status === 4 || booking.status === 5 || booking.status === 6 || booking.status === 7 || booking.status === 8) && (
+          {(booking.status === 3 || booking.status === 4) && (
             <>
               <Grid item xs={12}>
                 <Divider />
@@ -384,7 +384,7 @@ export default function BookingDetailPage({
                 </Button>
               </Grid>
             </>)}
-          {!(booking.status === 4 || booking.status === 5 || booking.status === 6 || booking.status === 7 || booking.status === 8) && (
+          {(booking.status === 5 ) && (
             <>
               <Grid item xs={12}>
                 <Divider />
