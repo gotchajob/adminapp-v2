@@ -9,11 +9,11 @@ import { redirect } from 'next/navigation';
 import { getStaffToken, getExpertToken, getAdminToken } from 'package/cookies/token';
 import SnackbarProvider from 'layout/snackbar-provider';
 
-export const metadata: Metadata = {
-  title: 'Berry - React Material Admin Dashboard Template by CodedThemes',
-  description:
-    'Start your next React project with Berry admin template. It build with Reactjs, Material-UI, Redux, and Hook for faster web development.'
+export const metadata = {
+  title: 'Gotcha Job',
+  description: 'Nền tảng website & app cung cấp các dịch vụ cải thiện kỹ năng người dùng trong quá trình họ tham gia ứng tuyển công việc'
 };
+
 
 // ==============================|| ROOT LAYOUT ||============================== //
 
