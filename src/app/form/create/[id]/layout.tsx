@@ -10,14 +10,14 @@ export default function Layout({ params, children }: { params: { id: string }; c
   const { isLoading, isValid } = useCheckRequestUrl({ id });
   const router = useRouter();
   useEffect(() => {
-    if (!isLoading && !isValid) {
+    if (!isLoading && !isValid && isValid) {
       router.push('/not-found');
     }
   }, [isValid, isLoading]);
   return (
     <>
       {isLoading ? <CircularLoader /> : null}
-      {!isLoading && isValid ? <>{children}</> : null}
+      {!isLoading && isValid && (<>{children}</>)}
     </>
   );
 

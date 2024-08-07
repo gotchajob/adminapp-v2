@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 export const useCheckRequestUrl = (params: ExpertRegisterCheckUrlRequest) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState<boolean | undefined>(undefined);
 
   const handleCheckUrl = async () => {
     try {
