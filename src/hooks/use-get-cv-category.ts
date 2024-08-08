@@ -1,7 +1,7 @@
 import { CVCategory, GetCVCategory } from "package/api/cv-category";
 import { useEffect, useState } from "react";
 
-export const useGetCVCategory = () => {
+export const useGetCVCategory = (page?: number, refreshTime?: number) => {
   const [cvCategory, setCVCategory] = useState<CVCategory[]>([]);
 
   const getCVCategory = async () => {
@@ -12,7 +12,7 @@ export const useGetCVCategory = () => {
   };
   useEffect(() => {
     getCVCategory();
-  }, []);
+  }, [refreshTime]);
   return {
     cvCategory,
   };

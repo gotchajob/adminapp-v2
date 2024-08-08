@@ -1,7 +1,4 @@
 export interface CVTemplate {
-  id: string;
-  subject: string;
-  status: boolean;
   name: string;
   primaryColor: string;
   personal: PersonalComponent[];
@@ -111,10 +108,7 @@ export const PersonalInformationTemplate: PersonalComponent[] = [
 ];
 
 export const CVTemplateData: CVTemplate = {
-  id: '1',
-  name: "Kiet's CV",
-  status: true,
-  subject: 'IT',
+  name: "new template",
   primaryColor: '#59ABD9',
   personal: [
     {

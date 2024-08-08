@@ -15,7 +15,8 @@ import MainCard from "ui-component/cards/MainCard";
 import { useReactToPrint } from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import TabsTable from "components/cv-component/tab-table";
+import { HeaderComponent } from "components/cv-component/header-component";
+import TabsTable from "./_component/tab-table";
 
 export default function Page() {
   const [historyTemplate, setHistoryTemplate] = useState<CVTemplate[]>([]);
@@ -54,6 +55,8 @@ export default function Page() {
 
   return (
     <Grid container spacing={3}>
+      <Grid>
+      </Grid>
       <Grid item xs={8}>
         <CreateCV onChangeCV={onChangeCV} cv={currentTemplate} cvRef={CVRef} />
       </Grid>

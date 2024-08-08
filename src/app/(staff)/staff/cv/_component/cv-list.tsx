@@ -44,23 +44,51 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetCVTemplate } from "hooks/use-get-cv-template";
 import { useGetCVCategory } from "hooks/use-get-cv-category";
+import { StatusChip } from "components/common/chip-status/status-chip";
+import {
+  useGetSearchParams,
+  useSearchParamsNavigation,
+} from "hooks/use-get-params";
+import { TablePagination } from "@mui/material";
 
 const avatarImage = "/assets/images/users";
 
 // ==============================|| USER LIST 1 ||============================== //
+const StatusCV = (status: number) => {
+  const switchStatus = [
+    { label: "Đã khóa", color: "error" },
+    { label: "Hoạt động", color: "success" },
+  ];
 
+  return (
+    <StatusChip
+      color={switchStatus[status].color}
+      label={switchStatus[status].label}
+    />
+  );
+};
 export const CVList = () => {
-  const theme = useTheme();
-  const { cvTemplateList } = useGetCVTemplate({});
   const { cvCategory } = useGetCVCategory();
+
+  const { cvTemplateListPage } = useGetSearchParams(["cvTemplateListPage"]);
+
+  const { push } = useSearchParamsNavigation();
+  const handleChangePage = (e: any, page: number) => {
+    push([{ name: "cvTemplateListPage", value: page + "" }], true);
+  };
+
+  const { cvTemplateList } = useGetCVTemplate({ page: cvTemplateListPage + 1 });
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell sx={{ pl: 3 }}>#</TableCell>
-            <TableCell>Tên</TableCell>
-            <TableCell align="center">Danh mục</TableCell>
+            <TableCell>Tên CV</TableCell>
+            <TableCell>Loại CV</TableCell>
+            <TableCell align="center">Số lượt sử dụng</TableCell>
+            <TableCell align="center">Ngày tạo</TableCell>
+            <TableCell align="center">Trạng thái</TableCell>
             <TableCell align="center" sx={{ pr: 3 }}>
               Actions
             </TableCell>
@@ -81,32 +109,23 @@ export const CVList = () => {
                     </Stack>
                   </Stack>
                 </TableCell>
-                <TableCell align="center">
-                  <Typography variant="subtitle2" noWrap>
+                <TableCell>
+                  <Typography variant="h4" noWrap>
                     {
                       cvCategory.find((value) => value.id === row.cvCategoryId)
-                        ?.name
+                        ?.description
                     }
                   </Typography>
                 </TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell align="center">{StatusCV(1)}</TableCell>
                 <TableCell align="center" sx={{ pr: 3 }}>
                   <Stack
                     direction="row"
                     justifyContent="center"
                     alignItems="center"
                   >
-                    {/* {row.status === "Ban" && (
-                      <Tooltip placement="top" title="Active">
-                        <IconButton
-                          color="primary"
-                          aria-label="delete"
-                          size="large"
-                        >
-                          <LockOpenIcon sx={{ fontSize: "1.1rem" }} />
-                        </IconButton>
-                      </Tooltip>
-                    )} */}
-                    {/* {row.status === "Active" && ( */}
                     <Tooltip placement="top" title="Ban">
                       <IconButton
                         color="primary"
@@ -127,6 +146,14 @@ export const CVList = () => {
             ))}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[]}
+        component="div"
+        count={100}
+        rowsPerPage={10}
+        page={cvTemplateListPage ? +cvTemplateListPage : 0}
+        onPageChange={handleChangePage}
+      />
     </TableContainer>
   );
 };

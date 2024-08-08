@@ -21,6 +21,35 @@ export const GetCVCategory = async (
     const res = await apiServerFetch("/cv-category", "GET");
     return res;
   } catch (error) {
-    return errorSystem("Lỗi", [])
+    return errorSystem("Lỗi", []);
+  }
+};
+
+export interface PostCVCategoryRequest {
+  name: string;
+  description: string;
+  image: string;
+  icon: string;
+}
+export interface PostCVCategoryResponse {
+  status: string;
+  responseText: string;
+  data: string;
+}
+
+export const PostCVCategory = async (
+  params: PostCVCategoryRequest,
+  accessToken: string
+): Promise<PostCVCategoryResponse> => {
+  try {
+    const res = await apiServerFetch(
+      "/cv-category",
+      "POST",
+      params,
+      accessToken
+    );
+    return res;
+  } catch (error) {
+    return errorSystem("Lỗi không thể tạo mới danh mục", "");
   }
 };

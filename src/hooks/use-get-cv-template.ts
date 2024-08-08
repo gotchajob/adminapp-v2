@@ -1,7 +1,13 @@
 import { CVTemplateApi, GetCVTemplate } from "package/api/cv-template";
 import { useEffect, useState } from "react";
 
-export const useGetCVTemplate = ({ categoryId }: { categoryId?: number }) => {
+export const useGetCVTemplate = ({
+  categoryId,
+  page = 1,
+}: {
+  categoryId?: number;
+  page?: number;
+}) => {
   const [cvTemplateList, setCVTemplateList] = useState<CVTemplateApi[]>([]);
   const getCVTemplate = async () => {
     try {
