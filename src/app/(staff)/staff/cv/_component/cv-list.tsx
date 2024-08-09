@@ -42,7 +42,7 @@ import type { UserList } from "package/api/user";
 import BlockTwoToneIcon from "@mui/icons-material/BlockTwoTone";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import CloseIcon from "@mui/icons-material/Close";
-import { useGetCVTemplate } from "hooks/use-get-cv-template";
+import { useGetCVTemplate, useGetCVTemplateForStaff } from "hooks/use-get-cv-template";
 import { useGetCVCategory } from "hooks/use-get-cv-category";
 import { StatusChip } from "components/common/chip-status/status-chip";
 import {
@@ -50,6 +50,7 @@ import {
   useSearchParamsNavigation,
 } from "hooks/use-get-params";
 import { TablePagination } from "@mui/material";
+import { formatDate } from "package/util";
 
 const avatarImage = "/assets/images/users";
 
@@ -77,7 +78,7 @@ export const CVList = () => {
     push([{ name: "cvTemplateListPage", value: page + "" }], true);
   };
 
-  const { cvTemplateList } = useGetCVTemplate({ page: cvTemplateListPage + 1 });
+  const { cvTemplateStaffList } = useGetCVTemplateForStaff({ page: cvTemplateListPage + 1 });
   return (
     <TableContainer>
       <Table>
@@ -95,8 +96,8 @@ export const CVList = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {cvTemplateList &&
-            cvTemplateList.map((row, index) => (
+          {cvTemplateStaffList &&
+            cvTemplateStaffList.map((row, index) => (
               <TableRow hover key={index}>
                 <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
                 <TableCell>
@@ -117,9 +118,9 @@ export const CVList = () => {
                     }
                   </Typography>
                 </TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell align="center">{StatusCV(1)}</TableCell>
+                <TableCell>{row.numberUse} lượt</TableCell>
+                <TableCell>{formatDate(row.createdAt, "dd-MM-yyyy")}</TableCell>
+                <TableCell align="center">{StatusCV(row.status)}</TableCell>
                 <TableCell align="center" sx={{ pr: 3 }}>
                   <Stack
                     direction="row"

@@ -55,6 +55,7 @@ import {
   FlexCenter,
 } from "components/common/box/flex-box";
 import { Text } from "views/forms/input/text/text";
+import { Certificate, ManageCertificate } from "components/certificate";
 
 const logo = "/assets/images/logo/logo.png";
 
@@ -70,6 +71,8 @@ export default function Page({ params }: { params: { id: string } }) {
   const [education, setEducation] = useState<string>("");
 
   const [isAgree, setIsAgree] = useState<boolean>(false);
+
+  const [certificateList, setCertificateList] = useState<Certificate[]>([])
 
   const [nation, setNation] = useState<string[]>(["Vietnam"]);
 
@@ -535,6 +538,12 @@ export default function Page({ params }: { params: { id: string } }) {
             {/* Education Subcard */}
             <Grid item lg={12}>
               <EducationForm setEducation={setEducation} />
+            </Grid>
+
+            <Grid item lg={12}>
+              <SubCard title="Chứng chỉ & bằng cấp">
+                <ManageCertificate certificateList={certificateList} setCertificateList={setCertificateList}/>
+              </SubCard>
             </Grid>
             <Grid item lg={12}>
               <SubCard title="Lĩnh vực đăng kí">
