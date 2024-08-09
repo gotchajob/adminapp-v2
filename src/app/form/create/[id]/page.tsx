@@ -151,6 +151,7 @@ export default function Page({ params }: { params: { id: string } }) {
         portfolioUrl: provinceCode + "-" + districtCode,
         address: `${values.street.replace(", ", "")}, ${values.ward}, ${values.district}, ${values.province}`,
         education,
+        certification: JSON.stringify(certificateList),
         nationSupport: nation,
         expertSKillOptionList: expertSkillOptionList,
       });

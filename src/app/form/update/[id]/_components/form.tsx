@@ -59,6 +59,7 @@ import { StyledLink } from "components/common/link/styled-link";
 import { Text } from "views/forms/input/text/text";
 import MainCard from "ui-component/cards/MainCard";
 import { RequireForm } from "./require";
+import { Certificate, ManageCertificate } from "components/certificate";
 
 const logo = "/assets/images/logo/logo.png";
 
@@ -81,6 +82,7 @@ export interface UpdateExpertInitValue {
   emailContact: string;
   portfolioUrl: string;
   address: string;
+  certification: Certificate[];
   note: string;
 }
 
@@ -94,6 +96,10 @@ export default function ExpertRegisterUpdateForm({
 
   const [street, ward, district, province] =
     initValueUpdateForm.address.split(", ");
+
+  const [certificateList, setCertificateList] = useState<Certificate[]>(
+    initValueUpdateForm.certification
+  );
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -115,8 +121,7 @@ export default function ExpertRegisterUpdateForm({
 
   const { provinceOptions } = useGetProvince();
 
-  const { districtOptions} =
-    useGetDistrict(provinceCode);
+  const { districtOptions } = useGetDistrict(provinceCode);
 
   const { wardOptions } = useGetWard(districtCode);
 
@@ -175,6 +180,7 @@ export default function ExpertRegisterUpdateForm({
         portfolioUrl: `${provinceCode}-${districtCode}`,
         address: `${values.street}, ${values.ward}, ${values.district}, ${values.province}`,
         education,
+        certification: JSON.stringify(certificateList),
         nationSupport: nation,
         expertSKillOptionList: expertSkillOptionList,
       });
@@ -212,7 +218,6 @@ export default function ExpertRegisterUpdateForm({
         <form autoComplete="on" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             {/* Logo Section */}
-
 
             <Grid item lg={12}>
               <FlexCenter my={4}>
@@ -327,52 +332,52 @@ export default function ExpertRegisterUpdateForm({
                     </TextField>
                   </Grid>
                   <Grid item lg={6}>
-                      <TextField
-                        select
-                        name="district"
-                        fullWidth
-                        label="Quận / huyện"
-                        value={values.district}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        disabled={values.province === ""}
-                        error={!!touched.district && !!errors.district}
-                        helperText={
-                          (touched.district && errors.district) as string
-                        }
-                      >
-                        {districtOptions?.map((option) => (
-                          <MenuItem
-                            key={option.idDistrict}
-                            value={option.name}
-                            onClick={() => {
-                              setDistrictCode(option.idDistrict);
-                            }}
-                          >
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </TextField>
+                    <TextField
+                      select
+                      name="district"
+                      fullWidth
+                      label="Quận / huyện"
+                      value={values.district}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      disabled={values.province === ""}
+                      error={!!touched.district && !!errors.district}
+                      helperText={
+                        (touched.district && errors.district) as string
+                      }
+                    >
+                      {districtOptions?.map((option) => (
+                        <MenuItem
+                          key={option.idDistrict}
+                          value={option.name}
+                          onClick={() => {
+                            setDistrictCode(option.idDistrict);
+                          }}
+                        >
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
                   <Grid item lg={6}>
-                      <TextField
-                        select
-                        name="ward"
-                        fullWidth
-                        label="Phường / Xã"
-                        value={values.ward}
-                        disabled={values.district === ""}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.ward && !!errors.ward}
-                        helperText={(touched.ward && errors.ward) as string}
-                      >
-                        {wardOptions?.map((option) => (
-                          <MenuItem key={option.name} value={option.name}>
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </TextField>
+                    <TextField
+                      select
+                      name="ward"
+                      fullWidth
+                      label="Phường / Xã"
+                      value={values.ward}
+                      disabled={values.district === ""}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      error={!!touched.ward && !!errors.ward}
+                      helperText={(touched.ward && errors.ward) as string}
+                    >
+                      {wardOptions?.map((option) => (
+                        <MenuItem key={option.name} value={option.name}>
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
                   <Grid item lg={12}>
                     <TextField
@@ -575,6 +580,14 @@ export default function ExpertRegisterUpdateForm({
               />
             </Grid>
             <Grid item lg={12}>
+              <SubCard title="Chứng chỉ & bằng cấp">
+                <ManageCertificate
+                  certificateList={certificateList}
+                  setCertificateList={setCertificateList}
+                />
+              </SubCard>
+            </Grid>
+            <Grid item lg={12}>
               <SubCard title="Lĩnh vực đăng kí">
                 <Grid
                   container
@@ -662,7 +675,6 @@ export default function ExpertRegisterUpdateForm({
                 </FlexBox>
               </FlexBetween>
             </Grid>
-
           </Grid>
         </form>
       </MainCard>
@@ -688,4 +700,3 @@ const errorText = (text: string, hide?: boolean) => {
     </Typography>
   );
 };
-

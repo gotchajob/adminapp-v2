@@ -3,6 +3,7 @@ import ExpertRegisterUpdateForm from "./_components/form";
 import { GetExpert } from "package/api/expert/id";
 import { GetExpertNation } from "package/api/expert-nation-support";
 import { convertNationString } from "package/util";
+import { Certificate } from "components/certificate";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const [email, id] = params.id.split("-");
@@ -12,14 +13,23 @@ export default async function Page({ params }: { params: { id: string } }) {
   const nation = await GetExpertNation({ expertId: expert.data.expertId });
 
   const newNation = convertNationString(nation.data);
+
+  let certification: Certificate[] = [];
+  try {
+    certification = [
+      ...certification,
+      JSON.parse(expert.data.certification),
+    ];
+  } catch (error) {}
   return (
     <ExpertRegisterUpdateForm
       initValueUpdateForm={{
-        note: registerRequest.data.note,
         ...expert.data,
+        note: registerRequest.data.note,
         requestId: registerRequest.data.id,
         linkedInUrl: expert.data.linkedinUrl,
         nation: newNation,
+        certification
       }}
     />
   );

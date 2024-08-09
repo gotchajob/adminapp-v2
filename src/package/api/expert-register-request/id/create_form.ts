@@ -17,6 +17,7 @@ export interface CreateExpertFormRequest {
   education: string;
   yearExperience: number;
   nationSupport: string[];
+  certification: string;
   expertSKillOptionList: ExpertSkillOption[];
 }
 
