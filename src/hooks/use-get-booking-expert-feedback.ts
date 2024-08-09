@@ -1,7 +1,7 @@
 
-import { useEffect, useState } from "react";
-import { BookingExpertFeedback, GetBookingExpertFeedback, GetBookingExpertFeedbackRequest } from "./api copy/booking-expert-feedback-controller";
+import { BookingExpertFeedback, GetBookingExpertFeedback, GetBookingExpertFeedbackRequest } from "package/api/booking-expert-feedback-controller";
 import { BookingExpertFeedbackByBooking, GetBookingExpertFeedbackByBooking, GetBookingExpertFeedbackByBookingRequest } from "package/api/booking-expert-feedback-controller/by-booking";
+import { useEffect, useState } from "react";
 
 export const UseGetBookingExpertFeedback = (params: GetBookingExpertFeedbackRequest) => {
     const [bookingExpertFeedback, setBookingExpertFeedback] = useState<BookingExpertFeedback[]>([]);

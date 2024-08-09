@@ -1,10 +1,5 @@
 "use client";
 
-import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import SubCard from "ui-component/cards/SubCard";
 import {
   Box,
   Button,
@@ -15,17 +10,16 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-import { useGetBookingById } from "hooks/use-get-booking";
-import Image from "next/image";
-import { formatDate } from "package/util";
-import { useEffect, useState } from "react";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { FlexBox, FlexCenter } from "components/common/box/flex-box";
 import { Answer } from "components/common/feedback/answer";
 import { Feedback } from "components/common/feedback/question";
 import { ReadOnlyAnswer } from "components/common/feedback/read-only-answer";
 import { Text } from "components/common/text/text";
-import { BookingFeedbackAnwer, PostBookingExpertFeedback } from "hooks/api copy/booking-expert-feedback-controller";
-import { BookingExpertFeedbackQuestion } from "hooks/api copy/booking-expert-feedback-question-controller";
+import { useGetBookingById } from "hooks/use-get-booking";
 import { UseGetBookingExpertFeedbackByBooking } from "hooks/use-get-booking-expert-feedback";
 import { UseGetBookingExpertFeedbackQuestion } from "hooks/use-get-booking-expert-feedback-question";
 import {
@@ -33,11 +27,17 @@ import {
 } from "hooks/use-get-expert-question-category";
 import { ExpertToken } from "hooks/use-login";
 import { useRefresh } from "hooks/use-refresh";
-import { enqueueSnackbar } from "notistack";
-import Avatar from "ui-component/extended/Avatar";
-import { PatchBookingReject } from "package/api/booking/id/reject";
-import { PatchBookingCancelByExpert } from "package/api/booking/id/cancel-by-expert";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { enqueueSnackbar } from "notistack";
+import { BookingFeedbackAnwer, PostBookingExpertFeedback } from "package/api/booking-expert-feedback-controller";
+import { BookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question-controller";
+import { PatchBookingCancelByExpert } from "package/api/booking/id/cancel-by-expert";
+import { PatchBookingReject } from "package/api/booking/id/reject";
+import { formatDate } from "package/util";
+import { useEffect, useState } from "react";
+import SubCard from "ui-component/cards/SubCard";
+import Avatar from "ui-component/extended/Avatar";
 
 const getStatusLabel = (status: number) => {
   switch (status) {
@@ -357,7 +357,7 @@ export default function BookingDetailPage({
                     multiline
                     rows={3}
                     value={bookingExpertFeedbackByBooking?.comment}
-                    onChange={(event) => {setComment(event.target.value)}}
+                    onChange={(event) => { setComment(event.target.value) }}
                     fullWidth
                   ></TextField>
                 </SubCard>
@@ -384,7 +384,7 @@ export default function BookingDetailPage({
                 </Button>
               </Grid>
             </>)}
-          {(booking.status === 5 ) && (
+          {(booking.status === 5) && (
             <>
               <Grid item xs={12}>
                 <Divider />
