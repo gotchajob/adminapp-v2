@@ -10,7 +10,11 @@ import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField,
     Tooltip,
-    Typography
+    Typography,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel
 } from '@mui/material';
 import { useGetExpertFormRequire } from "hooks/use-get-expert-form-require";
 import { useRefresh } from "hooks/use-refresh";
@@ -19,9 +23,11 @@ import SubCard from 'ui-component/cards/SubCard';
 import { ExpertFormRequire, PostExpertFormRequire } from "package/api/expert-form-require";
 import { DelExpertFormRequire, PatchExpertFormRequire } from 'package/api/expert-form-require/id';
 import { enqueueSnackbar } from 'notistack';
+import { useGetCategories } from 'hooks/use-get-category';
 
 export default function ExpertFormRequirePage() {
     const { refresh, refreshTime } = useRefresh();
+    const { categories, loading: categoriesLoading } = useGetCategories(refreshTime);
     const { expertFormRequire } = useGetExpertFormRequire({ categoryIds: null }, refreshTime);
     const [selectedRequirement, setSelectedRequirement] = useState<ExpertFormRequire | null>(null);
     const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
@@ -33,6 +39,7 @@ export default function ExpertFormRequirePage() {
         try {
             const response = await PostExpertFormRequire(newRequirement);
             if (response.status === "success") {
+                refresh();
                 setOpenAddDialog(false);
                 setNewRequirement({ name: '', description: '', id: 0, categoryId: 0 });
                 enqueueSnackbar("Thêm thành công", { variant: "success" });
@@ -56,6 +63,7 @@ export default function ExpertFormRequirePage() {
             try {
                 const response = await PatchExpertFormRequire(newRequirement);
                 if (response.status === "success") {
+                    refresh();
                     setOpenEditDialog(false);
                     setSelectedRequirement(null);
                     enqueueSnackbar("Sửa thành công", { variant: "success" });
@@ -79,6 +87,7 @@ export default function ExpertFormRequirePage() {
             try {
                 const response = await DelExpertFormRequire(selectedRequirement);
                 if (response.status === "success") {
+                    refresh();
                     setOpenDeleteDialog(false);
                     setSelectedRequirement(null);
                     enqueueSnackbar("Xóa thành công", { variant: "success" });
@@ -106,9 +115,10 @@ export default function ExpertFormRequirePage() {
         >
             <TableContainer component={Paper}>
                 <Table>
-                    <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                    <TableHead>
                         <TableRow>
                             <TableCell>Tên Yêu Cầu</TableCell>
+                            <TableCell>Danh mục đăng ký</TableCell>
                             <TableCell>Mô Tả</TableCell>
                             <TableCell>Quản lí</TableCell>
                         </TableRow>
@@ -117,6 +127,7 @@ export default function ExpertFormRequirePage() {
                         {expertFormRequire.map((requirement) => (
                             <TableRow key={requirement.id}>
                                 <TableCell>{requirement.name}</TableCell>
+                                <TableCell>{categories.find(cat => cat.id === requirement.categoryId)?.name}</TableCell>
                                 <TableCell>{requirement.description}</TableCell>
                                 <TableCell>
                                     <Tooltip title="Sửa">
@@ -140,6 +151,21 @@ export default function ExpertFormRequirePage() {
             <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>
                 <DialogTitle>Thêm Yêu Cầu</DialogTitle>
                 <DialogContent>
+                    <FormControl fullWidth sx={{ mt: 2 }}>
+                        <InputLabel id="category-select-label">Chọn danh mục</InputLabel>
+                        <Select
+                            labelId="category-select-label"
+                            value={newRequirement.categoryId}
+                            onChange={(e) => setNewRequirement({ ...newRequirement, categoryId: e.target.value as number })}
+                            label="Chọn danh mục"
+                        >
+                            {categories.map(category => (
+                                <MenuItem key={category.id} value={category.id}>
+                                    {category.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <TextField
                         placeholder="Tên yêu cầu"
                         value={newRequirement.name}
@@ -165,6 +191,22 @@ export default function ExpertFormRequirePage() {
             <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
                 <DialogTitle>Sửa Yêu Cầu</DialogTitle>
                 <DialogContent>
+                    <FormControl fullWidth sx={{ mt: 2 }}>
+                        <InputLabel id="category-select-label">Chọn danh mục</InputLabel>
+                        <Select
+                            labelId="category-select-label"
+                            value={newRequirement.categoryId}
+                            onChange={(e) => setNewRequirement({ ...newRequirement, categoryId: e.target.value as number })}
+                            label="Chọn danh mục"
+                            readOnly
+                        >
+                            {categories.map(category => (
+                                <MenuItem key={category.id} value={category.id}>
+                                    {category.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <TextField
                         placeholder="Tên yêu cầu"
                         value={newRequirement.name}
@@ -200,6 +242,6 @@ export default function ExpertFormRequirePage() {
                     <Button onClick={handleConfirmDelete} color="error">Xóa</Button>
                 </DialogActions>
             </Dialog>
-        </SubCard>
+        </SubCard >
     );
 }
