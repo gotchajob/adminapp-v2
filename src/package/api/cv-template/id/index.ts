@@ -46,7 +46,7 @@ export interface PatchCVTemplateRequest {
     data: string;
   }
   
-  export const PostCVTemplate = async (params: PatchCVTemplateRequest, accessToken: string) => {
+  export const PatchCVTemplate = async (params: PatchCVTemplateRequest, accessToken: string) => {
     try {
       const res = await apiServerFetch(`/cv-template/${params.id}`, "PATCH", params, accessToken);
       if (res.status === "error") {

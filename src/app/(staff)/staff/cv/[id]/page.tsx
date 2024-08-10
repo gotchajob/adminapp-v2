@@ -19,15 +19,18 @@ import { toPng } from "html-to-image";
 import { HeaderComponent } from "components/cv-component/header-component";
 import TabsTable from "./_component/edit-tab";
 import ManageCVHeader from "./_component/header";
+import { PostCVTemplate } from "package/api/cv-template";
+import { StaffToken } from "hooks/use-login";
+import { PatchCVTemplate } from "package/api/cv-template/id";
+import { UseGetCVTemplateById } from "hooks/use-get-cv-template";
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
   const [historyTemplate, setHistoryTemplate] = useState<CVTemplate[]>([]);
 
-  const [currentTemplate, setCurrentTemplate] =
-    useState<CVTemplate>(CVTemplateData);
+  const [currentTemplate, setCurrentTemplate] = useState<CVTemplate>();
 
   const onChangeCV = (cv: CVTemplate) => {
-    setHistoryTemplate([...historyTemplate, currentTemplate]);
+    // setHistoryTemplate([...historyTemplate, currentTemplate]);
     setCurrentTemplate(cv);
   };
 
@@ -51,10 +54,41 @@ export default function Page() {
     documentTitle: "CV",
   });
 
+  const { staffToken } = StaffToken();
+
+  //@ts-ignore
+  const { CVTemplateById } = UseGetCVTemplateById({ id: params.id });
+
   const handleSaveToDatabase = async () => {
     try {
       const imageUrl = await handleGetImage();
-      if (currentTemplate) {
+      if (currentTemplate && staffToken !== "") {
+        if (params.id === "create") {
+          const res = await PostCVTemplate(
+            {
+              image: imageUrl,
+              cvCategoryId: 1,
+              name: currentTemplate.name,
+              templateJson: JSON.stringify(currentTemplate),
+            },
+            staffToken
+          );
+          if (res.status === "error") {
+            throw new Error(res.responseText);
+          }
+        } else {
+          if (CVTemplateById) {
+            const res = await PatchCVTemplate(
+              {
+                id: CVTemplateById.id,
+                image: imageUrl,
+                name: currentTemplate.name,
+                templateJson: JSON.stringify(currentTemplate),
+              },
+              staffToken
+            );
+          }
+        }
       } else {
         throw new Error("Lỗi không tìm thấy cv");
       }
@@ -90,26 +124,41 @@ export default function Page() {
   };
 
   useEffect(() => {
-    console.log(currentTemplate)
-  }, [currentTemplate])
-  
+    if (CVTemplateById) {
+      try {
+        setCurrentTemplate(JSON.parse(CVTemplateById.templateJson));
+      } catch (error) {
+        setCurrentTemplate(CVTemplateData);
+      }
+    }
+  }, [CVTemplateById]);
+
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <ManageCVHeader
-          cv={currentTemplate}
-          onChangeCV={onChangeCV}
-          download={handleDownload}
-          review={handleReview}
-          save={handleSaveToDatabase}
-        />
-      </Grid>
-      <Grid item xs={8}>
-        <CreateCV onChangeCV={onChangeCV} cv={currentTemplate} cvRef={CVRef} />
-      </Grid>
-      <Grid item xs={4}>
-        <TabsTable cv={currentTemplate} onChangeCV={onChangeCV} />
-      </Grid>
+      {currentTemplate && (
+        <>
+          {" "}
+          <Grid item xs={12}>
+            <ManageCVHeader
+              cv={currentTemplate}
+              onChangeCV={onChangeCV}
+              download={handleDownload}
+              review={handleReview}
+              save={handleSaveToDatabase}
+            />
+          </Grid>
+          <Grid item xs={8}>
+            <CreateCV
+              onChangeCV={onChangeCV}
+              cv={currentTemplate}
+              cvRef={CVRef}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <TabsTable cv={currentTemplate} onChangeCV={onChangeCV} />
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 }
