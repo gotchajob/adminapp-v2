@@ -182,7 +182,10 @@ export default function ExpertFormRequirePage() {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenAddDialog(false)}>Đóng</Button>
+                    <Button onClick={() => {
+                        setOpenAddDialog(false);
+                        // setNewRequirement({ name: '', description: '', id: 0, categoryId: 0 });
+                    }}>Đóng</Button>
                     <Button onClick={handleAdd}>Thêm</Button>
                 </DialogActions>
             </Dialog>
@@ -198,7 +201,7 @@ export default function ExpertFormRequirePage() {
                             value={newRequirement.categoryId}
                             onChange={(e) => setNewRequirement({ ...newRequirement, categoryId: e.target.value as number })}
                             label="Chọn danh mục"
-                            readOnly
+                        // readOnly
                         >
                             {categories.map(category => (
                                 <MenuItem key={category.id} value={category.id}>
