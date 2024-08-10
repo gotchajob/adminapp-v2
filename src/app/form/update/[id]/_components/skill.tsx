@@ -28,9 +28,9 @@ export const SkillForm = ({
   setExpertSkillOptionList: (value: ExpertSkillOption[]) => void;
   expertId: number;
 }) => {
-  const { categories } = useGetCategories({});
-  const { skills } = useGetSkill({});
-  const { skillOptions } = useGetSkillOptions({});
+  const { categories } = useGetCategories(0);
+  const { skills } = useGetSkill(0);
+  const { skillOptions } = useGetSkillOptions(0);
 
   const [addingCategories, setAddingCategories] = useState<Category[]>([]);
   const [addingSkills, setAddingSkills] = useState<Skill[]>([]);

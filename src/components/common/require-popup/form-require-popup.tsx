@@ -16,8 +16,8 @@ export const ExpertFormRequirePopup = ({
   categories: Category[];
 }) => {
   const { expertFormRequire } = useGetExpertFormRequire({
-    categoryId: categories[0]?.id || 0,
-  });
+    categoryIds: getListCategoryId(categories),
+  }, 0);
   const [openRequire, setOpenRequire] = useState(false);
   return (
     <>
@@ -62,4 +62,14 @@ export const ExpertFormRequirePopup = ({
       </Dialog>
     </>
   );
+};
+
+const getListCategoryId = (categoryList: Category[]) => {
+  const list: number[] = [];
+
+  categoryList.forEach((value) => {
+    list.push(value.id);
+  });
+
+  return list;
 };

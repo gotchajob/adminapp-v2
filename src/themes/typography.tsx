@@ -21,7 +21,7 @@ const Typography = (theme: Theme, borderRadius: number, fontFamily: FontFamily):
     color: theme.palette.mode === ThemeMode.DARK ? theme.palette.grey[600] : theme.palette.grey[900],
     fontWeight: 600
   },
-  h4: {
+  h3: {
     fontSize: '1.25rem',
     color: theme.palette.mode === ThemeMode.DARK ? theme.palette.grey[600] : theme.palette.grey[900],
     fontWeight: 600

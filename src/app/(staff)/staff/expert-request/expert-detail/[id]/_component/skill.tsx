@@ -24,9 +24,9 @@ export const ReadSkillForm = ({
   expertId: number;
   setExpertFormRequire: (value: ExpertFormRequire[]) => void;
 }) => {
-  const { categories } = useGetCategories({});
-  const { skills } = useGetSkill({});
-  const { skillOptions } = useGetSkillOptions({});
+  const { categories } = useGetCategories(0);
+  const { skills } = useGetSkill(0);
+  const { skillOptions } = useGetSkillOptions(0);
 
   const [addingCategories, setAddingCategories] = useState<Category[]>([]);
   const [addingSkills, setAddingSkills] = useState<Skill[]>([]);
@@ -37,9 +37,12 @@ export const ReadSkillForm = ({
   const { newCategoryList, newSkillList, newSkillOptionList, isLoading } =
     useGetExpertSkillOptions({ expertId }, categories, skills, skillOptions);
 
-  const { expertFormRequire } = useGetExpertFormRequire({
-    categoryId: addingCategories[0]?.id || 0,
-  });
+  const { expertFormRequire } = useGetExpertFormRequire(
+    {
+      categoryIds: getListCategoryId(addingCategories),
+    },
+    0
+  );
 
   useEffect(() => {
     setExpertFormRequire(expertFormRequire);
@@ -122,4 +125,14 @@ export const ReadSkillForm = ({
       })}
     </Grid>
   );
+};
+
+const getListCategoryId = (categoryList: Category[]) => {
+  const list: number[] = [];
+
+  categoryList.forEach((value) => {
+    list.push(value.id);
+  });
+
+  return list;
 };

@@ -28,7 +28,7 @@ import { useGetCategories } from 'hooks/use-get-category';
 export default function ExpertFormRequirePage() {
     const { refresh, refreshTime } = useRefresh();
     const { categories, loading: categoriesLoading } = useGetCategories(refreshTime);
-    const { expertFormRequire } = useGetExpertFormRequire({ categoryIds: null }, refreshTime);
+    const { expertFormRequire } = useGetExpertFormRequire({ categoryIds: [] }, refreshTime);
     const [selectedRequirement, setSelectedRequirement] = useState<ExpertFormRequire | null>(null);
     const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
     const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);

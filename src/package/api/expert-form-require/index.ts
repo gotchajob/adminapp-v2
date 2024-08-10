@@ -1,7 +1,7 @@
 import { apiServerFetch, errorSystem } from "../api-fetch";
 
 export interface ExpertFormRequireRequest {
-  categoryIds?: number | null;
+  categoryIds: number[];
 }
 
 export interface ExpertFormRequireResponse {
@@ -22,8 +22,10 @@ export const GetExpertFormRequire = async (
 ): Promise<ExpertFormRequireResponse> => {
   try {
     const searchParams = new URLSearchParams();
-    if (params.categoryIds) {
-      searchParams.append("categoryId", params.categoryIds + "");
+    if (params.categoryIds.length > 0) {
+      params.categoryIds.forEach((value) => {
+        searchParams.append("categoryId", value + "");
+      });
     }
     const res = await apiServerFetch(
       `/expert-form-require?${searchParams.toString()}`,
@@ -52,10 +54,12 @@ export const PostExpertFormRequire = async (
   try {
     const res = await apiServerFetch(
       `/expert-form-require`,
-      "POST", params, undefined
+      "POST",
+      params,
+      undefined
     );
     return res;
   } catch (error) {
-    return errorSystem("Lỗi không thể lấy thông tin đăng kí", '');
+    return errorSystem("Lỗi không thể lấy thông tin đăng kí", "");
   }
 };
