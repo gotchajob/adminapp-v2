@@ -100,21 +100,21 @@ export const PersonalInformationTemplate: PersonalComponent[] = [
     field: "address",
     icon: "mdi:location",
     title:
-      '<p style="line-height: 1;"><span style="font-size: 10pt;">L&yacute; Anh Kiệt</span></p>',
+      '<p style="line-height: 1;"><span style="font-size: 10pt;">Nhap dia chi</span></p>',
     fieldName: "Địa chỉ",
   },
   {
     field: "name",
     icon: "ic:baseline-person",
     title:
-      '<p style="line-height: 1;"><span style="font-size: 10pt;">L&yacute; Anh Kiệt</span></p>',
+      '<p style="line-height: 1;"><span style="font-size: 10pt;">Nhap ho ten</span></p>',
     fieldName: "Họ tên",
   },
   {
     field: "birthday",
     icon: "ic:baseline-calendar-month",
     title:
-      '<p style="line-height: 1;"><span style="font-size: 10pt;">19/01/2002</span></p>',
+      '<p style="line-height: 1;"><span style="font-size: 10pt;">dd/mm/yyyy</span></p>',
     fieldName: "Năm sinh",
   },
   {
@@ -128,14 +128,14 @@ export const PersonalInformationTemplate: PersonalComponent[] = [
     field: "email",
     icon: "ic:baseline-email",
     title:
-      '<p style="line-height: 1;"><span style="font-size: 10pt;">kietly1901@gmail.com</span></p>',
+      '<p style="line-height: 1;"><span style="font-size: 10pt;">Nhap mail</span></p>',
     fieldName: "Email",
   },
   {
     field: "git",
     icon: "fluent-mdl2:git-hub-logo",
     title:
-      '<p style="line-height: 1;"><span style="font-size: 10pt;">kietly1901@gmail.com</span></p>',
+      '<p style="line-height: 1;"><span style="font-size: 10pt;">Nhap git</span></p>',
     fieldName: "Git",
   },
 ];

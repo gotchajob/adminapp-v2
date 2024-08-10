@@ -31,3 +31,28 @@ export const GetCVTemplate = async (
     return errorSystem("Lỗi không lấy được danh sách", []);
   }
 };
+export interface PostCVTemplateRequest {
+  cvCategoryId: number;
+  templateJson: string;
+  name: string;
+  image: string;
+}
+
+export interface PostCVTemplateResponse {
+  status: string;
+  responseText: string;
+  data: string;
+}
+
+export const PostCVTemplate = async (params: PostCVTemplateRequest, accessToken: string) => {
+  try {
+    const res = await apiServerFetch(`/cv-template`, "POST", params, accessToken);
+    if (res.status === "error") {
+      throw new Error("");
+    }
+    return res;
+  } catch (error: any) {
+    return errorSystem("Lấy thông tin thất bại", []);
+  }
+};
+
