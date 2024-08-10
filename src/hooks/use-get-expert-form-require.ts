@@ -5,7 +5,7 @@ import {
 } from "package/api/expert-form-require";
 import { useEffect, useState } from "react";
 
-export const useGetExpertFormRequire = (params: ExpertFormRequireRequest) => {
+export const useGetExpertFormRequire = (params: ExpertFormRequireRequest, refresh: number) => {
   const [expertFormRequire, setExpertFormRequire] = useState<
     ExpertFormRequire[]
   >([]);
@@ -13,11 +13,11 @@ export const useGetExpertFormRequire = (params: ExpertFormRequireRequest) => {
     try {
       const data = await GetExpertFormRequire(params);
       setExpertFormRequire(data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
   useEffect(() => {
     handleGetExpertFormRequire();
-  }, [params.categoryId]);
+  }, [params.categoryIds, refresh]);
 
   return {
     expertFormRequire

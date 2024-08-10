@@ -9,19 +9,34 @@ export interface GetCategoryRes {
 export interface Category {
   id: number;
   name: string;
-  status: number;
 }
 
 export const getCategory = async (): Promise<GetCategoryRes> => {
   try {
-    const res = await apiServerFetch('/category', 'GET');
+    const res = await apiServerFetch('/category', 'GET', undefined, undefined);
     return res;
   } catch (error: any) {
     return errorSystem('Lấy danh sách thất bại', []);
   }
 };
 
+export interface PostCategoryRes {
+  status: string;
+  responseText: string;
+}
 
+export interface PostCategoryRq {
+  name: string;
+}
+
+export const PostCategory = async (params: PostCategoryRq): Promise<PostCategoryRes> => {
+  try {
+    const res = await apiServerFetch('/category', 'POST', { name: params.name }, undefined);
+    return res;
+  } catch (error: any) {
+    return errorSystem('Lấy danh sách thất bại', '');
+  }
+};
 
 
 
