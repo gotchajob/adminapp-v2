@@ -1,9 +1,5 @@
 import { apiServerFetch, errorSystem } from '../api-fetch';
 
-export interface GetSkillRequest {
-  categoryId?: string;
-}
-
 export interface GetSkillResponse {
   status: string;
   responseText: string;
@@ -16,7 +12,7 @@ export interface Skill {
   categoryId: number;
 }
 
-export const GetSkill = async (params: GetSkillRequest): Promise<GetSkillResponse> => {
+export const GetSkill = async (): Promise<GetSkillResponse> => {
   try {
     const res = await apiServerFetch(`/skill`, 'GET');
     return res;
@@ -24,3 +20,42 @@ export const GetSkill = async (params: GetSkillRequest): Promise<GetSkillRespons
     return errorSystem('Lấy danh sách thất bại', []);
   }
 };
+
+export interface PostSkillRequest {
+  categoryId: number;
+  name: string;
+}
+
+export interface PostSkillResponse {
+  status: string;
+  responseText: string;
+}
+
+export const PostSkill = async (params: PostSkillRequest): Promise<PostSkillResponse> => {
+  try {
+    const res = await apiServerFetch(`/skill`, 'POST', { categoryId: params.categoryId, name: params.name }, undefined);
+    return res;
+  } catch (error: any) {
+    return errorSystem('Lấy danh sách thất bại', "");
+  }
+};
+
+export interface PatchSkillRequest {
+  id: number;
+  skillName: string;
+}
+
+export interface PatchSkillResponse {
+  status: string;
+  responseText: string;
+}
+
+export const PatchSkill = async (params: PatchSkillRequest): Promise<PatchSkillResponse> => {
+  try {
+    const res = await apiServerFetch(`/skill/${params.id}`, 'PATCH', { skillName: params.skillName }, undefined);
+    return res;
+  } catch (error: any) {
+    return errorSystem('Lấy danh sách thất bại', "");
+  }
+};
+

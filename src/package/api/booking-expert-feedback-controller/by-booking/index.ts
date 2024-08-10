@@ -1,4 +1,4 @@
-import { apiServerFetch, errorSystem } from "hooks/api copy/api-fetch";
+import { apiServerFetch, errorSystem } from "package/api/api-fetch";
 
 export interface GetBookingExpertFeedbackByBookingRequest {
     bookingId: number;
