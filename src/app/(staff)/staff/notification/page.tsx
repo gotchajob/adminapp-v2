@@ -39,7 +39,7 @@ const ListStylePage2 = () => {
             title={
                 <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
                     <Grid item>
-                        <Typography variant="h3">Notification</Typography>
+                        <Typography variant="h4">Notification</Typography>
                     </Grid>
                     <Grid item>
                         <OutlinedInput

@@ -46,7 +46,7 @@ export default function FullScreenDialog() {
                 <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close" size="large">
                   <CloseIcon />
                 </IconButton>
-                <Typography variant="h3" color="inherit" sx={{ ml: 2, flex: 1 }}>
+                <Typography variant="h4" color="inherit" sx={{ ml: 2, flex: 1 }}>
                   Sound
                 </Typography>
                 <Button autoFocus color="inherit" onClick={handleClose}>

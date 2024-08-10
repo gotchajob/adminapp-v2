@@ -164,7 +164,7 @@ const SalesPerformance = ({ isLoading }: { isLoading: boolean }) => {
               <Grid item xs={12} sm={4} key={index}>
                 <SubCard sx={{ bgcolor: divider }}>
                   <Stack spacing={1}>
-                    <Typography variant="h3">{data.number}</Typography>
+                    <Typography variant="h4">{data.number}</Typography>
                     <Typography variant="h4" sx={{ fontWeight: 400 }}>
                       {data.label}
                     </Typography>

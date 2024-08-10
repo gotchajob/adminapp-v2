@@ -42,7 +42,7 @@ const UserPage = () => {
         title={
           <Grid container justifyContent="space-between" alignItems="center" spacing={gridSpacing}>
             <Grid item>
-              <Typography variant="h3">Danh sách khách hàng</Typography>
+              <Typography variant="h4">Danh sách khách hàng</Typography>
             </Grid>
             <Grid item>
             </Grid>

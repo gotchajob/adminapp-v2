@@ -115,7 +115,7 @@ const UserPage = () => {
             spacing={gridSpacing}
           >
             <Grid item>
-              <Typography variant="h3">Danh sách danh mục CV</Typography>
+              <Typography variant="h4">Danh sách danh mục CV</Typography>
             </Grid>
             <Grid item>
               <Button
@@ -196,7 +196,7 @@ const UserPage = () => {
             spacing={gridSpacing}
           >
             <Grid item>
-              <Typography variant="h3">Danh sách CV</Typography>
+              <Typography variant="h4">Danh sách CV</Typography>
             </Grid>
             <Grid item>
               <StyledLink href={"/staff/cv/create"}>

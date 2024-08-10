@@ -79,7 +79,7 @@ const Register = () => {
                   <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12}>
                       <Stack alignItems="center" justifyContent="center" spacing={1}>
-                        <Typography color="secondary.main" gutterBottom variant={downMD ? 'h3' : 'h2'}>
+                        <Typography color="secondary.main" gutterBottom variant={downMD ? 'h4' : 'h2'}>
                           Sign up
                         </Typography>
                         <Typography variant="caption" fontSize="16px" textAlign={{ xs: 'center', md: 'inherit' }}>

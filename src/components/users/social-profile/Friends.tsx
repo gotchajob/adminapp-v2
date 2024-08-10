@@ -61,9 +61,9 @@ const Friends = () => {
       title={
         <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
           <Grid item>
-            <Typography variant="h3">
+            <Typography variant="h4">
               Friends{' '}
-              <Typography variant="h3" component="span" sx={{ color: 'grey.300', fontWeight: 500 }}>
+              <Typography variant="h4" component="span" sx={{ color: 'grey.300', fontWeight: 500 }}>
                 (463)
               </Typography>
             </Typography>

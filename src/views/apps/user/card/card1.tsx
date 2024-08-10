@@ -75,7 +75,7 @@ const CardStyle1 = () => {
       title={
         <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
           <Grid item>
-            <Typography variant="h3">Cards</Typography>
+            <Typography variant="h4">Cards</Typography>
           </Grid>
           <Grid item>
             <OutlinedInput

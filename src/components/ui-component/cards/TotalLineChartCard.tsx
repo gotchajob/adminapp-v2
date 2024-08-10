@@ -30,7 +30,7 @@ const TotalLineChartCard = ({ bgColor, chartData, title, percentage, value }: To
             <Grid item container justifyContent="space-between" alignItems="center">
               {value && (
                 <Grid item>
-                  <Typography variant="h3" color="inherit">
+                  <Typography variant="h4" color="inherit">
                     {value}
                   </Typography>
                 </Grid>

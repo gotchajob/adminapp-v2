@@ -30,14 +30,14 @@ const MarketChartCard = ({ chartData }: { chartData: ChartProps }) => {
         <Grid container direction="column" spacing={3}>
           <Grid item container spacing={1} alignItems="center">
             <Grid item>
-              <Typography variant="h3">Market Share</Typography>
+              <Typography variant="h4">Market Share</Typography>
             </Grid>
             <Grid item xs zeroMinWidth />
             <Grid item>
               <TrendingDownIcon fontSize="large" color="error" />
             </Grid>
             <Grid item>
-              <Typography variant="h3">27, 695.65</Typography>
+              <Typography variant="h4">27, 695.65</Typography>
             </Grid>
           </Grid>
           <Grid item xs={12}>

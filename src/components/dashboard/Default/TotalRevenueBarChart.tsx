@@ -195,7 +195,7 @@ const TotalRevenueBarChart = ({ isLoading }: TotalRevenueBarChartProps) => {
                                             <Typography variant="subtitle2">Total Revenue</Typography>
                                         </Grid>
                                         <Grid item>
-                                            <Typography variant="h3">5</Typography>
+                                            <Typography variant="h4">5</Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>

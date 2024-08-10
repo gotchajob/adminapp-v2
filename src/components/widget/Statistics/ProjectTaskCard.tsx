@@ -19,7 +19,7 @@ const ProjectTaskCard = () => {
               <Typography variant="subtitle2">Published Project</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h3">532</Typography>
+              <Typography variant="h4">532</Typography>
             </Grid>
             <Grid item xs={12}>
               <LinearProgress variant="determinate" value={40} color="secondary" aria-label="project progress" />
@@ -32,7 +32,7 @@ const ProjectTaskCard = () => {
               <Typography variant="subtitle2">Completed Task</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h3">4,569</Typography>
+              <Typography variant="h4">4,569</Typography>
             </Grid>
             <Grid item xs={12}>
               {/** had wrong colour, colour is an enum not string */}
@@ -51,7 +51,7 @@ const ProjectTaskCard = () => {
               <Typography variant="subtitle2">Pending Task</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h3">1,005</Typography>
+              <Typography variant="h4">1,005</Typography>
             </Grid>
             <Grid item xs={12}>
               {/** had wrong colour, colour is an enum not string */}
@@ -70,7 +70,7 @@ const ProjectTaskCard = () => {
               <Typography variant="subtitle2">Issues</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h3">365</Typography>
+              <Typography variant="h4">365</Typography>
             </Grid>
             <Grid item xs={12}>
               <LinearProgress

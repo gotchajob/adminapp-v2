@@ -47,7 +47,7 @@ const OfferCard = ({ title, caption, image }: OfferCardProps) => {
             <CardMedia component="img" src={image} alt="Beautiful User Interface" />
           </Avatar>
           <Stack spacing={2}>
-            <Typography variant="h3" sx={{ fontWeight: 500 }}>
+            <Typography variant="h4" sx={{ fontWeight: 500 }}>
               {title}
             </Typography>
             <Typography variant="body2" sx={{ fontSize: '1rem' }}>

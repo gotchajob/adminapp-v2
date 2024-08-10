@@ -47,7 +47,7 @@ const FilterBox = () => {
 
   return (
     <>
-      <MainCard title={<Typography variant="h3">Bộ lọc</Typography>} sx={{ my: 2 }}>
+      <MainCard title={<Typography variant="h4">Bộ lọc</Typography>} sx={{ my: 2 }}>
         <Grid container spacing={2}>
           {/* BOX-1 */}
           <Grid item lg={12} xs={12}>

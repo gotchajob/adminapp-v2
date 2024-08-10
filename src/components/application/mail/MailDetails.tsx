@@ -121,7 +121,7 @@ const MailDetails = ({ handleUserDetails, data, handleStarredChange, handleImpor
               <Grid item xs={12}>
                 <Grid container alignItems="center" spacing={0}>
                   <Grid item>
-                    <Typography variant={downMD ? 'h4' : 'h3'}>{data?.subject}</Typography>
+                    <Typography variant={downMD ? 'h4' : 'h4'}>{data?.subject}</Typography>
                   </Grid>
                   <Grid item xs zeroMinWidth />
                   <Grid item>

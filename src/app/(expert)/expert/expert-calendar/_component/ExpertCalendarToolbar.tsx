@@ -92,7 +92,7 @@ const ExpertToolbar = ({ date, view, onClickNext, onClickPrev, onClickToday, onC
           <IconButton onClick={onClickPrev} size="large" aria-label="prev">
             <IconChevronLeft />
           </IconButton>
-          <Typography variant="h3" color="textPrimary">
+          <Typography variant="h4" color="textPrimary">
             {format(date, 'MMMM yyyy')}
           </Typography>
           <IconButton onClick={onClickNext} size="large" aria-label="next">

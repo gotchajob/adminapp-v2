@@ -180,7 +180,7 @@ const Overview = ({ isLoading }: SalesChartProps) => {
       <CardContent sx={{ p: 2.5, '&:last-child': { pb: 5 } }}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <Typography variant="h3">Earning Report</Typography>
+            <Typography variant="h4">Earning Report</Typography>
           </Grid>
           <Grid item xs={12} lg={2}>
             <Stack spacing={2} mt={2} justifyContent="center" textAlign="center">
@@ -198,7 +198,7 @@ const Overview = ({ isLoading }: SalesChartProps) => {
                   <Typography fontSize={16} color="text.secondary">
                     Your earning this month
                   </Typography>
-                  <Typography variant="h3" fontSize={34} fontWeight={700}>
+                  <Typography variant="h4" fontSize={34} fontWeight={700}>
                     $586
                   </Typography>
                 </Stack>

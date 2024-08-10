@@ -21,7 +21,8 @@ export interface CVTemplateStaff {
 }
 
 export const GetCVTemplateForStaff = async (
-  params: GetCVTemplateStaffRequest
+  params: GetCVTemplateStaffRequest,
+  accessToken: string
 ): Promise<GetCVTemplateStaffResponse> => {
   try {
     const url = new URLSearchParams();
@@ -30,7 +31,9 @@ export const GetCVTemplateForStaff = async (
     }
     const res = await apiServerFetch(
       "/cv-template/for-staff?" + url.toString(),
-      "GET"
+      "GET",
+      undefined,
+      accessToken
     );
     return res;
   } catch (error: any) {

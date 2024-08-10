@@ -41,7 +41,7 @@ const ProductSales = () => (
             <Typography variant="subtitle2">Earning</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="h3">20,569$</Typography>
+            <Typography variant="h4">20,569$</Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -51,7 +51,7 @@ const ProductSales = () => (
             <Typography variant="subtitle2">Yesterday</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="h3">580$</Typography>
+            <Typography variant="h4">580$</Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -61,7 +61,7 @@ const ProductSales = () => (
             <Typography variant="subtitle2">This Week</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="h3">5,789$</Typography>
+            <Typography variant="h4">5,789$</Typography>
           </Grid>
         </Grid>
       </Grid>

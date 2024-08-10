@@ -1,6 +1,10 @@
 import { CVTemplateApi, GetCVTemplate } from "package/api/cv-template";
-import { CVTemplateStaff, GetCVTemplateForStaff } from "package/api/cv-template/for-staff";
+import {
+  CVTemplateStaff,
+  GetCVTemplateForStaff,
+} from "package/api/cv-template/for-staff";
 import { useEffect, useState } from "react";
+import { StaffToken } from "./use-login";
 
 export const useGetCVTemplate = ({
   categoryId,
@@ -32,16 +36,21 @@ export const useGetCVTemplateForStaff = ({
   categoryId?: number;
   page?: number;
 }) => {
-  const [cvTemplateStaffList, setCVTemplateList] = useState<CVTemplateStaff[]>([]);
+  const [cvTemplateStaffList, setCVTemplateList] = useState<CVTemplateStaff[]>(
+    []
+  );
+  const { staffToken } = StaffToken();
   const getCVTemplate = async () => {
     try {
-      const data = await GetCVTemplateForStaff({ categoryId });
+      const data = await GetCVTemplateForStaff({ categoryId }, staffToken);
       setCVTemplateList(data.data);
     } catch (error) {}
   };
   useEffect(() => {
-    getCVTemplate();
-  }, [categoryId]);
+    if (staffToken !== "") {
+      getCVTemplate();
+    }
+  }, [categoryId, staffToken]);
 
   return {
     cvTemplateStaffList,

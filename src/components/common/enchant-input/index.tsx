@@ -1,4 +1,5 @@
 import { Editor } from "@tinymce/tinymce-react";
+import { useState } from "react";
 
 export const EnchantInput = ({
   initValue,
@@ -9,13 +10,26 @@ export const EnchantInput = ({
   initValue: string;
   onChange?: (value: string) => void;
 }) => {
+  const [data, setData] = useState(initValue);
+
+  const handleBlur = () => {
+    if (onChange) {
+      onChange(data);
+    }
+  };
+
   return (
     <Editor
       inline={true}
       //@ts-ignore
-      onEditorChange={onChange}
-      onBlur={onBlur}
-      apiKey="e2f3pntb5ogxx9hu1lba5p8ef4c29vnogx4n8lid5dw71i4v"
+      onEditorChange={(value: string) => {
+        setData(value);
+      }}
+      onBlur={(e) => {
+        console.log(e.target.value);
+        handleBlur();
+      }}
+      apiKey="atsnk5k74f1mqjagfaa22635gdyelbzbw6qqbw3f6b1vhtwj"
       initialValue={initValue}
       init={{
         width: 500,
@@ -41,8 +55,7 @@ export const EnchantInput = ({
           "wordcount",
         ],
         toolbar:
-          "undo redo  | " +
-          "bold italic forecolor | alignleft aligncenter " +
+          "bold italic forecolor | fontsize | lineheight | alignleft aligncenter " +
           "alignright alignjustify | bullist numlist outdent indent | ",
         content_style:
           "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",

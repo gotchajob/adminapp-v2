@@ -69,7 +69,7 @@ const PrivacyPolicy = () => {
                   </Link>{' '}
                   (the “Website”).
                 </Typography>
-                <Typography variant="h3">The Types of Information Demos Collect</Typography>
+                <Typography variant="h4">The Types of Information Demos Collect</Typography>
                 <ul>
                   <li>
                     <Typography variant="h5">Non-personally identifiable information</Typography>
@@ -94,7 +94,7 @@ const PrivacyPolicy = () => {
                   choose to set your web browser to refuse cookies, or to alert you when cookies are being sent. If you do so, however, some
                   parts of the Website may not function properly.
                 </Typography>
-                <Typography variant="h3">Personally identifiable information</Typography>
+                <Typography variant="h4">Personally identifiable information</Typography>
                 <Typography>
                   DDemos, on its own and through select third party vendors, collects personally identifiable information, such as names,
                   email addresses, mailing addresses and credit card information, from Users when they voluntarily provide such information
@@ -102,7 +102,7 @@ const PrivacyPolicy = () => {
                   contact form, responds to a job posting, or donates money via the Website. Complete credit card information, however, is
                   not stored.
                 </Typography>
-                <Typography variant="h3">How Demos Uses the Information that it Collects</Typography>
+                <Typography variant="h4">How Demos Uses the Information that it Collects</Typography>
                 <Typography>
                   Demos uses Users’ personal information to better understand how Users use the Website so that we can improve the Website
                   and its offerings. Demos also uses Users’ personal information for the purpose for which the Users provided the
@@ -111,13 +111,13 @@ const PrivacyPolicy = () => {
                   email list, we will add you to our list. If at any time you wish to stop receiving emails from us, please follow the
                   unsubscribe instructions at the bottom of any email Demos sends you.
                 </Typography>
-                <Typography variant="h3">How Demos Protects User Information</Typography>
+                <Typography variant="h4">How Demos Protects User Information</Typography>
                 <Typography>
                   Demos adopts appropriate data collection, storage, and processing practices and security measures to help protect against
                   unauthorized access, alteration, disclosure or destruction of your personal information, but Demos cannot guarantee that
                   your information is 100% secure. Your credit card information is not stored by Demos.
                 </Typography>
-                <Typography variant="h3">Sharing Personal Information</Typography>
+                <Typography variant="h4">Sharing Personal Information</Typography>
                 <Typography>
                   We use third party service providers, including, for example, Mailchimp, Rallybound, EventBrite and HiringThing, to help
                   us operate the Website and administer activities on our behalf, such as collecting donations online and registering Users
@@ -138,7 +138,7 @@ const PrivacyPolicy = () => {
                   Demos may share generic aggregated demographic information not linked to any personally identifiable information regarding
                   Users with third parties.
                 </Typography>
-                <Typography variant="h3">Sharing Personal Information</Typography>
+                <Typography variant="h4">Sharing Personal Information</Typography>
                 <Typography>
                   We use third party service providers, including, for example, Mailchimp, Rallybound, EventBrite and HiringThing, to help
                   us operate the Website and administer activities on our behalf, such as collecting donations online and registering Users
@@ -150,7 +150,7 @@ const PrivacyPolicy = () => {
                   also share personally identifiable information if it believes it is necessary to protect the rights, property, and safety
                   of Demos or others.
                 </Typography>
-                <Typography variant="h3">Contacting Demos</Typography>
+                <Typography variant="h4">Contacting Demos</Typography>
                 <Typography>
                   If you have any questions about this Privacy Policy or anything relating to the Website, please contact Demos at{' '}
                   <Link href="#" underline="none">

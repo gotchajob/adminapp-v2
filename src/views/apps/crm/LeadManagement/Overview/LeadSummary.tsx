@@ -282,7 +282,7 @@ const LeadSummary = ({ isLoading }: { isLoading: boolean }) => {
                 <Typography variant="subtitle2" fontWeight="500">
                   Total Growth
                 </Typography>
-                <Typography variant="h3">$2324.00</Typography>
+                <Typography variant="h4">$2324.00</Typography>
               </Stack>
               <TextField
                 id="standard-select-currency"

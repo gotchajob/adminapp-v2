@@ -57,7 +57,7 @@ const ListStylePage2 = () => {
             spacing={gridSpacing}
           >
             <Grid item>
-              <Typography variant="h3">Danh sách giao dịch</Typography>
+              <Typography variant="h4">Danh sách giao dịch</Typography>
             </Grid>
           </Grid>
         }

@@ -81,7 +81,7 @@ function StickyActionBar() {
                     </Avatar>
                   </Grid>
                   <Grid item xs={12} sm={9} lg={6}>
-                    <Typography variant="h3" sx={{ mb: 0 }}>
+                    <Typography variant="h4" sx={{ mb: 0 }}>
                       Personal Information
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 2 }}>

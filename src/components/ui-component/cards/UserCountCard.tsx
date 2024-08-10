@@ -42,7 +42,7 @@ const UserCountCard = ({ primary, secondary, iconPrimary, color }: UserCountCard
         </Box>
         <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>
           <Grid item sm={12}>
-            <Typography variant="h3" align="center" color="inherit">
+            <Typography variant="h4" align="center" color="inherit">
               {secondary}
             </Typography>
           </Grid>

@@ -146,7 +146,7 @@ const Items = ({ title, caption, image, link }: ItemProps) => {
           target="_blank"
           sx={{ textDecoration: 'none' }}
         >
-          <Typography variant="h3" sx={{ fontWeight: 500 }}>
+          <Typography variant="h4" sx={{ fontWeight: 500 }}>
             {title}
           </Typography>
           <IconButton size="small" sx={{ color: 'text.primary' }}>

@@ -118,7 +118,7 @@ const Profile = () => {
                     </Box>
                   </Grid>
                   <Grid item xs zeroMinWidth>
-                    <Typography variant="h3" color="primary" sx={{ mb: 0.625 }}>
+                    <Typography variant="h4" color="primary" sx={{ mb: 0.625 }}>
                       239k
                     </Typography>
                     <Typography variant="body2">Friends</Typography>
@@ -145,7 +145,7 @@ const Profile = () => {
                   </Grid>
                   <Grid item xs zeroMinWidth>
                     <Typography
-                      variant="h3"
+                      variant="h4"
                       sx={{
                         mb: 0.625,
                         color: theme.palette.mode === ThemeMode.DARK ? 'text.secondary' : 'secondary.main'

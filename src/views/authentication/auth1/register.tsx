@@ -62,7 +62,7 @@ const Register = () => {
                 >
                   <Grid item>
                     <Stack justifyContent={{ xs: 'center', md: 'flex-start' }} textAlign={{ xs: 'center', md: 'inherit' }} pt={{ sm: 1 }}>
-                      <Typography color="secondary.main" gutterBottom variant={downMD ? 'h3' : 'h2'}>
+                      <Typography color="secondary.main" gutterBottom variant={downMD ? 'h4' : 'h2'}>
                         Sign up
                       </Typography>
                       <Typography color="textPrimary" gutterBottom variant="h4">

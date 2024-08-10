@@ -96,13 +96,13 @@ const PaymentCard = ({ type, cards, cardHandler }: PaymentCardProps) => {
         </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h3" color="inherit">
+          <Typography variant="h4" color="inherit">
             ****
           </Typography>
-          <Typography variant="h3" color="inherit">
+          <Typography variant="h4" color="inherit">
             ****
           </Typography>
-          <Typography variant="h3" color="inherit">
+          <Typography variant="h4" color="inherit">
             ****
           </Typography>
           <Typography variant="h4" color="inherit">

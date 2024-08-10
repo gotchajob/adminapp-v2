@@ -61,7 +61,7 @@ const ResetPassword = () => {
                 >
                   <Grid item>
                     <Stack justifyContent={{ xs: 'center', md: 'flex-start' }} textAlign={{ xs: 'center', md: 'inherit' }}>
-                      <Typography color="secondary.main" gutterBottom variant={downMD ? 'h3' : 'h2'}>
+                      <Typography color="secondary.main" gutterBottom variant={downMD ? 'h4' : 'h2'}>
                         Reset Password
                       </Typography>
                       <Typography color="textPrimary" gutterBottom variant="h4">

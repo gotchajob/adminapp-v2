@@ -62,7 +62,7 @@ const FriendRequest = () => {
       title={
         <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
           <Grid item>
-            <Typography variant="h3">Friend Request</Typography>
+            <Typography variant="h4">Friend Request</Typography>
           </Grid>
           <Grid item>
             <OutlinedInput

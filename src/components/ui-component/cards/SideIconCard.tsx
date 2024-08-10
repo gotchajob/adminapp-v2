@@ -32,7 +32,7 @@ const SideIconCard = ({ iconPrimary, primary, secondary, secondarySub, color, bg
         </Grid>
         <Grid item xs={8}>
           <Stack alignItems={{ xs: 'center', sm: 'flex-start' }} spacing={1} justifyContent="space-between">
-            <Typography variant="h3" {...(bgcolor && { sx: { color: '#fff' } })}>
+            <Typography variant="h4" {...(bgcolor && { sx: { color: '#fff' } })}>
               {primary}
             </Typography>
             <Typography variant="body2" sx={{ color: bgcolor ? '#fff' : 'grey.600', display: 'flex', gap: 0.25 }}>

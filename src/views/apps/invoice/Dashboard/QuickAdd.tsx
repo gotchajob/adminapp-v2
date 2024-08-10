@@ -85,7 +85,7 @@ const QuickAdd = () => {
                       {card.name}
                     </Typography>
                     <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
-                      <Typography variant="h3">{card.number}</Typography>
+                      <Typography variant="h4">{card.number}</Typography>
                       <IconButton size="small" sx={{ borderRadius: 1.25, p: 0.5, border: '1px solid', borderColor: 'divider' }}>
                         <IconPlus size={14} />
                       </IconButton>

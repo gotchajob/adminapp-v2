@@ -30,7 +30,7 @@ const IconNumberCard = ({ title, primary, color, iconPrimary }: IconNumberCardPr
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="h3">{primary}</Typography>
+              <Typography variant="h4">{primary}</Typography>
             </Grid>
           </Grid>
         </Grid>

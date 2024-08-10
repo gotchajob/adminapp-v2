@@ -41,7 +41,7 @@ const ExpertPage = () => {
       {/* Filter Card */}
       <ExpertFilter />
       {/* Layout Table */}
-      <MainCard title={<Typography variant="h3">Danh sách chuyên gia</Typography>}>
+      <MainCard title={<Typography variant="h4">Danh sách chuyên gia</Typography>}>
         {/* Data Table */}
         <ExpertList />
         <Grid item xs={12} sx={{ mt: 1.75 }}>

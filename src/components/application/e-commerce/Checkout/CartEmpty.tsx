@@ -29,7 +29,7 @@ const CartEmpty = () => {
       <Grid item xs={12} sm={8}>
         <Grid container direction="column" alignItems="center" spacing={1}>
           <Grid item>
-            <Typography variant={downLG ? 'h3' : 'h1'} color="inherit">
+            <Typography variant={downLG ? 'h4' : 'h1'} color="inherit">
               Cart is Empty
             </Typography>
           </Grid>

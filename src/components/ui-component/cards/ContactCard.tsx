@@ -94,7 +94,7 @@ const ContactCard = ({ avatar, contact, email, name, location, onActive, role }:
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h3">{name}</Typography>
+          <Typography variant="h4">{name}</Typography>
           <Typography variant="caption">{role}</Typography>
         </Grid>
         <Grid item xs={12}>

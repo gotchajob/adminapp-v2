@@ -47,7 +47,7 @@ const HoverSocialCard = ({ primary, secondary, iconPrimary, color }: HoverSocial
         </Typography>
         <Grid container spacing={0}>
           <Grid item xs={12}>
-            <Typography variant="h3" color="inherit">
+            <Typography variant="h4" color="inherit">
               {secondary}
             </Typography>
           </Grid>

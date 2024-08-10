@@ -30,8 +30,8 @@ const Typography = () => (
               </MuiTypography>
             </Grid>
             <Grid item>
-              <MuiTypography variant="h3" gutterBottom>
-                h3. Heading
+              <MuiTypography variant="h4" gutterBottom>
+                h4. Heading
               </MuiTypography>
             </Grid>
             <Grid item>

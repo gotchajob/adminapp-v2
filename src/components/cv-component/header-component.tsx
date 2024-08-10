@@ -6,10 +6,13 @@ import { EnchantInput } from 'components/common/enchant-input';
 
 export const HeaderComponent = ({
   component,
-  onChangeComponent
+  onChangeComponent,
+  primaryColor
 }: {
   component: CVComponent;
   onChangeComponent: (newCVComponent: CVComponent) => void;
+  primaryColor: string
+
 }) => {
   const handleChangeDescription = (newDescription: string) => {
     const newCVComponent = { ...component };
@@ -18,6 +21,7 @@ export const HeaderComponent = ({
   };
 
   const handleChangeHeader = (newHeader: string) => {
+    console.log(newHeader)
     const newCVComponent = { ...component };
     newCVComponent.header = newHeader;
     onChangeComponent(newCVComponent);
@@ -25,10 +29,10 @@ export const HeaderComponent = ({
 
   return (
     <Stack direction={'column'}>
-      <EnchantInput initValue={component.header} onBlur={handleChangeHeader} />
-      <Divider />
+      <EnchantInput initValue={component.header} onChange={handleChangeHeader} />
+      <Box borderBottom={`2px solid ${primaryColor}`}/>
       <Box mt={'0px !important'}>
-        <EnchantInput initValue={component.description} onBlur={handleChangeDescription} />
+        <EnchantInput initValue={component.description} onChange={handleChangeDescription} />
       </Box>
     </Stack>
   );

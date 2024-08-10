@@ -37,7 +37,7 @@ const CheckMail = () => {
                   <Grid item xs={12}>
                     <Grid container alignItems="center" justifyContent="center" textAlign="center" spacing={2}>
                       <Grid item xs={12}>
-                        <Typography color="secondary.main" gutterBottom variant={downMD ? 'h3' : 'h2'}>
+                        <Typography color="secondary.main" gutterBottom variant={downMD ? 'h4' : 'h2'}>
                           Hi, Check Your Mail
                         </Typography>
                       </Grid>

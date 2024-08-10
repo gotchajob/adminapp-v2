@@ -37,7 +37,7 @@ interface BreadcrumbLinkProps {
 const BTitle = ({ title }: { title: string }) => {
   return (
     <Grid item>
-      <Typography variant="h3" sx={{ fontWeight: 500 }}>
+      <Typography variant="h4" sx={{ fontWeight: 500 }}>
         {title}
       </Typography>
     </Grid>

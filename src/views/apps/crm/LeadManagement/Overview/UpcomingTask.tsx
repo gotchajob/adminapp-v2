@@ -28,7 +28,7 @@ const UpcomingTask = () => {
           </Grid>
           <Grid item xs={12}>
             <Stack direction="row" justifyContent="space-between">
-              <Typography variant="h3">200</Typography>
+              <Typography variant="h4">200</Typography>
               <Chip
                 label="Follow-up"
                 sx={{ color: 'primary.main', bgcolor: mode === ThemeMode.DARK ? 'dark.main' : 'primary.light' } as object}

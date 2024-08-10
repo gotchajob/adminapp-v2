@@ -61,7 +61,7 @@ const Followers = () => {
       title={
         <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
           <Grid item>
-            <Typography variant="h3">Followers</Typography>
+            <Typography variant="h4">Followers</Typography>
           </Grid>
           <Grid item>
             <OutlinedInput

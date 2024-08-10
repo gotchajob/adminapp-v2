@@ -42,14 +42,17 @@ import type { UserList } from "package/api/user";
 import BlockTwoToneIcon from "@mui/icons-material/BlockTwoTone";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import CloseIcon from "@mui/icons-material/Close";
-import { useGetCVTemplate, useGetCVTemplateForStaff } from "hooks/use-get-cv-template";
+import {
+  useGetCVTemplate,
+  useGetCVTemplateForStaff,
+} from "hooks/use-get-cv-template";
 import { useGetCVCategory } from "hooks/use-get-cv-category";
 import { StatusChip } from "components/common/chip-status/status-chip";
 import {
   useGetSearchParams,
   useSearchParamsNavigation,
 } from "hooks/use-get-params";
-import { TablePagination } from "@mui/material";
+import { Switch, TablePagination } from "@mui/material";
 import { formatDate } from "package/util";
 
 const avatarImage = "/assets/images/users";
@@ -78,7 +81,9 @@ export const CVList = () => {
     push([{ name: "cvTemplateListPage", value: page + "" }], true);
   };
 
-  const { cvTemplateStaffList } = useGetCVTemplateForStaff({ page: cvTemplateListPage + 1 });
+  const { cvTemplateStaffList } = useGetCVTemplateForStaff({
+    page: cvTemplateListPage + 1,
+  });
   return (
     <TableContainer>
       <Table>
@@ -111,37 +116,20 @@ export const CVList = () => {
                   </Stack>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h4" noWrap>
+                  <Typography variant="h5" noWrap>
                     {
                       cvCategory.find((value) => value.id === row.cvCategoryId)
                         ?.description
                     }
                   </Typography>
                 </TableCell>
-                <TableCell>{row.numberUse} lượt</TableCell>
-                <TableCell>{formatDate(row.createdAt, "dd-MM-yyyy")}</TableCell>
+                <TableCell align="center">{row.numberUse} lượt</TableCell>
+                <TableCell align="center">
+                  {formatDate(row.createdAt, "dd - MM - yyyy")}
+                </TableCell>
                 <TableCell align="center">{StatusCV(row.status)}</TableCell>
                 <TableCell align="center" sx={{ pr: 3 }}>
-                  <Stack
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Tooltip placement="top" title="Ban">
-                      <IconButton
-                        color="primary"
-                        sx={{
-                          color: "orange.dark",
-                          borderColor: "orange.main",
-                          "&:hover ": { bgcolor: "orange.light" },
-                        }}
-                        size="large"
-                      >
-                        <BlockTwoToneIcon sx={{ fontSize: "1.1rem" }} />
-                      </IconButton>
-                    </Tooltip>
-                    {/* )} */}
-                  </Stack>
+                  <Switch checked={true} />
                 </TableCell>
               </TableRow>
             ))}

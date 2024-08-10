@@ -34,7 +34,7 @@ const SalesLineChartCard = ({ bgColor, chartData, footerData, icon, title, perce
       <Grid item key={index}>
         <Box sx={{ my: 3, p: 1 }}>
           <Stack spacing={0.75} alignItems="center">
-            <Typography variant="h3">{item.value}</Typography>
+            <Typography variant="h4">{item.value}</Typography>
             <Typography variant="body1">{item.label}</Typography>
           </Stack>
         </Box>

@@ -34,7 +34,7 @@ const SeoChartCard = ({ chartData, value, title, icon, type }: SeoChartCardProps
       <Grid container spacing={1.25} justifyContent="space-between">
         <Grid item xs={12}>
           <Stack direction={type === 1 ? 'column-reverse' : 'column'} spacing={type === 1 ? 0.5 : 1}>
-            {value && <Typography variant={downMM ? 'h4' : 'h3'}>{value}</Typography>}
+            {value && <Typography variant={downMM ? 'h4' : 'h4'}>{value}</Typography>}
             {(title || icon) && (
               <Stack direction="row" alignItems="center" spacing={1}>
                 {title && (

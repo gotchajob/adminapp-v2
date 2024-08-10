@@ -141,7 +141,7 @@ const Profile = () => {
           <CardContent>
             <Grid container spacing={0}>
               <Grid item xs={4}>
-                <Typography align="center" variant="h3">
+                <Typography align="center" variant="h4">
                   37
                 </Typography>
                 <Typography align="center" variant="subtitle2">
@@ -149,7 +149,7 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography align="center" variant="h3">
+                <Typography align="center" variant="h4">
                   2749
                 </Typography>
                 <Typography align="center" variant="subtitle2">
@@ -157,7 +157,7 @@ const Profile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                <Typography align="center" variant="h3">
+                <Typography align="center" variant="h4">
                   678
                 </Typography>
                 <Typography align="center" variant="subtitle2">

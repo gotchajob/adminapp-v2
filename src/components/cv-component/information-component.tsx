@@ -22,7 +22,8 @@ export const InformationComponent = ({
   information: PersonalComponent[];
   onChangeComponent: (newCVPersonalComponent: PersonalComponent[], newCVComponent: CVComponent) => void;
 }) => {
-  const handleChangeHeader = (newHeader: string) => {
+  const handleChangeHeader = (newHeader: any) => {
+    console.log(newHeader.target)
     const newCVComponent = { ...component };
     newCVComponent.header = newHeader;
     onChangeComponent(information, newCVComponent);
@@ -36,8 +37,8 @@ export const InformationComponent = ({
 
   return (
     <Stack direction={'column'}>
-      <EnchantInput initValue={component.header} onBlur={handleChangeHeader} />
-      <Divider sx={{ mb: '8px' }} />
+      <EnchantInput initValue={component.header} onChange={handleChangeHeader} />
+      <Box borderBottom={`2px solid ${primaryColor}`}/>
       {information.map((e, index) => (
         <FlexBox
           key={index}
@@ -49,7 +50,7 @@ export const InformationComponent = ({
         >
           <Iconify icon={e.icon} width={20} color={primaryColor} />
           <Box pl={1}>
-            <EnchantInput initValue={e.title} onBlur={(value: string) => handleChangePersonalComponent(value, index)} />
+            <EnchantInput initValue={e.title} onChange={(value: string) => handleChangePersonalComponent(value, index)} />
           </Box>
         </FlexBox>
       ))}

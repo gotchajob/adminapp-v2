@@ -33,7 +33,7 @@ const RoundIconCard = ({ primary, secondary, content, iconPrimary, color, bgcolo
             <Typography variant="h5" color="inherit">
               {primary}
             </Typography>
-            <Typography variant="h3">{secondary}</Typography>
+            <Typography variant="h4">{secondary}</Typography>
             <Typography variant="subtitle2" color="inherit">
               {content}
             </Typography>

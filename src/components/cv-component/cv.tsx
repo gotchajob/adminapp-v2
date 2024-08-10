@@ -6,7 +6,7 @@ import {
   Column,
   PersonalComponent,
 } from "components/cv-component/interface";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { CVUploadImage } from "./avatar";
 import { HeaderComponent } from "./header-component";
 import { InformationComponent } from "./information-component";
@@ -17,6 +17,8 @@ import { PRIMARYCOLOR } from "components/common/config";
 import NorthIcon from "@mui/icons-material/North";
 import Tooltip from "@mui/material/Tooltip";
 import WestIcon from "@mui/icons-material/West";
+import { DefaultComponent } from "./default-component";
+
 const defaultShadow = "0 2px 14px 0 rgb(33 150 243 / 10%)";
 
 export const CreateCV = ({
@@ -50,7 +52,7 @@ export const CreateCV = ({
     onChangeCV(newCV);
   };
 
-  const handleChangeAvatar = (
+  const handleChangeAvatarComponent = (
     image: string,
     columnIndex: number,
     componentIndex: number
@@ -188,18 +190,41 @@ export const CreateCV = ({
       </Box>
     );
   };
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: any) => {
+  //     if (cvRef.current && !cvRef.current.contains(event.target)) {
+  //       setOnClickComponent("");
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
+
   return (
-    <Grid
-      ref={cvRef}
-      container
-      width={800}
-      height={1132}
-      margin={"auto"}
-      sx={{ boxShadow: defaultShadow }}
-    >
-      {cv &&
-        cv.layout.map((column, columnIndex) => {
-          return (
+    <Box position={"relative"}>
+      <IconButton
+        sx={{ position: "absolute", right: 0, top: 0 }}
+        onClick={() => {
+          setOnClickComponent("");
+        }}
+      >
+        <ClearIcon color="error" />
+      </IconButton>
+      <Grid
+        position={"relative"}
+        ref={cvRef}
+        container
+        width={800}
+        height={1131}
+        margin={"auto"}
+        sx={{ boxShadow: defaultShadow, overFlowY: "hidden" }}
+      >
+        {cv &&
+          cv.layout.map((column, columnIndex) => (
             <Grid
               key={columnIndex}
               xs={column.size}
@@ -207,34 +232,22 @@ export const CreateCV = ({
               bgcolor={column.backgroudColor}
               borderRadius={"inherit"}
             >
-              {column.componentList.map((component, componentIndex) => {
-                if (component.dataType === "image") {
-                  return (
-                    <ComponentWarper
-                      key={componentIndex}
-                      index={[componentIndex, columnIndex]}
-                      componentName={component.componentName}
-                    >
+              <Grid container>
+                {column.componentList.map((component, componentIndex) => {
+                  const returnComponentList = {
+                    image: (
                       <CVUploadImage
                         avatar={component.description}
                         handleChangeAvatar={(value) => {
-                          handleChangeAvatar(
+                          handleChangeAvatarComponent(
                             value,
                             columnIndex,
                             componentIndex
                           );
                         }}
                       />
-                    </ComponentWarper>
-                  );
-                }
-                if (component.dataType === "information") {
-                  return (
-                    <ComponentWarper
-                      key={componentIndex}
-                      index={[componentIndex, columnIndex]}
-                      componentName={component.componentName}
-                    >
+                    ),
+                    information: (
                       <InformationComponent
                         component={component}
                         primaryColor={cv.primaryColor}
@@ -251,17 +264,10 @@ export const CreateCV = ({
                           );
                         }}
                       />
-                    </ComponentWarper>
-                  );
-                }
-                if (component.dataType === "text") {
-                  return (
-                    <ComponentWarper
-                      key={componentIndex}
-                      index={[componentIndex, columnIndex]}
-                      componentName={component.componentName}
-                    >
+                    ),
+                    text: (
                       <HeaderComponent
+                        primaryColor={cv.primaryColor}
                         component={component}
                         onChangeComponent={(newCVComponent) => {
                           handelChangeHeaderComponent(
@@ -271,13 +277,38 @@ export const CreateCV = ({
                           );
                         }}
                       />
-                    </ComponentWarper>
+                    ),
+                    default: (
+                      <DefaultComponent
+                        primaryColor={cv.primaryColor}
+                        component={component}
+                        onChangeComponent={(newCVComponent) => {
+                          handelChangeHeaderComponent(
+                            newCVComponent,
+                            columnIndex,
+                            componentIndex
+                          );
+                        }}
+                      />
+                    ),
+                  };
+                  return (
+                    <Grid item xs={column.componentSize[componentIndex]}>
+                      <ComponentWarper
+                        key={componentIndex}
+                        index={[componentIndex, columnIndex]}
+                        componentName={component.componentName}
+                      >
+                        {/* @ts-ignore */}
+                        {returnComponentList[component.dataType]}
+                      </ComponentWarper>
+                    </Grid>
                   );
-                }
-              })}
+                })}
+              </Grid>
             </Grid>
-          );
-        })}
-    </Grid>
+          ))}
+      </Grid>
+    </Box>
   );
 };

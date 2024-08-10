@@ -74,8 +74,8 @@ const PaymentDetails = () => {
     <MainCard
       title={
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={0.5}>
-          <Typography variant="h3">Payment Receipt Deatails </Typography>
-          <Typography variant="h3" color="grey.400">
+          <Typography variant="h4">Payment Receipt Deatails </Typography>
+          <Typography variant="h4" color="grey.400">
             ({`#000${random(10000, 99999)}`})
           </Typography>
         </Stack>

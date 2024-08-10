@@ -191,7 +191,7 @@ const Overview = ({ isLoading }: SalesChartProps) => {
           <Grid item xs={12}>
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item>
-                <Typography variant="h3">Refund Report</Typography>
+                <Typography variant="h4">Refund Report</Typography>
               </Grid>
               <Stack direction="row" alignItems="center" justifyContent="center" sx={{ display: { xs: 'none', sm: 'flex' } }}>
                 <Button
@@ -242,7 +242,7 @@ const Overview = ({ isLoading }: SalesChartProps) => {
                   <Typography fontSize={16} color="text.secondary">
                     Earnings Report
                   </Typography>
-                  <Typography fontSize={'1.5rem'} variant="h3">
+                  <Typography fontSize={'1.5rem'} variant="h4">
                     $586
                   </Typography>
                 </Stack>

@@ -195,7 +195,7 @@ const TotalAccessBarChart = ({ isLoading }: TotalAccessBarChartProps) => {
                                             <Typography variant="subtitle2">Total Access</Typography>
                                         </Grid>
                                         <Grid item>
-                                            <Typography variant="h3">143</Typography>
+                                            <Typography variant="h4">143</Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>

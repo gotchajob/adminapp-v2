@@ -49,7 +49,7 @@ const ExpertFilter = () => {
   return (
     <>
       <MainCard
-        title={<Typography variant="h3">Bộ lọc</Typography>}
+        title={<Typography variant="h4">Bộ lọc</Typography>}
         sx={{ my: 2 }}
       >
         <Grid container spacing={2}>

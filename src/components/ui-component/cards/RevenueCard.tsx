@@ -37,7 +37,7 @@ const RevenueCard = ({ primary, secondary, content, iconPrimary, color }: Revenu
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h3" color="inherit">
+            <Typography variant="h4" color="inherit">
               {secondary}
             </Typography>
           </Grid>

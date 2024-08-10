@@ -81,7 +81,7 @@ const CodeVerification = () => {
                   <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12}>
                       <Stack alignItems="center" justifyContent="center" spacing={1}>
-                        <Typography color="secondary.main" gutterBottom variant={downMD ? 'h3' : 'h2'}>
+                        <Typography color="secondary.main" gutterBottom variant={downMD ? 'h4' : 'h2'}>
                           Enter Verification Code
                         </Typography>
                         <Typography variant="subtitle1" fontSize="1rem">

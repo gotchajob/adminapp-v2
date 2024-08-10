@@ -186,7 +186,7 @@ const ProductInfo = ({ product }: { product: Products }) => {
             </Grid>
             <Grid item xs={12}>
               <Stack direction="row" alignItems="center" spacing={1}>
-                <Typography variant="h3">{product.name}</Typography>
+                <Typography variant="h4">{product.name}</Typography>
                 <Chip size="small" label="New" chipcolor="primary" variant="outlined" />
               </Stack>
             </Grid>

@@ -32,7 +32,7 @@ const HoverDataCard = ({ title, iconPrimary, primary, secondary, color }: HoverD
         <Grid item sm={12}>
           <Stack direction="row" alignItems="center" spacing={0.5} sx={{ my: 1.75, mx: 'auto' }}>
             {primaryIcon}
-            <Typography variant="h3">{primary}</Typography>
+            <Typography variant="h4">{primary}</Typography>
           </Stack>
         </Grid>
         <Grid item sm={12}>
