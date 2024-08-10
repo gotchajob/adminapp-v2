@@ -23,6 +23,8 @@ import { PostCVTemplate } from "package/api/cv-template";
 import { StaffToken } from "hooks/use-login";
 import { PatchCVTemplate } from "package/api/cv-template/id";
 import { UseGetCVTemplateById } from "hooks/use-get-cv-template";
+import { enqueueSnackbar } from "notistack";
+import { useGetSearchParams } from "hooks/use-get-params";
 
 export default function Page({ params }: { params: { id: string } }) {
   const [historyTemplate, setHistoryTemplate] = useState<CVTemplate[]>([]);
@@ -59,6 +61,8 @@ export default function Page({ params }: { params: { id: string } }) {
   //@ts-ignore
   const { CVTemplateById } = UseGetCVTemplateById({ id: params.id });
 
+  const { categoryId} =useGetSearchParams(["categoryId"])
+
   const handleSaveToDatabase = async () => {
     try {
       const imageUrl = await handleGetImage();
@@ -67,7 +71,7 @@ export default function Page({ params }: { params: { id: string } }) {
           const res = await PostCVTemplate(
             {
               image: imageUrl,
-              cvCategoryId: 1,
+              cvCategoryId: categoryId,
               name: currentTemplate.name,
               templateJson: JSON.stringify(currentTemplate),
             },
@@ -92,7 +96,9 @@ export default function Page({ params }: { params: { id: string } }) {
       } else {
         throw new Error("Lỗi không tìm thấy cv");
       }
-    } catch (error) {
+      enqueueSnackbar("Cập nhật thành công", {variant: "success"})
+    } catch (error: any) {
+      enqueueSnackbar(error.message, { variant: "error" });
     } finally {
     }
   };

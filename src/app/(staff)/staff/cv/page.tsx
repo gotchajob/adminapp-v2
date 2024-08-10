@@ -48,6 +48,7 @@ import { enqueueSnackbar } from "notistack";
 import { useRefresh } from "hooks/use-refresh";
 import { useGetCVCategory } from "hooks/use-get-cv-category";
 import { StyledLink } from "components/common/link/styled-link";
+import { useRouter } from "next/navigation";
 // import UserList from './_component/UserList';
 
 // ==============================|| USER LIST STYLE 2 ||============================== //
@@ -103,7 +104,25 @@ const UserPage = () => {
     validationSchema: templateValidate,
   });
 
-  const { cvCategory } = useGetCVCategory();
+  const { cvCategory } = useGetCVCategory(0, refreshTime);
+  const router = useRouter();
+  const [openCreateNewCVTemplate, setOpenCreateNewCVTemplate] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(0);
+
+  const handleOpenCreateNewCVTemplate = () => {
+    setOpenCreateNewCVTemplate(!openCreateNewCVTemplate);
+  };
+
+  const handleCreateNewCVTemplate = () => {
+    const description = cvCategory.find(
+      (value) => value.id === selectedCategory
+    );
+    if (description) {
+      router.push(
+        `/staff/cv/create?categoryId=${selectedCategory}&categoryName=${description.description}`
+      );
+    }
+  };
   return (
     <Stack spacing={3}>
       <MainCard
@@ -178,7 +197,11 @@ const UserPage = () => {
               >
                 Đóng
               </Button>
-              <LoadingButton type="submit" variant="contained">
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={isLoading}
+              >
                 Tạo
               </LoadingButton>
             </DialogActions>
@@ -199,15 +222,47 @@ const UserPage = () => {
               <Typography variant="h4">Danh sách CV</Typography>
             </Grid>
             <Grid item>
-              <StyledLink href={"/staff/cv/create"}>
-                <Button variant="contained">Tạo mới</Button>
-              </StyledLink>
+              <Button
+                variant="contained"
+                onClick={handleOpenCreateNewCVTemplate}
+              >
+                Tạo mới
+              </Button>
             </Grid>
           </Grid>
         }
       >
         {/* Data Table */}
         <CVList />
+        <Dialog open={openCreateNewCVTemplate} fullWidth maxWidth="xs">
+          <DialogTitle>Tạo mới mẫu cv</DialogTitle>
+          <DialogContent sx={{ pt: "10px !important" }}>
+            <TextField
+              select
+              label="Chọn danh mục CV"
+              fullWidth
+              value={selectedCategory}
+            >
+              {cvCategory.map((category, index) => (
+                <MenuItem
+                  value={category.id}
+                  key={index}
+                  onClick={() => {
+                    setSelectedCategory(category.id);
+                  }}
+                >
+                  {category.description}
+                </MenuItem>
+              ))}
+            </TextField>
+          </DialogContent>
+          <DialogActions>
+            <Button color="error" onClick={handleOpenCreateNewCVTemplate}>
+              Hủy
+            </Button>
+            <Button onClick={handleCreateNewCVTemplate}>Tạo</Button>
+          </DialogActions>
+        </Dialog>
       </MainCard>
     </Stack>
   );
