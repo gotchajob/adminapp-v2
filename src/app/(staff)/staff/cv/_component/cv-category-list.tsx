@@ -35,10 +35,11 @@ const StatusCV = (status: number) => {
   );
 };
 export const CVCategoryList = ({refreshTime} : {refreshTime: number}) => {
+  
   const { cvCategoryPage } = useGetSearchParams(["cvCategoryPage"]);
   const { push } = useSearchParamsNavigation();
-
   const { cvCategory } = useGetCVCategory(+cvCategoryPage + 1, refreshTime);
+
 
   const handleChangePage = (e: any, page: number) => {
     push([{ name: "cvCategoryPage", value: page + "" }], true);

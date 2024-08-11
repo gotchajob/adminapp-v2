@@ -1,27 +1,45 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 // third-party
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-import { EditorState as EditorType, EditorProps } from 'react-draft-wysiwyg';
-import { ContentState, EditorState } from 'draft-js';
-const Editor = dynamic<EditorProps>(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), { ssr: false });
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { EditorState as EditorType, EditorProps } from "react-draft-wysiwyg";
+import {
+  ContentState,
+  convertFromHTML,
+  convertToRaw,
+  EditorState,
+} from "draft-js";
+const Editor = dynamic<EditorProps>(
+  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+  { ssr: false }
+);
+import "./react-draft-wysiwyg.css";
+import draftToHtml from "draftjs-to-html";
 
 // ==============================|| EDITOR ||============================== //
 
-const ReactDraftWysiwyg = () => {
+const ReactDraftWysiwyg = ({
+  blogDetail,
+  setBlogDetail,
+}: {
+  blogDetail: string;
+  setBlogDetail: (data: string) => void;
+}) => {
   const [editorState, setEditorState] = useState(() => {
-    const initialContent =
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-    return EditorState.createWithContent(ContentState.createFromText(initialContent));
+    const blocks = convertFromHTML(blogDetail);
+    return EditorState.createWithContent(
+      ContentState.createFromBlockArray(blocks.contentBlocks, blocks.entityMap)
+    );
   });
 
   const onEditorStateChange = (editor: EditorType) => {
     setEditorState(editor);
+    setBlogDetail(draftToHtml(convertToRaw(editorState.getCurrentContent())))
   };
+
   return (
     <Editor
       editorState={editorState}

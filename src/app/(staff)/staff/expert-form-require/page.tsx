@@ -327,7 +327,7 @@ export default function ExpertFormRequirePage() {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>Hủy</Button>
+          <Button onClick={() => setOpenDeleteDialog(false)}>Đóng</Button>
           <Button onClick={handleConfirmDelete} color="error">
             Xóa
           </Button>

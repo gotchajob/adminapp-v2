@@ -2212,6 +2212,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/draftjs-to-html@npm:^0":
+  version: 0.8.4
+  resolution: "@types/draftjs-to-html@npm:0.8.4"
+  dependencies:
+    "@types/draft-js": "npm:*"
+  checksum: 10c0/f7d459adbaad0241b89a9bf3209839b14e05ada907d48a97549e26a84a2965232248fcd46b0abe1db21dce1e0e68ba9a50860655a71a9d036db9d5baf03b3279
+  languageName: node
+  linkType: hard
+
 "@types/estree-jsx@npm:^1.0.0":
   version: 1.0.5
   resolution: "@types/estree-jsx@npm:1.0.5"
@@ -3206,6 +3215,7 @@ __metadata:
     "@tinymce/tinymce-react": "npm:^4.3.2"
     "@types/chance": "npm:^1.1.6"
     "@types/draft-js": "npm:^0.11.17"
+    "@types/draftjs-to-html": "npm:^0"
     "@types/lodash-es": "npm:^4.17.12"
     "@types/mapbox-gl": "npm:^3.1.0"
     "@types/node": "npm:^20.11.20"
@@ -3232,6 +3242,7 @@ __metadata:
     currency.js: "npm:^2.0.4"
     date-fns: "npm:^2.30.0"
     draft-js: "npm:^0.11.7"
+    draftjs-to-html: "npm:^0.9.1"
     emoji-picker-react: "npm:^4.8.0"
     encoding: "npm:^0.1.13"
     eslint: "npm:8.57.0"
@@ -4080,6 +4091,13 @@ __metadata:
     react: ">=0.14.0"
     react-dom: ">=0.14.0"
   checksum: 10c0/25943c73cbacf7e00e3ee6bef3496feffe14f09c436cec9233a4fc1bb2b4302f2bcf5fc66f4a5f8e3a9135808d20783aff75e42659da3b21d50f63185bedf557
+  languageName: node
+  linkType: hard
+
+"draftjs-to-html@npm:^0.9.1":
+  version: 0.9.1
+  resolution: "draftjs-to-html@npm:0.9.1"
+  checksum: 10c0/5b7fa0e337e5f3e64d728fa2bd4f04dcfcb70705b552e571dfba6477f951b8a9b09c6c768c64a3a0d6eade5f532d56e36010850a0ff4ec3905f9a7859a1f86a0
   languageName: node
   linkType: hard
 

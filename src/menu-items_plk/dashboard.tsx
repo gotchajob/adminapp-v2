@@ -61,14 +61,14 @@ const dashboard: NavItemType = {
       icon: IconUser,
       breadcrumbs: false,
     },
-    // {
-    //   id: "serviceprice",
-    //   title: <FormattedMessage id="Quản lí dịch vụ" />,
-    //   type: "item",
-    //   url: "/staff/service-config",
-    //   icon: PriceChangeIcon,
-    //   breadcrumbs: false,
-    // },
+    {
+      id: "blog",
+      title: <FormattedMessage id="Quản lí blog" />,
+      type: "item",
+      url: "/staff/blog",
+      icon: PriceChangeIcon,
+      breadcrumbs: false,
+    },
     {
       id: "transaction",
       title: <FormattedMessage id="Giao dịch" />,
