@@ -1,4 +1,4 @@
-import { BookingReject, GetBookingRejectSuggest, GetBookingRejectSuggestRequest } from "package/api/booking-reject-suggest-controller";
+import { BookingReject, GetBookingRejectSuggest, GetBookingRejectSuggestRequest } from "package/api/booking-reject-suggest";
 import { useEffect, useState } from "react";
 
 export const UseGetBookingRejectSuggest = (params: GetBookingRejectSuggestRequest) => {

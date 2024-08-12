@@ -77,6 +77,7 @@ export const CVList = () => {
   const { cvTemplateListPage } = useGetSearchParams(["cvTemplateListPage"]);
 
   const { push } = useSearchParamsNavigation();
+  
   const handleChangePage = (e: any, page: number) => {
     push([{ name: "cvTemplateListPage", value: page + "" }], true);
   };

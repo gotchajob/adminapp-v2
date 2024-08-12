@@ -33,12 +33,12 @@ interface ReviewProps {
   avatar: string;
   date: Date | string;
   name: string;
-  status: boolean;
+  status?: boolean;
   rating: number;
   review: string;
 }
 
-const ProductReview = ({ avatar, date, name, status, rating, review }: ReviewProps) => {
+const ProductReview = ({ avatar, date, name, rating, review }: ReviewProps) => {
   const [anchorEl, setAnchorEl] = useState<Element | (() => Element) | null | undefined>(null);
   const handleClick = (event: React.MouseEvent<SVGSVGElement> | undefined) => {
     setAnchorEl(event?.currentTarget);
@@ -58,16 +58,6 @@ const ProductReview = ({ avatar, date, name, status, rating, review }: ReviewPro
               <Typography variant="subtitle1" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
                 {name}
               </Typography>
-              {status && (
-                <Tooltip title="Purchased Verified">
-                  <VerifiedUserIcon fontSize="small" sx={{ color: 'success.dark' }} />
-                </Tooltip>
-              )}
-              {!status && (
-                <Tooltip title="Goodwill">
-                  <DirectionsRunIcon fontSize="small" sx={{ color: 'error.main' }} />
-                </Tooltip>
-              )}
             </Stack>
             <Typography variant="caption">{format(new Date(date), 'E, MMM d yyyy')}</Typography>
           </Stack>

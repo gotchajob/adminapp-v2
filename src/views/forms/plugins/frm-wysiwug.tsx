@@ -76,7 +76,7 @@ const WysiwygEditor = () => {
         >
           <Stack spacing={gridSpacing}>
             <Typography variant="subtitle1">React Draft</Typography>
-            <ReactDraftWysiwyg />
+            {/* <ReactDraftWysiwyg /> */}
           </Stack>
         </Grid>
         <Grid item xs={12}>

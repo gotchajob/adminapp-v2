@@ -22,20 +22,22 @@ import { Text } from "components/common/text/text";
 import { useGetBookingById } from "hooks/use-get-booking";
 import { UseGetBookingExpertFeedbackByBooking } from "hooks/use-get-booking-expert-feedback";
 import { UseGetBookingExpertFeedbackQuestion } from "hooks/use-get-booking-expert-feedback-question";
-import {
-  UseGetExpertQuestionCategoryCurrent
-} from "hooks/use-get-expert-question-category";
+import { UseGetExpertQuestionCategoryCurrent } from "hooks/use-get-expert-question-category";
 import { ExpertToken } from "hooks/use-login";
 import { useRefresh } from "hooks/use-refresh";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
-import { BookingFeedbackAnwer, PostBookingExpertFeedback } from "package/api/booking-expert-feedback-controller";
-import { BookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question-controller";
+import {
+  BookingFeedbackAnwer,
+  PostBookingExpertFeedback,
+} from "package/api/booking-expert-feedback-controller";
+import { BookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question";
 import { PatchBookingCancelByExpert } from "package/api/booking/id/cancel-by-expert";
 import { PatchBookingReject } from "package/api/booking/id/reject";
 import { formatDate } from "package/util";
 import { useEffect, useState } from "react";
+import MainCard from "ui-component/cards/MainCard";
 import SubCard from "ui-component/cards/SubCard";
 import Avatar from "ui-component/extended/Avatar";
 
@@ -77,14 +79,13 @@ export default function BookingDetailPage({
 }: {
   params: { id: string };
 }) {
-
   const route = useRouter();
 
   const { refresh, refreshTime } = useRefresh();
 
   const [open, setOpen] = useState(false);
 
-  const [cancelReason, setCancelReason] = useState('');
+  const [cancelReason, setCancelReason] = useState("");
 
   const [isCanceling, setIsCanceling] = useState(false);
 
@@ -92,7 +93,11 @@ export default function BookingDetailPage({
 
   const { expertToken } = ExpertToken();
 
-  const { bookingExpertFeedbackByBooking } = UseGetBookingExpertFeedbackByBooking({ bookingId: +params.id }, refreshTime);
+  const { bookingExpertFeedbackByBooking } =
+    UseGetBookingExpertFeedbackByBooking(
+      { bookingId: +params.id },
+      refreshTime
+    );
 
   const { booking } = useGetBookingById({ id: +params.id });
 
@@ -156,13 +161,19 @@ export default function BookingDetailPage({
         return;
       }
       if (booking.status === 1) {
-        const res = await PatchBookingReject({ id: +params.id, reason: cancelReason }, expertToken);
+        const res = await PatchBookingReject(
+          { id: +params.id, reason: cancelReason },
+          expertToken
+        );
         if (res.status !== "success") {
           throw new Error(res.responseText);
         }
         enqueueSnackbar("Hủy đặt lịch thành công", { variant: "success" });
       } else if (booking.canCancel) {
-        const res = await PatchBookingCancelByExpert({ id: +params.id, reason: cancelReason }, expertToken);
+        const res = await PatchBookingCancelByExpert(
+          { id: +params.id, reason: cancelReason },
+          expertToken
+        );
         if (res.status !== "success") {
           throw new Error(res.responseText);
         }
@@ -172,7 +183,6 @@ export default function BookingDetailPage({
       console.log(error);
       enqueueSnackbar(error, { variant: "error" });
     }
-
   };
 
   const mappedExpertSkillOption = () => {
@@ -228,10 +238,12 @@ export default function BookingDetailPage({
     );
   };
 
-  useEffect(() => { console.log("booking:", booking) }, [booking]);
+  useEffect(() => {
+    console.log("booking:", booking);
+  }, [booking]);
 
   return (
-    <SubCard>
+    <MainCard>
       {booking && (
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12}>
@@ -241,7 +253,14 @@ export default function BookingDetailPage({
                   <Typography variant="h4">Thông tin khách hàng</Typography>
                   <Stack spacing={1}>
                     <FlexBox>
-                      <Avatar alt="User 1" src={booking.customerInfo ? booking.customerInfo.avatar : ""} />
+                      <Avatar
+                        alt="User 1"
+                        src={
+                          booking.customerInfo
+                            ? booking.customerInfo.avatar
+                            : ""
+                        }
+                      />
                       <Typography variant="body2" ml={1}>
                         {booking.customerInfo.fullName}
                       </Typography>
@@ -298,15 +317,28 @@ export default function BookingDetailPage({
                 width={"100%"}
               >
                 <Image
-                  src={
-                    "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
-                  }
+                  src={booking.customerCV.image}
                   alt="Customer CV"
                   width={700}
                   height={1000}
                   style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
                 />
               </FlexCenter>
+
+              <Dialog open={open} onClose={handleClose} fullWidth>
+                <DialogContent>
+                  <Image
+                    src={booking.customerCV.image}
+                    alt="Customer CV"
+                    layout="intrinsic"
+                    width={700}
+                    height={1000}
+                    objectFit="cover"
+                    objectPosition="top"
+                    style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+                  />
+                </DialogContent>
+              </Dialog>
             </Stack>
           </Grid>
           <Grid item xs={12}>
@@ -320,7 +352,13 @@ export default function BookingDetailPage({
                 title="Chú thích của khách hàng"
                 sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
               >
-                <TextField multiline minRows={3} value={booking.note} fullWidth disabled></TextField>
+                <TextField
+                  multiline
+                  minRows={3}
+                  value={booking.note}
+                  fullWidth
+                  disabled
+                ></TextField>
               </SubCard>
             </Stack>
           </Grid>
@@ -357,7 +395,9 @@ export default function BookingDetailPage({
                     multiline
                     rows={3}
                     value={bookingExpertFeedbackByBooking?.comment}
-                    onChange={(event) => { setComment(event.target.value) }}
+                    onChange={(event) => {
+                      setComment(event.target.value);
+                    }}
                     fullWidth
                   ></TextField>
                 </SubCard>
@@ -383,8 +423,9 @@ export default function BookingDetailPage({
                   )}
                 </Button>
               </Grid>
-            </>)}
-          {(booking.status === 5) && (
+            </>
+          )}
+          {booking.status === 5 && (
             <>
               <Grid item xs={12}>
                 <Divider />
@@ -414,33 +455,46 @@ export default function BookingDetailPage({
                   ></TextField>
                 </SubCard>
               </Grid>
-            </>)}
-          {booking && (booking.status === 7) && (<Grid item xs={12}>
-            <SubCard
-              title="Lý do từ chối của bạn"
-              sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
-            >
-              <TextField
-                multiline
-                rows={3}
-                value={booking.rejectReason}
-                fullWidth
-                disabled
-              ></TextField>
-            </SubCard>
-          </Grid>)}
+            </>
+          )}
+          {booking && booking.status === 7 && (
+            <Grid item xs={12}>
+              <SubCard
+                title="Lý do từ chối của bạn"
+                sx={{ boxShadow: "0 3px 5px rgba(0, 0, 0, 0.2)" }}
+              >
+                <TextField
+                  multiline
+                  rows={3}
+                  value={booking.rejectReason}
+                  fullWidth
+                  disabled
+                ></TextField>
+              </SubCard>
+            </Grid>
+          )}
           <Grid item xs={12}>
-            <Stack direction="row" spacing={2} justifyContent="space-between" mt={4}>
-              <Button variant="outlined" onClick={() => route.push("/expert/booking-calendar")}>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="space-between"
+              mt={4}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => route.push("/expert/booking-calendar")}
+              >
                 Quay lại
               </Button>
-              {booking && booking.canCancel && (<Button
-                variant="contained"
-                color="primary"
-                onClick={() => setIsCanceling(!isCanceling)}
-              >
-                Hủy đặt lịch
-              </Button>)}
+              {booking && booking.canCancel && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setIsCanceling(!isCanceling)}
+                >
+                  Hủy đặt lịch
+                </Button>
+              )}
             </Stack>
           </Grid>
           {isCanceling && (
@@ -453,36 +507,30 @@ export default function BookingDetailPage({
                 onChange={(e) => setCancelReason(e.target.value)}
                 fullWidth
               />
-              <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
-                <Button variant="outlined" onClick={() => setIsCanceling(false)}>
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="flex-end"
+                mt={2}
+              >
+                <Button
+                  variant="outlined"
+                  onClick={() => setIsCanceling(false)}
+                >
                   Đóng
                 </Button>
-                <Button variant="contained" color="primary" onClick={handleCancelBooking}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCancelBooking}
+                >
                   Xác nhận
                 </Button>
               </Stack>
             </Grid>
           )}
         </Grid>
-      )
-      }
-
-      <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogContent>
-          <Image
-            src={
-              "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
-            }
-            alt="Customer CV"
-            layout="intrinsic"
-            width={700}
-            height={1000}
-            objectFit="cover"
-            objectPosition="top"
-            style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-          />
-        </DialogContent>
-      </Dialog>
-    </SubCard >
+      )}
+    </MainCard>
   );
 }

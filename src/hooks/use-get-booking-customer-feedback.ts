@@ -1,4 +1,4 @@
-import { BookingCustomerFeedback, GetBookingCustomerFeedback } from "package/api/booking-customer-feedback-controller";
+import { BookingCustomerFeedback, GetBookingCustomerFeedback } from "package/api/booking-customer-feedback";
 import { useEffect, useState } from "react";
 
 export const UseGetBookingCustomerFeedback = () => {

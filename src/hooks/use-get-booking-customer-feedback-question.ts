@@ -1,5 +1,5 @@
 
-import { BookingCustomerFeedbackQuestion, GetBookingCustomerFeedbackQuestion } from "package/api/booking-customer-feedback-question-controller";
+import { BookingCustomerFeedbackQuestion, GetBookingCustomerFeedbackQuestion } from "package/api/booking-customer-feedback-question";
 import { useEffect, useState } from "react";
 
 export const UseGetBookingCustomerFeedbackQuestion = (refresh: number) => {

@@ -54,10 +54,18 @@ const dashboard: NavItemType = {
       breadcrumbs: false
     },
     {
-      id: 'history-calendar',
-      title: <FormattedMessage id="Lịch sủ các buổi phỏng vấn" />,
+      id: 'booking-history',
+      title: <FormattedMessage id="Lịch sủ phỏng vấn" />,
       type: 'item',
       url: '/expert/history-calendar',
+      icon: FeedIcon,
+      breadcrumbs: false
+    },
+    {
+      id: 'feedback',
+      title: <FormattedMessage id="Danh sách đánh giá" />,
+      type: 'item',
+      url: '/expert/booking-feedback',
       icon: FeedIcon,
       breadcrumbs: false
     },
@@ -67,7 +75,6 @@ const dashboard: NavItemType = {
       type: 'item',
       url: '/expert/transaction-widthdraw',
       icon: PaidIcon,
-      breadcrumbs: false
     },
     {
       id: 'history-transaction',
