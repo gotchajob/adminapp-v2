@@ -62,6 +62,14 @@ const dashboard: NavItemType = {
       breadcrumbs: false
     },
     {
+      id: 'transaction-widthdraw',
+      title: <FormattedMessage id="Tạo yêu cầu rút tiền" />,
+      type: 'item',
+      url: '/expert/transaction-widthdraw',
+      icon: PaidIcon,
+      breadcrumbs: false
+    },
+    {
       id: 'history-transaction',
       title: <FormattedMessage id="Lịch sủ giao dịch" />,
       type: 'item',
