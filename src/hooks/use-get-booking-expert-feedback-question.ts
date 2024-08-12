@@ -1,6 +1,6 @@
 
-import { BookingExpertFeedbackQuestion, GetBookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question-controller";
-import { GetBookingExpertFeedbackQuestionCurrent } from "package/api/booking-expert-feedback-question-controller/current";
+import { BookingExpertFeedbackQuestion, GetBookingExpertFeedbackQuestion } from "package/api/booking-expert-feedback-question";
+import { GetBookingExpertFeedbackQuestionCurrent } from "package/api/booking-expert-feedback-question/current";
 import { useEffect, useState } from "react";
 
 export const UseGetBookingExpertFeedbackQuestion = (refresh: number) => {

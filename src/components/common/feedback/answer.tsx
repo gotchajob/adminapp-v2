@@ -12,7 +12,7 @@ import { Fragment, ReactNode } from 'react';
 import { FlexBox } from '../box/flex-box';
 import { Text } from '../text/text';
 import Stack from '@mui/material/Stack';
-import { BookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question-controller';
+import { BookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question';
 import { BookingFeedbackAnwer } from 'package/api/booking-expert-feedback-controller';
 
 interface QuestionAnswer extends BookingExpertFeedbackQuestion {

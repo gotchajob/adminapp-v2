@@ -16,7 +16,7 @@ import TextField from '@mui/material/TextField';
 import { Text } from '../text/text';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { BookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question-controller';
+import { BookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question';
 import { QuestionCategoryCurrent } from 'package/api/expert-question-category/current';
 
 interface MappedFeedbackQuestion extends QuestionCategoryCurrent {

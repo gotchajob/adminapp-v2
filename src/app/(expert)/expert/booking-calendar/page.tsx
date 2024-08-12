@@ -74,7 +74,7 @@ const ExpertBookingPage = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <Box sx={{ boxShadow: 3 }}>
+  
       <MainCard>
         <Grid container spacing={gridSpacing}>
           <Grid item xs={12}>
@@ -174,7 +174,6 @@ const ExpertBookingPage = ({ params }: { params: { id: string } }) => {
           </Grid>
         </Grid>
       </MainCard>
-    </Box>
   );
 };
 

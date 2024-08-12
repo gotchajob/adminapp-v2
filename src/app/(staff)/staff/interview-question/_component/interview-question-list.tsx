@@ -31,8 +31,8 @@ import {
 import SubCard from "ui-component/cards/SubCard";
 import { UseGetBookingCustomerFeedbackQuestion } from "hooks/use-get-booking-customer-feedback-question";
 import { useRefresh } from "hooks/use-refresh";
-import { PostBookingCustomerFeedbackQuestion } from "package/api/booking-customer-feedback-question-controller";
-import { DelBookingCustomerFeedbackQuestionById } from "package/api/booking-customer-feedback-question-controller/id";
+import { PostBookingCustomerFeedbackQuestion } from "package/api/booking-customer-feedback-question";
+import { DelBookingCustomerFeedbackQuestionById } from "package/api/booking-customer-feedback-question/id";
 
 const feedbackTypes = [
   { value: "text", label: "Dạng văn bản" },
