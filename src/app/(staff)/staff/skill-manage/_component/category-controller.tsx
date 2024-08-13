@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Button,
@@ -6,25 +8,23 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
-  Typography,
+  IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  TextField,
   Tooltip,
-  IconButton,
+  Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SubCard from "ui-component/cards/SubCard";
+import { enqueueSnackbar } from "notistack";
 import { PostCategory } from "package/api/category";
 import { DelCategory, PatchCategory } from "package/api/category/id";
-import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
+import MainCard from "ui-component/cards/MainCard";
 
 interface Category {
   name: string;
@@ -123,7 +123,7 @@ export function CategoryControllerPage({
   };
 
   return (
-    <SubCard
+    <MainCard
       title={
         <Box
           sx={{
@@ -132,7 +132,7 @@ export function CategoryControllerPage({
             alignItems: "center",
           }}
         >
-          <Typography variant="h4" color="primary">
+          <Typography variant="h4">
             Quản lí danh mục
           </Typography>
           <Button
@@ -233,6 +233,6 @@ export function CategoryControllerPage({
           </Button>
         </DialogActions>
       </Dialog>
-    </SubCard>
+    </MainCard>
   );
 }

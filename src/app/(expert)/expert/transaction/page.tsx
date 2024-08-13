@@ -104,7 +104,7 @@ export default function TransactionPage() {
                   </TableCell>
                   <TableCell align="center">
                     <Tooltip title="Xem Chi Tiết">
-                      <IconButton onClick={() => {}} sx={{ color: "#2196F3" }}>
+                      <IconButton onClick={() => { }} sx={{ color: "#2196F3" }}>
                         <VisibilityIcon />
                       </IconButton>
                     </Tooltip>

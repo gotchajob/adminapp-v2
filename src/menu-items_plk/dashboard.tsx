@@ -99,16 +99,23 @@ const dashboard: NavItemType = {
         },
         {
           id: "expert-form-require",
-          title: <FormattedMessage id="Yêu cầu đăng ký chuyên gia" />,
+          title: <FormattedMessage id="Quản lý yêu cầu đăng ký chuyên gia" />,
           type: "item",
           url: "/staff/expert-form-require",
           breadcrumbs: false,
         },
         {
           id: "category-controller",
-          title: <FormattedMessage id="Quản lý ngành nghề" />,
+          title: <FormattedMessage id="Quản lý ngành nghề chuyên gia đăng ký" />,
           type: "item",
           url: "/staff/skill-manage",
+          breadcrumbs: false,
+        },
+        {
+          id: "expert-transaction-withdraw",
+          title: <FormattedMessage id="Yêu cầu rút tiền của chuyên gia" />,
+          type: "item",
+          url: "/staff/expert-transaction-withdraw",
           breadcrumbs: false,
         },
         // {
