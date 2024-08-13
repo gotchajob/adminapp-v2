@@ -1,14 +1,12 @@
 import { RatingParams } from "components/review";
-import {
-  GetBookingFeedback,
-  GetBookingFeedbackRequest,
-} from "package/api/booking-customer-feedback/for-expert";
-import { GetBookingTotalRating } from "package/api/booking-customer-feedback/total-rating";
 import { useEffect, useState } from "react";
 import { ExpertToken } from "./use-login";
+import { GetExpertTotalSkillRating, GetExpertTotalSkillRatingRequest } from "package/api/expert-skill-rating/total-rating";
+import { GetExpertSkillRating, GetExpertSkillRatingRequest } from "package/api/expert-skill-rating/for-expert";
 
-export const useGetExpertBookingTotalRating = (
-  params: GetBookingFeedbackRequest,
+export const useGetExpertTotalSkillRating = (
+  params1: GetExpertTotalSkillRatingRequest,
+  params2: GetExpertSkillRatingRequest,
   refreshTime: number
 ) => {
   const [ratingParams, setRatingParams] = useState<RatingParams | undefined>();
@@ -16,8 +14,8 @@ export const useGetExpertBookingTotalRating = (
   const { expertToken } = ExpertToken();
 
   const getTotalRating = async () => {
-    const totalRating = await GetBookingTotalRating({}, expertToken);
-    const feedback = await GetBookingFeedback(params, expertToken);
+    const totalRating = await GetExpertTotalSkillRating(params1, expertToken);
+    const feedback = await GetExpertSkillRating(params2, expertToken);
     const newRatingParams: RatingParams = {
       feedbackList: [],
       totalRatingList: [
@@ -43,7 +41,7 @@ export const useGetExpertBookingTotalRating = (
           avatar: "",
           fullName: "Nguời dùng",
         },
-        href: `/expert/interview/${value.bookingId}`,
+        href: `#`,
       })
     );
     setRatingParams(newRatingParams);
