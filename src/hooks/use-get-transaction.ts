@@ -34,15 +34,18 @@ export const useGetTransactionCurrent = (params: GetTransactionCurrentReq, acces
     }
 }
 
-export const useGetTransaction = (params: GetTransactionReq, refresh: number) => {
+export const useGetTransaction = (params: GetTransactionReq, accessToken: string, refresh: number) => {
     const [transaction, setTransaction] = useState<TransactionRes>({ list: [], totalPage: 0 });
 
     const [loading, setLoading] = useState<boolean>(false);
 
     const fetchTransaction = async () => {
+        if (!accessToken) {
+            return;
+        }
         try {
             setLoading(true);
-            const data = await GetTransaction(params);
+            const data = await GetTransaction(params, accessToken);
             if (data.status !== "success") {
                 throw new Error(data.responseText);
             }
@@ -54,7 +57,7 @@ export const useGetTransaction = (params: GetTransactionReq, refresh: number) =>
         }
     }
 
-    useEffect(() => { fetchTransaction() }, [params.pageNumber, params.pageSize, params.search, params.sortBy, refresh]);
+    useEffect(() => { fetchTransaction() }, [params.pageNumber, params.pageSize, params.search, params.sortBy, accessToken, refresh]);
 
     return {
         transaction, loading

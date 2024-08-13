@@ -30,14 +30,14 @@ export interface Transaction {
     referId: number;
 }
 
-export const GetTransaction = async (params: GetTransactionReq): Promise<GetTransactionRes> => {
+export const GetTransaction = async (params: GetTransactionReq, accessToken: string): Promise<GetTransactionRes> => {
     try {
         const url = new URLSearchParams();
         url.append("pageNumber", params.pageNumber + "");
         url.append("pageSize", params.pageSize + "");
         url.append("sortBy", params.sortBy + "");
         url.append("search", params.search + "");
-        const res = await apiServerFetch(`/transaction?` + url, 'GET', undefined, undefined);
+        const res = await apiServerFetch(`/transaction?` + url, 'GET', undefined, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', { list: [], totalPage: 0 });

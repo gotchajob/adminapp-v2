@@ -1,32 +1,53 @@
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { Box, Button, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 interface BankInfoCardProps {
-    bankName: string;
-    bankAccount: string;
+    bankCode: string;
+    numberCard: string;
+    nameHolder: string;
     selected: boolean;
-    onSave: (bankName: string, bankAccount: string) => void;
+    bankInfoStatus: number;
+    onSave: (bankCode: string, numberCard: string, nameHolder: string) => void;
+    onAdd: (bankCode: string, numberCard: string, nameHolder: string) => void;
+    onDelete: () => void;
     onClick: () => void;
+    onRemove: () => void;
 }
 
-export function BankInfoCard({ bankName: initialBankName, bankAccount: initialBankAccount, selected, onSave, onClick }: BankInfoCardProps) {
-    const [bankName, setBankName] = useState(initialBankName);
-    const [bankAccount, setBankAccount] = useState(initialBankAccount);
+export function BankInfoCard({
+    bankCode: initialBankCode,
+    numberCard: initialNumberCard,
+    nameHolder: initialNameHolder,
+    bankInfoStatus,
+    selected,
+    onAdd,
+    onSave,
+    onDelete,
+    onClick,
+    onRemove,
+}: BankInfoCardProps) {
+    const [bankCode, setBankCode] = useState(initialBankCode);
+    const [numberCard, setNumberCard] = useState(initialNumberCard);
+    const [nameHolder, setNameHolder] = useState(initialNameHolder);
 
     useEffect(() => {
-        setBankName(initialBankName);
-        setBankAccount(initialBankAccount);
-    }, [initialBankName, initialBankAccount]);
+        setBankCode(initialBankCode);
+        setNumberCard(initialNumberCard);
+        setNameHolder(initialNameHolder);
+    }, [initialBankCode, initialNumberCard, initialNameHolder]);
 
-    const handleSave = () => {
-        onSave(bankName, bankAccount);
+    const handleDelete = () => {
+        if (bankInfoStatus !== 1) {
+            onRemove();
+        } else {
+            onDelete();
+        }
     };
 
     const handleOnClick = () => {
-        if (bankName && bankAccount) {
+        if (bankCode && numberCard && nameHolder) {
             onClick();
         }
     };
@@ -41,11 +62,11 @@ export function BankInfoCard({ bankName: initialBankName, bankAccount: initialBa
                     transform: 'scale(1.01)',
                 },
                 position: 'relative',
-                border: selected ? '2px solid blue' : 'none',
-                boxShadow: selected ? '0 0 10px rgba(33, 150, 243, 1)' : 'none',
+                border: bankInfoStatus === 1 && selected ? '2px solid blue' : 'none',
+                boxShadow: bankInfoStatus === 1 && selected ? '0 0 10px rgba(33, 150, 243, 1)' : 'none',
             }}
         >
-            {selected && (
+            {bankInfoStatus === 1 && selected && (
                 <TaskAltIcon
                     sx={{
                         position: 'absolute',
@@ -59,25 +80,37 @@ export function BankInfoCard({ bankName: initialBankName, bankAccount: initialBa
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, my: 2 }}>
                 <TextField
                     label="Tên Ngân hàng"
-                    value={bankName}
-                    onChange={(e) => setBankName(e.target.value)}
+                    value={bankCode}
+                    onChange={(e) => setBankCode(e.target.value)}
                     fullWidth
                 />
                 <TextField
                     label="Số tài khoản Ngân hàng"
-                    value={bankAccount}
-                    onChange={(e) => setBankAccount(e.target.value)}
+                    value={numberCard}
+                    onChange={(e) => setNumberCard(e.target.value)}
+                    fullWidth
+                />
+                <TextField
+                    label="Tên chủ thẻ"
+                    value={nameHolder}
+                    onChange={(e) => setNameHolder(e.target.value)}
                     fullWidth
                 />
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="outlined" color="primary" onClick={handleSave}>
+                <Button variant="outlined" color="primary" onClick={handleDelete}>
                     Xóa thẻ
                 </Button>
-                <Button variant="contained" color="primary" onClick={handleSave}>
-                    Lưu thông tin
-                </Button>
+                {bankInfoStatus === 1 ? (
+                    <Button variant="contained" color="primary" onClick={() => onSave(bankCode, numberCard, nameHolder)} >
+                        Lưu thông tin
+                    </Button>
+                ) : (
+                    <Button variant="contained" color="primary" onClick={() => onAdd(bankCode, numberCard, nameHolder)} disabled={!bankCode || !numberCard || !nameHolder}>
+                        Thêm thông tin thanh toán mới
+                    </Button>
+                )}
             </Box>
-        </MainCard>
+        </MainCard >
     );
 }
