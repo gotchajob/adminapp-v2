@@ -25,15 +25,17 @@ import { useRefresh } from 'hooks/use-refresh';
 
 // utils
 import { formatDate } from 'package/util';
+import { CustomerToken } from 'hooks/use-login';
 
 const TransactionList = () => {
   const theme = useTheme();
   const [pageSize, setPageSize] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
 
+  const {customerToken} = CustomerToken()
   const { refresh, refreshTime } = useRefresh();
 
-  const { transaction, loading: transactionLoading } = useGetTransaction({ pageSize: pageSize, pageNumber: page }, refreshTime);
+  const { transaction, loading: transactionLoading } = useGetTransaction({ pageSize: pageSize, pageNumber: page }, customerToken, refreshTime);
 
   useEffect(() => {
     console.log("Transaction Data", transaction);

@@ -26,6 +26,7 @@ import { Products, Reviews } from 'types/e-commerce';
 import StarTwoToneIcon from '@mui/icons-material/StarTwoTone';
 import StarBorderTwoToneIcon from '@mui/icons-material/StarBorderTwoTone';
 import RateReviewTwoToneIcon from '@mui/icons-material/RateReviewTwoTone';
+import { formatDate } from 'package/util';
 
 interface ProgressProps {
   like: number;
@@ -132,7 +133,7 @@ const ProductReviews = ({ product }: { product: Products }) => {
           <Grid item xs={12} key={index}>
             <ProductReview
               avatar={review.profile.avatar}
-              date={review.date}
+              date={formatDate(new Date(review.date).toISOString(), "dd-mm-yyyy")}
               name={review.profile.name}
               status={review.profile.status}
               rating={review.rating}
