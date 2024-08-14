@@ -1,7 +1,7 @@
 import { apiServerFetch, errorSystem } from "package/api/api-fetch";
 
-export interface BookingTotalRatingRequest {}
-export interface BookingTotalRatingResponse {
+export interface GetBookingTotalRatingRequest {}
+export interface GetBookingTotalRatingResponse {
   status: string;
   responseText: string;
   data: BookingTotalRating[];
@@ -13,9 +13,9 @@ export interface BookingTotalRating {
 }
 
 export const GetBookingTotalRating = async (
-  params: BookingTotalRatingRequest,
+  params: GetBookingTotalRatingRequest,
   accessToken: string
-): Promise<BookingTotalRatingResponse> => {
+): Promise<GetBookingTotalRatingResponse> => {
   try {
     const res = await apiServerFetch(
       "/booking-customer-feedback/total-rating",

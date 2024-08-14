@@ -81,6 +81,10 @@ interface TotalRating {
   count: number;
 }
 
+interface TotalRatingPercent extends TotalRating {
+  percent: number;
+}
+
 interface Feedback {
   rating: number;
   comment: string;
@@ -97,7 +101,7 @@ export const CustomerReview = ({
 }: {
   ratingParams: RatingParams;
 }) => {
-  const { total, numberRating } = calculateTotalRating(
+  const { total, numberRating, totalRatingPercentList } = calculateTotalRating(
     ratingParams.totalRatingList
   );
 
@@ -113,7 +117,7 @@ export const CustomerReview = ({
           >
             <Typography variant="subtitle1">Average Rating</Typography>
             <Typography variant="h1" color="primary">
-              {Number(total)}/5
+              {Number(total).toFixed(1)}/5
             </Typography>
             <Stack direction="row" alignItems="center" spacing={1}>
               <Rating
@@ -141,13 +145,13 @@ export const CustomerReview = ({
           justifyContent="space-between"
           spacing={1}
         >
-          {ratingParams.totalRatingList.map((value, index) => (
+          {totalRatingPercentList.map((value, index) => (
             <Grid item xs={12} key={index}>
               <LinearProgressWithLabel
                 color="secondary"
                 star={value.rating}
-                value={15}
-                like={125}
+                value={value.percent}
+                like={value.count}
               />
             </Grid>
           ))}
@@ -199,10 +203,19 @@ export const CustomerReview = ({
 const calculateTotalRating = (totalRatingList: TotalRating[]) => {
   let total = 0;
   let numberRating = 0;
-  console.log(totalRatingList)
+  let totalRatingPercentList: TotalRatingPercent[] = [];
+
   totalRatingList.forEach((value) => {
-    total = total + value.rating;
+    total = total + value.rating * value.count;
     numberRating = numberRating + value.count;
   });
-  return { total: total / totalRatingList.length, numberRating };
+
+  totalRatingList.forEach((value) => {
+    const newRatingPercent: TotalRatingPercent ={
+       ...value,
+       percent: value.count / numberRating * 100
+    }
+    totalRatingPercentList.push(newRatingPercent)
+  });
+  return { total: total / numberRating, numberRating, totalRatingPercentList };
 };

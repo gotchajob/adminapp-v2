@@ -54,6 +54,7 @@ import { FlexBetween } from "components/common/box/flex-box";
 import { Text } from "views/forms/input/text/text";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
+import { StyledLink } from "components/common/link/styled-link";
 
 // ==============================|| PROFILE 2 - Expert PROFILE ||============================== //
 
@@ -78,10 +79,9 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
     return array?.join(", ");
   };
 
-  const { expertSkillOptions } =
-    useGetExpertSkillOptions(
-      { expertId: expert?.expertId }
-    );
+  const { expertSkillOptions } = useGetExpertSkillOptions({
+    expertId: expert?.expertId,
+  });
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -275,16 +275,29 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
               </Grid>
             </Grid>
           </Grid>
-          {expertSkillOptions?.map((skillOptions, index) => (<> <Grid item xs={4}>
-            <SubCard title={skillOptions.skillOptionName} key={index}>
-              <FlexBetween>
-                <Rating value={skillOptions.sumPoint} size="small" readOnly />
-                <Text fontSize={13}>
-                  <span style={{ fontWeight: "bold" }}>{skillOptions.totalRating}</span> lượt đánh giá
-                </Text>
-              </FlexBetween>
-            </SubCard>
-          </Grid></>))}
+          {expertSkillOptions?.map((skillOption, index) => (
+            <Grid item xs={4} key={index}>
+              <StyledLink
+                href={`/expert/skill-feedback/${skillOption.skillOptionName}/${skillOption.id}`}
+              >
+                <SubCard title={skillOption.skillOptionName}>
+                  <FlexBetween>
+                    <Rating
+                      value={skillOption.sumPoint}
+                      size="small"
+                      readOnly
+                    />
+                    <Text fontSize={13}>
+                      <span style={{ fontWeight: "bold" }}>
+                        {skillOption.totalRating}
+                      </span>{" "}
+                      lượt đánh giá
+                    </Text>
+                  </FlexBetween>
+                </SubCard>
+              </StyledLink>
+            </Grid>
+          ))}
         </>
       ) : (
         <Typography variant="h6">Loading...</Typography>

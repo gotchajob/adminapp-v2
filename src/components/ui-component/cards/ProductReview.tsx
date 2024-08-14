@@ -31,7 +31,7 @@ const avatarImage = '/assets/images/users';
 
 interface ReviewProps {
   avatar: string;
-  date: Date | string;
+  date: string;
   name: string;
   status?: boolean;
   rating: number;
@@ -59,7 +59,7 @@ const ProductReview = ({ avatar, date, name, rating, review }: ReviewProps) => {
                 {name}
               </Typography>
             </Stack>
-            <Typography variant="caption">{format(new Date(date), 'E, MMM d yyyy')}</Typography>
+            <Typography variant="caption">{date}</Typography>
           </Stack>
         </Stack>
       </Grid>
