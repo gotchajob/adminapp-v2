@@ -21,11 +21,11 @@ export const useGetExpertBookingTotalRating = (
     const newRatingParams: RatingParams = {
       feedbackList: [],
       totalRatingList: [
-        { rating: 1, count: 0 },
-        { rating: 2, count: 0 },
-        { rating: 3, count: 0 },
-        { rating: 4, count: 0 },
         { rating: 5, count: 0 },
+        { rating: 4, count: 0 },
+        { rating: 3, count: 0 },
+        { rating: 2, count: 0 },
+        { rating: 1, count: 0 },
       ],
     };
 

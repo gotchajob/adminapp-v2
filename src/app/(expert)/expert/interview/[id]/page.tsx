@@ -317,7 +317,7 @@ export default function BookingDetailPage({
                 width={"100%"}
               >
                 <Image
-                  src={booking.customerCV.image}
+                  src={booking.customerCV.image || "https://th.bing.com/th/id/R.97b7aabdda0bb17d06b0bfe4676c4bd8?rik=LR3rS6Yr98kBfA&pid=ImgRaw&r=0"}
                   alt="Customer CV"
                   width={700}
                   height={1000}
@@ -328,7 +328,10 @@ export default function BookingDetailPage({
               <Dialog open={open} onClose={handleClose} fullWidth>
                 <DialogContent>
                   <Image
-                    src={booking.customerCV.image}
+                    src={
+                      booking.customerCV.image ||
+                      "https://th.bing.com/th/id/R.97b7aabdda0bb17d06b0bfe4676c4bd8?rik=LR3rS6Yr98kBfA&pid=ImgRaw&r=0"
+                    }
                     alt="Customer CV"
                     layout="intrinsic"
                     width={700}
