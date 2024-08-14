@@ -136,7 +136,7 @@ function CategoryTable({
             alignItems: "center",
           }}
         >
-          <Typography variant="h4" color="primary">
+          <Typography variant="h4">
             Quản lí danh mục câu hỏi
           </Typography>
           <Button
@@ -153,7 +153,7 @@ function CategoryTable({
     >
       <TableContainer component={Paper}>
         <Table>
-          <TableHead sx={{ backgroundColor: "#f5f5f5" }}>
+          <TableHead >
             <TableRow>
               <TableCell>Danh mục</TableCell>
               <TableCell>Mô Tả</TableCell>
@@ -331,7 +331,7 @@ function InterviewQuestionTable({
               alignItems: "center",
             }}
           >
-            <Typography variant="h4" color="primary">
+            <Typography variant="h4">
               Quản lí câu hỏi phỏng vấn
             </Typography>
             <Button
@@ -348,7 +348,7 @@ function InterviewQuestionTable({
       >
         <TableContainer component={Paper}>
           <Table>
-            <TableHead sx={{ backgroundColor: "#f5f5f5" }}>
+            <TableHead>
               <TableRow>
                 <TableCell>Câu hỏi</TableCell>
                 <TableCell>Kiểu câu hỏi</TableCell>

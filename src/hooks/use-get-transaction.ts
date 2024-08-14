@@ -1,6 +1,7 @@
 
 import { GetTransaction, GetTransactionReq, TransactionRes } from "package/api/transaction";
 import { GetTransactionCurrent, GetTransactionCurrentReq, TransactionCurrentRes } from "package/api/transaction/current";
+import { GetTransactionCurrentWithdraw, GetTransactionCurrentWithdrawReq, TransactionCurrentWithdrawRes } from "package/api/transaction/current/withdraw";
 import { useEffect, useState } from "react";
 
 export const useGetTransactionCurrent = (params: GetTransactionCurrentReq, accessToken: string, refresh: number) => {
@@ -33,15 +34,18 @@ export const useGetTransactionCurrent = (params: GetTransactionCurrentReq, acces
     }
 }
 
-export const useGetTransaction = (params: GetTransactionReq, refresh: number) => {
+export const useGetTransaction = (params: GetTransactionReq, accessToken: string, refresh: number) => {
     const [transaction, setTransaction] = useState<TransactionRes>({ list: [], totalPage: 0 });
 
     const [loading, setLoading] = useState<boolean>(false);
 
     const fetchTransaction = async () => {
+        if (!accessToken) {
+            return;
+        }
         try {
             setLoading(true);
-            const data = await GetTransaction(params);
+            const data = await GetTransaction(params, accessToken);
             if (data.status !== "success") {
                 throw new Error(data.responseText);
             }
@@ -53,9 +57,39 @@ export const useGetTransaction = (params: GetTransactionReq, refresh: number) =>
         }
     }
 
-    useEffect(() => { fetchTransaction() }, [params.pageNumber, params.pageSize, params.search, params.sortBy, refresh]);
+    useEffect(() => { fetchTransaction() }, [params.pageNumber, params.pageSize, params.search, params.sortBy, accessToken, refresh]);
 
     return {
         transaction, loading
+    }
+}
+
+export const useGetTransactionCurrentWithdraw = (params: GetTransactionCurrentWithdrawReq, accessToken: string, refresh: number) => {
+    const [transactionCurrentWithdraw, setTransactionCurrentWithdraw] = useState<TransactionCurrentWithdrawRes>({ list: [], totalPage: 0 });
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const fetchTransactionCurrentWithdraw = async () => {
+        if (!accessToken) {
+            return
+        }
+        try {
+            setLoading(true);
+            const data = await GetTransactionCurrentWithdraw(params, accessToken);
+            if (data.status !== "success") {
+                throw new Error(data.responseText);
+            }
+            setTransactionCurrentWithdraw(data.data);
+        } catch (error: any) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => { fetchTransactionCurrentWithdraw() }, [params.pageNumber, params.pageSize, params.status, params.sortBy, refresh, accessToken]);
+
+    return {
+        transactionCurrentWithdraw, loading
     }
 }

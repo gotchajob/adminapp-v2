@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
-import SubCard from 'ui-component/cards/SubCard';
-import { PatchSkill, PostSkill, Skill } from 'package/api/skill';
 import { Category } from 'package/api/category';
+import { PatchSkill, PostSkill, Skill } from 'package/api/skill';
 import { DelSkill } from 'package/api/skill/id';
+import { useState } from 'react';
+import MainCard from 'ui-component/cards/MainCard';
 
 interface SkillControllerPageProps {
     token: string;
@@ -93,10 +93,10 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
     };
 
     return (
-        <SubCard
+        <MainCard
             title={
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h4" color="primary">Quản lí kĩ năng</Typography>
+                    <Typography variant="h4">Quản lí kĩ năng</Typography>
                     <Button variant="outlined" color="primary" startIcon={<AddIcon />} onClick={() => {
                         setOpenAddDialog(true);
                         setNewSkill({ name: '', id: null, categoryId: null });
@@ -108,7 +108,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
             sx={{ mt: 3 }}>
             <TableContainer component={Paper}>
                 <Table>
-                    <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                    <TableHead>
                         <TableRow>
                             <TableCell>Tên kĩ năng</TableCell>
                             <TableCell>Tên danh mục</TableCell>
@@ -210,6 +210,6 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
                     <Button onClick={handleConfirmDelete} color="error">Xóa</Button>
                 </DialogActions>
             </Dialog>
-        </SubCard>
+        </MainCard>
     );
 }

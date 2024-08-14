@@ -40,6 +40,7 @@ import {
 } from "package/api/expert-form-require/id";
 import { enqueueSnackbar } from "notistack";
 import { useGetCategories } from "hooks/use-get-category";
+import MainCard from "ui-component/cards/MainCard";
 
 export default function ExpertFormRequirePage() {
   const { refresh, refreshTime } = useRefresh();
@@ -128,7 +129,7 @@ export default function ExpertFormRequirePage() {
   };
 
   return (
-    <SubCard
+    <MainCard
       title={
         <Box
           sx={{
@@ -137,8 +138,8 @@ export default function ExpertFormRequirePage() {
             alignItems: "center",
           }}
         >
-          <Typography variant="h4" color="primary">
-            Yêu cầu chuyên gia
+          <Typography variant="h4" >
+            Yêu cầu đăng ký chuyên gia
           </Typography>
           <Button
             variant="outlined"
@@ -266,7 +267,7 @@ export default function ExpertFormRequirePage() {
                 })
               }
               label="Chọn danh mục"
-              // readOnly
+            // readOnly
             >
               {categories.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
@@ -333,6 +334,6 @@ export default function ExpertFormRequirePage() {
           </Button>
         </DialogActions>
       </Dialog>
-    </SubCard>
+    </MainCard>
   );
 }
