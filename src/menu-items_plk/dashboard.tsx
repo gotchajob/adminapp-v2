@@ -12,6 +12,8 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 import PriceChangeIcon from '@mui/icons-material/PriceChange';
@@ -67,6 +69,14 @@ const dashboard: NavItemType = {
       type: "item",
       url: "/staff/blog",
       icon: PriceChangeIcon,
+      breadcrumbs: false,
+    },
+    {
+      id: "booking-report",
+      title: <FormattedMessage id="Quản lí báo cáo buổi phỏng vấn" />,
+      type: "item",
+      url: "/staff/booking-report",
+      icon: ReportProblemIcon,
       breadcrumbs: false,
     },
     {

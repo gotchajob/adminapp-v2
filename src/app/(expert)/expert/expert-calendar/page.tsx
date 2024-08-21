@@ -88,108 +88,108 @@ const ExpertBookingPage = () => {
   };
 
   return (
-      <MainCard>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="icon label tabs example"
-              variant="scrollable"
-              sx={{
-                "& .MuiTabs-flexContainer": {
-                  borderBottom: "none",
+    <MainCard>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="icon label tabs example"
+            variant="scrollable"
+            sx={{
+              "& .MuiTabs-flexContainer": {
+                borderBottom: "none",
+              },
+              "& .MuiTabs-indicator": {
+                display: "none",
+              },
+              "& .MuiButtonBase-root + .MuiButtonBase-root": {
+                position: "relative",
+                overflow: "visible",
+                ml: 2,
+                "&:after": {
+                  content: '""',
+                  bgcolor: "#ccc",
+                  width: 1,
+                  height: "calc(100% - 16px)",
+                  position: "absolute",
+                  top: 8,
+                  left: -8,
                 },
-                "& .MuiTabs-indicator": {
-                  display: "none",
-                },
-                "& .MuiButtonBase-root + .MuiButtonBase-root": {
-                  position: "relative",
-                  overflow: "visible",
-                  ml: 2,
+              },
+            }}
+          >
+            {tabsOption.map((tab, index) => (
+              <Tab
+                value={index}
+                key={index}
+                icon={tab.icon}
+                label={
+                  <Grid container direction="column">
+                    <Typography variant="subtitle1" color="inherit">
+                      {tab.label}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ textTransform: "capitalize" }}
+                    >
+                      {tab.caption}
+                    </Typography>
+                  </Grid>
+                }
+                sx={{
+                  color: value === index ? "primary.main" : "grey.900",
+                  bgcolor:
+                    value === index
+                      ? theme.palette.mode === ThemeMode.DARK
+                        ? "dark.main"
+                        : "grey.50"
+                      : "transparent",
+                  minHeight: "auto",
+                  minWidth: { xs: "100%", md: 250 },
+                  padding: 2,
+                  borderRadius: `${theme.shape.borderRadius}px`,
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "flex-start",
+                  textAlign: "left",
+                  justifyContent: "flex-start",
                   "&:after": {
-                    content: '""',
-                    bgcolor: "#ccc",
-                    width: 1,
-                    height: "calc(100% - 16px)",
-                    position: "absolute",
-                    top: 8,
-                    left: -8,
+                    bgcolor: "transparent !important",
                   },
-                },
-              }}
-            >
-              {tabsOption.map((tab, index) => (
-                <Tab
-                  value={index}
-                  key={index}
-                  icon={tab.icon}
-                  label={
-                    <Grid container direction="column">
-                      <Typography variant="subtitle1" color="inherit">
-                        {tab.label}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{ textTransform: "capitalize" }}
-                      >
-                        {tab.caption}
-                      </Typography>
-                    </Grid>
-                  }
-                  sx={{
-                    color: value === index ? "primary.main" : "grey.900",
+                  "&.Mui-selected": {
+                    color: "primary.main",
                     bgcolor:
-                      value === index
-                        ? theme.palette.mode === ThemeMode.DARK
-                          ? "dark.main"
-                          : "grey.50"
-                        : "transparent",
-                    minHeight: "auto",
-                    minWidth: { xs: "100%", md: 250 },
-                    padding: 2,
-                    borderRadius: `${theme.shape.borderRadius}px`,
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "flex-start",
-                    textAlign: "left",
-                    justifyContent: "flex-start",
-                    "&:after": {
-                      bgcolor: "transparent !important",
-                    },
-                    "&.Mui-selected": {
-                      color: "primary.main",
-                      bgcolor:
-                        theme.palette.mode === ThemeMode.DARK
-                          ? "dark.main"
-                          : "grey.50",
-                    },
-                    "& > svg": {
-                      marginBottom: "0px !important",
-                      mr: 1.25,
-                      mt: 0.25,
-                      height: 20,
-                      width: 20,
-                    },
-                  }}
-                />
-              ))}
-            </Tabs>
-          </Grid>
+                      theme.palette.mode === ThemeMode.DARK
+                        ? "dark.main"
+                        : "grey.50",
+                  },
+                  "& > svg": {
+                    marginBottom: "0px !important",
+                    mr: 1.25,
+                    mt: 0.25,
+                    height: 20,
+                    width: 20,
+                  },
+                }}
+              />
+            ))}
+          </Tabs>
+        </Grid>
 
-          <Grid item xs={12}>
-            <TabPanel value={value} index={0}>
-              <ExpertCalendarPage onNext={handleNextStep} />
-            </TabPanel>
-            {/* <TabPanel value={value} index={1}>
+        <Grid item xs={12}>
+          <TabPanel value={value} index={0}>
+            <ExpertCalendarPage onNext={handleNextStep} />
+          </TabPanel>
+          {/* <TabPanel value={value} index={1}>
                             <CustomerCalendarPage onNext={() => { }} onSelectEvent={() => { }} />
                         </TabPanel>
                         <TabPanel value={value} index={2}>
                             <CalendarHistoryPage onNext={() => { }} onSelectEvent={() => { }} />
-                        </TabPanel> */}
-          </Grid>
+              </TabPanel> */}
         </Grid>
-      </MainCard>
+      </Grid>
+    </MainCard>
   );
 };
 

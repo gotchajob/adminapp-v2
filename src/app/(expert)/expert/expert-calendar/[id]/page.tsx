@@ -33,60 +33,10 @@ import { Button, Dialog, DialogContent, TextField } from "@mui/material";
 import { StyledLink } from "components/common/link/styled-link";
 import Image from "next/image";
 
-const detailsIconSX = {
-  width: 15,
-  height: 15,
-  verticalAlign: "text-top",
-  mr: 0.5,
-  mt: 0.25,
-};
-
-// table data
-function createData(
-  product: string,
-  description: string,
-  quantity: string,
-  amount: string,
-  total: string
-) {
-  return { product, description, quantity, amount, total };
-}
-
-const rows = [
-  createData(
-    "Logo Design",
-    "lorem ipsum dolor sit amat, connecter adieu siccing eliot",
-    "6",
-    "$200.00",
-    "$1200.00"
-  ),
-  createData(
-    "Landing Page",
-    "lorem ipsum dolor sit amat, connecter adieu siccing eliot",
-    "7",
-    "$100.00",
-    "$700.00"
-  ),
-  createData(
-    "Admin Template",
-    "lorem ipsum dolor sit amat, connecter adieu siccing eliot",
-    "5",
-    "$150.00",
-    "$750.00"
-  ),
-];
-
-const formatDate = (isoString: any) => {
-  return format(new Date(isoString), "HH:mm dd/MM/yyyy");
-};
-
-const BookingDetailPage = ({
-}: {
-}) => {
+const BookingDetailPage = ({ params }: { params: { id: string } }) => {
   const theme = useTheme();
 
   const [open, setOpen] = useState(false);
-
 
   useEffect(() => {
     console.log("BookingDetailPage :", event);
