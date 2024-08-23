@@ -22,6 +22,15 @@ export interface BookingReport {
   staffNote: string,
   status: number;
   bookingId: number;
+  createdAt: string,
+  updatedAt: string,
+  reportSuggest: reportSuggest[]
+}
+
+export interface reportSuggest {
+  id: number,
+  reportSuggestId: number,
+  reportSuggest: string,
 }
 
 export const GetBookingReport = async (params: GetBookingReportRequest, accessToken: string): Promise<GetBookingReportResponse> => {

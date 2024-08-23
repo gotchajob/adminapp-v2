@@ -22,6 +22,8 @@ export interface BookingReportForExpert {
     bookingId: number,
     createdAt: string;
     bookingReportSuggest: bookingReportSuggest[];
+    updatedAt: string,
+    status: number,
 }
 
 export interface bookingReportSuggest {

@@ -1,12 +1,36 @@
 "use client"
 
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Box, Button, CircularProgress, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from "@mui/material";
 import { UseGetBookingReport } from "hooks/use-get-booking-report";
 import { StaffToken } from "hooks/use-login";
 import { useRefresh } from "hooks/use-refresh";
+import Link from 'next/link';
+import { enqueueSnackbar } from 'notistack';
+import { ApproveBookingReport } from 'package/api/booking-report/id/approve';
+import { RejectBookingReport } from 'package/api/booking-report/id/reject';
 import { useEffect, useState } from "react";
 import MainCard from "ui-component/cards/MainCard";
+
+const renderStatusChip = (status: number) => {
+    switch (status) {
+        case 1:
+            return <Chip label="Processing" color="primary" />;
+        case 2:
+            return <Chip label="Expert Processing" color="warning" />;
+        case 3:
+            return <Chip label="Staff Processing" color="info" />;
+        case 4:
+            return <Chip label="Approved" color="success" />;
+        case 5:
+            return <Chip label="Rejected" color="error" />;
+        default:
+            return <Chip label="Unknown" color="default" />;
+    }
+};
 
 const fakeBookingReportData = {
     list: [
@@ -43,6 +67,10 @@ export default function BookingReportPage() {
     const { refresh, refreshTime } = useRefresh();
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(6);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
+    const [actionType, setActionType] = useState<string | null>(null);
+    const [note, setNote] = useState<string | null>(null);
 
     const { bookingReport, loading: bookingReportLoading } = UseGetBookingReport(
         { pageNumber: page, pageSize: rowsPerPage },
@@ -57,6 +85,51 @@ export default function BookingReportPage() {
     const handleViewDetails = (bookingId: number) => {
         console.log("Xem chi tiết báo cáo với ID:", bookingId);
     };
+
+    const handleOpenDialog = (reportId: number, action: string) => {
+        setSelectedReportId(reportId);
+        setActionType(action);
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        setSelectedReportId(null);
+        setActionType(null);
+    };
+
+    const handleConfirmAction = async () => {
+        if (!selectedReportId || !note) {
+            enqueueSnackbar("Vui lòng điền nội dung trước khi xác nhận.", { variant: "warning" });
+            return;
+        }
+        try {
+            if (actionType === "accept") {
+                const response = await ApproveBookingReport({ id: selectedReportId, note }, staffToken);
+                if (response.status === "success") {
+                    enqueueSnackbar("Chấp nhận báo cáo thành công!", { variant: "success" });
+                } else {
+                    enqueueSnackbar("Có lỗi xảy ra khi chấp nhận báo cáo.", { variant: "error" });
+                }
+            } else if (actionType === "reject") {
+                const response = await RejectBookingReport({ id: selectedReportId, note }, staffToken);
+                if (response.status === "success") {
+                    enqueueSnackbar("Từ chối báo cáo thành công!", { variant: "success" });
+                } else {
+                    enqueueSnackbar("Có lỗi xảy ra khi từ chối báo cáo.", { variant: "error" });
+                }
+            } else if (actionType === "notify") {
+                enqueueSnackbar(`Đã gửi thông báo cho chuyên gia với ID: ${selectedReportId}`, { variant: "info" });
+            }
+        } catch (error) {
+            console.error("Error handling action:", error);
+            enqueueSnackbar("Lỗi hệ thống khi xử lý hành động.", { variant: "error" });
+        } finally {
+            handleCloseDialog();
+            refresh();
+        }
+    };
+
 
     useEffect(() => {
         console.log("bookingReport:", bookingReport);
@@ -105,11 +178,28 @@ export default function BookingReportPage() {
                                         {report.staffNote}
                                     </TableCell>
                                     <TableCell >
-                                        {report.status}
+                                        {renderStatusChip(report.status)}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Tooltip title="Xem chi tiết" onClick={() => handleViewDetails(report.bookingId)}>
-                                            <VisibilityIcon />
+                                        <Tooltip title="Xem chi tiết">
+                                            <IconButton color="primary" component={Link} href={`/staff/booking-report/${report.id}`}>
+                                                <VisibilityIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Thông báo cho chuyên gia">
+                                            <IconButton color="primary" onClick={() => handleOpenDialog(report.id, "notify")} disabled={report.status !== 1 && report.status !== 2}>
+                                                <NotificationsActiveIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Chấp nhận">
+                                            <IconButton color="success" onClick={() => handleOpenDialog(report.id, "accept")} disabled={report.status !== 3}>
+                                                <CheckCircleOutlineIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Từ chối" >
+                                            <IconButton color="error" onClick={() => handleOpenDialog(report.id, "reject")} disabled={report.status !== 3}>
+                                                <RemoveCircleOutlineIcon />
+                                            </IconButton>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -118,6 +208,7 @@ export default function BookingReportPage() {
                     </TableBody>
                 </Table>
             </TableContainer>
+
             <Box display="flex" justifyContent="center" mt={2}>
                 <Pagination
                     count={bookingReport.totalPage}
@@ -126,6 +217,45 @@ export default function BookingReportPage() {
                     color="primary"
                 />
             </Box>
+
+            {/* Dialog Xác Nhận */}
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>
+                    Xác nhận {actionType === "accept" ? "chấp nhận" : actionType === "reject" ? "từ chối" : "thông báo"} báo cáo
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ mb: 3, fontSize: '1rem', textAlign: 'center', color: 'text.secondary' }}>
+                        {actionType === "notify"
+                            ? `Bạn có chắc chắn muốn thông báo cho chuyên gia với để cung cấp bằng chứng không?`
+                            : `Bạn có chắc chắn muốn ${actionType === "accept" ? "chấp nhận" : "từ chối"} báo cáo với không?`}
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Nội dung"
+                        type="text"
+                        fullWidth
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                        variant="outlined"
+                        multiline
+                        rows={2}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                borderRadius: 2,
+                            },
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary" variant="text">
+                        Đóng
+                    </Button>
+                    <Button onClick={handleConfirmAction} color="primary" variant="text">
+                        Xác nhận
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </MainCard>
     );
 }
