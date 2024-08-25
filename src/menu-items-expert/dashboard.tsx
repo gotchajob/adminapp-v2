@@ -9,6 +9,7 @@ import PaidIcon from '@mui/icons-material/Paid';
 // assets
 import { IconDashboard, IconChartDots, IconUserCheck, IconBasket, IconFileInvoice, IconMail, IconUser } from '@tabler/icons-react';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
 // type
 import { NavItemType } from 'types';
@@ -68,6 +69,14 @@ const dashboard: NavItemType = {
       url: '/expert/booking-feedback',
       icon: FeedIcon,
       breadcrumbs: false
+    },
+    {
+      id: "booking-report",
+      title: <FormattedMessage id="Quản lí báo cáo buổi phỏng vấn" />,
+      type: "item",
+      url: "/expert/booking-report",
+      icon: ReportProblemIcon,
+      breadcrumbs: false,
     },
     {
       id: 'transaction-widthdraw',
