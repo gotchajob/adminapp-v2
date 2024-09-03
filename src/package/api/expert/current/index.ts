@@ -25,6 +25,9 @@ export interface ExpertCurrent {
     twitterUrl: string;
     linkedinUrl: string;
     education: string;
+    cost: number,
+    backgroundImage: string,
+    shortDescription: string,
 }
 
 export const GetExpertCurrent = async (accessToken: string): Promise<GetExpertResponse> => {

@@ -163,7 +163,7 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
                       <Typography variant="subtitle2">{expert.shortDescription}</Typography>
                     </Grid>
                     <Grid item xs={12} md={8}>
-                      <Grid
+                      {/* <Grid
                         container
                         spacing={1}
                         sx={{
@@ -176,7 +176,7 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
                             {`${formatNumber(expert.cost)} đ / Một buổi phỏng vấn`}
                           </Button>
                         </Grid>
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                   </Grid>
                 </Grid>
