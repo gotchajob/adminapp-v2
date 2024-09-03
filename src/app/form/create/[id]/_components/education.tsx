@@ -29,6 +29,7 @@ export const EducationForm = ({ setEducation }: { setEducation: (value: string) 
   }, [isUpdate]);
 
   const [educationList, setEducationList] = useState<EducationData[]>([]);
+
   const handleUpdateEducationData = (data: EducationData, index: number) => {
     const newEducationList = educationList;
     newEducationList[index] = data;

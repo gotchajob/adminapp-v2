@@ -42,7 +42,7 @@ import PinDropTwoToneIcon from "@mui/icons-material/PinDropTwoTone";
 import PublicTwoToneIcon from "@mui/icons-material/PublicTwoTone";
 import { IconEdit } from "@tabler/icons-react";
 import { useGetExpertSkillOptions } from "hooks/use-get-expert-skill-option";
-import { formatDate } from "package/util";
+import { formatDate, formatNumber } from "package/util";
 import { ExpertNation } from "package/api/expert-nation-support";
 import { ExpertToken } from "hooks/use-login";
 import { useGetNationSupportCurrent } from "hooks/use-get-nation-support";
@@ -55,6 +55,9 @@ import { Text } from "views/forms/input/text/text";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import { StyledLink } from "components/common/link/styled-link";
+import MainCard from "ui-component/cards/MainCard";
+import ImagePlaceholder from "ui-component/cards/Skeleton/ImagePlaceholder";
+import { CardMedia, useTheme } from "@mui/material";
 
 // ==============================|| PROFILE 2 - Expert PROFILE ||============================== //
 
@@ -65,7 +68,13 @@ export interface EducationData {
   titleDes: string;
 }
 
+const User1 = '/assets/images/users/img-user.png';
+
+const Cover = '/assets/images/profile/img-profile-bg.png';
+
 const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
+  const theme = useTheme();
+
   const { refreshTime, refresh } = useRefresh();
 
   const { expertToken } = ExpertToken();
@@ -87,20 +96,107 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
     <Grid container spacing={gridSpacing}>
       {expert ? (
         <>
-          <Grid item lg={4} xs={12}>
-            <SubCard
-              title={
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item>
-                    <Avatar alt="User 1" src={expert?.avatar} />
-                  </Grid>
-                  <Grid item xs zeroMinWidth>
-                    <Typography variant="subtitle1">
-                      {expert.firstName} {expert.lastName}
-                    </Typography>
+          <Grid item xs={12}>
+            <MainCard
+              contentSX={{
+                p: 1.5,
+                paddingBottom: '0px !important'
+              }}
+            >
+              {expert ? (
+                <CardMedia
+                  component="img"
+                  image={!expert.backgroundImage || expert.backgroundImage === '' ? Cover : expert.backgroundImage}
+                  sx={{ borderRadius: `10px`, overflow: 'hidden', mb: 3 }}
+                  alt="profile-background"
+                />
+              ) : (
+                <ImagePlaceholder
+                  sx={{
+                    borderRadius: `10px`,
+                    overflow: 'hidden',
+                    mb: 3,
+                    height: { xs: 85, sm: 150, md: 260 }
+                  }}
+                />
+              )}
+              <Grid container spacing={gridSpacing}>
+                <Grid item xs={12} md={3}>
+                  {expert ? (
+                    <Avatar
+                      alt="User 1"
+                      src={expert.avatar}
+                      sx={{
+                        margin: '-70px 0 0 auto',
+                        borderRadius: '16px',
+                        [theme.breakpoints.down('lg')]: {
+                          margin: '-70px auto 0'
+                        },
+                        [theme.breakpoints.down('md')]: {
+                          margin: '-60px auto 0'
+                        },
+                        width: { xs: 72, sm: 100, md: 140 },
+                        height: { xs: 72, sm: 100, md: 140 }
+                      }}
+                    />
+                  ) : (
+                    <ImagePlaceholder
+                      sx={{
+                        margin: '-70px 0 0 auto',
+                        borderRadius: '16px',
+                        [theme.breakpoints.down('lg')]: {
+                          margin: '-70px auto 0'
+                        },
+                        [theme.breakpoints.down('md')]: {
+                          margin: '-60px auto 0'
+                        },
+                        width: { xs: 72, sm: 100, md: 140 },
+                        height: { xs: 72, sm: 100, md: 140 }
+                      }}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} md={9}>
+                  <Grid container spacing={gridSpacing}>
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="h5">{expert.lastName + ' ' + expert.firstName}</Typography>
+                      <Typography variant="subtitle2">{expert.shortDescription}</Typography>
+                    </Grid>
+                    <Grid item xs={12} md={8}>
+                      {/* <Grid
+                        container
+                        spacing={1}
+                        sx={{
+                          justifyContent: 'flex-end',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Grid item>
+                          <Button sx={{ textTransform: 'none' }} variant="outlined">
+                            {`${formatNumber(expert.cost)} đ / Một buổi phỏng vấn`}
+                          </Button>
+                        </Grid>
+                      </Grid> */}
+                    </Grid>
                   </Grid>
                 </Grid>
-              }
+              </Grid>
+            </MainCard>
+          </Grid>
+          <Grid item lg={4} xs={12}>
+            <SubCard
+            // title={
+            //   <Grid container spacing={2} alignItems="center">
+            //     <Grid item>
+            //       <Avatar alt="User 1" src={expert?.avatar} />
+            //     </Grid>
+            //     <Grid item xs zeroMinWidth>
+            //       <Typography variant="subtitle1">
+            //         {expert.firstName} {expert.lastName}
+            //       </Typography>
+            //     </Grid>
+            //   </Grid>
+            // }
             >
               <Stack spacing={2}>
                 <Grid container item xs={12} spacing={1}>

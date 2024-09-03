@@ -164,7 +164,7 @@ const ExpertProfile = () => {
             <Profile expert={expertCurrent}></Profile>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <PersonalAccount></PersonalAccount>
+            <PersonalAccount expert={expertCurrent}></PersonalAccount>
           </TabPanel>
           <TabPanel value={value} index={2}>
             <MyAccount></MyAccount>
