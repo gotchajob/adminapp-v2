@@ -8,7 +8,7 @@ import { gridSpacing } from 'store/constant';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { ExpertCurrent } from 'package/api/expert/current';
+import { ExpertCurrent } from "package/api/expert/current";
 import MainCard from 'ui-component/cards/MainCard';
 import ImagePlaceholder from 'ui-component/cards/Skeleton/ImagePlaceholder';
 import { PatchExpertUpdateProfile } from 'package/api/expert/update-profile';
@@ -26,14 +26,14 @@ import { useGetExpertSkillOptions } from 'hooks/use-get-expert-skill-option';
 
 const Cover = '/assets/images/profile/img-profile-bg.png';
 
-const PersonalAccount = ({ expert }: { expert: ExpertCurrent }) => {
+const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { expertSkillOptions } = useGetExpertSkillOptions({
     expertId: expert?.expertId,
   });
   const { expertToken } = ExpertToken();
-  const [provinceInitCode, districtInitCode] = expert.portfolioUrl.split("-");
-  const [street, ward, district, province] = expert.address.split(", ");
+  const [provinceInitCode, districtInitCode] = expert?.portfolioUrl.split("-") || "";
+  const [street, ward, district, province] = expert?.address.split(", ") || "";
   const [provinceCode, setProvinceCode] = useState<string>(provinceInitCode);
   const [districtCode, setDistrictCode] = useState<string>(districtInitCode);
   const { provinceOptions } = useGetProvince();
@@ -60,7 +60,7 @@ const PersonalAccount = ({ expert }: { expert: ExpertCurrent }) => {
     province: province || '',
     district: district || '',
     ward: ward || '',
-    education: expert.education ? JSON.parse(expert.education) : []
+    education: expert ? JSON.parse(expert.education) : []
   });
 
   const [formData, setFormData] = useState(initialData);
