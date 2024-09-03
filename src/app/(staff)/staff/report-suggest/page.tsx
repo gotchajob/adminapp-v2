@@ -26,73 +26,73 @@ import { PostReportSuggest, ReportSuggest } from "package/api/report-suggest";
 import { PatchReportSuggestById } from "package/api/report-suggest/id";
 
 export default function ReportSuggestManage() {
-    const [page, setPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [totalPages, setTotalPages] = useState(1);
-    const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-    const { refresh, refreshTime } = useRefresh();
-    const { staffToken } = StaffToken();
-    const { reportSuggest, loading: reportSuggestLoading } = UseGetReportSuggest({}, staffToken, refreshTime);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [selectedReport, setSelectedReport] = useState<ReportSuggest | null>(null);
-    const [newReport, setNewReport] = useState({ report: "", description: "" });
-    const [editMode, setEditMode] = useState(false);
+    // const [page, setPage] = useState(1);
+    // const [rowsPerPage, setRowsPerPage] = useState(10);
+    // const [totalPages, setTotalPages] = useState(1);
+    // const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+    // const { refresh, refreshTime } = useRefresh();
+    // const { staffToken } = StaffToken();
+    // const { reportSuggest, loading: reportSuggestLoading } = UseGetReportSuggest({}, staffToken, refreshTime);
+    // const [openDialog, setOpenDialog] = useState(false);
+    // const [selectedReport, setSelectedReport] = useState<ReportSuggest | null>(null);
+    // const [newReport, setNewReport] = useState({ report: "", description: "" });
+    // const [editMode, setEditMode] = useState(false);
 
-    useEffect(() => {
-        const calculateTotalPages = () => {
-            if (reportSuggest.length > 0) {
-                setTotalPages(Math.ceil(reportSuggest.length / rowsPerPage));
-            }
-        };
-        calculateTotalPages();
-    }, [reportSuggest, rowsPerPage]);
+    // useEffect(() => {
+    //     const calculateTotalPages = () => {
+    //         if (reportSuggest.length > 0) {
+    //             setTotalPages(Math.ceil(reportSuggest.length / rowsPerPage));
+    //         }
+    //     };
+    //     calculateTotalPages();
+    // }, [reportSuggest, rowsPerPage]);
 
-    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setPage(value);
-    };
+    // const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    //     setPage(value);
+    // };
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+    // const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    //     setAnchorEl(event.currentTarget);
+    // };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    // const handleClose = () => {
+    //     setAnchorEl(null);
+    // };
 
-    const handleRowsPerPageChange = (rows: number) => {
-        setRowsPerPage(rows);
-        setAnchorEl(null);
-    };
+    // const handleRowsPerPageChange = (rows: number) => {
+    //     setRowsPerPage(rows);
+    //     setAnchorEl(null);
+    // };
 
-    const handleAddNew = () => {
-        setSelectedReport(null);
-        setEditMode(false);
-        setOpenDialog(true);
-    };
+    // const handleAddNew = () => {
+    //     setSelectedReport(null);
+    //     setEditMode(false);
+    //     setOpenDialog(true);
+    // };
 
-    const handleSubmit = async () => {
-        try {
-            if (editMode && selectedReport) {
-                const res = await PatchReportSuggestById({ id: selectedReport.id, report: selectedReport.report, description: selectedReport.description }, staffToken);
-                if (res.status === 'success') {
-                    refresh();
-                }
-            } else {
-                const res = await PostReportSuggest({ report: newReport.report, description: newReport.description }, staffToken);
-                if (res.status === 'success') {
-                    refresh();
-                }
-            }
-            setOpenDialog(false);
-            setNewReport({ report: "", description: "" });
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const handleSubmit = async () => {
+    //     try {
+    //         if (editMode && selectedReport) {
+    //             const res = await PatchReportSuggestById({ id: selectedReport.id, report: selectedReport.report, description: selectedReport.description }, staffToken);
+    //             if (res.status === 'success') {
+    //                 refresh();
+    //             }
+    //         } else {
+    //             const res = await PostReportSuggest({ report: newReport.report, description: newReport.description }, staffToken);
+    //             if (res.status === 'success') {
+    //                 refresh();
+    //             }
+    //         }
+    //         setOpenDialog(false);
+    //         setNewReport({ report: "", description: "" });
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     return (
         <>
-            <MainCard
+            {/* <MainCard
                 title={
                     <Grid
                         container
@@ -193,7 +193,7 @@ export default function ReportSuggestManage() {
                         {editMode ? "Sửa" : "Thêm"}
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog> */}
         </>
     );
 }

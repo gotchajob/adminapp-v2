@@ -39,7 +39,7 @@ export default function ReportSuggestList({ reportSuggests, refresh }: { reportS
                     {reportSuggests.map((report) => (
                         <TableRow key={report.id}>
                             <TableCell>{report.report}</TableCell>
-                            <TableCell>{report?.description}</TableCell>
+                            {/* <TableCell>{report?.description}</TableCell> */}
                             <TableCell align="right">
                                 <Tooltip title="Sửa">
                                     <IconButton onClick={() => handleEdit(report)}>
