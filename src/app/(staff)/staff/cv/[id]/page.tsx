@@ -61,7 +61,7 @@ export default function Page({ params }: { params: { id: string } }) {
   //@ts-ignore
   const { CVTemplateById } = UseGetCVTemplateById({ id: params.id });
 
-  const { categoryId} =useGetSearchParams(["categoryId"])
+  const { categoryId } = useGetSearchParams(["categoryId"])
 
   const handleSaveToDatabase = async () => {
     try {
@@ -96,7 +96,7 @@ export default function Page({ params }: { params: { id: string } }) {
       } else {
         throw new Error("Lỗi không tìm thấy cv");
       }
-      enqueueSnackbar("Cập nhật thành công", {variant: "success"})
+      enqueueSnackbar("Cập nhật thành công", { variant: "success" })
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: "error" });
     } finally {

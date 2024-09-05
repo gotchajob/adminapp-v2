@@ -21,6 +21,7 @@ import { TransactionCurrentWithdraw } from "package/api/transaction/current/with
 import { formatDate } from "package/util";
 import { useEffect, useState } from "react";
 import MainCard from "ui-component/cards/MainCard";
+import { RenderTransactionCurrentWithdrawTable } from "./_component/table";
 
 const formatCurrency = (value: number) => {
   try {
@@ -52,10 +53,6 @@ export default function TransactionPage() {
 
   const { expertToken } = ExpertToken();
 
-  const [page, setPage] = useState(1);
-
-  const [rowsPerPage, setRowsPerPage] = useState(6);
-
   const { transactionCurrentWithdraw, loading: transactionCurrentWithdrawLoading } = useGetTransactionCurrentWithdraw({ pageNumber: 1, pageSize: 10 }, expertToken, refreshTime);
 
   const { transactionType, loading: transactionTypeLoading } = useGetTransactionType(refreshTime);
@@ -65,21 +62,16 @@ export default function TransactionPage() {
     return type ? type.description : "Không xác định";
   };
 
-  const handleChangePage = (
-    event: React.ChangeEvent<unknown>,
-    newPage: number
-  ) => {
-    setPage(newPage);
-  };
-
   useEffect(() => {
     console.log("transactionCurrentWithdraw", transactionCurrentWithdraw);
     console.log("transactionType", transactionType);
   }, [transactionCurrentWithdraw, transactionType]);
 
+
   return (
     <MainCard title="Danh sách yêu cầu rút tiền">
-      <TableContainer>
+      {transactionCurrentWithdraw && (<RenderTransactionCurrentWithdrawTable transactionCurrentWithdraw={transactionCurrentWithdraw} />)}
+      {/* <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -121,13 +113,13 @@ export default function TransactionPage() {
                       {formatDate(transaction.createdAt, "dd/MM/yyyy - hh:mm")}
                     </Typography>
                   </TableCell>
-                  {/* <TableCell align="center">
+                  <TableCell align="center">
                     <Tooltip title="Xem Chi Tiết">
                       <IconButton onClick={() => { }} sx={{ color: "#2196F3" }}>
                         <VisibilityIcon />
                       </IconButton>
                     </Tooltip>
-                  </TableCell> */}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
@@ -151,7 +143,7 @@ export default function TransactionPage() {
             color="primary"
           />
         </Box>
-      </TableContainer>
+      </TableContainer> */}
     </MainCard>
   );
 }

@@ -22,16 +22,18 @@ import { ExpertToken } from 'hooks/use-login';
 import { StyledLink } from 'components/common/link/styled-link';
 import { FlexBetween } from 'components/common/box/flex-box';
 import { Text } from "views/forms/input/text/text";
-import { useGetExpertSkillOptions } from 'hooks/use-get-expert-skill-option';
+import { useGetExpertSkillOptions, useGetExpertSkillOptionsCurrent } from 'hooks/use-get-expert-skill-option';
+import { useRefresh } from 'hooks/use-refresh';
+import { PatchExpertSkillOptonHidden, PatchExpertSkillOptonShow } from 'package/api/expert-skill-option/id';
+import { ExpertSkillOptionCurrent } from 'package/api/expert-skill-option/current';
 
 const Cover = '/assets/images/profile/img-profile-bg.png';
 
 const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
-  const { enqueueSnackbar } = useSnackbar();
-  const { expertSkillOptions } = useGetExpertSkillOptions({
-    expertId: expert?.expertId,
-  });
+  const { refresh, refreshTime } = useRefresh();
   const { expertToken } = ExpertToken();
+  const { enqueueSnackbar } = useSnackbar();
+  const { expertSkillOptionsCurrent, loading: expertSkillOptionsCurrentLoading } = useGetExpertSkillOptionsCurrent(expertToken, refreshTime);
   const [provinceInitCode, districtInitCode] = expert?.portfolioUrl.split("-") || "";
   const [street, ward, district, province] = expert?.address.split(", ") || "";
   const [provinceCode, setProvinceCode] = useState<string>(provinceInitCode);
@@ -69,22 +71,53 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isEnabled, setIsEnabled] = useState(true);
 
-  const handleBackgroundImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData({ ...formData, backgroundImage: URL.createObjectURL(file) });
-      setBackgroundImageFile(file);
+  const uploadToCloudinary = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "my3ib4l5");
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dfwqbf3xr/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      throw new Error("Không thể tải ảnh lên Cloudinary");
     }
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBackgroundImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData({ ...formData, avatar: URL.createObjectURL(file) });
-      setAvatarFile(file);
+      try {
+        const cloudinaryUrl = await uploadToCloudinary(file);
+        setFormData({ ...formData, backgroundImage: cloudinaryUrl });
+        setBackgroundImageFile(file);
+      } catch (error) {
+        console.error("Upload ảnh nền thất bại:", error);
+      }
     }
   };
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const cloudinaryUrl = await uploadToCloudinary(file);
+        setFormData({ ...formData, avatar: cloudinaryUrl });
+        setAvatarFile(file);
+      } catch (error) {
+        console.error("Upload ảnh đại diện thất bại:", error);
+      }
+    }
+  };
+
+  //Check onChange
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -92,9 +125,9 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
 
   const hasChanges = JSON.stringify(initialData) !== JSON.stringify(formData);
 
+  //Update form
   const handleUpdate = async () => {
     if (!hasChanges) return;
-
     try {
       const updatedData = {
         emailContact: formData.email,
@@ -113,7 +146,6 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
         address: `${formData.street}, ${formData.ward}, ${formData.district}, ${formData.province}`,
         avatar: formData.avatar,
       };
-
       const response = await PatchExpertUpdateProfile(updatedData, expertToken);
       if (response.status === 'success') {
         setInitialData(formData);
@@ -124,6 +156,27 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Có lỗi xảy ra!', { variant: 'error' });
+    }
+  };
+
+  //Show & Hide skill option
+  const handleToggle = async (id: number, status: number) => {
+    try {
+      if (status === 0) {
+        const response = await PatchExpertSkillOptonShow({ id }, expertToken);
+        if (response.status !== 'success') {
+          throw new Error('Failed to show skill');
+        }
+      } else {
+        const response = await PatchExpertSkillOptonHidden({ id }, expertToken);
+        if (response.status !== 'success') {
+          throw new Error('Failed to hide skill');
+        }
+      }
+      enqueueSnackbar('Cập nhật thành công!', { variant: 'success' });
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Cập nhật thất bại!', { variant: 'error' });
     }
   };
 
@@ -282,7 +335,6 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   <DatePicker
                     slotProps={{ textField: { fullWidth: true } }}
                     onError={() => {
-                      // handle date error if needed
                     }}
                     format="dd-MM-yyyy"
                     label="Ngày sinh"
@@ -452,44 +504,44 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
           <EducationForm setEducation={(value) => setEducation(JSON.parse(value))} initValue={JSON.stringify(education)} />
         )}
       </Grid>
-      {expertSkillOptions ? (
-        expertSkillOptions.map((skillOption, index) => (
-          <Grid item xs={4} key={index}>
-            {/* <StyledLink
-              href={`/expert/skill-feedback/${skillOption.skillOptionName}/${skillOption.id}`}
-            > */}
-            <SubCard
-              title={
-                <FlexBetween>
-                  <Typography>{skillOption.skillOptionName}</Typography>
-                  <Switch
-                    checked={isEnabled}
-                    onChange={() => setIsEnabled(!isEnabled)}
-                    color="primary"
-                  />
-                </FlexBetween>
-              }
-            >
-              <FlexBetween>
-                <Rating
-                  value={skillOption.sumPoint}
-                  size="small"
-                  readOnly
-                  disabled={!isEnabled} // Disable rating when switch is off
-                />
-                <Text fontSize={13} color={isEnabled ? 'inherit' : 'text.disabled'}>
-                  <span style={{ fontWeight: "bold" }}>
-                    {skillOption.totalRating}
-                  </span>{" "}
-                  lượt đánh giá
-                </Text>
-              </FlexBetween>
-            </SubCard>
-            {/* </StyledLink> */}
-          </Grid>
-        ))
-      ) : (
+      {expertSkillOptionsCurrentLoading ? (
         <CircularProgress />
+      ) : expertSkillOptionsCurrent && expertSkillOptionsCurrent.length > 0 ? (
+        expertSkillOptionsCurrent.map((skillOption: ExpertSkillOptionCurrent, index) => {
+          return (
+            <Grid item xs={4} key={index}>
+              <SubCard
+                title={
+                  <FlexBetween>
+                    <Typography>{skillOption.skillOptionName}</Typography>
+                    <Switch
+                      checked={skillOption.status === 1}
+                      onChange={() => handleToggle(skillOption.id, skillOption.status)}
+                      color="primary"
+                    />
+                  </FlexBetween>
+                }
+              >
+                <FlexBetween>
+                  <Rating
+                    value={skillOption.sumPoint}
+                    size="small"
+                    readOnly
+                    disabled={skillOption.status !== 1}
+                  />
+                  <Text fontSize={13} color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>
+                    <span style={{ fontWeight: "bold" }}>
+                      {skillOption.totalRating}
+                    </span>{" "}
+                    lượt đánh giá
+                  </Text>
+                </FlexBetween>
+              </SubCard>
+            </Grid>
+          );
+        })
+      ) : (
+        <Typography>Không tìm thấy kỹ năng</Typography>
       )}
       <Grid item xs={12} sx={{ textAlign: 'right' }}>
         <Button variant="contained" onClick={handleUpdate} disabled={!hasChanges}>

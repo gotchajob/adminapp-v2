@@ -10,6 +10,7 @@ export interface GetReportSuggestResponse {
 export interface ReportSuggest {
   id: number;
   report: string;
+  description: string;
 }
 
 export const GetReportSuggest = async (params: GetReportSuggestRequest, accessToken: string): Promise<GetReportSuggestResponse> => {
