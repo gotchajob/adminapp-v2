@@ -113,7 +113,7 @@ export default function Page({ params }: { params: { id: string } }) {
       const blob = await (await fetch(dataUrl)).blob();
       const formData = new FormData();
       formData.append("file", blob);
-      formData.append("upload_preset", "my3ib4l5"); // Thay bằng upload preset của bạn
+      formData.append("upload_preset", "my3ib4l5");
       const response = await fetch(
         "https://api.cloudinary.com/v1_1/dfwqbf3xr/image/upload",
         {

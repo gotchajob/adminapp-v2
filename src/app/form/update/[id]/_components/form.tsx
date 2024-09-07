@@ -97,6 +97,10 @@ export default function ExpertRegisterUpdateForm({
   const [street, ward, district, province] =
     initValueUpdateForm.address.split(", ");
 
+  useEffect(() => {
+    console.log("initValueUpdateForm:", initValueUpdateForm);
+  }, [initValueUpdateForm])
+
   const [certificateList, setCertificateList] = useState<Certificate[]>(
     initValueUpdateForm.certification
   );
@@ -296,7 +300,7 @@ export default function ExpertRegisterUpdateForm({
                                 "yyyy-MM-dd"
                               )
                             );
-                          } catch (error) {}
+                          } catch (error) { }
                         }}
                       />
                       {errors.birthDate

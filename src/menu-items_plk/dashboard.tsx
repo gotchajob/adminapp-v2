@@ -20,6 +20,8 @@ import PriceChangeIcon from '@mui/icons-material/PriceChange';
 
 import ContactsIcon from '@mui/icons-material/Contacts';
 
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
+
 // type
 import { NavItemType } from "types";
 
@@ -69,6 +71,14 @@ const dashboard: NavItemType = {
       type: "item",
       url: "/staff/blog",
       icon: PriceChangeIcon,
+      breadcrumbs: false,
+    },
+    {
+      id: "report-suggest",
+      title: <FormattedMessage id="Report Suggest" />,
+      type: "item",
+      url: "/staff/report-suggest",
+      icon: ReportGmailerrorredIcon,
       breadcrumbs: false,
     },
     {
