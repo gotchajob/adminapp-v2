@@ -35,9 +35,25 @@ const dashboard: NavItemType = {
   children: [
     {
       id: "dashboard",
-      title: <FormattedMessage id="Thống kê" />,
+      title: <FormattedMessage id="Thống kê doanh thu" />,
       type: "item",
       url: "/staff/dashboard",
+      icon: IconChartDots,
+      breadcrumbs: false,
+    },
+    {
+      id: "cv-dashboard",
+      title: <FormattedMessage id="Thống kê cv" />,
+      type: "item",
+      url: "/staff/cv-dashboard",
+      icon: IconChartDots,
+      breadcrumbs: false,
+    },
+    {
+      id: "expert-dashboard",
+      title: <FormattedMessage id="Thống kê chuyên gia" />,
+      type: "item",
+      url: "/staff/expert-dashboard",
       icon: IconChartDots,
       breadcrumbs: false,
     },
