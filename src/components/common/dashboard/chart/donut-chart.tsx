@@ -21,7 +21,7 @@ import { gridSpacing } from 'store/constant';
 
 // types
 import { ThemeMode } from 'types/config';
-import { formatNumber } from 'lib/utils/number';
+import { formatNumber } from 'package/util';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
