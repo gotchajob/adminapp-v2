@@ -1,4 +1,6 @@
+import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { BarChart } from "components/common/dashboard/chart/bar-chart";
 import { PieChart } from "components/common/dashboard/chart/pie-chart";
 import EarningCard from "components/common/dashboard/label/earning-card";
@@ -28,6 +30,23 @@ export default async function Page() {
     undefined,
     accessToken
   );
+  const data4 = await apiServerFetch(
+    "/dash-board/top-cv-template?sort=asc&size=5",
+    "GET",
+    undefined,
+    accessToken
+  );
+  const data5 = await apiServerFetch(
+    "/dash-board/top-cv-template?sort=desc&size=5",
+    "GET",
+    undefined,
+    accessToken
+  );
+
+  let mergeList = [...data5.data, ...data4.data.reverse()];
+  if (mergeList.length < 10) {
+    mergeList = [...data5.data];
+  }
   return (
     <Grid container spacing={3}>
       <Grid item xs={4}>
@@ -62,9 +81,7 @@ export default async function Page() {
           mainTitle="Số lượng mẫu CV theo danh mục"
           height={400}
           barChartProps={{
-            categories: data1.data.map(
-              (cv: any) => `Danh mục ${cv.category}`
-            ),
+            categories: data1.data.map((cv: any) => `Danh mục ${cv.category}`),
             series: [
               {
                 data: data1.data.map((cv: any) => cv.countCvTemplate),
@@ -80,9 +97,7 @@ export default async function Page() {
           mainTitle="Danh mục CV được sử dụng"
           height={445}
           pieChartProps={{
-            labels: data2.data.map(
-              (cv: any) => `Danh mục ${cv.cvCategory}`
-            ),
+            labels: data2.data.map((cv: any) => `Danh mục ${cv.cvCategory}`),
             series: data2.data.map((cv: any) => cv.countCv),
           }}
         />
@@ -91,13 +106,65 @@ export default async function Page() {
         <MainCard
           title={<Text variant="h4">Mẫu CV được sử dụng nhiều nhất</Text>}
           align="center"
-        ></MainCard>
+        >
+          <Grid container spacing={3}>
+            {mergeList.map((cv, index) => (
+              <Grid item xs={12} key={index}>
+                <Grid container spacing={2}>
+                  <Grid item xs={2}>
+                    <Avatar alt="User 1" src={cv.image} />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="subtitle1" textAlign={"left"}>
+                      {cv.name}
+                    </Typography>
+                    <Typography variant="subtitle2" textAlign={"left"}>
+                      {cv.category}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}></Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="caption">
+                      {cv.numberCv} lượt sử dụng
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        </MainCard>
       </Grid>
       <Grid item xs={6}>
         <MainCard
           title={<Text variant="h4">Mẫu CV ít được sử dụng</Text>}
           align="center"
-        ></MainCard>
+        >
+          <Grid container spacing={3}>
+            {mergeList.length > 10 && mergeList.reverse().map((cv, index) => (
+              <Grid item xs={12} key={index}>
+                <Grid container spacing={2}>
+                  <Grid item xs={2}>
+                    <Avatar alt="User 1" src={cv.image} />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="subtitle1" textAlign={"left"}>
+                      {cv.name}
+                    </Typography>
+                    <Typography variant="subtitle2" textAlign={"left"}>
+                      {cv.category}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}></Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="caption">
+                      {cv.numberCv} lượt sử dụng
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        </MainCard>
       </Grid>
     </Grid>
   );

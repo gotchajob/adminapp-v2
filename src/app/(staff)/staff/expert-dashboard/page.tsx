@@ -1,5 +1,7 @@
 import StorefrontTwoToneIcon from "@mui/icons-material/StorefrontTwoTone";
+import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { BarChart } from "components/common/dashboard/chart/bar-chart";
 import EarningCard from "components/common/dashboard/label/earning-card";
 import { Text } from "components/common/text/text";
@@ -20,6 +22,12 @@ const Dashboard = async() => {
   );
   const data2 = await apiServerFetch(
     "/dash-board/expert",
+    "GET",
+    undefined,
+    accessToken
+  );
+  const data3 = await apiServerFetch(
+    "/dash-board/top-expert?sort=desc&size=5",
     "GET",
     undefined,
     accessToken
@@ -75,7 +83,33 @@ const Dashboard = async() => {
         <MainCard
           title={<Text variant="h4">Top chuyên gia có lượt booking cao nhất</Text>}
           align="center"
-        ></MainCard>
+        >
+             <Grid container spacing={3}>
+            {data3.data.map((expert: any, index: number) => (
+              <Grid item xs={12} key={index}>
+                <Grid container spacing={2}>
+                  <Grid item xs={2}>
+                    <Avatar alt="User 1" src={expert.image} />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <Typography variant="subtitle1" textAlign={"left"}>
+                      {expert.fullName}
+                    </Typography>
+                    <Typography variant="subtitle2" textAlign={"left"}>
+                      {expert.category}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={2}></Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="caption" textAlign="right">
+                      {expert.numberBooking} lượt phỏng vấn
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        </MainCard>
       </Grid>
     </Grid>
   );

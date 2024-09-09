@@ -37,6 +37,12 @@ const Dashboard = async () => {
     undefined,
     accessToken
   );
+  const data5 = await apiServerFetch(
+    "/dash-board/booking?year=" + formatDate(currentDate.toISOString(), "yyyy"),
+    "GET",
+    undefined,
+    accessToken
+  );
   return (
     <Grid container spacing={3}>
       <Grid item xs={4}>
@@ -142,32 +148,36 @@ const Dashboard = async () => {
           mainTitle="Thống kê đăng kí dịch vụ"
           height={600}
           barChartProps={{
-            categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(
-              (month) => `Tháng ${month}`
-            ),
-            colors: ["#44c097", "#445297"],
+            categories: listMonth.map((month) => `Tháng ${month}`),
+            colors: ["#44c097", "#445297", "#793fb7"],
             series: [
               {
-                data: [
-                  502000, 622000, 12000, 780000, 422200, 500000, 500000, 500000,
-                  0, 0, 0, 0,
-                ],
+                data: listMonth.map((month) => {
+                  const found = data5.data.find(
+                    (value: any) => value.month === month
+                  );
+                  return found ? found.bookingFinish : 0;
+                }),
                 name: "Hoàn thành",
                 type: "bar",
               },
               {
-                data: [
-                  502000, 622000, 12000, 780000, 422200, 500000, 500000, 500000,
-                  0, 0, 0, 0,
-                ],
+                data: listMonth.map((month) => {
+                  const found = data5.data.find(
+                    (value: any) => value.month === month
+                  );
+                  return found ? found.bookingCancelByExpert : 0;
+                }),
                 name: "Hủy bởi chuyên gia",
                 type: "bar",
               },
               {
-                data: [
-                  502000, 622000, 12000, 780000, 422200, 500000, 500000, 500000,
-                  0, 0, 0, 0,
-                ],
+                data: listMonth.map((month) => {
+                  const found = data5.data.find(
+                    (value: any) => value.month === month
+                  );
+                  return found ? found.bookingCancelByCustomer : 0;
+                }),
                 name: "Hủy bởi khách hàng",
                 type: "bar",
               },
