@@ -14,7 +14,14 @@ export interface BookingCurrent {
     status: number,
     createdAt: string,
     canCancel: boolean,
-    expertSkillOptionId: []
+    expertSkillOptionId: [],
+    customerInfo: CustomerInfo;
+}
+
+export interface CustomerInfo {
+    avatar: string;
+    fullName: string;
+    email: string;
 }
 
 export interface GetBookingCurrentRes {

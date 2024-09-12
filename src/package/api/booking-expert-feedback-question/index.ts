@@ -34,7 +34,6 @@ export interface PostBookingExpertFeedbackQuestionResponse {
     responseText: string;
 }
 
-
 export const PostBookingExpertFeedbackQuestion = async (params: PostBookingExpertFeedbackQuestionRequest, accessToken: string): Promise<PostBookingExpertFeedbackQuestionResponse> => {
     try {
         const res = await apiServerFetch(`/booking-expert-feedback-question`, 'POST', params, accessToken);

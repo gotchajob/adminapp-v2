@@ -107,7 +107,14 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
                 <CardMedia
                   component="img"
                   image={!expert.backgroundImage || expert.backgroundImage === '' ? Cover : expert.backgroundImage}
-                  sx={{ borderRadius: `10px`, overflow: 'hidden', mb: 3 }}
+                  sx={{
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    mb: 3,
+                    width: '100%',
+                    height: '260px',
+                    objectFit: 'cover',
+                  }}
                   alt="profile-background"
                 />
               ) : (

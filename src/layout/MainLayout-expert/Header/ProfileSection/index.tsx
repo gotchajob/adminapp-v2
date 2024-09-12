@@ -1,47 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
-
-// material-ui
-import { useTheme } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-
-// third-party
 import { FormattedMessage } from 'react-intl';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-
-// project imports
+import useAuth from 'hooks/useAuth';
+import { useRouter } from 'next/navigation';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
-import useAuth from 'hooks/useAuth';
-import { redirect, useRouter } from 'next/navigation';
-
-// types
 import { ThemeMode } from 'types/config';
-
-// assets
-import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons-react';
+import { Link } from '@mui/material';
+import { IconLogout, IconSettings } from '@tabler/icons-react';
+import { useGetExpertCurrent } from 'hooks/use-get-expert-profile';
+import { ExpertToken } from 'hooks/use-login';
+import { useRefresh } from 'hooks/use-refresh';
 import useConfig from 'hooks/useConfig';
-import { apiClientFetch } from 'package/api/api-fetch';
 import { enqueueSnackbar } from 'notistack';
-import WalletCard from '../../../MainLayout_plk/Header/ProfileSection/_component/WalletCard';
+import { apiClientFetch } from 'package/api/api-fetch';
 // import { redirect } from 'next/dist/server/api-utils';
 
 const User1 = '/assets/images/users/user-round.svg';
@@ -63,6 +49,15 @@ const ProfileSection = () => {
    * anchorRef is used on different components and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef<any>(null);
+
+  const { refreshTime, refresh } = useRefresh();
+
+  const { expertToken } = ExpertToken();
+
+  const { expertCurrent, loading: expertCurrentLoading } = useGetExpertCurrent(
+    expertToken,
+    refreshTime
+  );
 
   // const handleLogout = async () => {
   //   try {
@@ -180,11 +175,11 @@ const ProfileSection = () => {
                     <Box sx={{ p: 2, pb: 0 }}>
                       <Stack>
                         <Stack direction="row" spacing={0.5} alignItems="center">
-                          <Typography variant="h4">Good Morning,</Typography>
+                          <Typography fontWeight={700} variant="body2">Xin chào chuyên gia,</Typography>
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                             {user?.name}
                           </Typography>
-                          <Typography variant="subtitle2">Gotchajob Staff</Typography>
+                          <Typography variant="body2">{expertCurrent?.firstName} {expertCurrent?.lastName}</Typography>
                         </Stack>
                       </Stack>
                     </Box>
@@ -205,9 +200,11 @@ const ProfileSection = () => {
                           <ListItemButton
                             sx={{ borderRadius: `${borderRadius}px` }}
                             selected={selectedIndex === 0}
-                            onClick={(event: React.MouseEvent<HTMLDivElement>) =>
-                              handleListItemClick(event, 0, '/user/account-profile/profile1')
-                            }
+                            component={Link}
+                            href={"/expert/account-profile"}
+                          // onClick={(event: React.MouseEvent<HTMLDivElement>) =>
+                          //   handleListItemClick(event, 0, '/expert/account-profile')
+                          // }
                           >
                             <ListItemIcon>
                               <IconSettings stroke={1.5} size="20px" />

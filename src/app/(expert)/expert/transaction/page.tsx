@@ -35,19 +35,6 @@ const formatCurrency = (value: number) => {
   }
 };
 
-const renderStatusChip = (status: number) => {
-  switch (status) {
-    case 1:
-      return <Chip label="Thành công" color="success" />;
-    case 2:
-      return <Chip label="Đang xử lý" color="warning" />;
-    case 3:
-      return <Chip label="Thất bại" color="error" />;
-    default:
-      return <Chip label="Unknown" />;
-  }
-};
-
 export default function TransactionPage() {
   const { refresh, refreshTime } = useRefresh();
 
@@ -70,80 +57,7 @@ export default function TransactionPage() {
 
   return (
     <MainCard title="Danh sách yêu cầu rút tiền">
-      {transactionCurrentWithdraw && (<RenderTransactionCurrentWithdrawTable transactionCurrentWithdraw={transactionCurrentWithdraw} />)}
-      {/* <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell >ID Giao Dịch</TableCell>
-              <TableCell>Số Tiền Giao Dịch</TableCell>
-              <TableCell >Loại Giao Dịch</TableCell>
-              <TableCell >Mô Tả</TableCell>
-              <TableCell>Trạng thái</TableCell>
-              <TableCell >Ngày Thực Hiện Giao Dịch</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody
-            sx={{ "& .MuiTableRow-root:hover": { bgcolor: "#E3F2FD" } }}
-          >
-            {transactionCurrentWithdrawLoading || transactionTypeLoading ? (
-              <TableRow hover>
-                <TableCell colSpan={6} align="center">
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            ) : transactionCurrentWithdraw.list.length > 0 ? (
-              transactionCurrentWithdraw.list.map((transaction: TransactionCurrentWithdraw) => (
-                <TableRow hover key={transaction.id}>
-                  <TableCell>
-                    {transaction.id}
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', color: '#00796b' }}>
-                    {formatCurrency(transaction.amount)}
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 'bold', color: '#2196F3' }}>
-                    {getTransactionTypeName(transaction.typeId)}
-                  </TableCell>
-                  <TableCell sx={{ maxWidth: '200px', whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {transaction.description}
-                  </TableCell>
-                  <TableCell>{renderStatusChip(transaction.status)}</TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" noWrap>
-                      {formatDate(transaction.createdAt, "dd/MM/yyyy - hh:mm")}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Tooltip title="Xem Chi Tiết">
-                      <IconButton onClick={() => { }} sx={{ color: "#2196F3" }}>
-                        <VisibilityIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow hover>
-                <TableCell colSpan={6} align="center">
-                  Hiện chưa có giao dịch nào.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <Box sx={{ display: "flex", justifyContent: "center", paddingY: 3 }}>
-          <Pagination
-            count={Math.ceil(
-              (transactionCurrentWithdraw.totalPage * rowsPerPage) / rowsPerPage
-            )}
-            page={page + 1}
-            onChange={handleChangePage}
-            shape="rounded"
-            variant="outlined"
-            color="primary"
-          />
-        </Box>
-      </TableContainer> */}
+      {transactionCurrentWithdraw && (<RenderTransactionCurrentWithdrawTable transactionCurrentWithdraw={transactionCurrentWithdraw} transactionType={transactionType} />)}
     </MainCard>
   );
 }

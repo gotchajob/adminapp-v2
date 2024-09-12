@@ -83,10 +83,10 @@ const tabsOption = [
     label: "Change Password",
     icon: <LockTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
   },
-  {
-    label: "Settings",
-    icon: <MailTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
-  },
+  // {
+  //   label: "Settings",
+  //   icon: <MailTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
+  // },
 ];
 
 // ==============================|| PROFILE 1 ||============================== //

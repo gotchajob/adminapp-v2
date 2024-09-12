@@ -1,4 +1,3 @@
-
 import { Box, Chip, IconButton, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -11,49 +10,57 @@ import { TransactionCurrentWithdrawRes } from 'package/api/transaction/current/w
 import { useMemo } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { BookingReportForExpert } from 'package/api/booking-report/for-expert';
+import Link from 'next/link';
+import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import { formatDate } from 'package/util';
-import { TransactionTypeRes } from 'package/api/transaction-type';
 
 const renderStatusChip = (status: number) => {
     switch (status) {
         case 1:
-            return <Chip label="Thành công" color="success" />;
+            return <Chip label="Processing" color="primary" />;
         case 2:
-            return <Chip label="Đang xử lý" color="warning" />;
+            return <Chip label="Expert Processing" color="warning" />;
         case 3:
-            return <Chip label="Thất bại" color="error" />;
+            return <Chip label="Staff Processing" color="info" />;
+        case 4:
+            return <Chip label="Approved" color="success" />;
+        case 5:
+            return <Chip label="Rejected" color="error" />;
         default:
-            return <Chip label="Unknown" />;
+            return <Chip label="Unknown" color="default" />;
     }
 };
 
-export const RenderTransactionCurrentWithdrawTable = ({ transactionCurrentWithdraw, transactionType }: { transactionCurrentWithdraw: TransactionCurrentWithdrawRes, transactionType: TransactionTypeRes[] }) => {
+export const RenderBookingReportForExpertTable = ({ bookingReportForExpert, handelUpdateEvidence }: { bookingReportForExpert: BookingReportForExpert[], handelUpdateEvidence: (report: any) => void }) => {
 
     const columns: GridColDef[] = [
         {
             field: "id",
             headerName: "ID",
-        },
-        {
-            field: "typeId",
-            headerName: "Loại Giao Dịch",
             flex: 1,
-            renderCell: (params) => {
-                const transaction = transactionType.find(t => t.id === params.value);
-                return (
-                    <Chip label={transaction ? transaction.description : "Không xác định"} color="info" />
-                );
-            }
         },
         {
-            field: "description",
-            headerName: "Mô Tả",
+            field: "bookingReportSuggest",
+            headerName: "Đề xuất",
             flex: 2,
             renderCell: (params) => (
                 <Box sx={{ maxWidth: 300, wordWrap: "break-word", whiteSpace: "normal" }}>
-                    {params.value}
+                    {params.value.map((suggest: any) => (
+                        <div key={suggest.id}>{suggest.reportSuggest}</div>
+                    ))}
                 </Box>
             )
+        },
+        {
+            field: "createdAt",
+            headerName: "Ngày tạo báo cáo'",
+            flex: 1,
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {formatDate(params.value, 'dd/MM/yyyy hh:mm')}
+                </Box>
+            ),
         },
         {
             field: "status",
@@ -62,8 +69,8 @@ export const RenderTransactionCurrentWithdrawTable = ({ transactionCurrentWithdr
             renderCell: (params) => renderStatusChip(params.value),
         },
         {
-            field: "createdAt",
-            headerName: "Ngày Thực Hiện Giao Dịch",
+            field: "updatedAt",
+            headerName: "Ngày Cập Nhật Báo Cáo",
             flex: 1,
             renderCell: (params) => (
                 <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -76,37 +83,41 @@ export const RenderTransactionCurrentWithdrawTable = ({ transactionCurrentWithdr
             headerName: "Thao tác",
             flex: 1,
             renderCell: (params) =>
-                <Tooltip title="Xem Chi Tiết">
-                    <IconButton onClick={() => handleClick(params.value)} sx={{ color: "#2196F3" }}>
-                        <VisibilityIcon />
-                    </IconButton>
-                </Tooltip>
+                <>
+                    <Tooltip title="Xem chi tiết">
+                        <IconButton color="primary" component={Link} href={`/expert/booking-report/${params.row.id}`}>
+                            <VisibilityIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Cập nhật bằng chứng">
+                        <IconButton color="primary" onClick={() => handelUpdateEvidence(params.row)} disabled={params.row.status !== 2}>
+                            <AddToDriveIcon />
+                        </IconButton>
+                    </Tooltip>
+                </>
         },
     ]
-
-    const handleClick = (params: any) => {
-        console.log("Params:", JSON.parse(params));
-    }
 
     const { handleChangeEventText, text, findAllIndexByAnyField } = useGetFilter();
 
     const filteredData = useMemo(() => {
-        let data = [...transactionCurrentWithdraw.list];
+        let data = [...bookingReportForExpert];
         if (text.trim() !== '') {
             const lowerCaseText = text.toLowerCase();
             data = data.filter((row) => {
-                const transaction = transactionType.find(t => t.id === row.typeId);
                 return (
-                    transaction?.description.toLowerCase().includes(lowerCaseText) ||
-                    row.description.toLowerCase().includes(lowerCaseText) ||
-                    renderStatusChip(row.status).props.label.toLowerCase().includes(lowerCaseText) ||
-                    formatDate(row.createdAt, 'dd/MM/yyyy hh:mm').includes(lowerCaseText)
+                    row.bookingReportSuggest.some((suggest: any) =>
+                        suggest.reportSuggest.toLowerCase().includes(lowerCaseText)
+                    ) ||
+                    renderStatusChip(row.status)?.props.label.toLowerCase().includes(lowerCaseText) ||
+                    formatDate(row.createdAt, 'dd/MM/yyyy hh:mm').includes(lowerCaseText) ||
+                    formatDate(row.updatedAt, 'dd/MM/yyyy hh:mm').includes(lowerCaseText)
                 );
             });
         }
-
         return data;
-    }, [text, transactionCurrentWithdraw, transactionType]);
+    }, [text, bookingReportForExpert]);
+
 
     const RenderClientFilter = (
         <Grid container spacing={3}>
@@ -140,4 +151,3 @@ export const RenderTransactionCurrentWithdrawTable = ({ transactionCurrentWithdr
         </MainCard>
     );
 };
-

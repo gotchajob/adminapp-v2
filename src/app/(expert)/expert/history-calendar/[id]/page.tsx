@@ -150,13 +150,13 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
                             Tên khách hàng :
                           </Typography>
                           <Typography variant="body2">
-                            Anshan Handgun
+                            {booking.customerInfo?.fullName}
                           </Typography>
                         </Stack>
                         <Stack direction="row" spacing={1}>
                           <Typography variant="subtitle1">Email :</Typography>
                           <Typography variant="body2">
-                            anshan.handgun@example.com
+                            {booking.customerInfo?.email}
                           </Typography>
                         </Stack>
                       </Stack>
@@ -188,7 +188,7 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
                           <Typography variant="subtitle1">
                             Tổng tiền :
                           </Typography>
-                          <Typography variant="body2">375.000vnđ</Typography>
+                          <Typography variant="body2"></Typography>
                         </Stack>
                         <Stack spacing={1}>
                           <Stack direction="row" spacing={1}>
@@ -203,6 +203,12 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
                             />
                           </Stack>
                         </Stack>
+                        {booking.rejectReason !== '' && (<Stack direction="row" spacing={1}>
+                          <Typography variant="subtitle1">
+                            Lý do hủy đặt lịch :
+                          </Typography>
+                          <Typography variant="body2">{booking.rejectReason}</Typography>
+                        </Stack>)}
                       </Stack>
                     </Stack>
                   </Grid>
@@ -222,9 +228,11 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
                       >
                         <Image
                           src={
-                            "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
+                            typeof booking.customerCV?.image === "string" && booking.customerCV.image
+                              ? booking.customerCV.image
+                              : "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
                           }
-                          alt="Customer CV"
+                          alt={booking.customerCV?.name}
                           layout="responsive"
                           width={700}
                           height={1000}
@@ -300,25 +308,28 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
               )}
             </Grid>
           </Grid>
+
+          <Dialog open={open} onClose={handleClose} fullWidth>
+            <DialogContent>
+              <Image
+                src={
+                  typeof booking.customerCV?.image === "string" && booking.customerCV.image
+                    ? booking.customerCV.image
+                    : "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
+                }
+                alt={booking.customerCV?.name}
+                layout="intrinsic"
+                width={700}
+                height={1000}
+                objectFit="cover"
+                objectPosition="top"
+                style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+              />
+            </DialogContent>
+          </Dialog>
+
         </Grid>
       )}
-
-      <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogContent>
-          <Image
-            src={
-              "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
-            }
-            alt="Customer CV"
-            layout="intrinsic"
-            width={700}
-            height={1000}
-            objectFit="cover"
-            objectPosition="top"
-            style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-          />
-        </DialogContent>
-      </Dialog>
     </SubCard>
   );
 };
