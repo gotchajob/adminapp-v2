@@ -1,4 +1,4 @@
-import { Box, IconButton, Tooltip, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, Typography } from '@mui/material';
+import { Box, IconButton, Tooltip, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Select, MenuItem, Typography, Grid, Input, DialogContentText } from '@mui/material';
 import { useState, useMemo } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,11 +12,14 @@ import { DelBookingExpertFeedbackQuestionById, PatchBookingExpertFeedbackQuestio
 import { UseGetBookingExpertFeedbackQuestionCurrent } from 'hooks/use-get-booking-expert-feedback-question';
 import { PostBookingExpertFeedbackQuestion } from 'package/api/booking-expert-feedback-question';
 import { enqueueSnackbar } from 'notistack';
+import { FlexBox } from 'components/common/box/flex-box';
+import { useGetFilter } from 'components/common/filter-table/hook-filter';
 
 export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refresh: () => void; refreshTime: number; token: string; }) => {
     const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestionCurrent(token, refreshTime);
     const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(token, refreshTime);
     const [openDialog, setOpenDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // Dialog cho xác nhận xóa
     const [selectedQuestion, setSelectedQuestion] = useState<any | null>(null);
     const [editMode, setEditMode] = useState(false);
     const [questionData, setQuestionData] = useState<{ question: string, type: string, categoryId: number }>({ question: '', type: '', categoryId: 0 });
@@ -27,7 +30,6 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
             if (questionData.question === "" || questionData.type === "" || questionData.categoryId === 0) return;
 
             if (editMode && selectedQuestion) {
-                // Nếu đang chỉnh sửa, gọi API Patch
                 const res = await PatchBookingExpertFeedbackQuestionById({
                     id: selectedQuestion.id,
                     question: questionData.question,
@@ -41,7 +43,6 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
                     enqueueSnackbar('Cập nhật câu hỏi thất bại', { variant: 'error' });
                 }
             } else {
-                // Nếu đang thêm mới, gọi API Post
                 const res = await PostBookingExpertFeedbackQuestion(questionData, token);
                 if (res.status === "success") {
                     enqueueSnackbar('Thêm câu hỏi thành công', { variant: 'success' });
@@ -56,15 +57,18 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
         }
     };
 
-    const handleDeleteQuestion = async (id: number) => {
+    const handleDeleteQuestion = async () => {
         try {
-            const res = await DelBookingExpertFeedbackQuestionById({ id });
-            if (res.status === "success") {
-                enqueueSnackbar('Xóa câu hỏi thành công', { variant: 'success' });
-                refresh();
-            } else {
-                enqueueSnackbar('Xóa câu hỏi thất bại', { variant: 'error' });
+            if (selectedQuestion) {
+                const res = await DelBookingExpertFeedbackQuestionById({ id: selectedQuestion.id });
+                if (res.status === "success") {
+                    enqueueSnackbar('Xóa câu hỏi thành công', { variant: 'success' });
+                    refresh();
+                } else {
+                    enqueueSnackbar('Xóa câu hỏi thất bại', { variant: 'error' });
+                }
             }
+            setOpenDeleteDialog(false);
         } catch (error) {
             enqueueSnackbar('Lỗi trong quá trình xóa câu hỏi', { variant: 'error' });
         }
@@ -104,7 +108,7 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Xóa">
-                        <IconButton onClick={() => handleDeleteQuestion(params.row.id)}>
+                        <IconButton onClick={() => { setSelectedQuestion(params.row); setOpenDeleteDialog(true); }}>
                             <DeleteIcon sx={{ fontSize: 18 }} />
                         </IconButton>
                     </Tooltip>
@@ -113,12 +117,36 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
         }
     ];
 
+    const { handleChangeEventText, text, findAllIndexByAnyField } = useGetFilter();
+
     const filteredData = useMemo(() => {
-        return bookingExpertFeedbackQuestion.map((question: any) => ({
-            ...question,
-            actions: JSON.stringify(question),
-        }));
-    }, [bookingExpertFeedbackQuestion]);
+        let data = [...bookingExpertFeedbackQuestion];
+        if (text.trim() !== '') {
+            const lowerCaseText = text.toLowerCase();
+            data = data.filter((row) => {
+                return (
+                    row.question.toLowerCase().includes(lowerCaseText) ||
+                    row.type.toLowerCase().includes(lowerCaseText) ||
+                    expertQuestionCategoryCurrent.find(category => category.id === row.categoryId)?.category.toLowerCase().includes(lowerCaseText)
+                );
+            });
+        }
+        return data;
+    }, [text, bookingExpertFeedbackQuestion, expertQuestionCategoryCurrent]);
+
+    const RenderClientFilter = (
+        <Grid container spacing={3}>
+            <Grid item xs={12} lg={4}>
+                <FlexBox>
+                    <Button>Tìm kiếm</Button>
+                    <Input size="small" onChange={handleChangeEventText} />
+                </FlexBox>
+            </Grid>
+            <Grid item xs={12} lg={8}>
+                <FlexBox justifyContent={'right'} />
+            </Grid>
+        </Grid>
+    );
 
     const props: DataGridTableProps = {
         columns,
@@ -130,11 +158,12 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
             <MainCard
                 title={
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography>Quản lí câu hỏi phỏng vấn</Typography>
+                        <Typography variant='h4' sx={{ fontWeight: 'bold' }}>Quản lí câu hỏi phỏng vấn</Typography>
                         <Button variant="outlined" color="primary" startIcon={<AddIcon />} onClick={() => setOpenDialog(true)}>Thêm câu hỏi</Button>
                     </Box>
                 }
             >
+                {RenderClientFilter}
                 <DataGridTable props={props} />
             </MainCard>
 
@@ -191,6 +220,36 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
                     </Button>
                     <Button onClick={handleSaveQuestion} color="primary">
                         {editMode ? "Cập nhật" : "Thêm"}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+                open={openDeleteDialog}
+                onClose={() => setOpenDeleteDialog(false)}
+            >
+                <DialogTitle>Xác nhận xóa câu hỏi</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Bạn có chắc chắn muốn xóa câu hỏi{" "}
+                        <Typography component="span" color="primary">
+                            {selectedQuestion?.question}
+                        </Typography>{" "}
+                        trong danh mục{" "}
+                        <Typography component="span" color="primary">
+                            {selectedQuestion?.category}
+                        </Typography>{" "}
+                        không?
+                    </DialogContentText>
+                </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={() => setOpenDeleteDialog(false)} color="primary">
+                        Đóng
+                    </Button>
+                    <Button onClick={handleDeleteQuestion} color="primary" autoFocus>
+                        Xóa
                     </Button>
                 </DialogActions>
             </Dialog>
