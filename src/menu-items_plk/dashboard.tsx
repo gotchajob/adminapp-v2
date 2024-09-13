@@ -59,7 +59,7 @@ const dashboard: NavItemType = {
     },
     {
       id: "cv",
-      title: <FormattedMessage id="Quản lí CV" />,
+      title: <FormattedMessage id="Quản lý CV" />,
       type: "item",
       url: "/staff/cv",
       icon: ContactsIcon,
@@ -67,7 +67,7 @@ const dashboard: NavItemType = {
     },
     {
       id: "feedback",
-      title: <FormattedMessage id="Quản lí đánh giá" />,
+      title: <FormattedMessage id="Quản lý đánh giá" />,
       type: "item",
       url: "/staff/interview-question",
       icon: QuestionAnswerIcon,
@@ -83,7 +83,7 @@ const dashboard: NavItemType = {
     },
     {
       id: "blog",
-      title: <FormattedMessage id="Quản lí blog" />,
+      title: <FormattedMessage id="Quản lý bài viết" />,
       type: "item",
       url: "/staff/blog",
       icon: PriceChangeIcon,
@@ -99,7 +99,7 @@ const dashboard: NavItemType = {
     },
     {
       id: "booking-report",
-      title: <FormattedMessage id="Quản lí báo cáo buổi phỏng vấn" />,
+      title: <FormattedMessage id="Quản lý báo cáo buổi phỏng vấn" />,
       type: "item",
       url: "/staff/booking-report",
       icon: ReportProblemIcon,
@@ -115,7 +115,7 @@ const dashboard: NavItemType = {
     },
     {
       id: "expert-manager",
-      title: <FormattedMessage id="Quản lí chuyên gia" />,
+      title: <FormattedMessage id="Quản lý chuyên gia" />,
       icon: IconUserCheck,
       type: "collapse",
       children: [
