@@ -37,7 +37,7 @@ export default function Page() {
       <MainCard
         title={
           <FlexBetween>
-            <Text variant="h4">Danh mục blog</Text>
+            <Text variant="h4">Danh mục bài viết</Text>
             <Button variant="contained" onClick={handleOpenCreateBlogCategory}>
               Tạo mới
             </Button>
@@ -54,7 +54,7 @@ export default function Page() {
       <MainCard
         title={
           <FlexBetween>
-            <Text variant="h4">Danh sách blog</Text>
+            <Text variant="h4">Danh sách bài viết</Text>
             <StyledLink href={"/staff/blog/create"}>
               <Button variant="contained">Tạo mới</Button>
             </StyledLink>
