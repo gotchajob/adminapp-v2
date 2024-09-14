@@ -56,12 +56,12 @@ export default function Page({ params }: { params: { id: string } }) {
   };
   return (
     <Stack spacing={3}>
-      <SubCard title="Thông tin blog">
+      <SubCard title="Thông tin bài viết">
         <Grid container spacing={3}>
           <Grid item xs={6}>
             <Stack spacing={2}>
               <TextField
-                label="Tiêu đề blog"
+                label="Tiêu đề bài viết"
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);

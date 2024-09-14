@@ -33,6 +33,7 @@ export const CreateBlogCategoryPopup = ({
         throw new Error(data.responseText);
       }
       enqueueSnackbar("Tạo thành công", { variant: "success" });
+      setOpen();
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: "error" });
     } finally {

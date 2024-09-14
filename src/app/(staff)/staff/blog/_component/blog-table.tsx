@@ -48,7 +48,7 @@ export const BlogTable = ({
             <TableCell>Danh mục</TableCell>
             <TableCell>Ngày tạo</TableCell>
             <TableCell align="center" sx={{ pr: 3 }}>
-              Actions
+              Thực hiện
             </TableCell>
           </TableRow>
         </TableHead>
