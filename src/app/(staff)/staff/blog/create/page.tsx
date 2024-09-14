@@ -13,6 +13,7 @@ import { Text } from "components/common/text/text";
 import ReactDraftWysiwyg from "components/forms/plugins/Wysiwug/ReactDraftWysiwyg";
 import { useGetBlogCategory } from "hooks/use-get-blog-category";
 import { StaffToken } from "hooks/use-login";
+import { useRouter } from "next/navigation";
 import { enqueueSnackbar } from "notistack";
 import { PostBlog } from "package/api/blog";
 import { useState } from "react";
@@ -27,6 +28,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [shortDescription, setShortDescription] = useState("");
   const [content, setContent] = useState("<p></p>");
   const [categoryId, setCategoryId] = useState(0);
+  const router = useRouter()
 
   const { blogCategory } = useGetBlogCategory({}, 0);
 
@@ -48,6 +50,7 @@ export default function Page({ params }: { params: { id: string } }) {
         throw new Error(res.responseText);
       }
       enqueueSnackbar("Tạo thành công", { variant: "success" });
+      router.push("/staff/blog")
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: "error" });
     } finally {
