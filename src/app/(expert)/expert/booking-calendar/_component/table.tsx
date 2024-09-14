@@ -54,11 +54,15 @@ export const RenderCustomerBookingsTable = ({
     handleOpenDialog: (id: number, type: 'accept' | 'reject' | 'ban') => void;
 }) => {
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID' },
+        {
+            field: 'id',
+            headerName: 'ID',
+            flex: 0.5
+        },
         {
             field: 'customerInfo',
             headerName: 'Tên khách hàng',
-            flex: 1,
+            flex: 1.2,
             renderCell: (params) => (
                 <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value.fullName}
@@ -68,7 +72,7 @@ export const RenderCustomerBookingsTable = ({
         {
             field: 'startInterviewDate',
             headerName: 'Thời điểm bắt đầu',
-            flex: 1,
+            flex: 1.3,
             renderCell: (params) => {
                 return (
                     <Box sx={{
@@ -84,7 +88,7 @@ export const RenderCustomerBookingsTable = ({
         {
             field: 'endInterviewDate',
             headerName: 'Thời điểm kết thúc',
-            flex: 1,
+            flex: 1.3,
             renderCell: (params) => (
                 <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {formatDate(params.value, 'dd/MM/yyyy hh:mm')}
@@ -94,7 +98,7 @@ export const RenderCustomerBookingsTable = ({
         {
             field: 'createdAt',
             headerName: 'Thời điểm tạo',
-            flex: 1,
+            flex: 1.3,
             renderCell: (params) => (
                 <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {formatDate(params.value, 'dd/MM/yyyy hh:mm')}
@@ -115,7 +119,11 @@ export const RenderCustomerBookingsTable = ({
             field: 'status',
             headerName: 'Trạng thái',
             flex: 2,
-            renderCell: (params) => getStatusLabel(params.value),
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {getStatusLabel(params.value)}
+                </Box>
+            )
         },
         {
             field: 'object',
@@ -150,7 +158,7 @@ export const RenderCustomerBookingsTable = ({
                             <CloseIcon sx={{ fontSize: '1.1rem' }} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Chặn">
+                    {/* <Tooltip title="Chặn">
                         <IconButton
                             color="error"
                             onClick={() => handleOpenDialog(params.row.id, 'ban')}
@@ -158,7 +166,7 @@ export const RenderCustomerBookingsTable = ({
                         >
                             <BlockIcon sx={{ fontSize: '1.1rem' }} />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                 </>
             ),
         },

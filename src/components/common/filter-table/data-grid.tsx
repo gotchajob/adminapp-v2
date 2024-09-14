@@ -60,7 +60,7 @@ export const DataGridTable = ({ props, handleUpdate }: { props: DataGridTablePro
                 }
             }
         },
-        slots: { toolbar: GridToolbar },
+        // slots: { toolbar: GridToolbar },
         onPaginationModelChange(model, details) {
             // console.log(model)
         },

@@ -2202,6 +2202,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/draft-convert@npm:^2":
+  version: 2.1.8
+  resolution: "@types/draft-convert@npm:2.1.8"
+  dependencies:
+    "@types/draft-js": "npm:*"
+    "@types/react": "npm:*"
+  checksum: 10c0/e6af52f217146f0979d902d2c2539ae152a64e8a377427ab199a9307ef8f9f8f6f164471a967eb67905c0a764d584dca64336666c2e0fc098c3c4c2421e93b25
+  languageName: node
+  linkType: hard
+
 "@types/draft-js@npm:*, @types/draft-js@npm:^0.11.17":
   version: 0.11.17
   resolution: "@types/draft-js@npm:0.11.17"
@@ -3214,6 +3224,7 @@ __metadata:
     "@tabler/icons-react": "npm:^2.47.0"
     "@tinymce/tinymce-react": "npm:^4.3.2"
     "@types/chance": "npm:^1.1.6"
+    "@types/draft-convert": "npm:^2"
     "@types/draft-js": "npm:^0.11.17"
     "@types/draftjs-to-html": "npm:^0"
     "@types/lodash-es": "npm:^4.17.12"
@@ -3241,6 +3252,7 @@ __metadata:
     csstype: "npm:^3.1.3"
     currency.js: "npm:^2.0.4"
     date-fns: "npm:^2.30.0"
+    draft-convert: "npm:^2.1.13"
     draft-js: "npm:^0.11.7"
     draftjs-to-html: "npm:^0.9.1"
     emoji-picker-react: "npm:^4.8.0"
@@ -4077,6 +4089,21 @@ __metadata:
   version: 2.5.6
   resolution: "dompurify@npm:2.5.6"
   checksum: 10c0/ee7e7d17982b1017a20982a2d57a0463d7fbb67f7b92a13ecf772e5e6acf0a529a19e3e31d725b05d5a2524d40e0aeb7ebc4be0aff396a6345bd6f2749fe560d
+  languageName: node
+  linkType: hard
+
+"draft-convert@npm:^2.1.13":
+  version: 2.1.13
+  resolution: "draft-convert@npm:2.1.13"
+  dependencies:
+    "@babel/runtime": "npm:^7.5.5"
+    immutable: "npm:~3.7.4"
+    invariant: "npm:^2.2.1"
+  peerDependencies:
+    draft-js: ">=0.7.0"
+    react: ^15.0.2 || ^16.0.0-rc || ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^15.0.2 || ^16.0.0-rc || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/dc6617cd0e7196655ff67ebdd5d5210373aae8fb58645d59628fbe103aa3bf7939f8e6baab988c537563ba3f5a69fda165444908cc238116c8f0447860a26c04
   languageName: node
   linkType: hard
 
@@ -5652,6 +5679,15 @@ __metadata:
     "@formatjs/icu-messageformat-parser": "npm:2.7.6"
     tslib: "npm:^2.4.0"
   checksum: 10c0/423f1c879ce2d0e7b9e0b4c1787a81ead7fe4d1734e0366a20fef56b06c09146e7ca3618e2e78b4f8b8f2b59cafe6237ceed21530fe0c16cfb47d915fc80222d
+  languageName: node
+  linkType: hard
+
+"invariant@npm:^2.2.1":
+  version: 2.2.4
+  resolution: "invariant@npm:2.2.4"
+  dependencies:
+    loose-envify: "npm:^1.0.0"
+  checksum: 10c0/5af133a917c0bcf65e84e7f23e779e7abc1cd49cb7fdc62d00d1de74b0d8c1b5ee74ac7766099fb3be1b05b26dfc67bab76a17030d2fe7ea2eef867434362dfc
   languageName: node
   linkType: hard
 

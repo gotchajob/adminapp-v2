@@ -167,7 +167,7 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
                   <Grid container spacing={gridSpacing}>
                     <Grid item xs={12} md={4}>
                       <Typography variant="h5">{expert.lastName + ' ' + expert.firstName}</Typography>
-                      <Typography variant="subtitle2">{expert.shortDescription}</Typography>
+                      {/* <Typography variant="subtitle2">{expert.shortDescription}</Typography> */}
                     </Grid>
                     <Grid item xs={12} md={8}>
                       {/* <Grid

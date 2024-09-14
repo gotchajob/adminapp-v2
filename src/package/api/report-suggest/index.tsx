@@ -1,7 +1,5 @@
 import { apiServerFetch, errorSystem } from '../api-fetch';
 
-export interface GetReportSuggestRequest { }
-
 export interface GetReportSuggestResponse {
   status: string;
   responseText: string;
@@ -13,9 +11,9 @@ export interface ReportSuggest {
   description: string;
 }
 
-export const GetReportSuggest = async (params: GetReportSuggestRequest, accessToken: string): Promise<GetReportSuggestResponse> => {
+export const GetReportSuggest = async (accessToken: string): Promise<GetReportSuggestResponse> => {
   try {
-    const res = await apiServerFetch('/report-suggest', 'GET', undefined, undefined);
+    const res = await apiServerFetch('/report-suggest', 'GET', undefined, accessToken);
     return res
   } catch (error: any) {
     return errorSystem('Lỗi không lấy được yêu cầu', []);

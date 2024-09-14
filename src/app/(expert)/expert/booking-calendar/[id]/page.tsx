@@ -190,12 +190,12 @@ export default function BookingDetailPage({
                   <Stack spacing={1}>
                     <Stack direction="row" spacing={1}>
                       <Typography variant="subtitle1">Tên khách hàng :</Typography>
-                      <Typography variant="body2">  {booking.customerInfo.fullName}</Typography>
+                      <Typography variant="body2">  {booking.customerInfo?.fullName}</Typography>
                     </Stack>
                     <Stack direction="row" spacing={1}>
                       <Typography variant="subtitle1">Email :</Typography>
                       <Typography variant="body2">
-                        {booking.customerInfo.email}
+                        {booking.customerInfo?.email}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -245,11 +245,11 @@ export default function BookingDetailPage({
                   <Stack onClick={handleClickOpen} sx={{ cursor: "pointer" }}>
                     <Image
                       src={
-                        typeof booking.customerCV.image === "string" && booking.customerCV.image
+                        typeof booking.customerCV?.image === "string" && booking?.customerCV.image
                           ? booking.customerCV.image
                           : "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
                       }
-                      alt={booking.customerCV.name}
+                      alt={booking.customerCV?.name}
                       layout="responsive"
                       width={700}
                       height={1000}
@@ -311,11 +311,11 @@ export default function BookingDetailPage({
             <DialogContent>
               <Image
                 src={
-                  typeof booking.customerCV.image === "string" && booking.customerCV.image
-                    ? booking.customerCV.image
+                  typeof booking.customerCV?.image === "string" && booking.customerCV?.image
+                    ? booking.customerCV?.image
                     : "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
                 }
-                alt={booking.customerCV.name}
+                alt={booking.customerCV?.name}
                 layout="intrinsic"
                 width={700}
                 height={1000}

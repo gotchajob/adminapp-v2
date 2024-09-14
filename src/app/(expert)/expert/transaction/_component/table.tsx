@@ -104,7 +104,6 @@ export const RenderTransactionCurrentWithdrawTable = ({ transactionCurrentWithdr
                 );
             });
         }
-
         return data;
     }, [text, transactionCurrentWithdraw, transactionType]);
 

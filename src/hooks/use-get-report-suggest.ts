@@ -1,8 +1,8 @@
-import { GetReportSuggest, GetReportSuggestRequest, GetReportSuggestResponse, ReportSuggest } from "package/api/report-suggest";
+import { GetReportSuggest, GetReportSuggestResponse, ReportSuggest } from "package/api/report-suggest";
 import { GetReportSuggestById, GetReportSuggestByIdRequest, ReportSuggestById } from "package/api/report-suggest/id";
 import { useEffect, useState } from "react";
 
-export function UseGetReportSuggest(params: GetReportSuggestRequest, accessToken: string, refresh: number) {
+export function UseGetReportSuggest(accessToken: string, refresh: number) {
     const [reportSuggest, setReportSuggest] = useState<ReportSuggest[]>([]);
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -13,7 +13,7 @@ export function UseGetReportSuggest(params: GetReportSuggestRequest, accessToken
         }
         try {
             setLoading(true);
-            const res = await GetReportSuggest(params, accessToken);
+            const res = await GetReportSuggest(accessToken);
             if (res.status !== "success") {
                 throw new Error();
             }

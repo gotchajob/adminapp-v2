@@ -32,13 +32,9 @@ export default function ReportSuggestManage() {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const { refresh, refreshTime } = useRefresh();
     const { staffToken } = StaffToken();
-    const { reportSuggest, loading } = UseGetReportSuggest({}, staffToken, refreshTime);
+    const { reportSuggest, loading } = UseGetReportSuggest(staffToken, refreshTime);
     const [openDialog, setOpenDialog] = useState(false);
     const [newReport, setNewReport] = useState({ report: "", description: "" });
-
-    useEffect(() => {
-        setTotalPages(Math.ceil(reportSuggest.length / rowsPerPage));
-    }, [reportSuggest, rowsPerPage]);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => setPage(value);
 
@@ -66,6 +62,8 @@ export default function ReportSuggestManage() {
             enqueueSnackbar('Lỗi xảy ra khi thêm Report Suggest.', { variant: 'error' });
         }
     };
+
+    useEffect(() => { console.log("reportSuggest:", reportSuggest) }, [reportSuggest])
 
     return (
         <>

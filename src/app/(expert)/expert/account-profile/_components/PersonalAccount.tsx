@@ -162,7 +162,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   //Show & Hide skill option
   const handleToggle = async (id: number, status: number) => {
     try {
-      if (status === 0) {
+      if (status === 1) {
         const response = await PatchExpertSkillOptonShow({ id }, expertToken);
         if (response.status !== 'success') {
           throw new Error('Failed to show skill');
@@ -183,7 +183,8 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   useEffect(() => {
     console.log("expert:", expert);
     console.log("initialData:", initialData);
-  }, [initialData, expert])
+    console.log("expertSkillOptionsCurrent:", expertSkillOptionsCurrent);
+  }, [initialData, expert, expertSkillOptionsCurrent])
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -251,6 +252,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                     alt="User Avatar"
                     src={formData.avatar}
                     sx={{
+                      margin: '-25px 0 0 auto',
                       borderRadius: '16px',
                       width: { xs: 72, sm: 100, md: 140 },
                       height: { xs: 72, sm: 100, md: 140 }
@@ -515,7 +517,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   <FlexBetween>
                     <Typography>{skillOption.skillOptionName}</Typography>
                     <Switch
-                      checked={skillOption.status === 1}
+                      checked={skillOption.status === 2}
                       onChange={() => handleToggle(skillOption.id, skillOption.status)}
                       color="primary"
                     />
@@ -527,9 +529,9 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                     value={skillOption.sumPoint}
                     size="small"
                     readOnly
-                    disabled={skillOption.status !== 1}
+                    disabled={skillOption.status === 1}
                   />
-                  <Text fontSize={13} color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>
+                  <Text fontSize={13} color={skillOption.status === 2 ? 'inherit' : 'text.disabled'}>
                     <span style={{ fontWeight: "bold" }}>
                       {skillOption.totalRating}
                     </span>{" "}

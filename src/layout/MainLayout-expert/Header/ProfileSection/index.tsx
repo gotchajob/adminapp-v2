@@ -28,6 +28,7 @@ import { useRefresh } from 'hooks/use-refresh';
 import useConfig from 'hooks/useConfig';
 import { enqueueSnackbar } from 'notistack';
 import { apiClientFetch } from 'package/api/api-fetch';
+import WalletCard from './_component/WalletCard';
 // import { redirect } from 'next/dist/server/api-utils';
 
 const User1 = '/assets/images/users/user-round.svg';
@@ -129,7 +130,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={User1}
+            src={expertCurrent?.avatar ? expertCurrent.avatar : User1}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: '8px 0 8px 8px !important',
@@ -185,6 +186,7 @@ const ProfileSection = () => {
                     </Box>
                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                       <Box sx={{ p: 2, pt: 0 }}>
+                        <WalletCard />
                         <Divider />
                         <List
                           component="nav"
