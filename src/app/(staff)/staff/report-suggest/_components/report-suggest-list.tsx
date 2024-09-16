@@ -1,13 +1,12 @@
 'use client';
 
 import { useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography } from "@mui/material";
 import { DeleteReportSuggestById, PatchReportSuggestById } from "package/api/report-suggest/id";
 import { ReportSuggest } from "package/api/report-suggest";
 import { enqueueSnackbar } from "notistack";
 import { StaffToken } from "hooks/use-login";
+import { ReportSuggestTableRender } from "./ReportSuggestTable";
 
 export default function ReportSuggestList({ reportSuggests, refresh }: { reportSuggests: ReportSuggest[], refresh: () => void }) {
     const { staffToken } = StaffToken();
@@ -28,22 +27,20 @@ export default function ReportSuggestList({ reportSuggests, refresh }: { reportS
         setSelectedReport(null);
     };
 
-    const handleDelete = async () => {
-        if (selectedReport) {
-            try {
-                const res = await DeleteReportSuggestById({ id: selectedReport.id }, staffToken);
-                if (res.status === 'success') {
-                    enqueueSnackbar('Đề xuất Báo cáo đã được xóa thành công!', { variant: 'success' });
-                    refresh();
-                } else {
-                    enqueueSnackbar('Có lỗi xảy ra khi xóa Đề xuất Báo cáo.', { variant: 'error' });
-                }
-            } catch (error) {
-                enqueueSnackbar('Lỗi xảy ra khi xóa Đề xuất Báo cáo.', { variant: 'error' });
-                console.log(error);
-            } finally {
-                handleCloseDialog();
+    const handleDelete = async (id: number) => {
+        try {
+            const res = await DeleteReportSuggestById({ id }, staffToken);
+            if (res.status === 'success') {
+                enqueueSnackbar('Đề xuất Báo cáo đã được xóa thành công!', { variant: 'success' });
+                refresh();
+            } else {
+                enqueueSnackbar('Có lỗi xảy ra khi xóa Đề xuất Báo cáo.', { variant: 'error' });
             }
+        } catch (error) {
+            enqueueSnackbar('Lỗi xảy ra khi xóa Đề xuất Báo cáo.', { variant: 'error' });
+            console.log(error);
+        } finally {
+            handleCloseDialog();
         }
     };
 
@@ -69,58 +66,12 @@ export default function ReportSuggestList({ reportSuggests, refresh }: { reportS
 
     return (
         <>
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Đề xuất Báo cáo</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Mô tả</TableCell>
-                            <TableCell align="center" sx={{ fontWeight: 'bold' }}>Quản lý</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {reportSuggests.map((report) => (
-                            <TableRow
-                                key={report.id}
-                                hover
-                                sx={{
-                                    '&:hover': {
-                                        backgroundColor: '#f0f0f0',
-                                    },
-                                    transition: 'background-color 0.3s ease',
-                                }}
-                            >
-                                <TableCell>{report.report}</TableCell>
-                                <TableCell>{report.description}</TableCell>
-                                <TableCell align="center">
-                                    <Tooltip title="Sửa">
-                                        <IconButton
-                                            onClick={() => handleOpenDialog(report, 'edit')}
-                                            sx={{
-                                                color: '#1976d2',
-                                                '&:hover': { color: '#1565c0' },
-                                            }}
-                                        >
-                                            <EditIcon sx={{ fontSize: '1.2rem' }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Xóa">
-                                        <IconButton
-                                            onClick={() => handleOpenDialog(report, 'delete')}
-                                            sx={{
-                                                color: '#d32f2f',
-                                                '&:hover': { color: '#c62828' },
-                                            }}
-                                        >
-                                            <DeleteIcon sx={{ fontSize: '1.2rem' }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            {/* Render bảng đề xuất báo cáo */}
+            <ReportSuggestTableRender
+                reportSuggest={reportSuggests}
+                handleDelete={(id) => handleOpenDialog(reportSuggests.find(rs => rs.id === id)!, 'delete')}
+                handleEdit={(id) => handleOpenDialog(reportSuggests.find(rs => rs.id === id)!, 'edit')}
+            />
 
             {/* Dialog dùng chung cho cả xóa và sửa */}
             <Dialog open={openDialog} onClose={handleCloseDialog}>
@@ -149,7 +100,7 @@ export default function ReportSuggestList({ reportSuggests, refresh }: { reportS
                             />
                         </>
                     ) : (
-                        <Typography>Bạn có muốn xóa report suggest : {selectedReport?.report} ?</Typography>
+                        <Typography>Bạn có muốn xóa đề xuất báo cáo: {selectedReport?.report}?</Typography>
                     )}
                 </DialogContent>
                 <DialogActions>
@@ -157,7 +108,7 @@ export default function ReportSuggestList({ reportSuggests, refresh }: { reportS
                     {dialogMode === 'edit' ? (
                         <Button onClick={handleEdit} color="primary">Lưu</Button>
                     ) : (
-                        <Button onClick={handleDelete} color="error">Xóa</Button>
+                        <Button onClick={() => handleDelete(selectedReport?.id!)} color="error">Xóa</Button>
                     )}
                 </DialogActions>
             </Dialog>

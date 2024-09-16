@@ -82,7 +82,7 @@ export default function ReportSuggestManage() {
                 }
             >
                 <ReportSuggestList reportSuggests={reportSuggest} refresh={refresh} />
-                <Grid item xs={12} sx={{ mt: 1.75 }}>
+                {/* <Grid item xs={12} sx={{ mt: 1.75 }}>
                     <Grid container justifyContent="space-between" spacing={gridSpacing}>
                         <Grid item>
                             <Pagination
@@ -116,7 +116,7 @@ export default function ReportSuggestManage() {
                             </Menu>
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </MainCard>
 
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>

@@ -39,12 +39,12 @@ const ExpertPage = () => {
   return (
     <>
       {/* Filter Card */}
-      <ExpertFilter />
+      {/* <ExpertFilter /> */}
       {/* Layout Table */}
       <MainCard title={<Typography variant="h4">Danh sách chuyên gia</Typography>}>
         {/* Data Table */}
         <ExpertList />
-        <Grid item xs={12} sx={{ mt: 1.75 }}>
+        {/* <Grid item xs={12} sx={{ mt: 1.75 }}>
           <Grid container justifyContent="space-between" spacing={gridSpacing}>
             <Grid item>
               <Pagination count={10} color="primary" />
@@ -82,7 +82,7 @@ const ExpertPage = () => {
               </Menu>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </MainCard>
     </>
   );

@@ -47,7 +47,7 @@ const ListStylePage2 = () => {
 
   return (
     <>
-      <TransactionFilter />
+      {/* <TransactionFilter /> */}
       <MainCard
         title={
           <Grid
