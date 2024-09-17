@@ -46,9 +46,10 @@ export const DelBookingExpertFeedbackQuestionById = async (params: DelBookingExp
 };
 
 export interface PatchBookingExpertFeedbackQuestionByIdRequest {
-    id: number;
-    question: string;
-    type: string;
+    id: number,
+    question: string,
+    type: string,
+    categoryId: number
 }
 
 export interface PatchBookingExpertFeedbackQuestionByIdResponse {
@@ -56,9 +57,9 @@ export interface PatchBookingExpertFeedbackQuestionByIdResponse {
     responseText: string;
 }
 
-export const PatchBookingExpertFeedbackQuestionById = async (params: PatchBookingExpertFeedbackQuestionByIdRequest): Promise<PatchBookingExpertFeedbackQuestionByIdResponse> => {
+export const PatchBookingExpertFeedbackQuestionById = async (params: PatchBookingExpertFeedbackQuestionByIdRequest, accessToken: string): Promise<PatchBookingExpertFeedbackQuestionByIdResponse> => {
     try {
-        const res = await apiServerFetch(`/booking-expert-feedback-question/${params.id}`, 'PATCH', { question: params.question, type: params.type }, undefined);
+        const res = await apiServerFetch(`/booking-expert-feedback-question/${params.id}`, 'PATCH', { question: params.question, type: params.type, categoryId: params.categoryId }, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', "");

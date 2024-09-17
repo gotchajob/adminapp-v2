@@ -54,6 +54,7 @@ import {
 } from "hooks/use-get-params";
 import { Switch, TablePagination } from "@mui/material";
 import { formatDate } from "package/util";
+import { RenderCVListTable } from "./CVListTable";
 
 const avatarImage = "/assets/images/users";
 
@@ -77,7 +78,7 @@ export const CVList = () => {
   const { cvTemplateListPage } = useGetSearchParams(["cvTemplateListPage"]);
 
   const { push } = useSearchParamsNavigation();
-  
+
   const handleChangePage = (e: any, page: number) => {
     push([{ name: "cvTemplateListPage", value: page + "" }], true);
   };
@@ -85,65 +86,70 @@ export const CVList = () => {
   const { cvTemplateStaffList } = useGetCVTemplateForStaff({
     page: cvTemplateListPage + 1,
   });
+
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ pl: 3 }}>#</TableCell>
-            <TableCell>Tên CV</TableCell>
-            <TableCell>Loại CV</TableCell>
-            <TableCell align="center">Số lượt sử dụng</TableCell>
-            <TableCell align="center">Ngày tạo</TableCell>
-            <TableCell align="center">Trạng thái</TableCell>
-            <TableCell align="center" sx={{ pr: 3 }}>
-              Actions
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {cvTemplateStaffList &&
-            cvTemplateStaffList.map((row, index) => (
-              <TableRow hover key={index}>
-                <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
-                <TableCell>
-                  <Stack direction="row" alignItems="center" spacing={2}>
-                    <NextLink href={`/staff/cv/` + row.id} passHref>
-                      <Avatar alt="User 1" src={row.image} />
-                    </NextLink>
-                    <Stack direction="row" alignItems="center" spacing={0.25}>
-                      <Typography variant="subtitle1">{row.name}</Typography>
+    <>
+      {cvTemplateStaffList && (<RenderCVListTable cvTemplateStaffList={cvTemplateStaffList} cvCategory={cvCategory} />)}
+
+      {/* <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ pl: 3 }}>#</TableCell>
+              <TableCell>Tên CV</TableCell>
+              <TableCell>Loại CV</TableCell>
+              <TableCell align="center">Số lượt sử dụng</TableCell>
+              <TableCell align="center">Ngày tạo</TableCell>
+              <TableCell align="center">Trạng thái</TableCell>
+              <TableCell align="center" sx={{ pr: 3 }}>
+                Actions
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {cvTemplateStaffList &&
+              cvTemplateStaffList.map((row, index) => (
+                <TableRow hover key={index}>
+                  <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
+                  <TableCell>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <NextLink href={`/staff/cv/` + row.id} passHref>
+                        <Avatar alt="User 1" src={row.image} />
+                      </NextLink>
+                      <Stack direction="row" alignItems="center" spacing={0.25}>
+                        <Typography variant="subtitle1">{row.name}</Typography>
+                      </Stack>
                     </Stack>
-                  </Stack>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h5" noWrap>
-                    {
-                      cvCategory.find((value) => value.id === row.cvCategoryId)
-                        ?.description
-                    }
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">{row.numberUse} lượt</TableCell>
-                <TableCell align="center">
-                  {formatDate(row.createdAt, "dd - MM - yyyy")}
-                </TableCell>
-                <TableCell align="center">{StatusCV(row.status)}</TableCell>
-                <TableCell align="center" sx={{ pr: 3 }}>
-                  <Switch checked={true} />
-                </TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-      <TablePagination
-        rowsPerPageOptions={[]}
-        component="div"
-        count={100}
-        rowsPerPage={10}
-        page={cvTemplateListPage ? +cvTemplateListPage : 0}
-        onPageChange={handleChangePage}
-      />
-    </TableContainer>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="h5" noWrap>
+                      {
+                        cvCategory.find((value) => value.id === row.cvCategoryId)
+                          ?.description
+                      }
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">{row.numberUse} lượt</TableCell>
+                  <TableCell align="center">
+                    {formatDate(row.createdAt, "dd - MM - yyyy")}
+                  </TableCell>
+                  <TableCell align="center">{StatusCV(row.status)}</TableCell>
+                  <TableCell align="center" sx={{ pr: 3 }}>
+                    <Switch checked={true} />
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[]}
+          component="div"
+          count={100}
+          rowsPerPage={10}
+          page={cvTemplateListPage ? +cvTemplateListPage : 0}
+          onPageChange={handleChangePage}
+        />
+      </TableContainer> */}
+    </>
   );
 };

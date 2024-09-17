@@ -11,23 +11,7 @@ import { enqueueSnackbar } from 'notistack';
 import { ExpertUpReportEvidence } from 'package/api/booking-report/id/expert-up-evidence';
 import { useEffect, useState } from "react";
 import MainCard from "ui-component/cards/MainCard";
-
-const renderStatusChip = (status: number) => {
-    switch (status) {
-        case 1:
-            return <Chip label="Processing" color="primary" />;
-        case 2:
-            return <Chip label="Expert Processing" color="warning" />;
-        case 3:
-            return <Chip label="Staff Processing" color="info" />;
-        case 4:
-            return <Chip label="Approved" color="success" />;
-        case 5:
-            return <Chip label="Rejected" color="error" />;
-        default:
-            return <Chip label="Unknown" color="default" />;
-    }
-};
+import { RenderBookingReportForExpertTable } from './_component/table';
 
 const fakeBookingReportForExpertResponse = {
     list: [
@@ -121,12 +105,9 @@ export default function BookingReportForExpertPage() {
 
     const { bookingReportForExpert, loading: bookingReportForExpertLoading } = UseGetBookingReportForExpert({ pageNumber: page, pageSize: rowsPerPage }, refreshTime, expertToken);
 
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleOpenDialog = (reportId: number) => {
-        setSelectedReportId(reportId);
+    const handleOpenDialog = (report: any) => {
+        setSelectedReportId(report.id);
+        setEvidence('');
         setOpenDialog(true);
     };
 
@@ -163,60 +144,12 @@ export default function BookingReportForExpertPage() {
     useEffect(() => {
         console.log("bookingReportForExpert", bookingReportForExpert);
     }, [bookingReportForExpert]);
+
     return (
         <MainCard title="Danh sách các báo cáo buổi phỏng vấn">
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Đề Xuất</TableCell>
-                            <TableCell>Ngày Tạo Báo Cáo</TableCell>
-                            <TableCell>Trạng thái</TableCell>
-                            <TableCell>Ngày Cập Nhật Báo Cáo</TableCell>
-                            <TableCell align="center">Hành Động</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {fakeBookingReportForExpertResponse.list.map((report) => (
-                            <TableRow key={report.id}>
-                                <TableCell>{report.id}</TableCell>
-                                <TableCell sx={{ maxWidth: 300, wordWrap: "break-word", whiteSpace: "normal" }}>
-                                    {report.bookingReportSuggest.map((suggest) => (
-                                        <div key={suggest.id}>{suggest.reportSuggest}</div>
-                                    ))}
-                                </TableCell>
-                                <TableCell>{new Date(report.createdAt).toLocaleDateString()}</TableCell>
-                                <TableCell>
-                                    {renderStatusChip(report.status)}
-                                </TableCell>
-                                <TableCell>{new Date(report.updatedAt).toLocaleDateString()}</TableCell>
-                                <TableCell align="center">
-                                    <Tooltip title="Xem chi tiết">
-                                        <IconButton color="primary" component={Link} href={`/expert/booking-report/${report.id}`}>
-                                            <VisibilityIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Cập nhật bằng chứng">
-                                        <IconButton color="primary" onClick={() => handleOpenDialog(report.id)} disabled={report.status !== 2}>
-                                            <AddToDriveIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Box display="flex" justifyContent="center" mt={2}>
-                <Pagination
-                    count={bookingReportForExpert.totalPage}
-                    page={page}
-                    onChange={handlePageChange}
-                    color="primary"
-                />
-            </Box>
-
+            {bookingReportForExpert ?
+                (<RenderBookingReportForExpertTable bookingReportForExpert={bookingReportForExpert.list} handelUpdateEvidence={handleOpenDialog} />) :
+                (<RenderBookingReportForExpertTable bookingReportForExpert={fakeBookingReportForExpertResponse.list} handelUpdateEvidence={handleOpenDialog} />)}
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>Cập nhật bằng chứng</DialogTitle>
                 <DialogContent>
@@ -247,7 +180,6 @@ export default function BookingReportForExpertPage() {
                     </Button>
                 </DialogActions>
             </Dialog>
-
         </MainCard>
     );
 }

@@ -43,6 +43,7 @@ import { PatchExpertRegisterBan } from "package/api/expert-register-request/id/b
 import { ExpertRegisterApproveForm } from "package/api/expert-register-request/id/approve-form";
 import { useRouter } from "next/navigation";
 import CircularLoader from "ui-component/CircularLoader";
+import { RendeExpertRequestTable } from "./ExpertRequestTable";
 
 const avatarImage = "/assets/images/experts";
 
@@ -85,7 +86,7 @@ const ExpertRequestList = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { expertRegisterRequest, loading } = useGetExpertRegisterRequest(
-    { limit: 100, page: 1, search: ["id>32"] },
+    { limit: 1000, page: 1, search: ["id>32"] },
     refreshTime
   );
 
@@ -162,7 +163,6 @@ const ExpertRequestList = () => {
       if (!expertReject) {
         throw new Error("Hãy chọn đơn muốn xác nhận từ chối");
       }
-
       // const action = await ExpertRegisterRejectForm({
       //   id: expertReject.id,
       //   reasonReject: rejectReason,
@@ -318,84 +318,16 @@ const ExpertRequestList = () => {
     );
   };
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ pl: 3 }}>#</TableCell>
-            <TableCell>Email đăng kí</TableCell>
-            <TableCell>Ngày tạo</TableCell>
-            <TableCell>Ngày cập nhật</TableCell>
-            <TableCell>Trạng thái</TableCell>
-            <TableCell align="center" sx={{ pr: 3 }}>
-              Actions
-            </TableCell>
-            <TableCell align="center">Chi tiết</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-
-          {expertRegisterRequest.length > 0
-            ? expertRegisterRequest.map((row, index) => (
-                <TableRow hover key={index}>
-                  <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" noWrap>
-                      {row.email}
-                    </Typography>
-                  </TableCell>
-
-                  <TableCell>
-                    <Typography variant="subtitle2" noWrap>
-                      {formatDate(row.createdAt, "dd-MM-yyyy")}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2" noWrap>
-                      {formatDate(row.createdAt, "dd-MM-yyyy")}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <StatusChip status={row.status} />
-                  </TableCell>
-                  <TableCell align="center" sx={{ pr: 3 }}>
-                    <ActionButton row={row} />
-                  </TableCell>
-                  <TableCell align="center" sx={{ pr: 3 }}>
-                    <IconButton
-                      color="default"
-                      size="large"
-                      disabled={row.status === 1 || row.status === 2}
-                      onClick={() => {
-                        router.push(
-                          `/staff/expert-request/expert-detail/${row.id}-${row.expertId}`
-                        );
-                      }}
-                    >
-                      <MoreVertIcon sx={{ fontSize: "1.1rem" }} />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
-            : null}
-          {expertRegisterRequest.length === 0 && !loading ? (
-            <TableRow>
-              <TableCell colSpan={6}>
-                <Typography variant="h5" align="center" sx={{ pb: 20 }}>
-                  Hiện chưa có đơn đăng ký tài khoản nào
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ) : null}
-          {loading ? (
-            <TableRow>
-              <TableCell colSpan={6}>
-                <CircularLoader />
-              </TableCell>
-            </TableRow>
-          ) : null}
-        </TableBody>
-      </Table>
+    <>
+      {expertRegisterRequest && (
+        <RendeExpertRequestTable
+          expertRegisterRequest={expertRegisterRequest || []}
+          handleApprove={openExpertApprove}
+          handleReject={openExpertReject}
+          handleSendForm={openExpertSendForm}
+          handleBan={openExpertBan}
+        />)
+      }
 
       {/* Approve dialog */}
       <Dialog open={Boolean(expertApprove)} maxWidth="xs" fullWidth>
@@ -503,8 +435,88 @@ const ExpertRequestList = () => {
           </LoadingButton>
         </DialogActions>
       </Dialog>
-    </TableContainer>
+    </>
   );
 };
 
 export default ExpertRequestList;
+
+{/* <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ pl: 3 }}>#</TableCell>
+              <TableCell>Email đăng kí</TableCell>
+              <TableCell>Ngày tạo</TableCell>
+              <TableCell>Ngày cập nhật</TableCell>
+              <TableCell>Trạng thái</TableCell>
+              <TableCell align="center" sx={{ pr: 3 }}>
+                Actions
+              </TableCell>
+              <TableCell align="center">Chi tiết</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+
+            {expertRegisterRequest.length > 0
+              ? expertRegisterRequest.map((row, index) => (
+                <TableRow hover key={index}>
+                  <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" noWrap>
+                      {row.email}
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography variant="subtitle2" noWrap>
+                      {formatDate(row.createdAt, "dd-MM-yyyy")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" noWrap>
+                      {formatDate(row.createdAt, "dd-MM-yyyy")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <StatusChip status={row.status} />
+                  </TableCell>
+                  <TableCell align="center" sx={{ pr: 3 }}>
+                    <ActionButton row={row} />
+                  </TableCell>
+                  <TableCell align="center" sx={{ pr: 3 }}>
+                    <IconButton
+                      color="default"
+                      size="large"
+                      disabled={row.status === 1 || row.status === 2}
+                      onClick={() => {
+                        router.push(
+                          `/staff/expert-request/expert-detail/${row.id}-${row.expertId}`
+                        );
+                      }}
+                    >
+                      <MoreVertIcon sx={{ fontSize: "1.1rem" }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+              : null}
+            {expertRegisterRequest.length === 0 && !loading ? (
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <Typography variant="h5" align="center" sx={{ pb: 20 }}>
+                    Hiện chưa có đơn đăng ký tài khoản nào
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            ) : null}
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <CircularLoader />
+                </TableCell>
+              </TableRow>
+            ) : null}
+          </TableBody>
+        </Table>
+      </TableContainer> */}

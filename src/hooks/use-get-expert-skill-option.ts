@@ -4,6 +4,7 @@ import {
   ExpertSkillOptionRq,
   GetExpertSkillOption,
 } from "package/api/expert-skill-option";
+import { ExpertSkillOptionCurrent, GetExpertSkillOptionCurrent } from "package/api/expert-skill-option/current";
 import { Skill } from "package/api/skill";
 import { SkillOption } from "package/api/skill-option";
 import { useEffect, useState } from "react";
@@ -71,3 +72,31 @@ export const useGetExpertSkillOptions = (
     ...getMoreData(),
   };
 };
+
+
+export const useGetExpertSkillOptionsCurrent = (accessToken: string, refresh: number) => {
+  const [expertSkillOptionsCurrent, setExpertSkillOptionsCurrent] = useState<
+    ExpertSkillOptionCurrent[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+  const getExpertSkillOptionsCurrent = async () => {
+    if (accessToken) {
+      try {
+        setLoading(true);
+        const data = await GetExpertSkillOptionCurrent(accessToken);
+        setExpertSkillOptionsCurrent(data.data);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+  useEffect(() => {
+    getExpertSkillOptionsCurrent();
+  }, [accessToken, refresh]);
+
+  return {
+    loading,
+    expertSkillOptionsCurrent,
+  };
+}

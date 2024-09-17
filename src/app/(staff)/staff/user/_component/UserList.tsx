@@ -1,146 +1,61 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-//next
-import NextLink from "next/link";
-
-// material-ui
-import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
-import { alpha, useTheme } from "@mui/material/styles";
+import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Modal from "@mui/material/Modal";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Divider from "@mui/material/Divider";
-
-// project imports
-import { GetUserList } from "package/api/user";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
+import MainCard from "ui-component/cards/MainCard";
 import { PatchBanUser } from "package/api/user/id/ban";
 import { PatchUnBanUser } from "package/api/user/id/unban";
-import Avatar from "ui-component/extended/Avatar";
-import MainCard from "ui-component/cards/MainCard";
-import { ThemeMode } from "types/config";
-import { openSnackbar } from "store/slices/snackbar";
+import { GetUserList } from "package/api/user";
 import { dispatch } from "store";
+import { openSnackbar } from "store/slices/snackbar";
+import { UserTableRender } from "./UserListTable"; // Import UserTableRender
+import type { UserList as UserListType } from "package/api/user"; // Import type
 
-// types
-import type { UserList } from "package/api/user";
-
-// assets
-import BlockTwoToneIcon from "@mui/icons-material/BlockTwoTone";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import CloseIcon from "@mui/icons-material/Close";
-
-const avatarImage = "/assets/images/users";
-
-// ==============================|| USER LIST 1 ||============================== //
-
+// Component UserList
 const UserList = () => {
-  const theme = useTheme();
-
-  //user list state
-  const [userList, setUserList] = useState<UserList[]>([]);
-
-  //user selection state
-  const [user, setUser] = useState<UserList | undefined>(undefined);
-
-  //modal state
+  // Fetch theme and users
+  const [userList, setUserList] = useState<UserListType[]>([]);
+  const [user, setUser] = useState<UserListType | undefined>(undefined);
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  //Fetch API get uset list
+  // Fetch the list of users
   const FetchUserList = async () => {
-    const data = await GetUserList({ pageNumber: 1, pageSize: 100,search: ['roleId:4'] }, "");
+    const data = await GetUserList({ pageNumber: 1, pageSize: 100, search: ["roleId:4"] }, "");
     if (data) {
       setUserList(data.data.list);
     }
   };
 
-  //Fetch API post ban user
-  const BanUser = async (user: UserList) => {
-    if (user) {
-      try {
-        const id = user.id;
-        const action = await PatchBanUser({ id }, "");
-        if (action.status !== "error") {
-          FetchUserList();
-          setOpenModal((prev) => !prev);
-          showSnackbar(
-            user.status === 1
-              ? `Cấm tài khoản ${user.email} thành công`
-              : `Kích hoạt tài khoản ${user.email} thành công`,
-            "success"
-          );
-        } else {
-          showSnackbar(
-            user.status === 1
-              ? `Cấm tài khoản ${user.email} thất bại`
-              : `Kích hoạt tài khoản ${user.email} thất bại`,
-            "error"
-          );
-        }
-      } catch (error) {
-        console.log(error);
+  // Handle Ban/Unban user
+  const BanUser = async (user: UserListType) => {
+    try {
+      const id = user.id;
+      const action = user.status === 1 ? await PatchBanUser({ id }, "") : await PatchUnBanUser({ id }, "");
+      if (action.status !== "error") {
+        FetchUserList();
+        setOpenModal(false);
+        showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thành công` : `Kích hoạt tài khoản ${user.email} thành công`, "success");
+      } else {
+        showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thất bại` : `Kích hoạt tài khoản ${user.email} thất bại`, "error");
       }
+    } catch (error) {
+      showSnackbar(user.status === 1 ? `Cấm tài khoản ${user.email} thất bại` : `Kích hoạt tài khoản ${user.email} thất bại`, "error");
     }
   };
 
-  //Fetch API post active user
-  const UnBanUser = async (user?: UserList) => {
-    if (user) {
-      try {
-        const id = user.id;
-        const action = await PatchUnBanUser({ id }, "");
-        if (action.status !== "error") {
-          FetchUserList();
-          setOpenModal((prev) => !prev);
-          showSnackbar(
-            user.status === 1
-              ? `Cấm tài khoản ${user.email} thành công`
-              : `Kích hoạt tài khoản ${user.email} thành công`,
-            "success"
-          );
-        } else {
-          showSnackbar(
-            user.status === 1
-              ? `Cấm tài khoản ${user.email} thất bại`
-              : `Kích hoạt tài khoản ${user.email} thất bại`,
-            "error"
-          );
-        }
-      } catch (error) {
-        console.log(error);
-        showSnackbar(
-          user.status === 1
-            ? `Cấm tài khoản ${user.email} thất bại`
-            : `Kích hoạt tài khoản ${user.email} thất bại`,
-          "error"
-        );
-      }
-    }
+  // Handle open modal for ban/unban user
+  const userHandle = (id: number) => {
+    const selectedUser = userList?.find((u) => u.id === id);
+    setUser(selectedUser);
+    setOpenModal(true);
   };
 
-  //Ban user handle
-  const userHandle = async (id: number) => {
-    if (id) {
-      const filteredUserById = userList?.find((user) => user.id === id);
-      setUser(filteredUserById);
-    }
-    setOpenModal((prev) => !prev);
-  };
-
-  //snackBar
+  // Show snackbar notification
   const showSnackbar = (message: string, variant: string) => {
     dispatch(
       openSnackbar({
@@ -148,229 +63,56 @@ const UserList = () => {
         anchorOrigin: { vertical: "top", horizontal: "center" },
         message: message,
         variant: "alert",
-        alert: {
-          color: variant,
-        },
+        alert: { color: variant },
         close: false,
       })
     );
   };
 
-  //user Effect
+  // Fetch user list on component mount
   useEffect(() => {
     FetchUserList();
   }, []);
 
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ pl: 3 }}>#</TableCell>
-            <TableCell>Tên</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Số điện thoại</TableCell>
-            <TableCell>Địa chỉ</TableCell>
-            <TableCell>Trạng thái</TableCell>
-            <TableCell align="center" sx={{ pr: 3 }}>
-              Actions
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {userList.map((user, index) => (
-            <TableRow hover key={index}>
-              <TableCell sx={{ pl: 3 }}>{user.id}</TableCell>
-              <TableCell>
-                <Stack direction="row" alignItems="center" spacing={2}>
-                  <NextLink href={`/staff/user/profile`} passHref>
-                    <Avatar
-                      alt="User 1"
-                      src={`${avatarImage}/${user.avatar}`}
-                    />
-                  </NextLink>
-                  <Stack direction="row" alignItems="center" spacing={0.25}>
-                    <Typography variant="subtitle1">{user.fullName}</Typography>
-                  </Stack>
-                </Stack>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" noWrap>
-                  {user.email}
-                </Typography>
-              </TableCell>
-              <TableCell>{user.phone}</TableCell>
-              <TableCell>{user.address}</TableCell>
-              <TableCell>
-                {user.status === 1 && (
-                  <Chip
-                    label="Active"
-                    size="small"
-                    sx={{
-                      bgcolor:
-                        theme.palette.mode === ThemeMode.DARK
-                          ? "dark.main"
-                          : alpha(theme.palette.success.light, 0.6),
-                      color: "success.dark",
-                    }}
-                  />
-                )}
-                {user.status === 0 && (
-                  <Chip
-                    label="Ban"
-                    size="small"
-                    sx={{
-                      bgcolor:
-                        theme.palette.mode === ThemeMode.DARK
-                          ? "dark.main"
-                          : alpha(theme.palette.orange.light, 0.8),
-                      color: "orange.dark",
-                    }}
-                  />
-                )}
-                {user.status === 2 && (
-                  <Chip
-                    label="Pending"
-                    size="small"
-                    sx={{
-                      bgcolor:
-                        theme.palette.mode === ThemeMode.DARK
-                          ? "dark.main"
-                          : "warning.light",
-                      color: "warning.dark",
-                    }}
-                  />
-                )}
-              </TableCell>
-              <TableCell align="center" sx={{ pr: 3 }}>
-                <Stack
-                  direction="row"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  {user.status === 0 && (
-                    <Tooltip placement="top" title="Active">
-                      <IconButton
-                        color="primary"
-                        aria-label="delete"
-                        size="large"
-                        onClick={() => {
-                          userHandle(user.id);
-                        }}
-                      >
-                        <LockOpenIcon sx={{ fontSize: "1.1rem" }} />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                  {user.status === 1 && (
-                    <Tooltip placement="top" title="Ban">
-                      <IconButton
-                        color="primary"
-                        sx={{
-                          color: "orange.dark",
-                          borderColor: "orange.main",
-                          "&:hover ": { bgcolor: "orange.light" },
-                        }}
-                        size="large"
-                        onClick={() => {
-                          userHandle(user.id);
-                        }}
-                      >
-                        <BlockTwoToneIcon sx={{ fontSize: "1.1rem" }} />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                  {user.status === 2 && (
-                    <Tooltip placement="top" title="Ban">
-                      <IconButton
-                        color="primary"
-                        sx={{
-                          color: "orange.dark",
-                          borderColor: "orange.main",
-                          "&:hover": { bgcolor: "orange.light" },
-                        }}
-                        size="large"
-                      >
-                        <BlockTwoToneIcon sx={{ fontSize: "1.1rem" }} />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                </Stack>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <>
+      {/* UserTableRender is integrated here */}
+      <UserTableRender
+        userList={userList}
+        handleBan={userHandle} // Handle ban/unban action
+      />
 
-      {/* Modal Ban User */}
+      {/* Modal for Ban/Unban confirmation */}
       <Modal
-        disablePortal
-        disableEnforceFocus
-        disableAutoFocus
-        aria-labelledby="server-modal-title"
-        aria-describedby="server-modal-description"
-        sx={{
-          display: "flex",
-          p: 1,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
         open={openModal}
+        onClose={() => setOpenModal(false)}
+        aria-labelledby="ban-unban-user"
+        aria-describedby="ban-unban-description"
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         <MainCard
-          sx={{
-            width: { xs: 280, sm: 450 },
-            zIndex: 1,
-          }}
           title="Xác nhận phương thức"
           content={false}
           secondary={
-            <IconButton
-              size="large"
-              aria-label="close modal"
-              onClick={() => setOpenModal((prev) => !prev)}
-            >
-              <CloseIcon fontSize="small" />
+            <IconButton size="large" onClick={() => setOpenModal(false)}>
+              <CloseIcon />
             </IconButton>
           }
         >
-          <CardContent>
-            <Typography variant="body1">
-              Bạn muốn {user?.status === 1 ? "cấm" : "kích hoạt"} tài khoản với
-              email {user?.email}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Grid container justifyContent="space-between">
-              <Button
-                variant="contained"
-                type="button"
-                onClick={() => setOpenModal((prev) => !prev)}
-              >
-                Hủy
-              </Button>
-              {user && user.status === 1 ? (
-                <Button
-                  variant="contained"
-                  type="button"
-                  onClick={() => BanUser(user)}
-                >
-                  Chấp nhận
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  type="button"
-                  onClick={() => UnBanUser(user)}
-                >
-                  Chấp nhận
-                </Button>
-              )}
-            </Grid>
-          </CardActions>
+          <Typography variant="body1">
+            Bạn muốn {user?.status === 1 ? "cấm" : "kích hoạt"} tài khoản với email {user?.email}?
+          </Typography>
+          <Grid container sx={{ mt: 1 }}>
+            <Button variant="text" onClick={() => setOpenModal(false)}>
+              Đóng
+            </Button>
+            <Button variant="text" onClick={() => user && BanUser(user)}>
+              Chấp nhận
+            </Button>
+          </Grid>
         </MainCard>
       </Modal>
-    </TableContainer>
+    </>
   );
 };
 

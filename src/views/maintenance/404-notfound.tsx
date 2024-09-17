@@ -65,9 +65,9 @@ const Error = () => {
       </Grid>
       <Grid item xs={12}>
         <Stack justifyContent="center" alignItems="center" spacing={gridSpacing} sx={{ p: 1.5, maxWidth: 350 }}>
-          <Typography variant="h1">Something is wrong</Typography>
+          <Typography variant="h1">Có gì đó sai sai</Typography>
           <Typography variant="body2" align="center">
-            The page you are looking was moved, removed, renamed, or might never exist!
+            Trang bạn đang xem đã được di chuyển, xóa, đổi tên hoặc có thể không bao giờ tồn tại!
           </Typography>
           <AnimateButton>
             <Button variant="contained" size="large" component={Link} href={DASHBOARD_PATH}>

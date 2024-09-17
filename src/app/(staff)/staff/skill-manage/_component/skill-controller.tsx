@@ -8,6 +8,8 @@ import { PatchSkill, PostSkill, Skill } from 'package/api/skill';
 import { DelSkill } from 'package/api/skill/id';
 import { useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
+import { RenderSkillOptionControllerTable } from './SkillOptionControllerTable';
+import { RenderSkillControllerTable } from './SkilControllerTable';
 
 interface SkillControllerPageProps {
     token: string;
@@ -37,58 +39,69 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
     };
 
     const handleAdd = async () => {
-        if (!newSkill.name || !selectedCategory) return;
+        if (!newSkill.name || !selectedCategory) {
+            enqueueSnackbar("Vui lòng nhập tên kĩ năng và chọn danh mục", { variant: "warning" });
+            return;
+        }
+
         try {
             const response = await PostSkill({ categoryId: selectedCategory as number, name: newSkill.name });
-            if (response.status === 'success') {
+            if (response.status === "success") {
                 refresh();
                 setOpenAddDialog(false);
-                setNewSkill({ name: '', id: null, categoryId: null });
+                setNewSkill({ name: "", id: null, categoryId: null });
                 enqueueSnackbar("Thêm kĩ năng thành công", { variant: "success" });
             } else {
-                enqueueSnackbar(response.responseText, { variant: "error" });
+                throw new Error(response.responseText || "Không thể thêm kĩ năng");
             }
         } catch (error: any) {
-            console.error('Error adding skill:', error);
-            enqueueSnackbar(error.message, { variant: "error" });
+            console.error("Error adding skill:", error);
+            enqueueSnackbar(error.responseText || "Thêm kĩ năng thất bại", { variant: "error" });
         }
     };
 
     const handleUpdate = async () => {
-        if (!newSkill.name || !selectedCategory || !selectedSkill) return;
+        if (!newSkill.name || !selectedCategory || !selectedSkill) {
+            enqueueSnackbar("Vui lòng chọn kĩ năng, nhập tên và chọn danh mục", { variant: "warning" });
+            return;
+        }
 
         try {
             const response = await PatchSkill({ id: selectedSkill.id, skillName: newSkill.name });
-            if (response.status === 'success') {
+            if (response.status === "success") {
                 refresh();
                 setOpenEditDialog(false);
                 setSelectedSkill(null);
-                setNewSkill({ name: '', id: null, categoryId: null });
+                setNewSkill({ name: "", id: null, categoryId: null });
                 enqueueSnackbar("Sửa kĩ năng thành công", { variant: "success" });
             } else {
-                enqueueSnackbar(response.responseText, { variant: "error" });
+                throw new Error(response.responseText || "Không thể sửa kĩ năng");
             }
         } catch (error: any) {
-            console.error('Error updating skill:', error);
-            enqueueSnackbar(error.message, { variant: "error" });
+            console.error("Error updating skill:", error);
+            enqueueSnackbar(error.responseText || "Sửa kĩ năng thất bại", { variant: "error" });
         }
     };
 
     const handleConfirmDelete = async () => {
-        if (!selectedSkill) return;
+        if (!selectedSkill) {
+            enqueueSnackbar("Vui lòng chọn kĩ năng để xóa", { variant: "warning" });
+            return;
+        }
+
         try {
             const response = await DelSkill({ id: selectedSkill.id });
-            if (response.status === 'success') {
+            if (response.status === "success") {
                 refresh();
                 setOpenDeleteDialog(false);
                 setSelectedSkill(null);
                 enqueueSnackbar("Xóa kĩ năng thành công", { variant: "success" });
             } else {
-                enqueueSnackbar(response.responseText, { variant: "error" });
+                throw new Error(response.responseText || "Không thể xóa kĩ năng");
             }
         } catch (error: any) {
-            console.error('Error deleting skill:', error);
-            enqueueSnackbar(error.message, { variant: "error" });
+            console.error("Error deleting skill:", error);
+            enqueueSnackbar(error.responseText || "Xóa kĩ năng thất bại", { variant: "error" });
         }
     };
 
@@ -106,37 +119,15 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
                 </Box>
             }
             sx={{ mt: 3 }}>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Tên kĩ năng</TableCell>
-                            <TableCell>Tên danh mục</TableCell>
-                            <TableCell>Quản lí</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {skills.map((skill) => (
-                            <TableRow key={skill.id}>
-                                <TableCell>{skill.name}</TableCell>
-                                <TableCell>{category.find(cat => cat.id === skill.categoryId)?.name}</TableCell>
-                                <TableCell>
-                                    <Tooltip title="Sửa">
-                                        <IconButton onClick={() => handleEdit(skill)}>
-                                            <EditIcon sx={{ fontSize: 18 }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Xóa">
-                                        <IconButton onClick={() => handleDelete(skill)}>
-                                            <DeleteIcon sx={{ fontSize: 18 }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+
+            {skills && category && (
+                <RenderSkillControllerTable
+                    skills={skills}
+                    category={category}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                />
+            )}
 
             {/* Dialog thêm kĩ năng */}
             <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>
@@ -213,3 +204,35 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
         </MainCard>
     );
 }
+
+{/* <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Tên kĩ năng</TableCell>
+                            <TableCell>Tên danh mục</TableCell>
+                            <TableCell>Quản lí</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {skills.map((skill) => (
+                            <TableRow key={skill.id}>
+                                <TableCell>{skill.name}</TableCell>
+                                <TableCell>{category.find(cat => cat.id === skill.categoryId)?.name}</TableCell>
+                                <TableCell>
+                                    <Tooltip title="Sửa">
+                                        <IconButton onClick={() => handleEdit(skill)}>
+                                            <EditIcon sx={{ fontSize: 18 }} />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Xóa">
+                                        <IconButton onClick={() => handleDelete(skill)}>
+                                            <DeleteIcon sx={{ fontSize: 18 }} />
+                                        </IconButton>
+                                    </Tooltip>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer> */}

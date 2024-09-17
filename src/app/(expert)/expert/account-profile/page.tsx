@@ -68,25 +68,25 @@ function a11yProps(index: number) {
 // tabs option
 const tabsOption = [
   {
-    label: "Profile",
+    label: "Thông tin cá nhân",
     icon: <AccountCircleTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
   },
   {
-    label: "Personal Details",
+    label: "Thiết lập thông tin cá nhân",
     icon: <DescriptionTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
   },
   {
-    label: "My Account",
+    label: "Mô tả dịch vụ",
     icon: <LibraryBooksTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
   },
   {
-    label: "Change Password",
+    label: "Đổi mật khẩu",
     icon: <LockTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
   },
-  {
-    label: "Settings",
-    icon: <MailTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
-  },
+  // {
+  //   label: "Settings",
+  //   icon: <MailTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
+  // },
 ];
 
 // ==============================|| PROFILE 1 ||============================== //
@@ -167,7 +167,7 @@ const ExpertProfile = () => {
             <PersonalAccount expert={expertCurrent}></PersonalAccount>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <MyAccount></MyAccount>
+            <MyAccount expert={expertCurrent}></MyAccount>
           </TabPanel>
           <TabPanel value={value} index={3}>
             <ChangePassword></ChangePassword>

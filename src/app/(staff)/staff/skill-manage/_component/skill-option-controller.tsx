@@ -8,6 +8,7 @@ import { PatchSkillOption, PostSkillOption } from 'package/api/skill-option';
 import { DeleteSkillOption } from 'package/api/skill-option/id';
 import { useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
+import { RenderSkillOptionControllerTable } from './SkillOptionControllerTable';
 
 interface SkillOption {
     id: number;
@@ -43,11 +44,14 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
     };
 
     const handleAdd = async () => {
-        if (!newSkillOption.name || !selectedSkill) return;
+        if (!newSkillOption.name || !selectedSkill) {
+            enqueueSnackbar("Vui lòng nhập tên tùy chọn và chọn kỹ năng", { variant: "warning" });
+            return;
+        }
         try {
             const response = await PostSkillOption({ skillId: selectedSkill as number, name: newSkillOption.name });
             if (response.status !== 'success') {
-                throw new Error(response.responseText);
+                throw new Error(response.responseText || "Không thể thêm tùy chọn kỹ năng");
             }
             refresh();
             setOpenAddDialog(false);
@@ -55,16 +59,19 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             enqueueSnackbar("Thêm tùy chọn kĩ năng thành công", { variant: "success" });
         } catch (error: any) {
             console.error('Error adding skill option:', error);
-            enqueueSnackbar(error.message, { variant: "error" });
+            enqueueSnackbar(error.responseText || "Lỗi khi thêm tùy chọn kỹ năng", { variant: "error" });
         }
     };
 
     const handleUpdate = async () => {
-        if (!newSkillOption.name || !selectedSkillOption) return;
+        if (!newSkillOption.name || !selectedSkillOption) {
+            enqueueSnackbar("Vui lòng nhập tên tùy chọn và chọn kỹ năng cần cập nhật", { variant: "warning" });
+            return;
+        }
         try {
             const response = await PatchSkillOption({ id: selectedSkillOption.id, name: newSkillOption.name });
             if (response.status !== 'success') {
-                throw new Error(response.responseText);
+                throw new Error(response.responseText || "Không thể cập nhật tùy chọn kỹ năng");
             }
             refresh();
             setOpenEditDialog(false);
@@ -73,16 +80,19 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             enqueueSnackbar("Sửa tùy chọn kĩ năng thành công", { variant: "success" });
         } catch (error: any) {
             console.error('Error updating skill option:', error);
-            enqueueSnackbar(error.message, { variant: "error" });
+            enqueueSnackbar(error.responseText || "Lỗi khi cập nhật tùy chọn kỹ năng", { variant: "error" });
         }
     };
 
     const handleConfirmDelete = async () => {
-        if (!selectedSkillOption) return;
+        if (!selectedSkillOption) {
+            enqueueSnackbar("Không có tùy chọn kỹ năng được chọn để xóa", { variant: "warning" });
+            return;
+        }
         try {
             const response = await DeleteSkillOption({ id: selectedSkillOption.id });
             if (response.status !== 'success') {
-                throw new Error(response.responseText);
+                throw new Error(response.responseText || "Không thể xóa tùy chọn kỹ năng");
             }
             refresh();
             setOpenDeleteDialog(false);
@@ -90,7 +100,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             enqueueSnackbar("Xóa tùy chọn kĩ năng thành công", { variant: "success" });
         } catch (error: any) {
             console.error('Error deleting skill option:', error);
-            enqueueSnackbar(error.message, { variant: "error" });
+            enqueueSnackbar(error.responseText || "Lỗi khi xóa tùy chọn kỹ năng", { variant: "error" });
         }
     };
 
@@ -108,37 +118,15 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
                 </Box>
             }
             sx={{ mt: 3 }}>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Tên tùy chọn kỹ năng</TableCell>
-                            <TableCell>Thuộc kỹ năng</TableCell>
-                            <TableCell>Quản lí</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {skillOptions.map((skillOption) => (
-                            <TableRow key={skillOption.id}>
-                                <TableCell>{skillOption.name}</TableCell>
-                                <TableCell>{skills.find(skill => skill.id === skillOption.skillId)?.name}</TableCell>
-                                <TableCell>
-                                    <Tooltip title="Sửa">
-                                        <IconButton onClick={() => handleEdit(skillOption)}>
-                                            <EditIcon sx={{ fontSize: 18 }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Xóa">
-                                        <IconButton onClick={() => handleDelete(skillOption)}>
-                                            <DeleteIcon sx={{ fontSize: 18 }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+
+            {skillOptions && skills && (
+                <RenderSkillOptionControllerTable
+                    skillOptions={skillOptions}
+                    skills={skills}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                />
+            )}
 
             {/* Dialog thêm tùy chọn kĩ năng */}
             <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>
@@ -212,3 +200,35 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
         </MainCard>
     );
 }
+
+{/* <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Tên tùy chọn kỹ năng</TableCell>
+                            <TableCell>Thuộc kỹ năng</TableCell>
+                            <TableCell>Quản lí</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {skillOptions.map((skillOption) => (
+                            <TableRow key={skillOption.id}>
+                                <TableCell>{skillOption.name}</TableCell>
+                                <TableCell>{skills.find(skill => skill.id === skillOption.skillId)?.name}</TableCell>
+                                <TableCell>
+                                    <Tooltip title="Sửa">
+                                        <IconButton onClick={() => handleEdit(skillOption)}>
+                                            <EditIcon sx={{ fontSize: 18 }} />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Xóa">
+                                        <IconButton onClick={() => handleDelete(skillOption)}>
+                                            <DeleteIcon sx={{ fontSize: 18 }} />
+                                        </IconButton>
+                                    </Tooltip>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer> */}

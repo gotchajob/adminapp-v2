@@ -1,39 +1,44 @@
-// material-ui
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-
-// project imports
+import { useState } from 'react';
+import {
+  Grid,
+  Typography,
+  Button,
+  TextField,
+  IconButton,
+  InputAdornment,
+  Box
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import SubCard from 'ui-component/cards/SubCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
-
-// ==============================|| PROFILE 1 - CHANGE PASSWORD ||============================== //
-
-// formik and yup
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Box, Stack } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
+import { ExpertToken, StaffToken } from 'hooks/use-login';
+import { UserChangePassword } from 'package/api/user/change-password';
 
-// validation schema
+// Validation schema
 const validationSchema = yup.object().shape({
-  currentPassword: yup.string().required("Current Password is required"),
+  currentPassword: yup.string().required('Mật khẩu hiện tại là bắt buộc'),
   newPassword: yup
     .string()
-    .required("New Password is required")
-    .min(8, "Minimum 8 characters")
-    .matches(/^(?=.*[0-9])/, "At least 1 digit (0-9)")
-    .matches(/^(?=.*[A-Z])/, "At least 1 uppercase letter (A-Z)"),
+    .required('Mật khẩu mới là bắt buộc')
+    .min(8, 'Mật khẩu phải chứa ít nhất 8 ký tự')
+    .matches(/^(?=.*[0-9])/, 'Mật khẩu phải chứa ít nhất 1 chữ số (0-9)')
+    .matches(/^(?=.*[A-Z])/, 'Mật khẩu phải chứa ít nhất 1 chữ hoa (A-Z)'),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref("newPassword")], "Passwords must match")
-    .required("Confirm Password is required"),
+    .oneOf([yup.ref('newPassword')], 'Mật khẩu xác nhận phải trùng khớp')
+    .required('Xác nhận mật khẩu là bắt buộc'),
 });
 
-// component
+// Component
 const ChangePassword = () => {
+  const { expertToken } = ExpertToken();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -42,82 +47,120 @@ const ChangePassword = () => {
       confirmPassword: '',
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log('Form values:', values);
+    onSubmit: async (values) => {
+      try {
+        const res = await UserChangePassword(
+          {
+            oldPassword: values.currentPassword,
+            newPassword: values.newPassword,
+          },
+          expertToken
+        );
+        if (res.status === 'success') {
+          enqueueSnackbar('Mật khẩu đã được thay đổi thành công!', { variant: 'success' });
+          formik.resetForm();
+        } else {
+          enqueueSnackbar('Có lỗi xảy ra khi đổi mật khẩu.', { variant: 'error' });
+        }
+      } catch (error) {
+        enqueueSnackbar('Lỗi hệ thống xảy ra khi đổi mật khẩu.', { variant: 'error' });
+        console.log(error);
+      }
     },
   });
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
+  const toggleShowNewPassword = () => setShowNewPassword(!showNewPassword);
+  const toggleShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12}>
-        <Alert severity="warning" variant="outlined" sx={{ borderColor: 'warning.dark' }}>
-          <AlertTitle>Alert!</AlertTitle>
-          Your Password will expire every 3 months. Change it periodically.
-          <strong> Do not share your password</strong>
-        </Alert>
-      </Grid>
-      <Grid item xs={12}>
-        <SubCard title="Change Password">
+        <SubCard title="Đổi mật khẩu">
           <Box component="form" noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
             <Grid container spacing={gridSpacing} sx={{ mb: 1.75 }}>
               <Grid item xs={12} md={6}>
                 <TextField
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="currentPassword"
                   fullWidth
-                  label="Current Password"
+                  label="Nhập mật khẩu hiện tại"
                   name="currentPassword"
                   value={formik.values.currentPassword}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.currentPassword && Boolean(formik.errors.currentPassword)}
                   helperText={formik.touched.currentPassword && formik.errors.currentPassword}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={toggleShowPassword}>
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
             </Grid>
             <Grid container spacing={gridSpacing} sx={{ mb: 1.75 }}>
               <Grid item xs={12} md={6}>
                 <TextField
-                  type="password"
+                  type={showNewPassword ? 'text' : 'password'}
                   id="newPassword"
                   fullWidth
-                  label="New Password"
+                  label="Nhập mật khẩu mới"
                   name="newPassword"
                   value={formik.values.newPassword}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.newPassword && Boolean(formik.errors.newPassword)}
                   helperText={formik.touched.newPassword && formik.errors.newPassword}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={toggleShowNewPassword}>
+                          {showNewPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   id="confirmPassword"
                   fullWidth
-                  label="Confirm Password"
+                  label="Xác nhận mật khẩu mới"
                   name="confirmPassword"
                   value={formik.values.confirmPassword}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
                   helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={toggleShowConfirmPassword}>
+                          {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
             </Grid>
-            <Grid spacing={2} container justifyContent="flex-end" sx={{ mt: 3 }}>
+            <Grid container justifyContent="flex-end" spacing={2} sx={{ mt: 3 }}>
               <Grid item>
                 <AnimateButton>
                   <Button variant="contained" type="submit">
-                    Change Password
+                    Đổi mật khẩu
                   </Button>
                 </AnimateButton>
               </Grid>
               <Grid item>
-                <Button
-                  sx={{ color: 'error.main' }}
-                  onClick={() => formik.resetForm()}
-                >
+                <Button sx={{ color: 'error.main' }} onClick={() => formik.resetForm()}>
                   Clear
                 </Button>
               </Grid>

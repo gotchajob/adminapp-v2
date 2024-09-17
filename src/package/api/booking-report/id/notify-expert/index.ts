@@ -13,7 +13,7 @@ export const StaffNotifyExpert = async (params: StaffNotifyExpertRequest, access
     try {
         const res = await apiServerFetch(`/booking-report/${params.id}/notify-expert`, "PATCH", { note: params.note }, accessToken);
         return res
-    } catch (error) {
-        return errorSystem("Lỗi không thể gửi yêu cầu", "")
+    } catch (error: any) {
+        return errorSystem(error, "")
     }
 };

@@ -29,9 +29,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [content, setContent] = useState("<p></p>");
   const [categoryId, setCategoryId] = useState(0);
   const router = useRouter()
-
   const { blogCategory } = useGetBlogCategory({}, 0);
-
   const [isLoading, setIsLoading] = useState(false);
   const handleCreateBlog = async () => {
     try {

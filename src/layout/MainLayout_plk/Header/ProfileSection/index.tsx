@@ -184,17 +184,17 @@ const ProfileSection = () => {
                     <Box sx={{ p: 2, pb: 0 }}>
                       <Stack>
                         <Stack direction="row" spacing={0.5} alignItems="center">
-                          <Typography variant="h4">Good Morning,</Typography>
+                          <Typography fontWeight={700} variant="body2">Xin chào,</Typography>
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                             {user?.name}
                           </Typography>
-                          <Typography variant="subtitle2">Gotchajob Staff</Typography>
+                          <Typography variant="body2">Nhân viên Gotchajob</Typography>
                         </Stack>
                       </Stack>
                     </Box>
                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                       <Box sx={{ p: 2, pt: 0 }}>
-                        <WalletCard />
+                        {/* <WalletCard /> */}
                         <Divider />
                         <List
                           component="nav"
@@ -207,7 +207,7 @@ const ProfileSection = () => {
                             '& .MuiListItemButton-root': { mt: 0.5 }
                           }}
                         >
-                          <ListItemButton
+                          {/* <ListItemButton
                             sx={{ borderRadius: `${borderRadius}px` }}
                             selected={selectedIndex === 0}
                             onClick={(event: React.MouseEvent<HTMLDivElement>) =>
@@ -224,7 +224,7 @@ const ProfileSection = () => {
                                 </Typography>
                               }
                             />
-                          </ListItemButton>
+                          </ListItemButton> */}
                           <ListItemButton sx={{ borderRadius: `${borderRadius}px` }} selected={selectedIndex === 4} onClick={handleLogout}>
                             <ListItemIcon>
                               <IconLogout stroke={1.5} size="20px" />

@@ -107,7 +107,14 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
                 <CardMedia
                   component="img"
                   image={!expert.backgroundImage || expert.backgroundImage === '' ? Cover : expert.backgroundImage}
-                  sx={{ borderRadius: `10px`, overflow: 'hidden', mb: 3 }}
+                  sx={{
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    mb: 3,
+                    width: '100%',
+                    height: '260px',
+                    objectFit: 'cover',
+                  }}
                   alt="profile-background"
                 />
               ) : (
@@ -160,7 +167,7 @@ const Profile = ({ expert }: { expert?: ExpertCurrent }) => {
                   <Grid container spacing={gridSpacing}>
                     <Grid item xs={12} md={4}>
                       <Typography variant="h5">{expert.lastName + ' ' + expert.firstName}</Typography>
-                      <Typography variant="subtitle2">{expert.shortDescription}</Typography>
+                      {/* <Typography variant="subtitle2">{expert.shortDescription}</Typography> */}
                     </Grid>
                     <Grid item xs={12} md={8}>
                       {/* <Grid

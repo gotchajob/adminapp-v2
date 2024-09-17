@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // third-party
 import dynamic from "next/dynamic";
-
 import { EditorState as EditorType, EditorProps } from "react-draft-wysiwyg";
 import {
   ContentState,
@@ -12,24 +11,26 @@ import {
   convertToRaw,
   EditorState,
 } from "draft-js";
-const Editor = dynamic<EditorProps>(
-  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
-  { ssr: false }
-);
 import "./react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 
 // ==============================|| EDITOR ||============================== //
 
+const Editor = dynamic<EditorProps>(
+  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+  { ssr: false }
+);
+
 const ReactDraftWysiwyg = ({
-  blogDetail,
-  setBlogDetail,
+  data,
+  setData,
 }: {
-  blogDetail: string;
-  setBlogDetail: (data: string) => void;
+  data: string;
+  setData: (data: string) => void;
 }) => {
+
   const [editorState, setEditorState] = useState(() => {
-    const blocks = convertFromHTML(blogDetail);
+    const blocks = convertFromHTML(data);
     return EditorState.createWithContent(
       ContentState.createFromBlockArray(blocks.contentBlocks, blocks.entityMap)
     );
@@ -37,7 +38,7 @@ const ReactDraftWysiwyg = ({
 
   const onEditorStateChange = (editor: EditorType) => {
     setEditorState(editor);
-    setBlogDetail(draftToHtml(convertToRaw(editorState.getCurrentContent())))
+    setData(draftToHtml(convertToRaw(editorState.getCurrentContent())))
   };
 
   return (

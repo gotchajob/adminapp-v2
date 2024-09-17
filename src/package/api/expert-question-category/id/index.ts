@@ -44,7 +44,9 @@ export const DelExpertQuestionCategoryById = async (params: DelExpertQuestionCat
 };
 
 export interface PatchExpertQuestionCategoryByIdRequest {
-    id: string
+    id: string,
+    category: string,
+    description: string,
 }
 
 export interface PatchExpertQuestionCategoryByIdResponse {
@@ -52,9 +54,12 @@ export interface PatchExpertQuestionCategoryByIdResponse {
     responseText: string;
 }
 
-export const PatchExpertQuestionCategoryById = async (params: PatchExpertQuestionCategoryByIdRequest): Promise<PatchExpertQuestionCategoryByIdResponse> => {
+export const PatchExpertQuestionCategoryById = async (params: PatchExpertQuestionCategoryByIdRequest, accessToken: string): Promise<PatchExpertQuestionCategoryByIdResponse> => {
     try {
-        const res = await apiServerFetch(`/expert-question-category/${params.id}`, 'PATCH', params, undefined);
+        const res = await apiServerFetch(`/expert-question-category/${params.id}`, 'PATCH', {
+            category: params.category,
+            description: params.description,
+        }, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', '');

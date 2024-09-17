@@ -163,63 +163,63 @@ const CustomerCalendarPage = ({
           <TableBody>
             {bookings && bookings.length > 0
               ? bookings
-                  .filter(
-                    (row) =>
-                      row.status == 4 ||
-                      row.status == 5 ||
-                      row.status == 6 ||
-                      row.status == 7 ||
-                      row.status == 8
-                  )
-                  .map((row) => (
-                    <TableRow hover key={row.id}>
-                      <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
-                      <TableCell sx={{ pl: 3 }}>{row.customerId}</TableCell>
-                      <TableCell>
-                        <Typography variant="subtitle2" noWrap>
-                          {formatDate(
-                            row.startInterviewDate,
-                            "dd/MM/yyyy - hh:mm"
-                          )}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="subtitle2" noWrap>
-                          {formatDate(
-                            row.endInterviewDate,
-                            "dd/MM/yyyy - hh:mm"
-                          )}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="subtitle2" noWrap>
-                          {formatDate(row.createdAt, "dd/MM/yyyy")}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>{row.note}</TableCell>
-                      <TableCell align="center">
-                        <Chip
-                          label={getStatusLabel(row.status).label}
-                          color={getStatusLabel(row.status).color as any}
-                        />
-                      </TableCell>
-                      <TableCell align="center" sx={{ pr: 3 }}>
-                        <Tooltip title="Xem chi tiết">
-                          <StyledLink href={`/expert/interview/${row.id}`}>
-                            <IconButton
-                              color="default"
-                              size="large"
-                              onClick={() => {
-                                router.push(
-                                  `/expert/history-calendar/${row.id}`
-                                );
-                              }}
-                            >
-                              <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
-                            </IconButton>
-                          </StyledLink>
-                        </Tooltip>
-                        {/* <Tooltip title="Chấp nhận">
+                .filter(
+                  (row) =>
+                    row.status == 4 ||
+                    row.status == 5 ||
+                    row.status == 6 ||
+                    row.status == 7 ||
+                    row.status == 8
+                )
+                .map((row) => (
+                  <TableRow hover key={row.id}>
+                    <TableCell sx={{ pl: 3 }}>{row.id}</TableCell>
+                    <TableCell sx={{ pl: 3 }}>{row.customerId}</TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2" noWrap>
+                        {formatDate(
+                          row.startInterviewDate,
+                          "dd/MM/yyyy - hh:mm"
+                        )}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2" noWrap>
+                        {formatDate(
+                          row.endInterviewDate,
+                          "dd/MM/yyyy - hh:mm"
+                        )}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2" noWrap>
+                        {formatDate(row.createdAt, "dd/MM/yyyy")}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>{row.note}</TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        label={getStatusLabel(row.status).label}
+                        color={getStatusLabel(row.status).color as any}
+                      />
+                    </TableCell>
+                    <TableCell align="center" sx={{ pr: 3 }}>
+                      <Tooltip title="Xem chi tiết">
+                        <StyledLink href={`/expert/interview/${row.id}`}>
+                          <IconButton
+                            color="default"
+                            size="large"
+                            onClick={() => {
+                              router.push(
+                                `/expert/history-calendar/${row.id}`
+                              );
+                            }}
+                          >
+                            <VisibilityIcon sx={{ fontSize: "1.1rem" }} />
+                          </IconButton>
+                        </StyledLink>
+                      </Tooltip>
+                      {/* <Tooltip title="Chấp nhận">
                                             <IconButton
                                                 color="primary"
                                                 size="large"
@@ -228,7 +228,7 @@ const CustomerCalendarPage = ({
                                                 <CheckIcon sx={{ fontSize: "1.1rem" }} />
                                             </IconButton>
                                         </Tooltip> */}
-                        {/* <Tooltip title="Từ chối">
+                      {/* <Tooltip title="Từ chối">
                                             <IconButton
                                                 color="secondary"
                                                 size="large"
@@ -238,7 +238,7 @@ const CustomerCalendarPage = ({
                                                 <CloseIcon sx={{ fontSize: "1.1rem" }} />
                                             </IconButton>
                                         </Tooltip> */}
-                        {/* <Tooltip title="Chặn">
+                      {/* <Tooltip title="Chặn">
                                             <IconButton
                                                 color="error"
                                                 size="large"
@@ -247,18 +247,18 @@ const CustomerCalendarPage = ({
                                                 <BlockIcon sx={{ fontSize: "1.1rem" }} />
                                             </IconButton>
                                         </Tooltip> */}
-                      </TableCell>
-                    </TableRow>
-                  ))
-              : !loading && (
-                  <TableRow>
-                    <TableCell colSpan={7}>
-                      <Typography variant="h5" align="center" sx={{ pb: 20 }}>
-                        Hiện chưa người dùng nào đặt lịch
-                      </Typography>
                     </TableCell>
                   </TableRow>
-                )}
+                ))
+              : !loading && (
+                <TableRow>
+                  <TableCell colSpan={7}>
+                    <Typography variant="h5" align="center" sx={{ pb: 20 }}>
+                      Hiện chưa người dùng nào đặt lịch
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
             {loading && (
               <TableRow>
                 <TableCell colSpan={7}>
