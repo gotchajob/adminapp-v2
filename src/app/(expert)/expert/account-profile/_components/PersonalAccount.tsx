@@ -531,7 +531,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                     readOnly
                     disabled={skillOption.status === 1}
                   />
-                  <Text fontSize={13} color={skillOption.status === 2 ? 'inherit' : 'text.disabled'}>
+                  <Text fontSize={13} color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>
                     <span style={{ fontWeight: "bold" }}>
                       {skillOption.totalRating}
                     </span>{" "}
