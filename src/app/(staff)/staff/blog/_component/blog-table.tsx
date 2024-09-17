@@ -52,6 +52,39 @@ export const BlogTable = ({
               <TableCell>Ngày tạo</TableCell>
               <TableCell align="center" sx={{ pr: 3 }}>
                 Actions
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ pl: 3 }}>#</TableCell>
+            <TableCell>Tên Blog</TableCell>
+            <TableCell>Nguời tạo</TableCell>
+            <TableCell>Danh mục</TableCell>
+            <TableCell>Ngày tạo</TableCell>
+            <TableCell align="center" sx={{ pr: 3 }}>
+              Thực hiện
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {blogList.map((blog, index) => (
+            <TableRow key={index}>
+              <TableCell>{blog.id}</TableCell>
+              <TableCell>
+                <StyledLink href={"/staff/blog/" + blog.id}>
+                  {blog.title}
+                </StyledLink>
+              </TableCell>
+              <TableCell>
+                <FlexBox>
+                  <Avatar src={blog.profile.avatar} />
+                  <Text ml={1}>{blog.profile.fullName}</Text>
+                </FlexBox>
+              </TableCell>
+              <TableCell></TableCell>
+              <TableCell>{formatDate(blog.createdAt, "dd-MM-yyyy")}</TableCell>
+              <TableCell align="center">
+                <Switch checked={true} />
               </TableCell>
             </TableRow>
           </TableHead>

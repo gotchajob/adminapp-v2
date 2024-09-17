@@ -53,6 +53,28 @@ export const BlogCategoryTable = ({
               <TableCell>Ngày tạo</TableCell>
               <TableCell align="center" sx={{ pr: 3 }}>
                 Actions
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ pl: 3 }}>#</TableCell>
+            <TableCell>Tên</TableCell>
+            <TableCell>Mô tả</TableCell>
+            <TableCell>Ngày tạo</TableCell>
+            <TableCell align="center" sx={{ pr: 3 }}>
+              Thực hiện
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {renderBlog.map((category, index) => (
+            <TableRow key={index}>
+              <TableCell>{category.id}</TableCell>
+              <TableCell>{category.category}</TableCell>
+              <TableCell>{category.description}</TableCell>
+              <TableCell></TableCell>
+              <TableCell align="center">
+                <Switch checked={true} />
               </TableCell>
             </TableRow>
           </TableHead>

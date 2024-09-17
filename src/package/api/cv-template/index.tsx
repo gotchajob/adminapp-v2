@@ -45,6 +45,7 @@ export interface PostCVTemplateResponse {
 }
 
 export const PostCVTemplate = async (params: PostCVTemplateRequest, accessToken: string): Promise<PostCVTemplateResponse> => {
+  console.log(accessToken)
   try {
     const res = await apiServerFetch(`/cv-template`, "POST", params, accessToken);
     if (res.status === "error") {

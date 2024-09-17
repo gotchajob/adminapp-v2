@@ -117,7 +117,7 @@ export const CustomerReview = ({
           >
             <Typography variant="subtitle1">Average Rating</Typography>
             <Typography variant="h1" color="primary">
-              {Number(total).toFixed(1)}/5
+              {Number(total || 0).toFixed(1)}/5
             </Typography>
             <Stack direction="row" alignItems="center" spacing={1}>
               <Rating

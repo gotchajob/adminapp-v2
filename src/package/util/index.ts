@@ -110,3 +110,14 @@ export const getDatesBetween = (dates: [Date, Date]): Date[] => {
 
   return dateArray;
 };
+//---------------------------------------
+function generateDarkColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 9)]; // Chỉ sử dụng giá trị từ '0' đến '8'
+  }
+  return color;
+}
+
+export const colorArray = Array.from({ length: 100 }, generateDarkColor);
