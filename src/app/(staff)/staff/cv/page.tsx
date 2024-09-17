@@ -149,8 +149,10 @@ const UserPage = () => {
           </Grid>
         }
       >
+
         {/* Data Table */}
         <CVCategoryList refreshTime={refreshTime} />
+
         <Dialog open={openCreateNewCategory} maxWidth="sm" fullWidth>
           <form onSubmit={handleSubmit}>
             <DialogTitle align="center">Tạo mới danh mục</DialogTitle>
@@ -232,8 +234,10 @@ const UserPage = () => {
           </Grid>
         }
       >
+
         {/* Data Table */}
         <CVList />
+
         <Dialog open={openCreateNewCVTemplate} fullWidth maxWidth="xs">
           <DialogTitle>Tạo mới mẫu cv</DialogTitle>
           <DialogContent sx={{ pt: "10px !important" }}>

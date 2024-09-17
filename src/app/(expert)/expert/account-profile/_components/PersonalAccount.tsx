@@ -517,7 +517,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   <FlexBetween>
                     <Typography>{skillOption.skillOptionName}</Typography>
                     <Switch
-                      checked={skillOption.status === 2}
+                      checked={skillOption.status === 1}
                       onChange={() => handleToggle(skillOption.id, skillOption.status)}
                       color="primary"
                     />

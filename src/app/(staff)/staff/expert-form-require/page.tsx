@@ -41,11 +41,13 @@ import {
 import { enqueueSnackbar } from "notistack";
 import { useGetCategories } from "hooks/use-get-category";
 import MainCard from "ui-component/cards/MainCard";
+import { RenderExpertFormRequireTable } from "./_component/ExpertFormRequireTable";
 
 export default function ExpertFormRequirePage() {
   const { refresh, refreshTime } = useRefresh();
   const { categories, loading: categoriesLoading } =
     useGetCategories(refreshTime);
+
   const { expertFormRequire } = useGetExpertFormRequire(
     { categoryIds: [] },
     refreshTime
@@ -153,44 +155,14 @@ export default function ExpertFormRequirePage() {
       }
       sx={{ mt: 3 }}
     >
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Tên Yêu Cầu</TableCell>
-              <TableCell>Danh mục đăng ký</TableCell>
-              <TableCell>Mô Tả</TableCell>
-              <TableCell>Quản lí</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {expertFormRequire.map((requirement) => (
-              <TableRow key={requirement.id}>
-                <TableCell>{requirement.name}</TableCell>
-                <TableCell>
-                  {
-                    categories.find((cat) => cat.id === requirement.categoryId)
-                      ?.name
-                  }
-                </TableCell>
-                <TableCell>{requirement.description}</TableCell>
-                <TableCell>
-                  <Tooltip title="Sửa">
-                    <IconButton onClick={() => handleEdit(requirement)}>
-                      <EditIcon sx={{ fontSize: 18 }} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Xóa">
-                    <IconButton onClick={() => handleDelete(requirement)}>
-                      <DeleteIcon sx={{ fontSize: 18 }} />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {expertFormRequire && categories && (
+        <RenderExpertFormRequireTable
+          categories={categories}
+          expertFormRequire={expertFormRequire}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
+      )}
 
       {/* Dialog thêm yêu cầu */}
       <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>
@@ -337,3 +309,42 @@ export default function ExpertFormRequirePage() {
     </MainCard>
   );
 }
+
+{/* <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Tên Yêu Cầu</TableCell>
+              <TableCell>Danh mục đăng ký</TableCell>
+              <TableCell>Mô Tả</TableCell>
+              <TableCell>Quản lí</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {expertFormRequire.map((requirement) => (
+              <TableRow key={requirement.id}>
+                <TableCell>{requirement.name}</TableCell>
+                <TableCell>
+                  {
+                    categories.find((cat) => cat.id === requirement.categoryId)
+                      ?.name
+                  }
+                </TableCell>
+                <TableCell>{requirement.description}</TableCell>
+                <TableCell>
+                  <Tooltip title="Sửa">
+                    <IconButton onClick={() => handleEdit(requirement)}>
+                      <EditIcon sx={{ fontSize: 18 }} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Xóa">
+                    <IconButton onClick={() => handleDelete(requirement)}>
+                      <DeleteIcon sx={{ fontSize: 18 }} />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer> */}

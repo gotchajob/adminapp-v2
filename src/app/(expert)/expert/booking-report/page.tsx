@@ -147,7 +147,9 @@ export default function BookingReportForExpertPage() {
 
     return (
         <MainCard title="Danh sách các báo cáo buổi phỏng vấn">
-            {bookingReportForExpert && (<RenderBookingReportForExpertTable bookingReportForExpert={fakeBookingReportForExpertResponse.list} handelUpdateEvidence={handleOpenDialog} />)}
+            {bookingReportForExpert ?
+                (<RenderBookingReportForExpertTable bookingReportForExpert={bookingReportForExpert.list} handelUpdateEvidence={handleOpenDialog} />) :
+                (<RenderBookingReportForExpertTable bookingReportForExpert={fakeBookingReportForExpertResponse.list} handelUpdateEvidence={handleOpenDialog} />)}
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>Cập nhật bằng chứng</DialogTitle>
                 <DialogContent>

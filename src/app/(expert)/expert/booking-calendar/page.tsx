@@ -268,7 +268,15 @@ const ExpertBookingPage = ({ params }: { params: { id: string } }) => {
         Bạn chỉ có thể từ chối những buổi đặt lịch từ khách hàng cách{" "}
         {policyById.value} phút hiện tại.
       </Typography>
-      {fakeBookingCurrentData && (
+      {bookings ? (
+        <RenderCustomerBookingsTable
+          bookings={bookings.filter(
+            (row) =>
+              row.status == 1 || row.status == 2 || row.status == 3
+          )}
+          handleOpenDialog={handleOpenDialog}
+        />
+      ) : (
         <RenderCustomerBookingsTable
           bookings={fakeBookingCurrentData.filter(
             (row) =>

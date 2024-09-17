@@ -13,7 +13,7 @@ import { useRefresh } from 'hooks/use-refresh';
 
 // utils
 import { formatDate } from 'package/util';
-import { CustomerToken } from 'hooks/use-login';
+import { CustomerToken, StaffToken } from 'hooks/use-login';
 import { Transaction } from 'package/api/transaction';
 import { TransactionTableRender } from './TransactionTable';
 
@@ -78,9 +78,9 @@ export const fakeTransactions: Transaction[] = [
 
 const TransactionList = () => {
   const theme = useTheme();
-  const { customerToken } = CustomerToken();
+  const { staffToken } = StaffToken();
   const { refresh, refreshTime } = useRefresh();
-  const { transaction, loading: transactionLoading } = useGetTransaction({ pageSize: 1000, pageNumber: 1 }, customerToken, refreshTime);
+  const { transaction, loading: transactionLoading } = useGetTransaction({ pageSize: 1000, pageNumber: 1 }, staffToken, refreshTime);
 
   useEffect(() => {
     console.log('Transaction Data', transaction);
@@ -88,7 +88,9 @@ const TransactionList = () => {
 
   return (
     <>
-      {fakeTransactions && (<TransactionTableRender transactionList={fakeTransactions} />)}
+      {transaction.list ?
+        (<TransactionTableRender transactionList={transaction.list} />)
+        : (<TransactionTableRender transactionList={fakeTransactions} />)}
     </>
   );
 };

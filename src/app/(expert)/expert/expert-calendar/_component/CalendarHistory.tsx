@@ -241,7 +241,7 @@ const CalendarHistoryPage = ({ onNext, onSelectEvent }: { onNext: () => void, on
                         editable
                         droppable
                         selectable
-                        events={fakeEvents}
+                        events={events}
                         ref={calendarRef}
                         rerenderDelay={10}
                         initialDate={date}

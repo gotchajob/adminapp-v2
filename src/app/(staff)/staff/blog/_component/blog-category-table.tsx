@@ -14,6 +14,7 @@ import {
 } from "hooks/use-get-params";
 import { BlogCategory } from "package/api/blog-category";
 import { useMemo } from "react";
+import { RenderBlogCategoryTable } from "./BlogCategoryTable";
 
 export const BlogCategoryTable = ({
   blogCategoryList,
@@ -36,34 +37,40 @@ export const BlogCategoryTable = ({
     );
   }, [blogCategoryPage, blogCategoryList]);
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ pl: 3 }}>#</TableCell>
-            <TableCell>Tên</TableCell>
-            <TableCell>Mô tả</TableCell>
-            <TableCell>Ngày tạo</TableCell>
-            <TableCell align="center" sx={{ pr: 3 }}>
-              Actions
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {renderBlog.map((category, index) => (
-            <TableRow key={index}>
-              <TableCell>{category.id}</TableCell>
-              <TableCell>{category.category}</TableCell>
-              <TableCell>{category.description}</TableCell>
-              <TableCell></TableCell>
-              <TableCell align="center">
-                <Switch checked={true} />
+    <>
+      {blogCategoryList && (
+        <RenderBlogCategoryTable
+          blogCategoryList={blogCategoryList}
+        />
+      )}
+      {/* <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ pl: 3 }}>#</TableCell>
+              <TableCell>Tên</TableCell>
+              <TableCell>Mô tả</TableCell>
+              <TableCell>Ngày tạo</TableCell>
+              <TableCell align="center" sx={{ pr: 3 }}>
+                Actions
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <TablePagination
+          </TableHead>
+          <TableBody>
+            {renderBlog.map((category, index) => (
+              <TableRow key={index}>
+                <TableCell>{category.id}</TableCell>
+                <TableCell>{category.category}</TableCell>
+                <TableCell>{category.description}</TableCell>
+                <TableCell></TableCell>
+                <TableCell align="center">
+                  <Switch checked={true} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <TablePagination
         rowsPerPageOptions={[]}
         component="div"
         count={blogCategoryList.length}
@@ -71,6 +78,7 @@ export const BlogCategoryTable = ({
         page={blogCategoryPage ? +blogCategoryPage : 0}
         onPageChange={handleChangePage}
       />
-    </TableContainer>
+      </TableContainer> */}
+    </>
   );
 };

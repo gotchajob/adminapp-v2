@@ -25,6 +25,7 @@ import { PostCategory } from "package/api/category";
 import { DelCategory, PatchCategory } from "package/api/category/id";
 import { useState } from "react";
 import MainCard from "ui-component/cards/MainCard";
+import { RenderCategoryControllerTable } from "./CategoryControllerTable";
 
 interface Category {
   name: string;
@@ -63,62 +64,68 @@ export function CategoryControllerPage({
 
   const handleAdd = async () => {
     try {
-      if (newCategory.name) {
-        const response = await PostCategory({ name: newCategory.name });
-        if (response.status === "success") {
-          refresh();
-          setOpenAddDialog(false);
-          setNewCategory({ name: "", id: 0 });
-          enqueueSnackbar("Thêm mới thành công", { variant: "success" });
-        } else {
-          console.error(response.responseText);
-        }
+      if (!newCategory.name) {
+        enqueueSnackbar("Vui lòng nhập tên danh mục", { variant: "warning" });
+        return;
       }
-    } catch (error) {
+
+      const response = await PostCategory({ name: newCategory.name });
+      if (response.status === "success") {
+        refresh();
+        setOpenAddDialog(false);
+        setNewCategory({ name: "", id: 0 });
+        enqueueSnackbar("Thêm mới danh mục thành công", { variant: "success" });
+      } else {
+        throw new Error(response.responseText || "Không thể thêm danh mục");
+      }
+    } catch (error: any) {
       console.error("Error adding category:", error);
-      enqueueSnackbar("Thêm mới thất bại", { variant: "error" });
+      enqueueSnackbar(error.responseText || "Thêm mới danh mục thất bại", { variant: "error" });
     }
   };
 
   const handleUpdate = async () => {
     try {
-      if (selectedCategory && newCategory.name) {
-        const response = await PatchCategory({
-          id: selectedCategory.id,
-          name: newCategory.name,
-        });
-        if (response.status === "success") {
-          refresh();
-          setOpenEditDialog(false);
-          setSelectedCategory(null);
-          setNewCategory({ name: "", id: 0 });
-          enqueueSnackbar("Sửa danh mục thành công", { variant: "success" });
-        } else {
-          console.error(response.responseText);
-        }
+      if (!selectedCategory || !newCategory.name) {
+        enqueueSnackbar("Vui lòng chọn danh mục và nhập tên danh mục", { variant: "warning" });
+        return;
       }
-    } catch (error) {
+
+      const response = await PatchCategory({ id: selectedCategory.id, name: newCategory.name });
+      if (response.status === "success") {
+        refresh();
+        setOpenEditDialog(false);
+        setSelectedCategory(null);
+        setNewCategory({ name: "", id: 0 });
+        enqueueSnackbar("Sửa danh mục thành công", { variant: "success" });
+      } else {
+        throw new Error(response.responseText || "Không thể sửa danh mục");
+      }
+    } catch (error: any) {
       console.error("Error updating category:", error);
-      enqueueSnackbar("Sửa danh mục thất bại", { variant: "error" });
+      enqueueSnackbar(error.responseText || "Sửa danh mục thất bại", { variant: "error" });
     }
   };
 
   const handleConfirmDelete = async () => {
     try {
-      if (selectedCategory) {
-        const response = await DelCategory({ id: selectedCategory.id });
-        if (response.status === "success") {
-          refresh();
-          setOpenDeleteDialog(false);
-          setSelectedCategory(null);
-        } else {
-          console.error(response.responseText);
-          enqueueSnackbar("Xóa danh mục thành công", { variant: "success" });
-        }
+      if (!selectedCategory) {
+        enqueueSnackbar("Vui lòng chọn danh mục để xóa", { variant: "warning" });
+        return;
       }
-    } catch (error) {
+
+      const response = await DelCategory({ id: selectedCategory.id });
+      if (response.status === "success") {
+        refresh();
+        setOpenDeleteDialog(false);
+        setSelectedCategory(null);
+        enqueueSnackbar("Xóa danh mục thành công", { variant: "success" });
+      } else {
+        throw new Error(response.responseText || "Không thể xóa danh mục");
+      }
+    } catch (error: any) {
       console.error("Error deleting category:", error);
-      enqueueSnackbar("Xóa danh mục thất bại", { variant: "error" });
+      enqueueSnackbar(error.responseText || "Xóa danh mục thất bại", { variant: "error" });
     }
   };
 
@@ -147,35 +154,14 @@ export function CategoryControllerPage({
       }
       sx={{ mt: 3 }}
     >
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Tên danh mục</TableCell>
-              <TableCell>Quản lí</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {category.map((category) => (
-              <TableRow key={category.id}>
-                <TableCell>{category.name}</TableCell>
-                <TableCell>
-                  <Tooltip title="Sửa">
-                    <IconButton onClick={() => handleEdit(category)}>
-                      <EditIcon sx={{ fontSize: 18 }} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Xóa">
-                    <IconButton onClick={() => handleDelete(category)}>
-                      <DeleteIcon sx={{ fontSize: 18 }} />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+      {category && (
+        <RenderCategoryControllerTable
+          category={category}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
+      )}
 
       {/* Dialog thêm danh mục */}
       <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>
@@ -236,3 +222,33 @@ export function CategoryControllerPage({
     </MainCard>
   );
 }
+
+{/* <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Tên danh mục</TableCell>
+              <TableCell>Quản lí</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {category.map((category) => (
+              <TableRow key={category.id}>
+                <TableCell>{category.name}</TableCell>
+                <TableCell>
+                  <Tooltip title="Sửa">
+                    <IconButton onClick={() => handleEdit(category)}>
+                      <EditIcon sx={{ fontSize: 18 }} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Xóa">
+                    <IconButton onClick={() => handleDelete(category)}>
+                      <DeleteIcon sx={{ fontSize: 18 }} />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer> */}

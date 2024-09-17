@@ -13,6 +13,7 @@ import { PatchRejectWithdrawn } from 'package/api/account/withdrawn/transactionI
 import { formatDate } from 'package/util';
 import { useEffect, useState } from "react";
 import MainCard from "ui-component/cards/MainCard";
+import { RenderExpertTransactionWithDrawTable } from './_component/ExpertTransactionWithDrawTable';
 
 const formatCurrency = (value: number) => {
     try {
@@ -63,6 +64,14 @@ export default function ExpertTransactionWithDraw() {
         rejectReason: ''
     });
 
+    const handleApprove = (transactionId: number) => {
+        openDialog('approve', transactionId);
+    };
+
+    const handleReject = (transactionId: number) => {
+        openDialog('reject', transactionId);
+    };
+
     const openDialog = (type: 'approve' | 'reject', id: number) => {
         setDialogState({
             ...dialogState,
@@ -74,9 +83,9 @@ export default function ExpertTransactionWithDraw() {
 
     const closeDialog = () => {
         setDialogState({
-            ...dialogState,
             isApproveDialogOpen: false,
             isRejectDialogOpen: false,
+            currentTransactionId: null,
             rejectReason: ''
         });
     };
@@ -116,7 +125,52 @@ export default function ExpertTransactionWithDraw() {
 
     return (
         <MainCard title="Danh sách yêu cầu rút tiền của chuyên gia">
-            <TableContainer>
+            {transaction && transactionType && (
+                <RenderExpertTransactionWithDrawTable
+                    transaction={transaction.list}
+                    transactionType={transactionType}
+                    handleApprove={handleApprove}
+                    handleReject={handleReject}
+                />
+            )}
+
+
+            {/* Dialog Duyệt giao dịch */}
+            <Dialog open={dialogState.isApproveDialogOpen} onClose={closeDialog}>
+                <DialogTitle>Xác nhận duyệt giao dịch</DialogTitle>
+                <DialogContent>Bạn có chắc chắn muốn duyệt giao dịch với ID: {dialogState.currentTransactionId}?</DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog}>Hủy</Button>
+                    <Button onClick={() => handleAction('approve')} color="primary">Duyệt</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Dialog Từ chối giao dịch */}
+            <Dialog open={dialogState.isRejectDialogOpen} onClose={closeDialog}>
+                <DialogTitle>Xác nhận từ chối giao dịch với ID: {dialogState.currentTransactionId}</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Lý do từ chối"
+                        type="text"
+                        fullWidth
+                        value={dialogState.rejectReason}
+                        onChange={(e) => setDialogState({ ...dialogState, rejectReason: e.target.value })}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeDialog}>Hủy</Button>
+                    <Button onClick={() => handleAction('reject')} color="primary" disabled={dialogState.rejectReason.trim() === ''}>
+                        Từ chối
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </MainCard>
+    );
+}
+
+{/* <TableContainer>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -184,39 +238,4 @@ export default function ExpertTransactionWithDraw() {
                         color="primary"
                     />
                 </Box>
-            </TableContainer>
-
-            {/* Dialog Duyệt giao dịch */}
-            <Dialog open={dialogState.isApproveDialogOpen} onClose={closeDialog}>
-                <DialogTitle>Xác nhận duyệt giao dịch</DialogTitle>
-                <DialogContent>Bạn có chắc chắn muốn duyệt giao dịch với ID: {dialogState.currentTransactionId}?</DialogContent>
-                <DialogActions>
-                    <Button onClick={closeDialog}>Hủy</Button>
-                    <Button onClick={() => handleAction('approve')} color="primary">Duyệt</Button>
-                </DialogActions>
-            </Dialog>
-
-            {/* Dialog Từ chối giao dịch */}
-            <Dialog open={dialogState.isRejectDialogOpen} onClose={closeDialog}>
-                <DialogTitle>Xác nhận từ chối giao dịch với ID: {dialogState.currentTransactionId}</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Lý do từ chối"
-                        type="text"
-                        fullWidth
-                        value={dialogState.rejectReason}
-                        onChange={(e) => setDialogState({ ...dialogState, rejectReason: e.target.value })}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeDialog}>Hủy</Button>
-                    <Button onClick={() => handleAction('reject')} color="primary" disabled={dialogState.rejectReason.trim() === ''}>
-                        Từ chối
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </MainCard>
-    );
-}
+            </TableContainer> */}

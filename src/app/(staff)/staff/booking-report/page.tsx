@@ -9,6 +9,7 @@ import { enqueueSnackbar } from "notistack";
 import { ApproveBookingReport } from 'package/api/booking-report/id/approve';
 import { RejectBookingReport } from 'package/api/booking-report/id/reject';
 import { BookingReportTableRender } from "./_component/BookingReportTable";
+import { StaffNotifyExpert } from "package/api/booking-report/id/notify-expert";
 
 const fakeBookingReportData = {
     list: [
@@ -94,7 +95,12 @@ export default function BookingReportPage() {
                     enqueueSnackbar("Có lỗi xảy ra khi từ chối báo cáo.", { variant: "error" });
                 }
             } else if (actionType === "notify") {
-                enqueueSnackbar(`Đã gửi thông báo cho chuyên gia với ID: ${selectedReportId}`, { variant: "info" });
+                const response = await StaffNotifyExpert({ id: selectedReportId, note }, staffToken)
+                if (response.status === "success") {
+                    enqueueSnackbar(`Đã gửi thông báo cho chuyên gia với ID: ${selectedReportId}`, { variant: "info" });
+                } else {
+                    enqueueSnackbar("Có lỗi xảy ra khi gửi thông báo cho chuyên gia.", { variant: "error" });
+                }
             }
         } catch (error) {
             console.error("Error handling action:", error);
@@ -111,7 +117,13 @@ export default function BookingReportPage() {
 
     return (
         <MainCard title="Danh sách các báo cáo buổi phỏng vấn">
-            {fakeBookingReportData && (<BookingReportTableRender
+            {bookingReport ? (<BookingReportTableRender
+                bookingReport={bookingReport?.list || []}
+                handleViewDetails={(id: number) => console.log("Xem chi tiết báo cáo với ID:", id)}
+                handleNotifyExpert={(id) => handleOpenDialog(id, "notify")}
+                handleAcceptReport={(id) => handleOpenDialog(id, "accept")}
+                handleRejectReport={(id) => handleOpenDialog(id, "reject")}
+            />) : (<BookingReportTableRender
                 bookingReport={fakeBookingReportData?.list || []}
                 handleViewDetails={(id: number) => console.log("Xem chi tiết báo cáo với ID:", id)}
                 handleNotifyExpert={(id) => handleOpenDialog(id, "notify")}

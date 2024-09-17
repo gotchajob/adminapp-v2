@@ -239,7 +239,7 @@ const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, o
                         editable
                         droppable
                         selectable
-                        events={fakeEvents}
+                        events={events}
                         ref={calendarRef}
                         rerenderDelay={10}
                         initialDate={date}

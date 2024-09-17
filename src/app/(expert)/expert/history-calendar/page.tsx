@@ -250,15 +250,27 @@ const ExpertBookingPage = ({ params }: { params: { id: string } }) => {
   return (
     <>
       <MainCard title="Danh sách các báo cáo buổi phỏng vấn">
-        {fakeBookingCurrentData && <RenderHistoryBookingTable
-          bookings={fakeBookingCurrentData.filter(
-            (row) =>
-              row.status == 4 ||
-              row.status == 5 ||
-              row.status == 6 ||
-              row.status == 7 ||
-              row.status == 8
-          )} handleOpenDialog={handleOpenDialog} />}
+        {bookings ?
+          (<RenderHistoryBookingTable
+            bookings={bookings.filter(
+              (row) =>
+                row.status == 4 ||
+                row.status == 5 ||
+                row.status == 6 ||
+                row.status == 7 ||
+                row.status == 8
+            )} handleOpenDialog={handleOpenDialog} />)
+          :
+          (<RenderHistoryBookingTable
+            bookings={fakeBookingCurrentData.filter(
+              (row) =>
+                row.status == 4 ||
+                row.status == 5 ||
+                row.status == 6 ||
+                row.status == 7 ||
+                row.status == 8
+            )} handleOpenDialog={handleOpenDialog} />)
+        }
       </MainCard>
       <Dialog
         open={selectedBooking?.type === "reject"}
