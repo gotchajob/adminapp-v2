@@ -117,7 +117,7 @@ export default function Page({ params }: { params: { id: string } }) {
         </Grid>
       </SubCard>
       <SubCard>
-        <ReactDraftWysiwyg blogDetail={content} setBlogDetail={setContent} />
+        <ReactDraftWysiwyg data={content} setData={setContent} />
       </SubCard>
     </Stack>
   );
