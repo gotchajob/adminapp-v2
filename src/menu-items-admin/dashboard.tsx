@@ -20,7 +20,7 @@ import { NavItemType } from 'types';
 
 const dashboard: NavItemType = {
   id: 'dashboard',
-  title: <FormattedMessage id="Hệ thống quản lý của chuyên gia" />,
+  title: <FormattedMessage id="Hệ thống quản lý của quản trị viên" />,
   icon: IconDashboard,
   type: 'group',
   children: [

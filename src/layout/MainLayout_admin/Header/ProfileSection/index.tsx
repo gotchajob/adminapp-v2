@@ -188,7 +188,7 @@ const ProfileSection = () => {
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                             {user?.name}
                           </Typography>
-                          <Typography variant="body2">Nhân viên Gotchajob</Typography>
+                          <Typography variant="body2">Quản trị viên</Typography>
                         </Stack>
                       </Stack>
                     </Box>
