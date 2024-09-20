@@ -18,12 +18,13 @@ import LinkIcon from '@mui/icons-material/Link';
 
 // types
 import { ThemeMode } from 'types/config';
+import { useState } from 'react';
 
 // ==============================|| PLUGIN - EDITORS ||============================== //
 
 const WysiwygEditor = () => {
   const theme = useTheme();
-
+  const [quillContent, setQuillContent] = useState('<p></p>');
   return (
     <MainCard
       title="Wysiwyg Editor"
@@ -105,7 +106,7 @@ const WysiwygEditor = () => {
             }}
           >
             <Typography variant="subtitle1">React Quill</Typography>
-            <ReactQuillDemo />
+            <ReactQuillDemo data={quillContent} setData={setQuillContent} />
           </Stack>
         </Grid>
       </Grid>
