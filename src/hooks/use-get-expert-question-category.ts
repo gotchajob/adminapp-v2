@@ -32,6 +32,7 @@ export const UseGetExpertQuestionCategoryCurrent = (accessToken: string, refresh
     const [loading, setLoading] = useState(true);
 
     const fetchGetBookingExpertFeedbackQuestionCurrent = async () => {
+
         try {
             const res = await GetExpertQuestionCategoryCurrent(accessToken);
             if (res.status !== "success") {
@@ -43,7 +44,11 @@ export const UseGetExpertQuestionCategoryCurrent = (accessToken: string, refresh
         }
     }
 
-    useEffect(() => { fetchGetBookingExpertFeedbackQuestionCurrent(); }, [refresh, accessToken]);
+    useEffect(() => {
+        if (accessToken) {
+            fetchGetBookingExpertFeedbackQuestionCurrent();
+        }
+    }, [refresh, accessToken]);
 
     return {
         expertQuestionCategoryCurrent

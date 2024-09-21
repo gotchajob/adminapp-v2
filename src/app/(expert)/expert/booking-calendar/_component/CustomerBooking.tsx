@@ -95,6 +95,8 @@ const CustomerCalendarPage = ({
 
   const [cancelReason, setCancelReason] = useState<string>("");
 
+  const { policyById } = useGetPolicyById({ id: 6 }, expertToken, refreshTime);
+
   const handleOpenDialog = (
     bookingId: number,
     type: "accept" | "reject" | "ban"
@@ -124,7 +126,6 @@ const CustomerCalendarPage = ({
     }
     handleCloseDialog();
   };
-  const { policyById } = useGetPolicyById({ id: 6 }, 0);
 
   const handleConfirmCancel = async () => {
     console.log("Cancelled with reason:", cancelReason);

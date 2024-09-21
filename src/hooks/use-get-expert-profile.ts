@@ -14,7 +14,6 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
   const fetchExpertProfile = async () => {
     try {
       setLoading(true);
-
       const data = await GetExpert(params);
       if (data.status == "error") {
         throw new Error();
@@ -36,7 +35,7 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
   };
 }
 
-export function useGetExpertCurrent(params: string, refresh: any) {
+export function useGetExpertCurrent(accessToken: string, refresh: any) {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [expertCurrent, setExpertCurrent] = useState<ExpertCurrent | undefined>(undefined);
@@ -44,7 +43,7 @@ export function useGetExpertCurrent(params: string, refresh: any) {
   const fetchExpertCurrent = async () => {
     try {
       setLoading(true);
-      const data = await GetExpertCurrent(params);
+      const data = await GetExpertCurrent(accessToken);
       if (data.status == 'error') {
         throw new Error();
       }
@@ -56,8 +55,10 @@ export function useGetExpertCurrent(params: string, refresh: any) {
   };
 
   useEffect(() => {
-    fetchExpertCurrent();
-  }, [refresh, params]);
+    if (accessToken) {
+      fetchExpertCurrent();
+    }
+  }, [refresh, accessToken]);
 
   return {
     expertCurrent,

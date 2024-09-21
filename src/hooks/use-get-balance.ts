@@ -13,7 +13,7 @@ export const useGetBalance = (accessToken: string) => {
         }
     }
 
-    useEffect(() => { fetchBalance() }, [accessToken]);
+    useEffect(() => { if (accessToken) { fetchBalance() } }, [accessToken]);
 
     return {
         balance

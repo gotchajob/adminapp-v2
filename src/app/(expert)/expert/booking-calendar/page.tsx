@@ -20,7 +20,6 @@ import MainCard from "ui-component/cards/MainCard";
 import { PatchBookingAccept } from "package/api/booking/id/accept";
 import { PatchBookingReject } from "package/api/booking/id/reject";
 import { RenderCustomerBookingsTable } from "./_component/table";
-import { BookingCurrent } from "package/api/booking/expert/current";
 import { useGetPolicyById } from "hooks/use-get-policy";
 
 interface ParamsType {
@@ -30,11 +29,11 @@ interface ParamsType {
 // ==============================|| EXPERT BOOKING PAGE ||============================== //
 
 const ExpertBookingPage = ({ params }: { params: ParamsType }) => {
+  const { refreshTime, refresh } = useRefresh();
   const theme = useTheme();
   const router = useRouter();
-  const { policyById } = useGetPolicyById({ id: 6 }, 0);
-  const { refreshTime, refresh } = useRefresh();
   const { expertToken } = ExpertToken();
+  const { policyById } = useGetPolicyById({ id: 6 }, expertToken, refreshTime);
   const { bookings } = useGetBookingCurrent(expertToken, refreshTime);
 
   const [selectedBooking, setSelectedBooking] = useState<{
