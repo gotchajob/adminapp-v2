@@ -4,6 +4,7 @@ import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Button, Chip, Divider, Grid, Stack, TextField, Typography } from "@mui/material";
 import { StyledLink } from "components/common/link/styled-link";
+import { UseGetBookingReportById } from 'hooks/use-get-booking-report';
 import { ExpertToken } from "hooks/use-login";
 import { useRefresh } from "hooks/use-refresh";
 import { enqueueSnackbar } from "notistack";
@@ -13,23 +14,23 @@ import { formatDate } from "package/util";
 import { useEffect, useState } from "react";
 import SubCard from "ui-component/cards/SubCard";
 
-const mockBookingReportById: BookingReportById = {
-    id: 1,
-    customerContent: "Khách hàng báo cáo vì chuyên gia không có đủ kỹ năng cần thiết.",
-    customerEvidence: "https://drive.google.com/customer-recording",
-    expertContent: "Chuyên gia báo cáo vì khách hàng không chuẩn bị tốt.",
-    expertEvidence: "https://drive.google.com/expert-recording",
-    staffNote: "Lưu ý: Cần kiểm tra lại kỹ năng của chuyên gia.",
-    processingBy: 2,
-    status: 1,
-    bookingId: 101,
-    createdAt: "2023-08-09T08:00:00Z",
-    updatedAt: "2023-08-10T08:00:00Z",
-    bookingReportSuggest: [
-        { id: 1, reportSuggestId: 101, reportSuggest: "Khuyến nghị thay đổi chuyên gia" },
-        { id: 2, reportSuggestId: 102, reportSuggest: "Khuyến nghị hoàn tiền cho khách hàng" },
-    ],
-};
+// const mockBookingReportById: BookingReportById = {
+//     id: 1,
+//     customerContent: "Khách hàng báo cáo vì chuyên gia không có đủ kỹ năng cần thiết.",
+//     customerEvidence: "https://drive.google.com/customer-recording",
+//     expertContent: "Chuyên gia báo cáo vì khách hàng không chuẩn bị tốt.",
+//     expertEvidence: "https://drive.google.com/expert-recording",
+//     staffNote: "Lưu ý: Cần kiểm tra lại kỹ năng của chuyên gia.",
+//     processingBy: 2,
+//     status: 1,
+//     bookingId: 101,
+//     createdAt: "2023-08-09T08:00:00Z",
+//     updatedAt: "2023-08-10T08:00:00Z",
+//     bookingReportSuggest: [
+//         { id: 1, reportSuggestId: 101, reportSuggest: "Khuyến nghị thay đổi chuyên gia" },
+//         { id: 2, reportSuggestId: 102, reportSuggest: "Khuyến nghị hoàn tiền cho khách hàng" },
+//     ],
+// };
 
 const renderStatusChip = (status: number) => {
     switch (status) {
@@ -55,8 +56,7 @@ export default function BookingReportForExpertByIdPage({ params }: { params: { i
     const [evidence, setEvidence] = useState("");
     const { expertToken } = ExpertToken();
     const { refresh, refreshTime } = useRefresh();
-
-    const bookingReportById = mockBookingReportById;
+    const { bookingReportById, loading } = UseGetBookingReportById({ id: +params.id }, expertToken, refreshTime);
 
     const handleConfirmUpdate = async () => {
         if (+params.id !== null) {
@@ -88,7 +88,7 @@ export default function BookingReportForExpertByIdPage({ params }: { params: { i
 
     return (
         <SubCard>
-            <Grid container spacing={3} justifyContent="center">
+            {bookingReportById && (<Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
@@ -97,7 +97,7 @@ export default function BookingReportForExpertByIdPage({ params }: { params: { i
                                     Booking report được tạo vào :
                                 </Typography>
                                 <Typography variant="body2">
-                                    {formatDate(bookingReportById.createdAt, "dd/MM/yyyy - hh:mm")}
+                                    {formatDate(bookingReportById?.createdAt, "dd/MM/yyyy - hh:mm")}
                                 </Typography>
                             </Stack>
                             <Stack direction="row" spacing={1}>
@@ -105,7 +105,7 @@ export default function BookingReportForExpertByIdPage({ params }: { params: { i
                                     Booking report được cập nhật vào :
                                 </Typography>
                                 <Typography variant="body2">
-                                    {formatDate(bookingReportById.updatedAt, "dd/MM/yyyy - hh:mm")}
+                                    {formatDate(bookingReportById?.updatedAt, "dd/MM/yyyy - hh:mm")}
                                 </Typography>
                             </Stack>
                         </Grid>
@@ -126,7 +126,7 @@ export default function BookingReportForExpertByIdPage({ params }: { params: { i
                                                 Report Suggest:
                                             </Typography>
                                             <Stack spacing={1} direction="row" flexWrap="wrap" gap={1}>
-                                                {bookingReportById.bookingReportSuggest.map((suggest) => (
+                                                {bookingReportById?.bookingReportSuggest.map((suggest) => (
                                                     <Chip
                                                         key={suggest.id}
                                                         label={suggest.reportSuggest}
@@ -162,14 +162,14 @@ export default function BookingReportForExpertByIdPage({ params }: { params: { i
                                                     Lý do báo cáo:
                                                 </Typography>
                                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                                    {bookingReportById.customerContent}
+                                                    {bookingReportById?.customerContent}
                                                 </Typography>
                                             </Stack>
                                             <Stack direction="row" spacing={1} alignItems="center">
                                                 <Typography variant="subtitle1" fontWeight="medium">Bằng chứng:</Typography>
                                                 <Typography variant="body2" sx={{ color: 'primary.main' }}>
-                                                    <a href={bookingReportById.customerEvidence} target="_blank" rel="noopener noreferrer">
-                                                        {bookingReportById.customerEvidence}
+                                                    <a href={bookingReportById?.customerEvidence} target="_blank" rel="noopener noreferrer">
+                                                        {bookingReportById?.customerEvidence}
                                                     </a>
                                                 </Typography>
                                             </Stack>
@@ -186,14 +186,14 @@ export default function BookingReportForExpertByIdPage({ params }: { params: { i
                                                     Lý do báo cáo:
                                                 </Typography>
                                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                                    {bookingReportById.expertContent}
+                                                    {bookingReportById?.expertContent}
                                                 </Typography>
                                             </Stack>
                                             <Stack direction="row" spacing={1} alignItems="center">
                                                 <Typography variant="subtitle1" fontWeight="medium">Bằng chứng:</Typography>
                                                 <Typography variant="body2" sx={{ color: 'primary.main' }}>
-                                                    <a href={bookingReportById.expertEvidence} target="_blank" rel="noopener noreferrer">
-                                                        {bookingReportById.expertEvidence}
+                                                    <a href={bookingReportById?.expertEvidence} target="_blank" rel="noopener noreferrer">
+                                                        {bookingReportById?.expertEvidence}
                                                     </a>
                                                 </Typography>
                                             </Stack>
@@ -286,7 +286,7 @@ export default function BookingReportForExpertByIdPage({ params }: { params: { i
                         )}
                     </Grid>
                 </Grid>
-            </Grid>
+            </Grid>)}
         </SubCard >
     );
 }

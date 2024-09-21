@@ -119,7 +119,7 @@ export const RenderExpertTransactionWithDrawTable = ({
                 <Stack direction="row" justifyContent="center" alignItems="center">
                     <Tooltip title="Duyệt yêu cầu">
                         <IconButton
-                            sx={{ color: '#2196F3' }}
+                            color='primary'
                             onClick={() => handleApprove(params.row.id)}
                         >
                             <BeenhereIcon />
@@ -127,7 +127,7 @@ export const RenderExpertTransactionWithDrawTable = ({
                     </Tooltip>
                     <Tooltip title="Từ chối yêu cầu">
                         <IconButton
-                            sx={{ color: '#F44336' }}
+                            color='secondary'
                             onClick={() => handleReject(params.row.id)}
                         >
                             <CancelPresentationIcon />

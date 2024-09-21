@@ -42,7 +42,6 @@ export const RenderCategoryControllerTable = ({
                 <Stack direction="row" spacing={1}>
                     <Tooltip title="Sửa">
                         <IconButton
-                            color="primary"
                             onClick={() => handleEdit(params.row)}
                         >
                             <EditIcon />
@@ -50,7 +49,6 @@ export const RenderCategoryControllerTable = ({
                     </Tooltip>
                     <Tooltip title="Xóa">
                         <IconButton
-                            color="error"
                             onClick={() => handleDelete(params.row)}
                         >
                             <DeleteIcon />

@@ -6,6 +6,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, Stack, TextField, Typography } from "@mui/material";
 import { StyledLink } from "components/common/link/styled-link";
+import { UseGetBookingReportById } from 'hooks/use-get-booking-report';
 import { StaffToken } from "hooks/use-login";
 import { useRefresh } from "hooks/use-refresh";
 import { enqueueSnackbar } from "notistack";
@@ -16,23 +17,23 @@ import { formatDate } from "package/util";
 import { useEffect, useState } from "react";
 import SubCard from "ui-component/cards/SubCard";
 
-const mockBookingReportById: BookingReportById = {
-    id: 1,
-    customerContent: "Khách hàng báo cáo vì chuyên gia không có đủ kỹ năng cần thiết.",
-    customerEvidence: "https://drive.google.com/customer-recording",
-    expertContent: "Chuyên gia báo cáo vì khách hàng không chuẩn bị tốt.",
-    expertEvidence: "https://drive.google.com/expert-recording",
-    staffNote: "Lưu ý: Cần kiểm tra lại kỹ năng của chuyên gia.",
-    processingBy: 2,
-    status: 1,
-    bookingId: 101,
-    createdAt: "2023-08-09T08:00:00Z",
-    updatedAt: "2023-08-10T08:00:00Z",
-    bookingReportSuggest: [
-        { id: 1, reportSuggestId: 101, reportSuggest: "Khuyến nghị thay đổi chuyên gia" },
-        { id: 2, reportSuggestId: 102, reportSuggest: "Khuyến nghị hoàn tiền cho khách hàng" },
-    ],
-};
+// const mockBookingReportById: BookingReportById = {
+//     id: 1,
+//     customerContent: "Khách hàng báo cáo vì chuyên gia không có đủ kỹ năng cần thiết.",
+//     customerEvidence: "https://drive.google.com/customer-recording",
+//     expertContent: "Chuyên gia báo cáo vì khách hàng không chuẩn bị tốt.",
+//     expertEvidence: "https://drive.google.com/expert-recording",
+//     staffNote: "Lưu ý: Cần kiểm tra lại kỹ năng của chuyên gia.",
+//     processingBy: 2,
+//     status: 1,
+//     bookingId: 101,
+//     createdAt: "2023-08-09T08:00:00Z",
+//     updatedAt: "2023-08-10T08:00:00Z",
+//     bookingReportSuggest: [
+//         { id: 1, reportSuggestId: 101, reportSuggest: "Khuyến nghị thay đổi chuyên gia" },
+//         { id: 2, reportSuggestId: 102, reportSuggest: "Khuyến nghị hoàn tiền cho khách hàng" },
+//     ],
+// };
 
 const renderStatusChip = (status: number) => {
     switch (status) {
@@ -57,10 +58,7 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
     const [openDialog, setOpenDialog] = useState(false);
     const [actionType, setActionType] = useState<string | null>(null);
     const [note, setNote] = useState<string | null>(null);
-
-    //const { bookingReportById, loading: loadingBookingReportById } = UseGetBookingReportById({ id: +params.id }, refreshTime, staffToken);
-
-    const bookingReportById = mockBookingReportById;
+    const { bookingReportById, loading: loadingBookingReportById } = UseGetBookingReportById({ id: +params.id }, staffToken, refreshTime);
 
     const handleOpenDialog = (action: string) => {
         setActionType(action);
@@ -112,7 +110,7 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
 
     return (
         <SubCard>
-            <Grid container spacing={3} justifyContent="center">
+            {bookingReportById && (<Grid container spacing={3} justifyContent="center">
                 <Grid item xs={12}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={8}>
@@ -121,7 +119,7 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                                     Booking report được tạo vào :
                                 </Typography>
                                 <Typography variant="body2">
-                                    {formatDate(bookingReportById.createdAt, "dd/MM/yyyy - hh:mm")}
+                                    {formatDate(bookingReportById?.createdAt, "dd/MM/yyyy - hh:mm")}
                                 </Typography>
                             </Stack>
                             <Stack direction="row" spacing={1}>
@@ -129,12 +127,12 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                                     Booking report được cập nhật vào :
                                 </Typography>
                                 <Typography variant="body2">
-                                    {formatDate(bookingReportById.updatedAt, "dd/MM/yyyy - hh:mm")}
+                                    {formatDate(bookingReportById?.updatedAt, "dd/MM/yyyy - hh:mm")}
                                 </Typography>
                             </Stack>
                         </Grid>
                         <Grid item xs={12} sm={4} sx={{ textAlign: 'right' }}>
-                            <Button color="primary" variant="outlined" onClick={() => handleOpenDialog("notify")} endIcon={<NotificationsActiveIcon />} disabled={mockBookingReportById.status !== 1 && mockBookingReportById.status !== 2}>
+                            <Button color="primary" variant="outlined" onClick={() => handleOpenDialog("notify")} endIcon={<NotificationsActiveIcon />} disabled={bookingReportById?.status !== 1 && bookingReportById?.status !== 2}>
                                 Thông báo cho chuyên gia
                             </Button>
                         </Grid>
@@ -155,7 +153,7 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                                                 Report Suggest:
                                             </Typography>
                                             <Stack spacing={1} direction="row" flexWrap="wrap" gap={1}>
-                                                {bookingReportById.bookingReportSuggest.map((suggest) => (
+                                                {bookingReportById?.bookingReportSuggest.map((suggest: any) => (
                                                     <Chip
                                                         key={suggest.id}
                                                         label={suggest.reportSuggest}
@@ -176,7 +174,7 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                                                 Trạng thái booking report:
                                             </Typography>
                                             <Stack spacing={1} direction="row" flexWrap="wrap" gap={1}>
-                                                {renderStatusChip(bookingReportById.status)}
+                                                {renderStatusChip(bookingReportById?.status)}
                                             </Stack>
                                         </Stack>
                                     </Stack>
@@ -191,14 +189,14 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                                                     Lý do báo cáo:
                                                 </Typography>
                                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                                    {bookingReportById.customerContent}
+                                                    {bookingReportById?.customerContent}
                                                 </Typography>
                                             </Stack>
                                             <Stack direction="row" spacing={1} alignItems="center">
                                                 <Typography variant="subtitle1" fontWeight="medium">Bằng chứng:</Typography>
                                                 <Typography variant="body2" sx={{ color: 'primary.main' }}>
-                                                    <a href={bookingReportById.customerEvidence} target="_blank" rel="noopener noreferrer">
-                                                        {bookingReportById.customerEvidence}
+                                                    <a href={bookingReportById?.customerEvidence} target="_blank" rel="noopener noreferrer">
+                                                        {bookingReportById?.customerEvidence}
                                                     </a>
                                                 </Typography>
                                             </Stack>
@@ -215,14 +213,14 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                                                     Lý do báo cáo:
                                                 </Typography>
                                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                                    {bookingReportById.expertContent}
+                                                    {bookingReportById?.expertContent}
                                                 </Typography>
                                             </Stack>
                                             <Stack direction="row" spacing={1} alignItems="center">
                                                 <Typography variant="subtitle1" fontWeight="medium">Bằng chứng:</Typography>
                                                 <Typography variant="body2" sx={{ color: 'primary.main' }}>
-                                                    <a href={bookingReportById.expertEvidence} target="_blank" rel="noopener noreferrer">
-                                                        {bookingReportById.expertEvidence}
+                                                    <a href={bookingReportById?.expertEvidence} target="_blank" rel="noopener noreferrer">
+                                                        {bookingReportById?.expertEvidence}
                                                     </a>
                                                 </Typography>
                                             </Stack>
@@ -243,10 +241,10 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                                 </Grid>
                                 <Grid item>
                                     <Stack direction="row" spacing={2}>
-                                        <Button color="primary" variant="outlined" onClick={() => handleOpenDialog("accept")} endIcon={<CheckCircleOutlineIcon />} disabled={mockBookingReportById.status !== 3}>
+                                        <Button color="primary" variant="outlined" onClick={() => handleOpenDialog("accept")} endIcon={<CheckCircleOutlineIcon />} disabled={bookingReportById?.status !== 3}>
                                             Chấp nhận
                                         </Button>
-                                        <Button color="error" variant="outlined" onClick={() => handleOpenDialog("reject")} endIcon={<RemoveCircleOutlineIcon />} disabled={mockBookingReportById.status !== 3}>
+                                        <Button color="error" variant="outlined" onClick={() => handleOpenDialog("reject")} endIcon={<RemoveCircleOutlineIcon />} disabled={bookingReportById?.status !== 3}>
                                             Từ chối
                                         </Button>
                                     </Stack>
@@ -255,7 +253,7 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                         </Grid>
                     </Grid>
                 </Grid >
-            </Grid >
+            </Grid >)}
 
             <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
                 <DialogTitle sx={{ fontWeight: 'bold', textAlign: 'center' }}>
@@ -265,7 +263,7 @@ export default function BookingReportByIdPage({ params }: { params: { id: string
                     <DialogContentText sx={{ mb: 3, fontSize: '1rem', textAlign: 'center', color: 'text.secondary' }}>
                         {actionType === "notify"
                             ? `Bạn có chắc chắn muốn thông báo cho chuyên gia với để cung cấp bằng chứng không?`
-                            : `Bạn có chắc chắn muốn ${actionType === "accept" ? "chấp nhận" : "từ chối"} báo cáo với ID: ${bookingReportById.id} không?`}
+                            : `Bạn có chắc chắn muốn ${actionType === "accept" ? "chấp nhận" : "từ chối"} báo cáo với ID: ${bookingReportById?.id} không?`}
                     </DialogContentText>
                     <TextField
                         autoFocus

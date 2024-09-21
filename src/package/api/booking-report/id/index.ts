@@ -7,7 +7,7 @@ export interface GetBookingReportByIdRequest {
 export interface GetBookingReportByIdResponse {
     status: string;
     responseText: string;
-    data: BookingReportById[];
+    data: BookingReportById;
 }
 
 export interface BookingReportById {

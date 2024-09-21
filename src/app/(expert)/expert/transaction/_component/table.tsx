@@ -71,17 +71,17 @@ export const RenderTransactionCurrentWithdrawTable = ({ transactionCurrentWithdr
                 </Box>
             ),
         },
-        {
-            field: "object",
-            headerName: "Thao tác",
-            flex: 1,
-            renderCell: (params) =>
-                <Tooltip title="Xem Chi Tiết">
-                    <IconButton onClick={() => handleClick(params.value)} sx={{ color: "#2196F3" }}>
-                        <VisibilityIcon />
-                    </IconButton>
-                </Tooltip>
-        },
+        // {
+        //     field: "object",
+        //     headerName: "Thao tác",
+        //     flex: 1,
+        //     renderCell: (params) =>
+        //         <Tooltip title="Xem Chi Tiết">
+        //             <IconButton onClick={() => handleClick(params.value)} sx={{ color: "#2196F3" }}>
+        //                 <VisibilityIcon />
+        //             </IconButton>
+        //         </Tooltip>
+        // },
     ]
 
     const handleClick = (params: any) => {

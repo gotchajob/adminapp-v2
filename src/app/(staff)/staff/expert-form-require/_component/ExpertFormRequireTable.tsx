@@ -62,7 +62,6 @@ export const RenderExpertFormRequireTable = ({
                 <Stack direction="row" spacing={1}>
                     <Tooltip title="Sửa">
                         <IconButton
-                            color="primary"
                             onClick={() => handleEdit(params.row)}
                         >
                             <EditIcon />
@@ -70,7 +69,6 @@ export const RenderExpertFormRequireTable = ({
                     </Tooltip>
                     <Tooltip title="Xóa">
                         <IconButton
-                            color="error"
                             onClick={() => handleDelete(params.row)}
                         >
                             <DeleteIcon />
