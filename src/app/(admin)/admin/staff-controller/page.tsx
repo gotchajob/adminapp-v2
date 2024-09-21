@@ -17,7 +17,7 @@ import { PatchStaffById } from "package/api/staff/id/indext";
 export default function StaffController() {
     const { refresh, refreshTime } = useRefresh();
     const { adminToken } = AdminToken();
-    const { staffs, loading } = UseGetAllStaff("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MjY3Mzc2NjcsImV4cCI6MTcyNjc4MDg2N30.StM0u6uri-DrB-cBLBVo86HHuN0LJSnhBO7-NvuBmII", refreshTime);
+    const { staffs, loading } = UseGetAllStaff(adminToken, refreshTime);
 
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
@@ -184,7 +184,7 @@ export default function StaffController() {
                         staffs={staffs}
                         onDisable={openConfirmDialog}
                         onEnable={openConfirmDialog}
-                        onEdit={()=>{}}
+                        onEdit={() => { }}
                     />
                 </MainCard>
             )}

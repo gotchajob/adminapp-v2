@@ -14,7 +14,7 @@ import MainCard from "ui-component/cards/MainCard";
 export default function PolicyConfig() {
     const { refresh, refreshTime } = useRefresh();
     const { adminToken } = AdminToken();
-    const { policy, loading } = useGetPolicy(adminToken ? adminToken : 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MjY4MzYyNTUsImV4cCI6MTcyNjg3OTQ1NX0.VMl5WBFlXprxTyyXcTJDhYL8eV9_dLJ7-TXJhN7WMZc', refreshTime);
+    const { policy, loading } = useGetPolicy(adminToken, refreshTime);
     const [policyContent, setPolicyContent] = useState<{ [key: number]: string }>({});
     const [isLoading, setIsLoading] = useState<{ [key: number]: boolean }>({});
 

@@ -7,9 +7,9 @@ import { getAdminToken, getStaffToken } from 'package/cookies/token';
 // ==============================|| DASHBOARD LAYOUT ||============================== //
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  // const adminToken = await getAdminToken(cookies())
-  // if (adminToken === "") {
-  //   redirect("/login")
-  // }
+  const adminToken = await getAdminToken(cookies())
+  if (adminToken === "") {
+    redirect("/login")
+  }
   return <DashboardLayout>{children}</DashboardLayout>;
 }
