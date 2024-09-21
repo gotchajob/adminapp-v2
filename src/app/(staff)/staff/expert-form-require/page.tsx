@@ -141,7 +141,7 @@ export default function ExpertFormRequirePage() {
           }}
         >
           <Typography variant="h4" >
-            Yêu cầu đăng ký chuyên gia
+            Yêu cầu đăng ký của chuyên gia
           </Typography>
           <Button
             variant="outlined"
