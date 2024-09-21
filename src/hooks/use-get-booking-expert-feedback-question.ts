@@ -45,7 +45,11 @@ export const UseGetBookingExpertFeedbackQuestionCurrent = (accessToken: string, 
         }
     }
 
-    useEffect(() => { fetchGetBookingExpertFeedbackQuestionCurrent(); }, [refresh, accessToken]);
+    useEffect(() => {
+        if (accessToken) {
+            fetchGetBookingExpertFeedbackQuestionCurrent();
+        }
+    }, [refresh, accessToken]);
 
     return {
         bookingExpertFeedbackQuestion

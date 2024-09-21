@@ -13,13 +13,16 @@ import MainCard from 'ui-component/cards/MainCard';
 
 const formatCurrency = (value: number) => {
     try {
+        if (isNaN(value) || value === null || value === undefined) {
+            return '0 đ';
+        }
         return new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND',
         }).format(value);
     } catch (error) {
-        console.error("Lỗi khi format currency:", error);
-        return 'N/A';
+        console.error('Lỗi khi format currency:', error);
+        return '0 đ';
     }
 };
 

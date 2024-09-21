@@ -35,6 +35,8 @@ const response = async (params: any, staffToken: string, expertToken: string, ad
           setStaffToken(res.data.token, cookies());
         } else if (res.data.roleId && res.data.roleId === 3) {
           setExpertToken(res.data.token, cookies());
+        } else if (res.data.roleId && res.data.roleId === 1) {
+          setAdminToken(res.data.token, cookies());
         } else {
           throw new Error('Sai tài khoản hoặc mật khẩu');
         }

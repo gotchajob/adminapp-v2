@@ -1,7 +1,7 @@
 import { ExpertNation, GetExpertNationSupportCurrent } from "package/api/expert-nation-support/current";
 import { useEffect, useState } from "react";
 
-export function useGetNationSupportCurrent(params: string, refresh: any) {
+export function useGetNationSupportCurrent(accessToken: string, refresh: any) {
     const [loading, setLoading] = useState<boolean>(true);
 
     const [nationSupportCurrent, setNationSupportCurrent] = useState<ExpertNation[] | undefined>();
@@ -9,7 +9,7 @@ export function useGetNationSupportCurrent(params: string, refresh: any) {
     const fetchExpertCurrent = async () => {
         try {
             setLoading(true);
-            const data = await GetExpertNationSupportCurrent(params);
+            const data = await GetExpertNationSupportCurrent(accessToken);
             if (data.status == 'error') {
                 throw new Error();
             }
@@ -21,8 +21,10 @@ export function useGetNationSupportCurrent(params: string, refresh: any) {
     };
 
     useEffect(() => {
-        fetchExpertCurrent();
-    }, [refresh, params]);
+        if (accessToken) {
+            fetchExpertCurrent();
+        }
+    }, [refresh, accessToken]);
 
     return {
         nationSupportCurrent,

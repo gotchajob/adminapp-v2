@@ -65,7 +65,7 @@ export const RenderCustomerBookingsTable = ({
             flex: 1.2,
             renderCell: (params) => (
                 <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value.fullName}
+                    {params.value}
                 </Box>
             ),
         },
@@ -108,10 +108,10 @@ export const RenderCustomerBookingsTable = ({
         {
             field: 'note',
             headerName: 'Chú thích',
-            flex: 2,
+            flex: 1.5,
             renderCell: (params) => (
                 <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.value ? params.value : "Không có chú thích"}
                 </Box>
             ),
         },
