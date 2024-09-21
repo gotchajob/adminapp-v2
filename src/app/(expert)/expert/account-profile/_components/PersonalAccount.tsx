@@ -162,7 +162,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   //Show & Hide skill option
   const handleToggle = async (id: number, status: number) => {
     try {
-      if (status === 1) {
+      if (status === 2) {
         const response = await PatchExpertSkillOptonShow({ id }, expertToken);
         if (response.status !== 'success') {
           throw new Error('Failed to show skill');
@@ -177,6 +177,8 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Cập nhật thất bại!', { variant: 'error' });
+    } finally {
+      refresh();
     }
   };
 

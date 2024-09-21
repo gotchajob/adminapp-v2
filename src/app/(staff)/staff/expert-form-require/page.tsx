@@ -153,7 +153,6 @@ export default function ExpertFormRequirePage() {
           </Button>
         </Box>
       }
-      sx={{ mt: 3 }}
     >
       {expertFormRequire && categories && (
         <RenderExpertFormRequireTable

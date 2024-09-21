@@ -44,12 +44,12 @@ export const RenderSkillOptionControllerTable = ({
             renderCell: (params) => (
                 <Stack direction="row" spacing={1}>
                     <Tooltip title="Sửa">
-                        <IconButton color="primary" onClick={() => handleEdit(params.row)}>
+                        <IconButton onClick={() => handleEdit(params.row)}>
                             <EditIcon />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Xóa">
-                        <IconButton color="error" onClick={() => handleDelete(params.row)}>
+                        <IconButton onClick={() => handleDelete(params.row)}>
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>

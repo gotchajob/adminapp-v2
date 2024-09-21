@@ -51,7 +51,7 @@ export default function ExpertTransactionWithDraw() {
     const [loading, setLoading] = useState<boolean>(false);
     const [totalPage, setTotalPage] = useState(1);
 
-    const { transaction, loading: transactionLoading } = useGetTransaction({ pageNumber: page, pageSize: rowsPerPage }, staffToken, refreshTime);
+    const { transaction, loading: transactionLoading } = useGetTransaction({ pageNumber: page, pageSize: rowsPerPage, sortBy: "createdAt:desc", search: ["transactionTypeId:3", "status:2"] }, staffToken, refreshTime);
     const { transactionType, loading: transactionTypeLoading } = useGetTransactionType(refreshTime);
 
     // Lấy description của transaction type dựa trên typeId

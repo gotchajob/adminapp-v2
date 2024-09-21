@@ -76,8 +76,8 @@ export const UseGetBookingReportForExpert = (params: GetBookingReportForExpertRe
     }
 }
 
-export const UseGetBookingReportById = (params: GetBookingReportByIdRequest, refresh: number, accessToken: string) => {
-    const [bookingReportById, setBookingReportById] = useState<BookingReportById[]>([]);
+export const UseGetBookingReportById = (params: GetBookingReportByIdRequest, accessToken: string, refresh: number) => {
+    const [bookingReportById, setBookingReportById] = useState<BookingReportById>();
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -99,7 +99,7 @@ export const UseGetBookingReportById = (params: GetBookingReportByIdRequest, ref
         }
     }
 
-    useEffect(() => { fetchGetBookingReportById(); }, [params.id, refresh, accessToken])
+    useEffect(() => { fetchGetBookingReportById(); }, [params, refresh, accessToken])
 
     return {
         bookingReportById, loading
