@@ -12,6 +12,8 @@ import DoneAllTwoToneIcon from '@mui/icons-material/DoneAllTwoTone';
 import EmailTwoToneIcon from '@mui/icons-material/EmailTwoTone';
 import { formatDate } from 'package/util';
 import { ExpertRegister } from 'package/api/expert-register-request';
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useRouter } from "next/navigation";
 
 const getStatusText = (status: number) => {
     switch (status) {
@@ -76,6 +78,8 @@ export const RendeExpertRequestTable = ({
     handleSendForm: (row: ExpertRegister) => void,
     handleBan: (row: ExpertRegister) => void
 }) => {
+
+    const router = useRouter();
     const columns: GridColDef[] = [
         {
             field: 'id',
@@ -148,6 +152,20 @@ export const RendeExpertRequestTable = ({
                             onClick={() => handleBan(params.row)}
                         >
                             <BlockTwoToneIcon sx={{ fontSize: "1.1rem" }} />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Xem chi tiết">
+                        <IconButton
+                            color="default"
+                            size="large"
+                            disabled={params.row.status === 1 || params.row.status === 2}
+                            onClick={() => {
+                                router.push(
+                                    `/staff/expert-request/expert-detail/${params.row.id}-${params.row.expertId}`
+                                );
+                            }}
+                        >
+                            <MoreVertIcon sx={{ fontSize: "1.1rem" }} />
                         </IconButton>
                     </Tooltip>
                 </Stack>
