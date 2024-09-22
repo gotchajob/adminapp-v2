@@ -5,42 +5,25 @@ export interface BookingCurrent {
     id: number,
     expertId: number,
     customerId: number,
-    customerCv: CustomerCv
     startInterviewDate: string,
     endInterviewDate: string,
-    note: string,
-    rejectReason: string,
     status: number,
     createdAt: string,
     canCancel: boolean,
-    skillOptionBooking: skillOptionBooking[],
-    customerInfo: CustomerInfo
+    expertInfo: expertInfo
 }
 
-export interface CustomerCv {
-    id: 0,
-    name: string,
-    image: string
-}
-
-export interface CustomerInfo {
-    avatar: string;
-    fullName: string;
-    email: string;
+export interface expertInfo {
+    userId: number,
+    fullName: string,
+    email: string,
+    avatar: string
 }
 
 export interface GetBookingCurrentRes {
     status: string;
     responseText: string;
     data: BookingCurrent[];
-}
-
-export interface skillOptionBooking {
-    expertSkillOptionId: number,
-    skillId: number,
-    skillName: string,
-    skillOptionId: number,
-    skillOptionName: string
 }
 
 export const GetBookingCurrent = async (accessToken: string): Promise<GetBookingCurrentRes> => {
