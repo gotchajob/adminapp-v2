@@ -113,6 +113,7 @@ export const BlogForm = ({ initData }: BlogFormProps) => {
                 <TextField
                   label="Mô tả ngắn"
                   onBlur={handleBlur}
+                  name="shortDescription"
                   value={values.shortDescription}
                   onChange={handleChange}
                   error={
