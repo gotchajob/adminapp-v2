@@ -35,9 +35,9 @@ export interface DelBookingCustomerFeedbackQuestionByIdResponse {
     responseText: string;
 }
 
-export const DelBookingCustomerFeedbackQuestionById = async (params: DelBookingCustomerFeedbackQuestionByIdRequest): Promise<DelBookingCustomerFeedbackQuestionByIdResponse> => {
+export const DelBookingCustomerFeedbackQuestionById = async (params: DelBookingCustomerFeedbackQuestionByIdRequest, accessToken: string): Promise<DelBookingCustomerFeedbackQuestionByIdResponse> => {
     try {
-        const res = await apiServerFetch(`/booking-customer-feedback-question/${params.id}`, 'DELETE', undefined, undefined);
+        const res = await apiServerFetch(`/booking-customer-feedback-question/${params.id}`, 'DELETE', undefined, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', "");
@@ -55,9 +55,9 @@ export interface PatchBookingCustomerFeedbackQuestionByIdResponse {
     responseText: string;
 }
 
-export const PatchBookingCustomerFeedbackQuestionById = async (params: PatchBookingCustomerFeedbackQuestionByIdRequest): Promise<PatchBookingCustomerFeedbackQuestionByIdResponse> => {
+export const PatchBookingCustomerFeedbackQuestionById = async (params: PatchBookingCustomerFeedbackQuestionByIdRequest, accessToken: string): Promise<PatchBookingCustomerFeedbackQuestionByIdResponse> => {
     try {
-        const res = await apiServerFetch(`/booking-customer-feedback-question/${params.id}`, 'PATCH', { question: params.question, type: params.type }, undefined);
+        const res = await apiServerFetch(`/booking-customer-feedback-question/${params.id}`, 'PATCH', { question: params.question, type: params.type }, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', "");
