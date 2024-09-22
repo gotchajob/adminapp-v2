@@ -54,7 +54,7 @@ export const InterviewQuestionTableRender = ({
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Xóa">
-                        <IconButton onClick={() => handleDelete(params.row)}>
+                        <IconButton onClick={() => handleDelete(params.row.id)}>
                             <DeleteIcon sx={{ fontSize: 16 }} />
                         </IconButton>
                     </Tooltip>

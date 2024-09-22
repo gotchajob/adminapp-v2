@@ -56,7 +56,7 @@ export const RenderStaffTable = ({
                 <Chip
                     label={params.value === 1 ? 'Hoạt động' : 'Vô hiệu hóa'}
                     color={params.value === 1 ? 'success' : 'default'}
-                    onClick={() => params.value === 1 ? onDisable(params.row.id, 'disable') : onEnable(params.row.id, 'enable')}
+                    // onClick={() => params.value === 1 ? onDisable(params.row.id, 'disable') : onEnable(params.row.id, 'enable')}
                     clickable
                 />
             )

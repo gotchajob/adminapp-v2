@@ -22,6 +22,7 @@ import { DelBookingCustomerFeedbackQuestionById } from "package/api/booking-cust
 import { PatchBookingCustomerFeedbackQuestionById } from "package/api/booking-customer-feedback-question/id";
 import { useEffect, useState } from "react";
 import { InterviewQuestionTableRender } from "./InterviewQuestionTable";
+import { StaffToken } from "hooks/use-login";
 
 const feedbackTypes = [
   { value: "text", label: "Dạng văn bản" },
@@ -32,11 +33,11 @@ const feedbackTypes = [
 
 function InterviewQuestionList() {
   const { refresh, refreshTime } = useRefresh();
+  const { staffToken } = StaffToken();
   const { bookingCustomerFeedbackQuestion } = UseGetBookingCustomerFeedbackQuestion(refreshTime);
   // Trạng thái riêng biệt cho thao tác sửa và xóa
   const [selectedQuestionForEdit, setSelectedQuestionForEdit] = useState<any>(null);
   const [selectedQuestionForDelete, setSelectedQuestionForDelete] = useState<any>(null);
-
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [newQuestion, setNewQuestion] = useState({ question: "", type: "" });
   const [editMode, setEditMode] = useState(false);
@@ -53,9 +54,9 @@ function InterviewQuestionList() {
   };
 
   // Hàm xử lý xóa câu hỏi
-  const handleDelete = async (question: any) => {
+  const handleDelete = async (id: number) => {
     try {
-      const res = await DelBookingCustomerFeedbackQuestionById({ id: question.id });
+      const res = await DelBookingCustomerFeedbackQuestionById({ id }, staffToken);
       if (res.status !== "success") {
         enqueueSnackbar("Xóa câu hỏi thất bại", { variant: "error" });
         return;
@@ -80,31 +81,33 @@ function InterviewQuestionList() {
           id: selectedQuestionForEdit.id,
           question: newQuestion.question,
           type: newQuestion.type,
-        });
+        }, staffToken);
         if (res.status !== "success") {
           enqueueSnackbar("Cập nhật câu hỏi thất bại", { variant: "error" });
           return;
         }
+        enqueueSnackbar("Cập nhật câu hỏi thành công", { variant: "success" });
       } else {
         // Chế độ thêm mới
         const res = await PostBookingCustomerFeedbackQuestion({
           question: newQuestion.question,
           type: newQuestion.type,
           categoryId: 1,
-        });
+        }, staffToken);
         if (res.status !== "success") {
           enqueueSnackbar("Thêm câu hỏi thất bại", { variant: "error" });
           return;
         }
       }
+    } catch (error) {
+      enqueueSnackbar("Lỗi khi xử lý câu hỏi", { variant: "error" });
+      console.error(error);
+    } finally {
       refresh();
       setOpenAddDialog(false);
       setNewQuestion({ question: "", type: "" });
       setEditMode(false);
       setSelectedQuestionForEdit(null);
-    } catch (error) {
-      enqueueSnackbar("Lỗi khi xử lý câu hỏi", { variant: "error" });
-      console.error(error);
     }
   };
 

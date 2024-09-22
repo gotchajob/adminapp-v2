@@ -38,14 +38,14 @@ export interface PostBookingCustomerFeedbackQuestionResponse {
 }
 
 export const PostBookingCustomerFeedbackQuestion = async (
-  params: PostBookingCustomerFeedbackQuestionRequest
+  params: PostBookingCustomerFeedbackQuestionRequest, accessToken: string
 ): Promise<PostBookingCustomerFeedbackQuestionResponse> => {
   try {
     const res = await apiServerFetch(
       `/booking-customer-feedback-question`,
       "POST",
       params,
-      undefined
+      accessToken
     );
     return res;
   } catch (error: any) {
