@@ -137,11 +137,11 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
   const handleRemoveRequireId = (id: number) => {
     setRequireId(requireId.filter((value) => value !== id));
   };
+
   const rejectHandle = async () => {
     try {
       setIsLoading(true);
       const criteriaList: Criteria[] = [];
-
       requireId.map((value) => {
         const expertFormRequireValue = expertFormRequire.find(
           (require) => require.id === value
@@ -151,8 +151,7 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
           description: expertFormRequireValue?.description || "",
           status: 1,
         });
-      });
-
+      })
       const currentHost = window.location.hostname;
       const action = await ExpertRegisterRejectForm({
         id: expertRegisterRequest[0].id,

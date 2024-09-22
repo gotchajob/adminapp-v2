@@ -13,11 +13,13 @@ export const useGetExpertFormRequire = (params: ExpertFormRequireRequest, refres
     try {
       const data = await GetExpertFormRequire(params);
       setExpertFormRequire(data.data);
-    } catch (error) { }
+    } catch (error) { 
+
+    }
   };
   useEffect(() => {
     handleGetExpertFormRequire();
-  }, [params.categoryIds, refresh]);
+  }, [ refresh]);
 
   return {
     expertFormRequire

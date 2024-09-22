@@ -27,7 +27,7 @@ export function useGetExpertProfile(params: GetExpertRequest, refresh: any) {
 
   useEffect(() => {
     fetchExpertProfile();
-  }, [refresh, params]);
+  }, [refresh, params.id]);
 
   return {
     expert,
