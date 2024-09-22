@@ -7,10 +7,18 @@ export interface BookingCurrent {
     customerId: number,
     startInterviewDate: string,
     endInterviewDate: string,
+    note: string,
     status: number,
     createdAt: string,
     canCancel: boolean,
-    expertInfo: expertInfo
+    expertInfo: expertInfo,
+    customerInfo: customerInfo,
+}
+export interface customerInfo {
+    userId: number,
+    fullName: string,
+    email: string,
+    avatar: string
 }
 
 export interface expertInfo {

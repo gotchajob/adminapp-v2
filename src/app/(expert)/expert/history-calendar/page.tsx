@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import MainCard from "ui-component/cards/MainCard";
@@ -86,6 +86,10 @@ const ExpertBookingPage = ({ params }: { params: ParamsType }) => {
     }
     handleCloseDialog();
   };
+
+  useEffect(() => {
+    console.log("booking:", bookings);
+  }, [bookings]);
 
 
   return (

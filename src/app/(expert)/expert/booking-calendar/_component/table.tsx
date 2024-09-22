@@ -62,10 +62,10 @@ export const RenderCustomerBookingsTable = ({
         {
             field: 'customerInfo',
             headerName: 'Tên khách hàng',
-            flex: 1.2,
+            flex: 1,
             renderCell: (params) => (
                 <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.row.customerInfo.fullName}
                 </Box>
             ),
         },
@@ -214,6 +214,7 @@ export const RenderCustomerBookingsTable = ({
         rows: filteredData.map((data, index) => ({
             ...data,
             object: JSON.stringify(data),
+            customerInfo: JSON.stringify(data),
         })),
     };
 

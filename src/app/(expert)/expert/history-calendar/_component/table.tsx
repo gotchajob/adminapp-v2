@@ -47,17 +47,17 @@ export const RenderHistoryBookingTable = ({
     handleOpenDialog: (id: number, type: 'accept' | 'reject' | 'ban') => void;
 }) => {
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', flex: 1 },
-        // {
-        //     field: 'customerInfo',
-        //     headerName: 'Tên khách hàng',
-        //     flex: 1,
-        //     renderCell: (params) => (
-        //         <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-        //             {params.row.customerInfo.fullName}
-        //         </Box>
-        //     ),
-        // },
+        { field: 'id', headerName: 'Id', flex: 0.5 },
+        {
+            field: 'customerInfo',
+            headerName: 'Tên khách hàng',
+            flex: 1,
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.customerInfo.fullName}
+                </Box>
+            ),
+        },
         {
             field: 'startInterviewDate',
             headerName: 'Thời điểm bắt đầu',
@@ -88,16 +88,16 @@ export const RenderHistoryBookingTable = ({
                 </Box>
             ),
         },
-        // {
-        //     field: 'note',
-        //     headerName: 'Chú thích',
-        //     flex: 2,
-        //     renderCell: (params) => (
-        //         <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-        //             {params.value}
-        //         </Box>
-        //     ),
-        // },
+        {
+            field: 'note',
+            headerName: 'Chú thích',
+            flex: 1.5,
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value ? params.value : "Không có chú thích"}
+                </Box>
+            ),
+        },
         {
             field: 'status',
             headerName: 'Trạng thái',
@@ -189,6 +189,7 @@ export const RenderHistoryBookingTable = ({
         rows: filteredData.map((data, index) => ({
             ...data,
             object: JSON.stringify(data),
+            customerInfo: JSON.stringify(data),
         })),
     };
 

@@ -316,20 +316,20 @@ export default function BookingDetailPage({
                 sx={{ cursor: "pointer" }}
                 width={"100%"}
               >
-                <Image
-                  src={booking.customerCV.image || "https://th.bing.com/th/id/R.97b7aabdda0bb17d06b0bfe4676c4bd8?rik=LR3rS6Yr98kBfA&pid=ImgRaw&r=0"}
+                {booking && (<Image
+                  src={booking.customerCv?.image || "https://th.bing.com/th/id/R.97b7aabdda0bb17d06b0bfe4676c4bd8?rik=LR3rS6Yr98kBfA&pid=ImgRaw&r=0"}
                   alt="Customer CV"
                   width={700}
                   height={1000}
                   style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-                />
+                />)}
               </FlexCenter>
 
               <Dialog open={open} onClose={handleClose} fullWidth>
                 <DialogContent>
-                  <Image
+                  {booking && (<Image
                     src={
-                      booking.customerCV.image ||
+                      booking.customerCv?.image ||
                       "https://th.bing.com/th/id/R.97b7aabdda0bb17d06b0bfe4676c4bd8?rik=LR3rS6Yr98kBfA&pid=ImgRaw&r=0"
                     }
                     alt="Customer CV"
@@ -339,7 +339,7 @@ export default function BookingDetailPage({
                     objectFit="cover"
                     objectPosition="top"
                     style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-                  />
+                  />)}
                 </DialogContent>
               </Dialog>
             </Stack>
