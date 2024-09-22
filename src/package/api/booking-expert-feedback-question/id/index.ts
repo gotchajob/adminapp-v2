@@ -36,9 +36,9 @@ export interface DelBookingExpertFeedbackQuestionByIdResponse {
     responseText: string;
 }
 
-export const DelBookingExpertFeedbackQuestionById = async (params: DelBookingExpertFeedbackQuestionByIdRequest): Promise<DelBookingExpertFeedbackQuestionByIdResponse> => {
+export const DelBookingExpertFeedbackQuestionById = async (params: DelBookingExpertFeedbackQuestionByIdRequest, accessToken: string): Promise<DelBookingExpertFeedbackQuestionByIdResponse> => {
     try {
-        const res = await apiServerFetch(`/booking-expert-feedback-question/${params.id}`, 'DELETE', undefined, undefined);
+        const res = await apiServerFetch(`/booking-expert-feedback-question/${params.id}`, 'DELETE', undefined, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', "");

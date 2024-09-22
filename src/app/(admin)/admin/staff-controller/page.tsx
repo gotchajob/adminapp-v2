@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, CircularProgress, Typography, Button, Stack, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Box, CircularProgress, Typography, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { RenderStaffTable } from "./_components/StaffTable";
 import { useRefresh } from "hooks/use-refresh";
 import { AdminToken } from "hooks/use-login";
@@ -38,21 +38,6 @@ export default function StaffController() {
         lastName: "",
     });
 
-    // const openEditDialog = (staff: {
-    //     id: number;
-    //     firstName: string;
-    //     lastName: string;
-    // }) => {
-    //     setEditStaffData({
-    //         id: staff.id,
-    //         firstName: staff.firstName,
-    //         lastName: staff.lastName,
-    //         password: "",
-    //     });
-    //     setOpenEditStaffDialog(true);
-    // };
-
-    // Mở dialog xác nhận
     const openConfirmDialog = (id: number, action: "enable" | "disable") => {
         setSelectedStaffId(id);
         setActionType(action);
@@ -65,7 +50,6 @@ export default function StaffController() {
         setActionType(null);
     };
 
-    // Xử lý vô hiệu hóa tài khoản
     const handleDisable = async () => {
         if (!selectedStaffId) return;
         try {
@@ -85,7 +69,6 @@ export default function StaffController() {
         }
     };
 
-    // Xử lý kích hoạt tài khoản
     const handleEnable = async () => {
         if (!selectedStaffId) return;
         try {
@@ -105,7 +88,6 @@ export default function StaffController() {
         }
     };
 
-    // Xử lý thêm tài khoản
     const handleAddStaff = async () => {
         try {
             setLoadingAction(true);
@@ -130,7 +112,6 @@ export default function StaffController() {
         }
     };
 
-    // Xử lý cập nhật thông tin tài khoản
     const handleEditStaff = async () => {
         if (!selectedStaffId) return;
         try {
@@ -158,36 +139,37 @@ export default function StaffController() {
         }
     };
 
-    useEffect(() => {
-        console.log("staffs", staffs)
-    }, [staffs])
-
     return (
         <>
-            {loading ? (
-                <CircularProgress />
-            ) : (
-                <MainCard title={
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant='h4' sx={{ fontWeight: 'bold' }}>Quản lí tài khoản nhân viên</Typography>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            startIcon={<AddIcon />}
-                            onClick={() => setOpenAddStaffDialog(true)}
-                        >
-                            Thêm tài khoản
-                        </Button>
+            <MainCard title={
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant='h4' sx={{ fontWeight: 'bold' }}>Quản lí tài khoản nhân viên</Typography>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        startIcon={<AddIcon />}
+                        onClick={() => setOpenAddStaffDialog(true)}
+                    >
+                        Thêm tài khoản
+                    </Button>
+                </Box>
+            }>
+                {loading ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+                        <CircularProgress />
                     </Box>
-                }>
+                ) : (
                     <RenderStaffTable
                         staffs={staffs}
                         onDisable={openConfirmDialog}
                         onEnable={openConfirmDialog}
-                        onEdit={() => { }}
-                    />
-                </MainCard>
-            )}
+                        onEdit={(staff) => {
+                            setSelectedStaffId(staff.id);
+                            setEditStaffData({ firstName: staff.firstName, lastName: staff.lastName, password: "" });
+                            setOpenEditStaffDialog(true);
+                        }}
+                    />)}
+            </MainCard>
 
             {/* Dialog xác nhận hành động */}
             <Dialog open={openDialog} onClose={closeDialog}>
@@ -209,6 +191,7 @@ export default function StaffController() {
                 </DialogActions>
             </Dialog>
 
+            {/* Dialog thêm tài khoản */}
             <Dialog open={openAddStaffDialog} onClose={() => setOpenAddStaffDialog(false)}>
                 <DialogTitle>Thêm tài khoản nhân viên</DialogTitle>
                 <DialogContent>
@@ -272,7 +255,7 @@ export default function StaffController() {
                     />
                     <TextField
                         margin="normal"
-                        label="Mật khẩu"
+                        label="Mật khẩu mới"
                         type="password"
                         fullWidth
                         value={editStaffData.password}
