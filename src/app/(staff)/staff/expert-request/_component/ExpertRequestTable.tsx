@@ -154,7 +154,7 @@ export const RendeExpertRequestTable = ({
                             <BlockTwoToneIcon sx={{ fontSize: "1.1rem" }} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Xem chi tiết">
+                    <Tooltip title="Chi tiết">
                         <IconButton
                             color="default"
                             size="large"
