@@ -8,10 +8,11 @@ export interface GetAllStaffResponse {
 
 export interface Staff {
     id: number,
-    fullName: string,
+    firstName: string,
+    lastName: string,
     email: string,
     avatar: string,
-    status: number
+    status: number,
 }
 
 export async function GetAllStaff(accessToken: string): Promise<GetAllStaffResponse> {

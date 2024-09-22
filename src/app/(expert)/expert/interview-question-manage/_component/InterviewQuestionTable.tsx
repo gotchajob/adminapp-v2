@@ -60,7 +60,7 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
     const handleDeleteQuestion = async () => {
         try {
             if (selectedQuestion) {
-                const res = await DelBookingExpertFeedbackQuestionById({ id: selectedQuestion.id });
+                const res = await DelBookingExpertFeedbackQuestionById({ id: selectedQuestion.id }, token);
                 if (res.status === "success") {
                     enqueueSnackbar('Xóa câu hỏi thành công', { variant: 'success' });
                     refresh();
