@@ -48,16 +48,16 @@ export const RenderHistoryBookingTable = ({
 }) => {
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', flex: 1 },
-        {
-            field: 'customerInfo',
-            headerName: 'Tên khách hàng',
-            flex: 1,
-            renderCell: (params) => (
-                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.row.customerInfo.fullName}
-                </Box>
-            ),
-        },
+        // {
+        //     field: 'customerInfo',
+        //     headerName: 'Tên khách hàng',
+        //     flex: 1,
+        //     renderCell: (params) => (
+        //         <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+        //             {params.row.customerInfo.fullName}
+        //         </Box>
+        //     ),
+        // },
         {
             field: 'startInterviewDate',
             headerName: 'Thời điểm bắt đầu',
