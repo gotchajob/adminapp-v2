@@ -153,7 +153,7 @@ const CustomerCalendarPage = ({
               <TableCell>Thời điểm bắt đầu</TableCell>
               <TableCell>Thời điểm kết thúc</TableCell>
               <TableCell>Thời điểm tạo</TableCell>
-              <TableCell>Chú thích</TableCell>
+              {/* <TableCell>Chú thích</TableCell> */}
               <TableCell align="center">Trạng thái</TableCell>
               <TableCell align="center" sx={{ pr: 3 }}>
                 Actions
@@ -196,7 +196,7 @@ const CustomerCalendarPage = ({
                         {formatDate(row.createdAt, "dd/MM/yyyy")}
                       </Typography>
                     </TableCell>
-                    <TableCell>{row.note}</TableCell>
+                    {/* <TableCell>{row.note}</TableCell> */}
                     <TableCell align="center">
                       <Chip
                         label={getStatusLabel(row.status).label}

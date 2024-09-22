@@ -88,16 +88,16 @@ export const RenderHistoryBookingTable = ({
                 </Box>
             ),
         },
-        {
-            field: 'note',
-            headerName: 'Chú thích',
-            flex: 2,
-            renderCell: (params) => (
-                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </Box>
-            ),
-        },
+        // {
+        //     field: 'note',
+        //     headerName: 'Chú thích',
+        //     flex: 2,
+        //     renderCell: (params) => (
+        //         <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+        //             {params.value}
+        //         </Box>
+        //     ),
+        // },
         {
             field: 'status',
             headerName: 'Trạng thái',
@@ -156,8 +156,8 @@ export const RenderHistoryBookingTable = ({
             const lowerCaseText = text.toLowerCase();
             data = data.filter((row) => {
                 return (
-                    row.customerInfo.fullName.toLowerCase().includes(lowerCaseText) ||
-                    row.note.toLowerCase().includes(lowerCaseText) ||
+                    // row.customerInfo.fullName.toLowerCase().includes(lowerCaseText) ||
+                    // row.note.toLowerCase().includes(lowerCaseText) ||
                     formatDate(row.startInterviewDate, 'dd/MM/yyyy hh:mm').includes(lowerCaseText) ||
                     getStatusLabel(row.status).props.label.toLowerCase().includes(lowerCaseText)
                 );
