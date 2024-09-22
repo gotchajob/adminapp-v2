@@ -1,16 +1,16 @@
-import { Chip, IconButton, Stack, Switch, Tooltip, Typography } from "@mui/material";
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import EditIcon from '@mui/icons-material/Edit';
+import { Chip, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
 import { GridColDef } from '@mui/x-data-grid/models';
 import { FlexBox } from 'components/common/box/flex-box';
 import { DataGridTable, DataGridTableProps } from 'components/common/filter-table/data-grid';
+import { useGetFilter } from 'components/common/filter-table/hook-filter';
+import { Staff } from "package/api/staff/all";
 import { useMemo } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
-import { Staff } from "package/api/staff/all";
-import BlockIcon from "@mui/icons-material/Block";
-import CheckIcon from "@mui/icons-material/Check";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LockIcon from '@mui/icons-material/Lock';
-import EditIcon from '@mui/icons-material/Edit';
 
 export const RenderStaffTable = ({
     staffs,
@@ -33,11 +33,11 @@ export const RenderStaffTable = ({
             )
         },
         {
-            field: 'fullName',
+            field: 'name',
             headerName: 'Tên nhân viên',
             flex: 2,
             renderCell: (params) => (
-                <Typography variant="subtitle1">{params.value}</Typography>
+                <Typography variant="subtitle1">{`${params.row.firstName} ${params.row.lastName}`}</Typography>
             )
         },
         {
@@ -67,16 +67,11 @@ export const RenderStaffTable = ({
             flex: 1.5,
             renderCell: (params) => (
                 <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-                    <Tooltip title="Xem chi tiết">
-                        <IconButton>
-                            <VisibilityIcon />
-                        </IconButton>
-                    </Tooltip>
-                    {/* <Tooltip title="Chỉnh sửa">
+                    <Tooltip title="Chỉnh sửa">
                         <IconButton onClick={() => onEdit(params.row)}>
                             <EditIcon />
                         </IconButton>
-                    </Tooltip> */}
+                    </Tooltip>
                     {params.row.status === 1 ? (
                         <Tooltip title="Vô hiệu hóa">
                             <IconButton onClick={() => onDisable(params.row.id, 'disable')}>
@@ -95,16 +90,46 @@ export const RenderStaffTable = ({
         }
     ];
 
+    const { handleChangeEventText, text } = useGetFilter();
+
+    const filteredData = useMemo(() => {
+        let data = [...staffs];
+        if (text.trim() !== '') {
+            const lowerCaseText = text.toLowerCase();
+            data = data.filter((row) => {
+                const fullName = `${row.firstName.toLowerCase()} ${row.lastName.toLowerCase()}`;
+                const statusText = row.status === 1 ? 'hoạt động' : 'vô hiệu hóa';
+                return (
+                    fullName.includes(lowerCaseText) ||
+                    row.email.toLowerCase().includes(lowerCaseText) ||
+                    row.id.toString().includes(lowerCaseText) ||
+                    statusText.includes(lowerCaseText)
+                );
+            });
+        }
+        return data;
+    }, [text, staffs]);
+
+    const RenderClientFilter = (
+        <Grid container spacing={3}>
+            <Grid item xs={12} lg={4}>
+                <FlexBox>
+                    <Input size="small" placeholder="Tìm kiếm..." onChange={handleChangeEventText} />
+                </FlexBox>
+            </Grid>
+        </Grid>
+    );
+
     const props: DataGridTableProps = {
         columns,
-        rows: staffs.map((data) => ({
+        rows: filteredData.map((data) => ({
             ...data,
             object: JSON.stringify(data),
         })),
     };
 
     return (
-        <MainCard>
+        <MainCard title={RenderClientFilter}>
             <DataGridTable props={props} />
         </MainCard>
     );
