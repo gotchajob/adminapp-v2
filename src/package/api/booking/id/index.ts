@@ -34,7 +34,7 @@ export interface BookingById {
   id: number;
   expertId: number;
   customerId: number;
-  customerCV: CustomerCV;
+  customerCv: CustomerCV;
   availabilityId: number;
   startInterviewDate: string;
   endInterviewDate: string;

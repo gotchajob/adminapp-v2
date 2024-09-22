@@ -63,7 +63,6 @@ export default function BookingDetailPage({
   const { expertToken } = ExpertToken();
   const [cancelReason, setCancelReason] = useState("");
   const [showCancelForm, setShowCancelForm] = useState(false);
-
   const { booking } = useGetBookingById({ id: +params.id });
 
   const { label, color } =
@@ -243,20 +242,16 @@ export default function BookingDetailPage({
                 <Stack spacing={2}>
                   <Typography variant="h4">CV khách hàng</Typography>
                   <Stack onClick={handleClickOpen} sx={{ cursor: "pointer" }}>
-                    <Image
-                      src={
-                        typeof booking.customerCV?.image === "string" && booking?.customerCV.image
-                          ? booking.customerCV.image
-                          : "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
-                      }
-                      alt={booking.customerCV?.name}
+                    {booking.customerCv && (<Image
+                      src={booking.customerCv.image}
+                      alt={booking.customerCv.name}
                       layout="responsive"
                       width={700}
                       height={1000}
                       objectFit="cover"
                       objectPosition="top"
                       style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-                    />
+                    />)}
                   </Stack>
                 </Stack>
               </Grid>
@@ -309,20 +304,16 @@ export default function BookingDetailPage({
 
           <Dialog open={open} onClose={handleClose} fullWidth>
             <DialogContent>
-              <Image
-                src={
-                  typeof booking.customerCV?.image === "string" && booking.customerCV?.image
-                    ? booking.customerCV?.image
-                    : "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
-                }
-                alt={booking.customerCV?.name}
-                layout="intrinsic"
+              {booking.customerCv && (<Image
+                src={booking.customerCv.image}
+                alt={booking.customerCv.name}
+                layout="responsive"
                 width={700}
                 height={1000}
                 objectFit="cover"
                 objectPosition="top"
                 style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-              />
+              />)}
             </DialogContent>
           </Dialog>
         </Grid>

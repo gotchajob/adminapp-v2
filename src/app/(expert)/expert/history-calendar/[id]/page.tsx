@@ -226,20 +226,16 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
                         onClick={handleClickOpen}
                         sx={{ cursor: "pointer" }}
                       >
-                        <Image
-                          src={
-                            typeof booking.customerCV?.image === "string" && booking.customerCV.image
-                              ? booking.customerCV.image
-                              : "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
-                          }
-                          alt={booking.customerCV?.name}
+                        {booking.customerCv && (<Image
+                          src={booking.customerCv.image}
+                          alt={booking.customerCv.name}
                           layout="responsive"
                           width={700}
                           height={1000}
                           objectFit="cover"
                           objectPosition="top"
                           style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-                        />
+                        />)}
                       </Stack>
                     </Stack>
                   </Grid>
@@ -311,20 +307,16 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
 
           <Dialog open={open} onClose={handleClose} fullWidth>
             <DialogContent>
-              <Image
-                src={
-                  typeof booking.customerCV?.image === "string" && booking.customerCV.image
-                    ? booking.customerCV.image
-                    : "https://marketplace.canva.com/EAFcO7DTEHM/1/0/1131w/canva-blue-professional-modern-cv-resume-pPAKwLoiobE.jpg"
-                }
-                alt={booking.customerCV?.name}
-                layout="intrinsic"
+              {booking.customerCv && (<Image
+                src={booking.customerCv.image}
+                alt={booking.customerCv.name}
+                layout="responsive"
                 width={700}
                 height={1000}
                 objectFit="cover"
                 objectPosition="top"
                 style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-              />
+              />)}
             </DialogContent>
           </Dialog>
 
