@@ -26,7 +26,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [newSkill, setNewSkill] = useState<{ name: string, id: number | null, categoryId: number | null }>({ name: '', id: null, categoryId: null });
     const [selectedCategory, setSelectedCategory] = useState<number | ''>('');
-    const {staffToken} = StaffToken();
+    const { staffToken } = StaffToken();
 
     const handleEdit = (skill: Skill) => {
         setSelectedSkill(skill);
@@ -69,7 +69,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
         }
 
         try {
-            const response = await PatchSkill({ id: selectedSkill.id, skillName: newSkill.name });
+            const response = await PatchSkill({ id: selectedSkill.id, skillName: newSkill.name }, staffToken);
             if (response.status === "success") {
                 refresh();
                 setOpenEditDialog(false);
@@ -92,7 +92,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
         }
 
         try {
-            const response = await DelSkill({ id: selectedSkill.id });
+            const response = await DelSkill({ id: selectedSkill.id }, staffToken);
             if (response.status === "success") {
                 refresh();
                 setOpenDeleteDialog(false);

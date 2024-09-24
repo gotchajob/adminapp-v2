@@ -50,9 +50,9 @@ export interface PatchSkillResponse {
   responseText: string;
 }
 
-export const PatchSkill = async (params: PatchSkillRequest): Promise<PatchSkillResponse> => {
+export const PatchSkill = async (params: PatchSkillRequest, accessToken: string): Promise<PatchSkillResponse> => {
   try {
-    const res = await apiServerFetch(`/skill/${params.id}`, 'PATCH', { skillName: params.skillName }, undefined);
+    const res = await apiServerFetch(`/skill/${params.id}`, 'PATCH', { skillName: params.skillName }, accessToken);
     return res;
   } catch (error: any) {
     return errorSystem('Lấy danh sách thất bại', "");
