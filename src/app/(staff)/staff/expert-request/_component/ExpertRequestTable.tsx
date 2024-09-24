@@ -177,7 +177,15 @@ export const RendeExpertRequestTable = ({
 
     const filteredData = useMemo(() => {
         const lowerCaseText = text.toLowerCase();
-        return expertRegisterRequest.filter((request) => {
+        return expertRegisterRequest.sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            if (dateA < dateB) {
+                return 1
+            } else {
+                return -1;
+            }
+        }).filter((request) => {
             return (
                 request.email.toLowerCase().includes(lowerCaseText) ||
                 request.id.toString().toLowerCase().includes(lowerCaseText) ||

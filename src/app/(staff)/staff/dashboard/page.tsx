@@ -1,17 +1,16 @@
-import StorefrontTwoToneIcon from "@mui/icons-material/StorefrontTwoTone";
 import Grid from "@mui/material/Grid";
 import { BarChart } from "components/common/dashboard/chart/bar-chart";
 import EarningCard from "components/common/dashboard/label/earning-card";
 import { cookies } from "next/headers";
 import { apiServerFetch } from "package/api/api-fetch";
-import { getExpertToken } from "package/cookies/token";
+import { getStaffToken } from "package/cookies/token";
 import { formatDate, formatNumber } from "package/util";
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const listMonth = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const Dashboard = async () => {
-  const accessToken = await getExpertToken(cookies());
+  const accessToken = await getStaffToken(cookies());
   const currentDate = new Date();
   const data1 = await apiServerFetch(
     "/dash-board/total-money",

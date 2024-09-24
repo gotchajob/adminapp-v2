@@ -196,7 +196,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   );
 
   const { availabilities, loading: availabilitiesLoadings } =
-    useGetAvailability({ expertId: expertCurrent?.expertId ?? 0 }, refreshTime);
+    useGetAvailability({ expertId: expertCurrent ? expertCurrent.expertId : 0 }, refreshTime);
 
   const [isAddDateRangeOpen, setIsAddDateRangeOpen] = useState(false);
 
@@ -333,12 +333,6 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   };
 
   useEffect(() => {
-    console.log("availabilities:", availabilities);
-    const convertedEvents = convertEvents(availabilities);
-    setEvents(convertedEvents);
-  }, [expertCurrent, availabilities, expertToken, refreshTime]);
-
-  useEffect(() => {
     if (startDate && endDate) {
       try {
         const dates = getDatesBetween([startDate, endDate]);
@@ -349,6 +343,12 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
       }
     }
   }, [startDate, endDate]);
+
+  useEffect(() => {
+    // console.log("availabilities:", availabilities);
+    const convertedEvents = convertEvents(availabilities);
+    setEvents(convertedEvents);
+  }, [expertCurrent, availabilities, expertToken, refreshTime]);
 
   useEffect(() => { console.log("select Event:", selectEvent) }, [selectEvent])
 

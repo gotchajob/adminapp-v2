@@ -7,6 +7,9 @@ export const useGetAvailability = (params: GetAvailabilityRequest, refreshTime: 
     const [loading, setLoading] = useState<boolean>();
 
     const fetchAvailability = async () => {
+        if (!params.expertId) {
+            return;
+        }
         try {
             setLoading(true);
             const data = await GetAvailability(params);
@@ -16,6 +19,7 @@ export const useGetAvailability = (params: GetAvailabilityRequest, refreshTime: 
     };
 
     useEffect(() => {
+        console.log("useGetAvailability", params.expertId);
         fetchAvailability();
     }, [params.expertId, refreshTime]);
 

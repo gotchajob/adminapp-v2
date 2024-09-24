@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Avatar, Box, Button, ButtonBase, CardMedia, CircularProgress, Grid, Rating, Switch, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, ButtonBase, CardMedia, CircularProgress, Grid, Rating, Skeleton, Switch, TextField, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import SubCard from 'ui-component/cards/SubCard';
 import { gridSpacing } from 'store/constant';
@@ -71,6 +71,86 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isEnabled, setIsEnabled] = useState(true);
 
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    address: '',
+  });
+
+  const validateForm = () => {
+    let tempErrors = { firstName: '', lastName: '', email: '', phone: '', address: '' };
+    let isValid = true;
+
+    const nameRegex = /^[A-Za-zÀ-ỹ\s]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10,15}$/;
+
+    // Kiểm tra tên
+    if (!formData.firstName) {
+      tempErrors.firstName = 'Tên không được để trống';
+      isValid = false;
+    } else if (!nameRegex.test(formData.firstName)) {
+      tempErrors.firstName = 'Tên chỉ được chứa chữ cái và khoảng trắng';
+      isValid = false;
+    } else if (formData.firstName.length < 2) {
+      tempErrors.firstName = 'Tên quá ngắn, tối thiểu 2 ký tự';
+      isValid = false;
+    } else if (formData.firstName.length > 30) {
+      tempErrors.firstName = 'Tên quá dài, tối đa 30 ký tự';
+      isValid = false;
+    }
+
+    // Kiểm tra họ
+    if (!formData.lastName) {
+      tempErrors.lastName = 'Họ không được để trống';
+      isValid = false;
+    } else if (!nameRegex.test(formData.lastName)) {
+      tempErrors.lastName = 'Họ chỉ được chứa chữ cái và khoảng trắng';
+      isValid = false;
+    } else if (formData.lastName.length < 2) {
+      tempErrors.lastName = 'Họ quá ngắn, tối thiểu 2 ký tự';
+      isValid = false;
+    } else if (formData.lastName.length > 30) {
+      tempErrors.lastName = 'Họ quá dài, tối đa 30 ký tự';
+      isValid = false;
+    }
+
+    // Kiểm tra email
+    if (!emailRegex.test(formData.email)) {
+      tempErrors.email = 'Email không hợp lệ';
+      isValid = false;
+    } else if (formData.email.length > 50) {
+      tempErrors.email = 'Email quá dài, tối đa 50 ký tự';
+      isValid = false;
+    }
+
+    // Kiểm tra số điện thoại
+    if (!/^\d+$/.test(formData.phone)) {
+      tempErrors.phone = 'Số điện thoại chỉ được chứa số';
+      isValid = false;
+    } else if (!phoneRegex.test(formData.phone)) {
+      tempErrors.phone = 'Số điện thoại phải có 10-15 số';
+      isValid = false;
+    }
+
+    // Kiểm tra địa chỉ
+    if (!formData.address) {
+      tempErrors.address = 'Địa chỉ không được để trống';
+      isValid = false;
+    } else if (formData.address.length < 5) {
+      tempErrors.address = 'Địa chỉ quá ngắn, tối thiểu 5 ký tự';
+      isValid = false;
+    } else if (formData.address.length > 100) {
+      tempErrors.address = 'Địa chỉ quá dài, tối đa 100 ký tự';
+      isValid = false;
+    }
+
+    setErrors(tempErrors);
+    return isValid;
+  };
+
   const uploadToCloudinary = async (file: File) => {
     try {
       const formData = new FormData();
@@ -117,17 +197,12 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
     }
   };
 
-  //Check onChange
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setFormData({ ...formData, [id]: value });
-  };
-
-  const hasChanges = JSON.stringify(initialData) !== JSON.stringify(formData);
-
   //Update form
   const handleUpdate = async () => {
-    if (!hasChanges) return;
+    if (!validateForm()) {
+      enqueueSnackbar('Vui lòng sửa các lỗi trong biểu mẫu', { variant: 'error' });
+      return;
+    }
     try {
       const updatedData = {
         emailContact: formData.email,
@@ -301,8 +376,10 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   id="firstName"
                   fullWidth
                   label="Tên"
-                  defaultValue={expert?.firstName}
-                  onChange={handleChange}
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  error={!!errors.firstName}
+                  helperText={errors.firstName}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -310,8 +387,10 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   id="lastName"
                   fullWidth
                   label="Họ"
-                  defaultValue={expert?.lastName}
-                  onChange={handleChange}
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  error={!!errors.lastName}
+                  helperText={errors.lastName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -322,7 +401,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   rows={3}
                   value={formData.bio}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -331,7 +410,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Kinh nghiệm (năm)"
                   value={formData.experience}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -366,7 +445,9 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Số điện thoại liên hệ"
                   value={formData.phone}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  error={!!errors.phone}
+                  helperText={errors.phone}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -375,7 +456,9 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Email"
                   value={formData.email}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  error={!!errors.email}
+                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -385,7 +468,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Tỉnh / Thành phố"
                   value={formData.province}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, province: e.target.value })}
                 >
                   {provinceOptions?.map((option) => (
                     <MenuItem
@@ -408,7 +491,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Quận / huyện"
                   value={formData.district}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, district: e.target.value })}
                   disabled={formData.province === ""}
                 >
                   {districtOptions?.map((option) => (
@@ -432,7 +515,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Phường / Xã"
                   value={formData.ward}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, ward: e.target.value })}
                   disabled={formData.district === ""}
                 >
                   {wardOptions?.map((option) => (
@@ -448,7 +531,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Số nhà, tên đường"
                   value={formData.street}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, street: e.target.value })}
                 />
               </Grid>
             </Grid>
@@ -468,7 +551,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Facebook Profile Url"
                   value={formData.facebookUrl}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, facebookUrl: e.target.value })}
                 />
               </Grid>
             </Grid>
@@ -482,7 +565,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="Twitter Profile Url"
                   value={formData.twitterUrl}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, twitterUrl: e.target.value })}
                 />
               </Grid>
             </Grid>
@@ -496,7 +579,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   fullWidth
                   label="LinkedIn Profile Url"
                   value={formData.linkedinUrl}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
                 />
               </Grid>
             </Grid>
@@ -509,7 +592,23 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
         )}
       </Grid>
       {expertSkillOptionsCurrentLoading ? (
-        <CircularProgress />
+        Array.from(new Array(6)).map((_, index) => (
+          <Grid item xs={4} key={index}>
+            <SubCard
+              title={
+                <FlexBetween>
+                  <Skeleton variant="text" width={150} />
+                  <Skeleton variant="circular" width={40} height={40} />
+                </FlexBetween>
+              }
+            >
+              <FlexBetween>
+                <Skeleton variant="rectangular" width={80} height={20} />
+                <Skeleton variant="text" width={50} />
+              </FlexBetween>
+            </SubCard>
+          </Grid>
+        ))
       ) : expertSkillOptionsCurrent && expertSkillOptionsCurrent.length > 0 ? (
         expertSkillOptionsCurrent.map((skillOption: ExpertSkillOptionCurrent, index) => {
           return (
@@ -517,7 +616,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
               <SubCard
                 title={
                   <FlexBetween>
-                    <Typography>{skillOption.skillOptionName}</Typography>
+                    <Typography color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>{skillOption.skillOptionName}</Typography>
                     <Switch
                       checked={skillOption.status === 1}
                       onChange={() => handleToggle(skillOption.id, skillOption.status)}
@@ -545,10 +644,14 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
           );
         })
       ) : (
-        <Typography>Không tìm thấy kỹ năng</Typography>
+        <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
+          <Typography variant="h6" color="textSecondary">
+            Không tìm thấy kỹ năng
+          </Typography>
+        </Grid>
       )}
       <Grid item xs={12} sx={{ textAlign: 'right' }}>
-        <Button variant="contained" onClick={handleUpdate} disabled={!hasChanges}>
+        <Button variant="contained" onClick={handleUpdate}>
           Cập nhật
         </Button>
       </Grid>

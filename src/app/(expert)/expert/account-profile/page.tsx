@@ -67,10 +67,10 @@ function a11yProps(index: number) {
 
 // tabs option
 const tabsOption = [
-  {
-    label: "Thông tin cá nhân",
-    icon: <AccountCircleTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
-  },
+  // {
+  //   label: "Thông tin cá nhân",
+  //   icon: <AccountCircleTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
+  // },
   {
     label: "Thiết lập thông tin cá nhân",
     icon: <DescriptionTwoToneIcon sx={{ fontSize: "1.3rem" }} />,
@@ -160,21 +160,21 @@ const ExpertProfile = () => {
               />
             ))}
           </Tabs>
-          <TabPanel value={value} index={0}>
+          {/* <TabPanel value={value} index={0}>
             <Profile expert={expertCurrent}></Profile>
+          </TabPanel> */}
+          <TabPanel value={value} index={0}>
+            {expertCurrent && (<PersonalAccount expert={expertCurrent}></PersonalAccount>)}
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <PersonalAccount expert={expertCurrent}></PersonalAccount>
+            {expertCurrent && (<MyAccount expert={expertCurrent}></MyAccount>)}
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <MyAccount expert={expertCurrent}></MyAccount>
-          </TabPanel>
-          <TabPanel value={value} index={3}>
             <ChangePassword></ChangePassword>
           </TabPanel>
-          <TabPanel value={value} index={4}>
+          {/* <TabPanel value={value} index={3}>
             <Settings></Settings>
-          </TabPanel>
+          </TabPanel> */}
         </Grid>
       </Grid>
     </MainCard>
