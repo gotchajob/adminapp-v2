@@ -1,6 +1,17 @@
-"use client"
+"use client";
 
-import { Box, Button, CircularProgress, Stack } from "@mui/material"
+import { LoadingButton } from "@mui/lab";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Input,
+  Paper,
+  Stack,
+  TextField,
+} from "@mui/material";
+import { FlexBox } from "components/common/box/flex-box";
 import ReactQuillDemo from "components/forms/plugins/Wysiwug/ReactQuill";
 import { useGetPolicy } from "hooks/use-get-policy";
 import { AdminToken } from "hooks/use-login";
@@ -12,93 +23,105 @@ import { useState } from "react";
 import MainCard from "ui-component/cards/MainCard";
 
 export default function PolicyConfig() {
-    const { refresh, refreshTime } = useRefresh();
-    const { adminToken } = AdminToken();
-    const { policy, loading } = useGetPolicy(adminToken, refreshTime);
-    const [policyContent, setPolicyContent] = useState<{ [key: number]: string }>({});
-    const [isLoading, setIsLoading] = useState<{ [key: number]: boolean }>({});
+  const { refresh, refreshTime } = useRefresh();
+  const { adminToken } = AdminToken();
+  const { policy, loading } = useGetPolicy(adminToken, refreshTime);
+  const [policyContent, setPolicyContent] = useState<{ [key: number]: string }>(
+    {}
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    // Cập nhật nội dung cho một policy cụ thể
-    const handleContentChange = (policyId: number, content: string) => {
-        setPolicyContent((prevState) => ({
-            ...prevState,
-            [policyId]: content,
-        }));
-    };
+  // Cập nhật nội dung cho một policy cụ thể
+  const handleContentChange = (policyId: number, value: string) => {
+    setPolicyContent((prevState) => ({
+      ...prevState,
+      [policyId]: value,
+    }));
+  };
 
-    // Reset lại nội dung của một policy về giá trị gốc
-    const handleResetContent = (policyId: number, originalDescription: string) => {
-        setPolicyContent((prevState) => ({
-            ...prevState,
-            [policyId]: originalDescription,
-        }));
-    };
-
-    // Gọi hàm PatchPolicyById để lưu nội dung
-    const handlePatchPolicy = async (policyId: number, value: string) => {
-        setIsLoading((prevState) => ({ ...prevState, [policyId]: true }));
-        try {
-            const res = await PatchPolicyById(
-                {
-                    id: policyId,
-                    value,
-                    description: policyContent[policyId],
-                },
-                adminToken
-            );
-            if (res.status === "success") {
-                enqueueSnackbar('Cập nhật chính sách thành công!', { variant: 'success' });
-                refresh();
-            } else {
-                enqueueSnackbar(`Có lỗi xảy ra: ${res.responseText}`, { variant: 'error' });
-            }
-        } catch (error: any) {
-            enqueueSnackbar('Cập nhật thất bại: ' + error.message, { variant: 'error' });
-        } finally {
-            setIsLoading((prevState) => ({ ...prevState, [policyId]: false }));
+  // Gọi hàm PatchPolicyById để lưu nội dung
+  const handlePatchPolicy = async () => {
+    setIsLoading(true);
+    try {
+      // Use map to create an array of promises
+      const promises = Object.entries(policyContent).map(async ([key, value]) => {
+        const res = await PatchPolicyById(
+          {
+            id: +key,
+            value,
+            description: policy.find((data) => data.id === +key)?.description || "",
+          },
+          adminToken
+        );
+        if (res.status === "error") {
+          throw new Error(res.responseText);
         }
-    };
+        return res; 
+      });
+  
+      await Promise.all(promises);
+      
+      enqueueSnackbar("Cập nhật thành công!", {
+        variant: "success",
+      });
+    } catch (error: any) {
+      enqueueSnackbar("Cập nhật thất bại: " + error.message, {
+        variant: "error",
+      });
+    } finally {
+      setIsLoading(false); // set to false instead of true
+    }
+  };
+  
 
-    return (
-        <>
-            {loading ? (
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: "100vh",
-                    }}
+  return (
+    <>
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <CircularProgress size={80} />
+        </Box>
+      ) : (
+        <MainCard>
+          <Grid container spacing={3}>
+            {policy.map((policy: Policy) => (
+              <Grid item xs={6} key={policy.id}>
+                <Grid container spacing={1} alignItems={"flex-end"}>
+                  <Grid item xs={6}>
+                    <Button size="small">{policy.description}:</Button>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <TextField
+                      size="small"
+                      value={policyContent[policy.id] || policy.value}
+                      onChange={(e) => {
+                        handleContentChange(policy.id, e.target.value);
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            ))}
+            <Grid item xs={12}>
+              <FlexBox justifyContent={"flex-end"}>
+                <LoadingButton
+                  variant="outlined"
+                  onClick={handlePatchPolicy}
+                  loading={isLoading}
                 >
-                    <CircularProgress size={80} />
-                </Box>
-            ) : (
-                policy.map((policy: Policy) => (
-                    <MainCard key={policy.id} title={policy.key} sx={{ my: 3 }}>
-                        <ReactQuillDemo
-                            data={policy.description}
-                            setData={(content: string) => handleContentChange(policy.id, content)}
-                        />
-                        <Stack direction="row" justifyContent={"flex-end"} spacing={2} sx={{ pt: 2 }}>
-                            {/* <Button
-                                variant="outlined"
-                                color="secondary"
-                                onClick={() => handleResetContent(policy.id, policy.description)}
-                            >
-                                Bỏ thay đổi
-                            </Button> */}
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handlePatchPolicy(policy.id, policy.value)}
-                                disabled={isLoading[policy.id]}
-                            >
-                                {isLoading[policy.id] ? "Đang lưu..." : "Lưu thay đổi"}
-                            </Button>
-                        </Stack>
-                    </MainCard>
-                ))
-            )}
-        </>
-    )
+                  Lưu thay đổi
+                </LoadingButton>
+              </FlexBox>
+            </Grid>
+          </Grid>
+        </MainCard>
+      )}
+    </>
+  );
 }
