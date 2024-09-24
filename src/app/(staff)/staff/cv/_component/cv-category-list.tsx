@@ -12,7 +12,7 @@ import Image from "next/image";
 
 import { useGetCVCategory } from "hooks/use-get-cv-category";
 import { StatusChip } from "components/common/chip-status/status-chip";
-import { Switch, TablePagination, ToggleButton } from "@mui/material";
+import { Skeleton, Switch, TablePagination, ToggleButton } from "@mui/material";
 import {
   useGetSearchParams,
   useSearchParamsNavigation,
@@ -46,9 +46,39 @@ export const CVCategoryList = ({ refreshTime }: { refreshTime: number }) => {
     push([{ name: "cvCategoryPage", value: page + "" }], true);
   };
 
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   return (
     <>
-      {cvCategory && (<RenderCVCategoryListTable cvCategory={cvCategory} />)}
+      {cvCategory.length > 0 ? (<RenderCVCategoryListTable cvCategory={cvCategory} />) : (SkeletonTable())}
       {/* <TableContainer>
         <Table>
           <TableHead>

@@ -1,5 +1,5 @@
 "use client"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Pagination, TextField, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Pagination, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { UseGetBookingReport } from "hooks/use-get-booking-report";
 import { StaffToken } from "hooks/use-login";
 import { useRefresh } from "hooks/use-refresh";
@@ -11,35 +11,35 @@ import { RejectBookingReport } from 'package/api/booking-report/id/reject';
 import { BookingReportTableRender } from "./_component/BookingReportTable";
 import { StaffNotifyExpert } from "package/api/booking-report/id/notify-expert";
 
-const fakeBookingReportData = {
-    list: [
-        {
-            id: 1,
-            customerContent: "Khách hàng không hài lòng với dịch vụ.",
-            expertContent: "Chuyên gia đã làm hết khả năng nhưng khách hàng vẫn không hài lòng.",
-            staffNote: "Xem xét lại kỹ năng của chuyên gia.",
-            status: 1, // 1: Đã xử lý
-            bookingId: 101,
-        },
-        {
-            id: 2,
-            customerContent: "Chuyên gia không đến đúng giờ.",
-            expertContent: "Chuyên gia gặp vấn đề về giao thông, đã thông báo trễ.",
-            staffNote: "Lên lịch lại buổi phỏng vấn cho khách hàng.",
-            status: 0, // 0: Chưa xử lý
-            bookingId: 102,
-        },
-        {
-            id: 3,
-            customerContent: "Chuyên gia không cung cấp được giải pháp hữu ích.",
-            expertContent: "Chuyên gia đã cố gắng nhưng vấn đề phức tạp cần thêm thời gian.",
-            staffNote: "Cân nhắc hoàn tiền hoặc giới thiệu chuyên gia khác.",
-            status: 2, // 2: Đang xử lý
-            bookingId: 103,
-        },
-    ],
-    totalPage: 1,
-};
+// const fakeBookingReportData = {
+//     list: [
+//         {
+//             id: 1,
+//             customerContent: "Khách hàng không hài lòng với dịch vụ.",
+//             expertContent: "Chuyên gia đã làm hết khả năng nhưng khách hàng vẫn không hài lòng.",
+//             staffNote: "Xem xét lại kỹ năng của chuyên gia.",
+//             status: 1, // 1: Đã xử lý
+//             bookingId: 101,
+//         },
+//         {
+//             id: 2,
+//             customerContent: "Chuyên gia không đến đúng giờ.",
+//             expertContent: "Chuyên gia gặp vấn đề về giao thông, đã thông báo trễ.",
+//             staffNote: "Lên lịch lại buổi phỏng vấn cho khách hàng.",
+//             status: 0, // 0: Chưa xử lý
+//             bookingId: 102,
+//         },
+//         {
+//             id: 3,
+//             customerContent: "Chuyên gia không cung cấp được giải pháp hữu ích.",
+//             expertContent: "Chuyên gia đã cố gắng nhưng vấn đề phức tạp cần thêm thời gian.",
+//             staffNote: "Cân nhắc hoàn tiền hoặc giới thiệu chuyên gia khác.",
+//             status: 2, // 2: Đang xử lý
+//             bookingId: 103,
+//         },
+//     ],
+//     totalPage: 1,
+// };
 
 export default function BookingReportPage() {
     const { staffToken } = StaffToken();
@@ -111,25 +111,50 @@ export default function BookingReportPage() {
         }
     };
 
+    const SkeletonTable = () => {
+        return (
+            <TableContainer>
+                <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+                <Table sx={{ borderCollapse: 'collapse' }}>
+                    <TableHead>
+                        <TableRow>
+                            {Array.from(new Array(5)).map((_, index) => (
+                                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                                    <Skeleton variant="rectangular" />
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Array.from(new Array(5)).map((_, rowIndex) => (
+                            <TableRow key={rowIndex}>
+                                {Array.from(new Array(5)).map((_, cellIndex) => (
+                                    <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                                        <Skeleton variant="rectangular" />
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    };
+
     useEffect(() => {
         console.log("bookingReport:", bookingReport);
     }, [bookingReport]);
 
     return (
         <MainCard title="Danh sách các báo cáo buổi phỏng vấn">
-            {bookingReport ? (<BookingReportTableRender
+
+            {bookingReport.list.length > 0 ? (<BookingReportTableRender
                 bookingReport={bookingReport?.list || []}
                 handleViewDetails={(id: number) => console.log("Xem chi tiết báo cáo với ID:", id)}
                 handleNotifyExpert={(id) => handleOpenDialog(id, "notify")}
                 handleAcceptReport={(id) => handleOpenDialog(id, "accept")}
                 handleRejectReport={(id) => handleOpenDialog(id, "reject")}
-            />) : (<BookingReportTableRender
-                bookingReport={fakeBookingReportData?.list || []}
-                handleViewDetails={(id: number) => console.log("Xem chi tiết báo cáo với ID:", id)}
-                handleNotifyExpert={(id) => handleOpenDialog(id, "notify")}
-                handleAcceptReport={(id) => handleOpenDialog(id, "accept")}
-                handleRejectReport={(id) => handleOpenDialog(id, "reject")}
-            />)}
+            />) : (SkeletonTable())}
 
             {/* Dialog xác nhận hành động */}
             <Dialog open={openDialog} onClose={handleCloseDialog}>

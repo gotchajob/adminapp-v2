@@ -20,6 +20,7 @@ import { BlogList } from "package/api/blog";
 import { BlogCategory } from "package/api/blog-category";
 import { formatDate } from "package/util";
 import { RenderBlogTable } from "./BlogTable";
+import { Skeleton } from "@mui/material";
 
 export const BlogTable = ({
   blogList,
@@ -37,6 +38,37 @@ export const BlogTable = ({
   };
 
   const { blogCategoryPage } = useGetSearchParams(["blogPage"]);
+
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
 
   return (
     <>

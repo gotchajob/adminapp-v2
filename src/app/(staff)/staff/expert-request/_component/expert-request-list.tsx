@@ -27,7 +27,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { useRefresh } from "hooks/use-refresh";
 import { enqueueSnackbar } from "notistack";
-import { LoadingButton } from "@mui/lab";
+import { LoadingButton, Skeleton } from "@mui/lab";
 import { formatDate } from "package/util";
 import TextField from "@mui/material/TextField";
 import { useGetExpertRegisterRequest } from "hooks/use-get-expert-register-request";
@@ -317,16 +317,49 @@ const ExpertRequestList = () => {
       </Stack>
     );
   };
+
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   return (
     <>
-      {expertRegisterRequest && (
+      {expertRegisterRequest.length > 0 ? (
         <RendeExpertRequestTable
-          expertRegisterRequest={expertRegisterRequest || []}
+          expertRegisterRequest={expertRegisterRequest}
           handleApprove={openExpertApprove}
           handleReject={openExpertReject}
           handleSendForm={openExpertSendForm}
           handleBan={openExpertBan}
         />)
+        :
+        (SkeletonTable())
       }
 
       {/* Approve dialog */}

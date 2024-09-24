@@ -52,7 +52,7 @@ import {
   useGetSearchParams,
   useSearchParamsNavigation,
 } from "hooks/use-get-params";
-import { Switch, TablePagination } from "@mui/material";
+import { Skeleton, Switch, TablePagination } from "@mui/material";
 import { formatDate } from "package/util";
 import { RenderCVListTable } from "./CVListTable";
 
@@ -87,9 +87,39 @@ export const CVList = () => {
     page: cvTemplateListPage + 1,
   });
 
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   return (
     <>
-      {cvTemplateStaffList && (<RenderCVListTable cvTemplateStaffList={cvTemplateStaffList} cvCategory={cvCategory} />)}
+      {cvTemplateStaffList.length > 0 ? (<RenderCVListTable cvTemplateStaffList={cvTemplateStaffList} cvCategory={cvCategory} />) : (SkeletonTable())}
 
       {/* <TableContainer>
         <Table>

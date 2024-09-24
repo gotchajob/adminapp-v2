@@ -15,6 +15,7 @@ import { dispatch } from "store";
 import { openSnackbar } from "store/slices/snackbar";
 import { UserTableRender } from "./UserListTable"; // Import UserTableRender
 import type { UserList as UserListType } from "package/api/user"; // Import type
+import { Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 
 // Component UserList
 const UserList = () => {
@@ -69,6 +70,36 @@ const UserList = () => {
     );
   };
 
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   // Fetch user list on component mount
   useEffect(() => {
     FetchUserList();
@@ -77,10 +108,11 @@ const UserList = () => {
   return (
     <>
       {/* UserTableRender is integrated here */}
-      <UserTableRender
-        userList={userList}
-        handleBan={userHandle} // Handle ban/unban action
-      />
+      {userList.length > 0 ?
+        (<UserTableRender
+          userList={userList}
+          handleBan={userHandle} // Handle ban/unban action
+        />) : (SkeletonTable())}
 
       {/* Modal for Ban/Unban confirmation */}
       <Modal

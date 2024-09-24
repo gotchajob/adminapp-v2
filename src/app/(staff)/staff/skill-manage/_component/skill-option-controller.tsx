@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { Skill } from 'package/api/skill';
 import { PatchSkillOption, PostSkillOption } from 'package/api/skill-option';
@@ -104,6 +104,37 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
         }
     };
 
+    const SkeletonTable = () => {
+        return (
+            <TableContainer>
+                <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+                <Table sx={{ borderCollapse: 'collapse' }}>
+                    <TableHead>
+                        <TableRow>
+                            {Array.from(new Array(5)).map((_, index) => (
+                                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                                    <Skeleton variant="rectangular" />
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Array.from(new Array(5)).map((_, rowIndex) => (
+                            <TableRow key={rowIndex}>
+                                {Array.from(new Array(5)).map((_, cellIndex) => (
+                                    <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                                        <Skeleton variant="rectangular" />
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    };
+
+
     return (
         <MainCard
             title={
@@ -119,14 +150,14 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             }
             sx={{ mt: 3 }}>
 
-            {skillOptions && skills && (
+            {skillOptions.length > 0 && skills.length > 0 ? (
                 <RenderSkillOptionControllerTable
                     skillOptions={skillOptions}
                     skills={skills}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                 />
-            )}
+            ) : (SkeletonTable())}
 
             {/* Dialog thêm tùy chọn kĩ năng */}
             <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>

@@ -25,6 +25,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Skeleton,
 } from "@mui/material";
 import { useGetExpertFormRequire } from "hooks/use-get-expert-form-require";
 import { useRefresh } from "hooks/use-refresh";
@@ -130,6 +131,36 @@ export default function ExpertFormRequirePage() {
     }
   };
 
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   return (
     <MainCard
       title={
@@ -154,14 +185,14 @@ export default function ExpertFormRequirePage() {
         </Box>
       }
     >
-      {expertFormRequire && categories && (
+      {expertFormRequire.length > 0 && categories.length > 0 ? (
         <RenderExpertFormRequireTable
           categories={categories}
           expertFormRequire={expertFormRequire}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
         />
-      )}
+      ) : (SkeletonTable())}
 
       {/* Dialog thêm yêu cầu */}
       <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>

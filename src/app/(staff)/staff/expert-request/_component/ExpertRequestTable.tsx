@@ -90,6 +90,11 @@ export const RendeExpertRequestTable = ({
             field: 'email',
             headerName: 'Email đăng kí',
             flex: 1.5,
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </Box>
+            ),
         },
         {
             field: 'createdAt',

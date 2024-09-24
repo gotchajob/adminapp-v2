@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, TableContainer, Skeleton, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { DeleteReportSuggestById, PatchReportSuggestById } from "package/api/report-suggest/id";
 import { ReportSuggest } from "package/api/report-suggest";
 import { enqueueSnackbar } from "notistack";
@@ -64,14 +64,44 @@ export default function ReportSuggestList({ reportSuggests, refresh }: { reportS
         }
     };
 
+    const SkeletonTable = () => {
+        return (
+            <TableContainer>
+                <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+                <Table sx={{ borderCollapse: 'collapse' }}>
+                    <TableHead>
+                        <TableRow>
+                            {Array.from(new Array(5)).map((_, index) => (
+                                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                                    <Skeleton variant="rectangular" />
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Array.from(new Array(5)).map((_, rowIndex) => (
+                            <TableRow key={rowIndex}>
+                                {Array.from(new Array(5)).map((_, cellIndex) => (
+                                    <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                                        <Skeleton variant="rectangular" />
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    }
+
     return (
         <>
             {/* Render bảng đề xuất báo cáo */}
-            <ReportSuggestTableRender
+            {reportSuggests.length > 0 ? (<ReportSuggestTableRender
                 reportSuggest={reportSuggests}
                 handleDelete={(id) => handleOpenDialog(reportSuggests.find(rs => rs.id === id)!, 'delete')}
                 handleEdit={(id) => handleOpenDialog(reportSuggests.find(rs => rs.id === id)!, 'edit')}
-            />
+            />) : (SkeletonTable())}
 
             {/* Dialog dùng chung cho cả xóa và sửa */}
             <Dialog open={openDialog} onClose={handleCloseDialog}>
