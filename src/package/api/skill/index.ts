@@ -31,9 +31,9 @@ export interface PostSkillResponse {
   responseText: string;
 }
 
-export const PostSkill = async (params: PostSkillRequest): Promise<PostSkillResponse> => {
+export const PostSkill = async (params: PostSkillRequest, accessToken: string): Promise<PostSkillResponse> => {
   try {
-    const res = await apiServerFetch(`/skill`, 'POST', { categoryId: params.categoryId, name: params.name }, undefined);
+    const res = await apiServerFetch(`/skill`, 'POST', { categoryId: params.categoryId, name: params.name }, accessToken);
     return res;
   } catch (error: any) {
     return errorSystem('Lấy danh sách thất bại', "");

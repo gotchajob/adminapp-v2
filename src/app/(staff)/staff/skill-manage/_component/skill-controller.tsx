@@ -10,6 +10,7 @@ import { useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import { RenderSkillOptionControllerTable } from './SkillOptionControllerTable';
 import { RenderSkillControllerTable } from './SkilControllerTable';
+import { StaffToken } from 'hooks/use-login';
 
 interface SkillControllerPageProps {
     token: string;
@@ -25,6 +26,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [newSkill, setNewSkill] = useState<{ name: string, id: number | null, categoryId: number | null }>({ name: '', id: null, categoryId: null });
     const [selectedCategory, setSelectedCategory] = useState<number | ''>('');
+    const {staffToken} = StaffToken();
 
     const handleEdit = (skill: Skill) => {
         setSelectedSkill(skill);
@@ -45,7 +47,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
         }
 
         try {
-            const response = await PostSkill({ categoryId: selectedCategory as number, name: newSkill.name });
+            const response = await PostSkill({ categoryId: selectedCategory as number, name: newSkill.name }, staffToken);
             if (response.status === "success") {
                 refresh();
                 setOpenAddDialog(false);
