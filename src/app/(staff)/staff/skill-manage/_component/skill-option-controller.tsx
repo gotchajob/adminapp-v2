@@ -9,6 +9,7 @@ import { DeleteSkillOption } from 'package/api/skill-option/id';
 import { useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import { RenderSkillOptionControllerTable } from './SkillOptionControllerTable';
+import { StaffToken } from 'hooks/use-login';
 
 interface SkillOption {
     id: number;
@@ -30,6 +31,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [newSkillOption, setNewSkillOption] = useState<{ name: string, skillId: number | null }>({ name: '', skillId: null });
     const [selectedSkill, setSelectedSkill] = useState<number | ''>('');
+    const { staffToken } = StaffToken();
 
     const handleEdit = (skillOption: SkillOption) => {
         setSelectedSkillOption(skillOption);
@@ -49,7 +51,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             return;
         }
         try {
-            const response = await PostSkillOption({ skillId: selectedSkill as number, name: newSkillOption.name });
+            const response = await PostSkillOption({ skillId: selectedSkill as number, name: newSkillOption.name }, staffToken);
             if (response.status !== 'success') {
                 throw new Error(response.responseText || "Không thể thêm tùy chọn kỹ năng");
             }
@@ -69,7 +71,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             return;
         }
         try {
-            const response = await PatchSkillOption({ id: selectedSkillOption.id, name: newSkillOption.name });
+            const response = await PatchSkillOption({ id: selectedSkillOption.id, name: newSkillOption.name }, staffToken);
             if (response.status !== 'success') {
                 throw new Error(response.responseText || "Không thể cập nhật tùy chọn kỹ năng");
             }
@@ -90,7 +92,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             return;
         }
         try {
-            const response = await DeleteSkillOption({ id: selectedSkillOption.id });
+            const response = await DeleteSkillOption({ id: selectedSkillOption.id }, staffToken);
             if (response.status !== 'success') {
                 throw new Error(response.responseText || "Không thể xóa tùy chọn kỹ năng");
             }

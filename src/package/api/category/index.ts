@@ -29,9 +29,9 @@ export interface PostCategoryRq {
   name: string;
 }
 
-export const PostCategory = async (params: PostCategoryRq): Promise<PostCategoryRes> => {
+export const PostCategory = async (params: PostCategoryRq, accessToken: string): Promise<PostCategoryRes> => {
   try {
-    const res = await apiServerFetch('/category', 'POST', { name: params.name }, undefined);
+    const res = await apiServerFetch('/category', 'POST', { name: params.name }, accessToken);
     return res;
   } catch (error: any) {
     return errorSystem('Lấy danh sách thất bại', '');

@@ -27,6 +27,7 @@ import { DelCategory, PatchCategory } from "package/api/category/id";
 import { useState } from "react";
 import MainCard from "ui-component/cards/MainCard";
 import { RenderCategoryControllerTable } from "./CategoryControllerTable";
+import { StaffToken } from "hooks/use-login";
 
 interface Category {
   name: string;
@@ -51,6 +52,7 @@ export function CategoryControllerPage({
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "", id: 0 });
+  const { staffToken } = StaffToken();
 
   const handleEdit = (category: Category) => {
     setSelectedCategory(category);
@@ -70,7 +72,7 @@ export function CategoryControllerPage({
         return;
       }
 
-      const response = await PostCategory({ name: newCategory.name });
+      const response = await PostCategory({ name: newCategory.name }, staffToken);
       if (response.status === "success") {
         refresh();
         setOpenAddDialog(false);
@@ -92,7 +94,7 @@ export function CategoryControllerPage({
         return;
       }
 
-      const response = await PatchCategory({ id: selectedCategory.id, name: newCategory.name });
+      const response = await PatchCategory({ id: selectedCategory.id, name: newCategory.name }, staffToken);
       if (response.status === "success") {
         refresh();
         setOpenEditDialog(false);
@@ -115,7 +117,7 @@ export function CategoryControllerPage({
         return;
       }
 
-      const response = await DelCategory({ id: selectedCategory.id });
+      const response = await DelCategory({ id: selectedCategory.id }, staffToken);
       if (response.status === "success") {
         refresh();
         setOpenDeleteDialog(false);
