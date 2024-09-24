@@ -136,7 +136,7 @@ const ExpertRequestList = () => {
       }
       const action = await ExpertRegisterApproveForm(
         { id: expertApprove.id },
-        ""
+        staffToken
       );
       if (action.status === "error") {
         throw new Error("");
