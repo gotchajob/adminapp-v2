@@ -30,6 +30,13 @@ import {
   DialogContent,
   DialogTitle,
   CircularProgress,
+  TableContainer,
+  Skeleton,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import useGetUserList from "hooks/use-get-user-list";
 import { useRefresh } from "hooks/use-refresh";
@@ -109,15 +116,45 @@ const ExpertList = () => {
     }
   };
 
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   return (
     <>
-      {userList && (
+      {userList.length > 0 ? (
         <RendeExpertListTable
           expertList={userList}
-          setExpertBan={setExpertBan}     // Pass the setExpertBan function
-          setExpertUnban={setExpertUnban} // Pass the setExpertUnban function
+          setExpertBan={setExpertBan}
+          setExpertUnban={setExpertUnban}
         />
-      )}
+      ) : (SkeletonTable())}
 
       {/* Ban dialog */}
       <Dialog open={Boolean(expertBan)} maxWidth="xs" fullWidth>

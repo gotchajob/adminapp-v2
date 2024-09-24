@@ -31,9 +31,9 @@ export interface PostSkillResponse {
   responseText: string;
 }
 
-export const PostSkill = async (params: PostSkillRequest): Promise<PostSkillResponse> => {
+export const PostSkill = async (params: PostSkillRequest, accessToken: string): Promise<PostSkillResponse> => {
   try {
-    const res = await apiServerFetch(`/skill`, 'POST', { categoryId: params.categoryId, name: params.name }, undefined);
+    const res = await apiServerFetch(`/skill`, 'POST', { categoryId: params.categoryId, name: params.name }, accessToken);
     return res;
   } catch (error: any) {
     return errorSystem('Lấy danh sách thất bại', "");
@@ -50,9 +50,9 @@ export interface PatchSkillResponse {
   responseText: string;
 }
 
-export const PatchSkill = async (params: PatchSkillRequest): Promise<PatchSkillResponse> => {
+export const PatchSkill = async (params: PatchSkillRequest, accessToken: string): Promise<PatchSkillResponse> => {
   try {
-    const res = await apiServerFetch(`/skill/${params.id}`, 'PATCH', { skillName: params.skillName }, undefined);
+    const res = await apiServerFetch(`/skill/${params.id}`, 'PATCH', { skillName: params.skillName }, accessToken);
     return res;
   } catch (error: any) {
     return errorSystem('Lấy danh sách thất bại', "");

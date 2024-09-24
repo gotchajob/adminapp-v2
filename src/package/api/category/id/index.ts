@@ -9,9 +9,9 @@ export interface DelCategoryRq {
     id: number;
 }
 
-export const DelCategory = async (params: DelCategoryRq): Promise<DelCategoryRes> => {
+export const DelCategory = async (params: DelCategoryRq, accessToken: string): Promise<DelCategoryRes> => {
     try {
-        const res = await apiServerFetch(`/category/${params.id}`, 'DELETE', undefined, undefined);
+        const res = await apiServerFetch(`/category/${params.id}`, 'DELETE', undefined, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', '');
@@ -28,9 +28,9 @@ export interface PatchCategoryRq {
     name: string;
 }
 
-export const PatchCategory = async (params: PatchCategoryRq): Promise<PatchCategoryRes> => {
+export const PatchCategory = async (params: PatchCategoryRq, accessToken: string): Promise<PatchCategoryRes> => {
     try {
-        const res = await apiServerFetch(`/category/${params.id}`, 'PATCH', { name: params.name }, undefined);
+        const res = await apiServerFetch(`/category/${params.id}`, 'PATCH', { name: params.name }, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', '');

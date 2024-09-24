@@ -34,6 +34,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
@@ -123,6 +130,7 @@ const UserPage = () => {
       );
     }
   };
+
   return (
     <Stack spacing={3}>
       <MainCard
@@ -151,7 +159,7 @@ const UserPage = () => {
       >
 
         {/* Data Table */}
-        <CVCategoryList refreshTime={refreshTime} />
+        <CVCategoryList refreshTime={refreshTime} /> 
 
         <Dialog open={openCreateNewCategory} maxWidth="sm" fullWidth>
           <form onSubmit={handleSubmit}>

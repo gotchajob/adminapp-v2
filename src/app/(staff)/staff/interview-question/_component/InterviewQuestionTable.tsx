@@ -8,7 +8,7 @@ import { useGetFilter } from 'components/common/filter-table/hook-filter';
 import { BookingCustomerFeedbackQuestion } from "package/api/booking-customer-feedback-question";
 import { useMemo } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
-import { IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -32,7 +32,13 @@ export const InterviewQuestionTableRender = ({
     setOpenAddDialog: (open: boolean) => void
 }) => {
     const columns: GridColDef[] = [
-        { field: 'question', headerName: 'Câu hỏi', flex: 1 },
+        {
+            field: 'question', headerName: 'Câu hỏi', flex: 2, renderCell: (params) => (
+                <Box sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                    {params.value}
+                </Box>
+            )
+        },
         {
             field: 'type',
             headerName: 'Kiểu câu hỏi',
@@ -50,12 +56,12 @@ export const InterviewQuestionTableRender = ({
                 <>
                     <Tooltip title="Sửa">
                         <IconButton onClick={() => handleEdit(params.row.id)}>
-                            <EditIcon sx={{ fontSize: 16 }} />
+                            <EditIcon  />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Xóa">
                         <IconButton onClick={() => handleDelete(params.row.id)}>
-                            <DeleteIcon sx={{ fontSize: 16 }} />
+                            <DeleteIcon />
                         </IconButton>
                     </Tooltip>
                 </>

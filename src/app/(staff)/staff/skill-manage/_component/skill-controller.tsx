@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { Category } from 'package/api/category';
 import { PatchSkill, PostSkill, Skill } from 'package/api/skill';
@@ -10,6 +10,7 @@ import { useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import { RenderSkillOptionControllerTable } from './SkillOptionControllerTable';
 import { RenderSkillControllerTable } from './SkilControllerTable';
+import { StaffToken } from 'hooks/use-login';
 
 interface SkillControllerPageProps {
     token: string;
@@ -25,6 +26,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [newSkill, setNewSkill] = useState<{ name: string, id: number | null, categoryId: number | null }>({ name: '', id: null, categoryId: null });
     const [selectedCategory, setSelectedCategory] = useState<number | ''>('');
+    const { staffToken } = StaffToken();
 
     const handleEdit = (skill: Skill) => {
         setSelectedSkill(skill);
@@ -45,7 +47,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
         }
 
         try {
-            const response = await PostSkill({ categoryId: selectedCategory as number, name: newSkill.name });
+            const response = await PostSkill({ categoryId: selectedCategory as number, name: newSkill.name }, staffToken);
             if (response.status === "success") {
                 refresh();
                 setOpenAddDialog(false);
@@ -67,7 +69,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
         }
 
         try {
-            const response = await PatchSkill({ id: selectedSkill.id, skillName: newSkill.name });
+            const response = await PatchSkill({ id: selectedSkill.id, skillName: newSkill.name }, staffToken);
             if (response.status === "success") {
                 refresh();
                 setOpenEditDialog(false);
@@ -90,7 +92,7 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
         }
 
         try {
-            const response = await DelSkill({ id: selectedSkill.id });
+            const response = await DelSkill({ id: selectedSkill.id }, staffToken);
             if (response.status === "success") {
                 refresh();
                 setOpenDeleteDialog(false);
@@ -103,6 +105,36 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
             console.error("Error deleting skill:", error);
             enqueueSnackbar(error.responseText || "Xóa kĩ năng thất bại", { variant: "error" });
         }
+    };
+
+    const SkeletonTable = () => {
+        return (
+            <TableContainer>
+                <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+                <Table sx={{ borderCollapse: 'collapse' }}>
+                    <TableHead>
+                        <TableRow>
+                            {Array.from(new Array(5)).map((_, index) => (
+                                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                                    <Skeleton variant="rectangular" />
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Array.from(new Array(5)).map((_, rowIndex) => (
+                            <TableRow key={rowIndex}>
+                                {Array.from(new Array(5)).map((_, cellIndex) => (
+                                    <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                                        <Skeleton variant="rectangular" />
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
     };
 
     return (
@@ -120,14 +152,14 @@ export function SkillControllerPage({ token, skills, refresh, category }: SkillC
             }
             sx={{ mt: 3 }}>
 
-            {skills && category && (
+            {skills.length > 0 ? category.length > 0 && (
                 <RenderSkillControllerTable
                     skills={skills}
                     category={category}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                 />
-            )}
+            ) : (SkeletonTable())}
 
             {/* Dialog thêm kĩ năng */}
             <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>

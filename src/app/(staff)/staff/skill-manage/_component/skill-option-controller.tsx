@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import { Skill } from 'package/api/skill';
 import { PatchSkillOption, PostSkillOption } from 'package/api/skill-option';
@@ -9,6 +9,7 @@ import { DeleteSkillOption } from 'package/api/skill-option/id';
 import { useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import { RenderSkillOptionControllerTable } from './SkillOptionControllerTable';
+import { StaffToken } from 'hooks/use-login';
 
 interface SkillOption {
     id: number;
@@ -30,6 +31,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [newSkillOption, setNewSkillOption] = useState<{ name: string, skillId: number | null }>({ name: '', skillId: null });
     const [selectedSkill, setSelectedSkill] = useState<number | ''>('');
+    const { staffToken } = StaffToken();
 
     const handleEdit = (skillOption: SkillOption) => {
         setSelectedSkillOption(skillOption);
@@ -49,7 +51,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             return;
         }
         try {
-            const response = await PostSkillOption({ skillId: selectedSkill as number, name: newSkillOption.name });
+            const response = await PostSkillOption({ skillId: selectedSkill as number, name: newSkillOption.name }, staffToken);
             if (response.status !== 'success') {
                 throw new Error(response.responseText || "Không thể thêm tùy chọn kỹ năng");
             }
@@ -69,7 +71,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             return;
         }
         try {
-            const response = await PatchSkillOption({ id: selectedSkillOption.id, name: newSkillOption.name });
+            const response = await PatchSkillOption({ id: selectedSkillOption.id, name: newSkillOption.name }, staffToken);
             if (response.status !== 'success') {
                 throw new Error(response.responseText || "Không thể cập nhật tùy chọn kỹ năng");
             }
@@ -90,7 +92,7 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             return;
         }
         try {
-            const response = await DeleteSkillOption({ id: selectedSkillOption.id });
+            const response = await DeleteSkillOption({ id: selectedSkillOption.id }, staffToken);
             if (response.status !== 'success') {
                 throw new Error(response.responseText || "Không thể xóa tùy chọn kỹ năng");
             }
@@ -103,6 +105,37 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             enqueueSnackbar(error.responseText || "Lỗi khi xóa tùy chọn kỹ năng", { variant: "error" });
         }
     };
+
+    const SkeletonTable = () => {
+        return (
+            <TableContainer>
+                <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+                <Table sx={{ borderCollapse: 'collapse' }}>
+                    <TableHead>
+                        <TableRow>
+                            {Array.from(new Array(5)).map((_, index) => (
+                                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                                    <Skeleton variant="rectangular" />
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Array.from(new Array(5)).map((_, rowIndex) => (
+                            <TableRow key={rowIndex}>
+                                {Array.from(new Array(5)).map((_, cellIndex) => (
+                                    <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                                        <Skeleton variant="rectangular" />
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    };
+
 
     return (
         <MainCard
@@ -119,14 +152,14 @@ export function SkillOptionControllerPage({ token, skillOptions, refresh, skills
             }
             sx={{ mt: 3 }}>
 
-            {skillOptions && skills && (
+            {skillOptions.length > 0 && skills.length > 0 ? (
                 <RenderSkillOptionControllerTable
                     skillOptions={skillOptions}
                     skills={skills}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
                 />
-            )}
+            ) : (SkeletonTable())}
 
             {/* Dialog thêm tùy chọn kĩ năng */}
             <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>

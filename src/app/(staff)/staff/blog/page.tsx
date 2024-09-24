@@ -14,6 +14,7 @@ import Stack from "@mui/material/Stack";
 import { BlogTable } from "./_component/blog-table";
 import { useGetBlogs } from "hooks/use-get-blog";
 import { StyledLink } from "components/common/link/styled-link";
+import { Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 
 export default function Page() {
   const { blogCategoryPage } = useGetSearchParams(["blogCategoryPage"]);
@@ -32,6 +33,37 @@ export default function Page() {
     { pageNumber: 1, pageSize: 10 },
     refreshTime
   );
+
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   return (
     <Stack spacing={3}>
       <MainCard
@@ -44,7 +76,7 @@ export default function Page() {
           </FlexBetween>
         }
       >
-        <BlogCategoryTable blogCategoryList={blogCategory} />
+        {blogCategory.length > 0 ? (<BlogCategoryTable blogCategoryList={blogCategory} />) : (SkeletonTable())}
         <CreateBlogCategoryPopup
           refresh={refresh}
           open={openCreateBlogCategory}
@@ -61,11 +93,11 @@ export default function Page() {
           </FlexBetween>
         }
       >
-        <BlogTable
+        {blogList.length > 0 ? (<BlogTable
           blogList={blogList}
           totalPage={totalPage}
           blogCategoryList={blogCategory}
-        />
+        />) : (SkeletonTable())}
       </MainCard>
     </Stack>
   );

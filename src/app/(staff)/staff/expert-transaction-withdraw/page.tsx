@@ -2,7 +2,7 @@
 
 import BeenhereIcon from '@mui/icons-material/Beenhere';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-import { Box, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip } from "@mui/material";
+import { Box, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Pagination, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip } from "@mui/material";
 import { useGetTransaction } from 'hooks/use-get-transaction';
 import { useGetTransactionType } from 'hooks/use-get-transaction-type';
 import { StaffToken } from "hooks/use-login";
@@ -120,6 +120,36 @@ export default function ExpertTransactionWithDraw() {
         }
     };
 
+    const SkeletonTable = () => {
+        return (
+            <TableContainer>
+                <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+                <Table sx={{ borderCollapse: 'collapse' }}>
+                    <TableHead>
+                        <TableRow>
+                            {Array.from(new Array(5)).map((_, index) => (
+                                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                                    <Skeleton variant="rectangular" />
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Array.from(new Array(5)).map((_, rowIndex) => (
+                            <TableRow key={rowIndex}>
+                                {Array.from(new Array(5)).map((_, cellIndex) => (
+                                    <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                                        <Skeleton variant="rectangular" />
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    };
+
     useEffect(() => {
         if (transaction && transaction.totalPage) {
             setTotalPage(transaction.totalPage);
@@ -128,15 +158,29 @@ export default function ExpertTransactionWithDraw() {
 
     return (
         <MainCard title="Danh sách yêu cầu rút tiền của chuyên gia">
-            {transaction && transactionType && (
+
+            {transaction.list.length > 0 && transactionType.length > 0 ? (
                 <RenderExpertTransactionWithDrawTable
                     transaction={transaction.list}
                     transactionType={transactionType}
                     handleApprove={handleApprove}
                     handleReject={handleReject}
                 />
+            ) : (
+                transaction.list.length === 0 ? (
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell align="center">Chưa có dữ liệu</TableCell>
+                                </TableRow>
+                            </TableHead>
+                        </Table>
+                    </TableContainer>
+                ) : (
+                    SkeletonTable()
+                )
             )}
-
 
             {/* Dialog Duyệt giao dịch */}
             <Dialog open={dialogState.isApproveDialogOpen} onClose={closeDialog}>

@@ -10,6 +10,7 @@ import {
   DialogTitle,
   IconButton,
   Paper,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -26,6 +27,7 @@ import { DelCategory, PatchCategory } from "package/api/category/id";
 import { useState } from "react";
 import MainCard from "ui-component/cards/MainCard";
 import { RenderCategoryControllerTable } from "./CategoryControllerTable";
+import { StaffToken } from "hooks/use-login";
 
 interface Category {
   name: string;
@@ -50,6 +52,7 @@ export function CategoryControllerPage({
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "", id: 0 });
+  const { staffToken } = StaffToken();
 
   const handleEdit = (category: Category) => {
     setSelectedCategory(category);
@@ -69,7 +72,7 @@ export function CategoryControllerPage({
         return;
       }
 
-      const response = await PostCategory({ name: newCategory.name });
+      const response = await PostCategory({ name: newCategory.name }, staffToken);
       if (response.status === "success") {
         refresh();
         setOpenAddDialog(false);
@@ -91,7 +94,7 @@ export function CategoryControllerPage({
         return;
       }
 
-      const response = await PatchCategory({ id: selectedCategory.id, name: newCategory.name });
+      const response = await PatchCategory({ id: selectedCategory.id, name: newCategory.name }, staffToken);
       if (response.status === "success") {
         refresh();
         setOpenEditDialog(false);
@@ -114,7 +117,7 @@ export function CategoryControllerPage({
         return;
       }
 
-      const response = await DelCategory({ id: selectedCategory.id });
+      const response = await DelCategory({ id: selectedCategory.id }, staffToken);
       if (response.status === "success") {
         refresh();
         setOpenDeleteDialog(false);
@@ -127,6 +130,36 @@ export function CategoryControllerPage({
       console.error("Error deleting category:", error);
       enqueueSnackbar(error.responseText || "Xóa danh mục thất bại", { variant: "error" });
     }
+  };
+
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
   };
 
   return (
@@ -152,16 +185,15 @@ export function CategoryControllerPage({
           </Button>
         </Box>
       }
-      sx={{ mt: 3 }}
     >
 
-      {category && (
+      {category.length > 0 ? (
         <RenderCategoryControllerTable
           category={category}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
         />
-      )}
+      ) : (SkeletonTable())}
 
       {/* Dialog thêm danh mục */}
       <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)}>

@@ -28,22 +28,37 @@ export const RendeExpertListTable = ({
         {
             field: 'id',
             headerName: 'Mã chuyên gia',
-            flex: 1,
+            flex: 0.7,
         },
         {
             field: 'fullName',
             headerName: 'Tên',
             flex: 1,
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                    {params.value}
+                </Box>
+            ),
         },
         {
             field: 'email',
             headerName: 'Email',
-            flex: 1,
+            flex: 1.5,
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                    {params.value}
+                </Box>
+            ),
         },
         {
             field: 'phone',
             headerName: 'Số điện thoại',
             flex: 1,
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                    {params.value}
+                </Box>
+            ),
         },
         {
             field: 'createdAt',
@@ -97,7 +112,15 @@ export const RendeExpertListTable = ({
 
     const filteredData = useMemo(() => {
         const lowerCaseText = text.toLowerCase();
-        return expertList.filter((expert) =>
+        return expertList.sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            if (dateA < dateB) {
+                return 1
+            } else {
+                return -1;
+            }
+        }).filter((expert) =>
             expert.id.toString().includes(lowerCaseText) ||
             expert.fullName.toLowerCase().includes(lowerCaseText) ||
             expert.email.toLowerCase().includes(lowerCaseText) ||

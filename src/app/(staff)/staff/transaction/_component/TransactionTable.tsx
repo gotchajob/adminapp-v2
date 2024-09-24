@@ -77,7 +77,7 @@ export const TransactionTableRender = ({
             headerName: 'Số tiền',
             flex: 1,
             renderCell: (params) => (
-                <Box sx={{ maxWidth: 300, wordWrap: 'break-word', whiteSpace: 'normal' }}>
+                <Box sx={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>
                     {formatCurrency(params.value)}
                 </Box>
             ),
@@ -92,6 +92,10 @@ export const TransactionTableRender = ({
             field: 'description',
             headerName: 'Mô tả',
             flex: 2,
+            renderCell: (params) => (
+                <Box sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                    {params.value}
+                </Box>),
         },
         {
             field: 'createdAt',
@@ -109,7 +113,15 @@ export const TransactionTableRender = ({
 
     const filteredData = useMemo(() => {
         const lowerCaseText = text.toLowerCase();
-        return transactionList.filter((transaction) =>
+        return transactionList.sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            if (dateA < dateB) {
+                return 1
+            } else {
+                return -1;
+            }
+        }).filter((transaction) =>
             transaction.id.toString().includes(lowerCaseText) ||
             transaction.amount.toString().includes(lowerCaseText) ||
             transactionType(transaction.typeId).props.label.toLowerCase().includes(lowerCaseText) ||

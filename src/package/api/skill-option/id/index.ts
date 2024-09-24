@@ -9,9 +9,9 @@ export interface DeleteSkillOptionResponse {
     responseText: string;
 }
 
-export const DeleteSkillOption = async (params: DeleteSkillOptionRequest): Promise<DeleteSkillOptionResponse> => {
+export const DeleteSkillOption = async (params: DeleteSkillOptionRequest, accessToken: string): Promise<DeleteSkillOptionResponse> => {
     try {
-        const res = await apiServerFetch(`/skill-option/${params.id}`, 'DELETE', undefined, undefined);
+        const res = await apiServerFetch(`/skill-option/${params.id}`, 'DELETE', undefined, accessToken);
         return res;
     } catch (error: any) {
         return errorSystem('Lấy danh sách thất bại', "");

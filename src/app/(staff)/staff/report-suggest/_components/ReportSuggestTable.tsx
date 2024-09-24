@@ -7,7 +7,7 @@ import { DataGridTable, DataGridTableProps } from 'components/common/filter-tabl
 import { useGetFilter } from 'components/common/filter-table/hook-filter';
 import { useMemo } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
-import { IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ReportSuggest } from 'package/api/report-suggest';
@@ -22,8 +22,20 @@ export const ReportSuggestTableRender = ({
     handleEdit: (id: number) => void,
 }) => {
     const columns: GridColDef[] = [
-        { field: 'report', headerName: 'Đề xuất Báo cáo', flex: 1 },
-        { field: 'description', headerName: 'Mô tả', flex: 1 },
+        {
+            field: 'report', headerName: 'Đề xuất Báo cáo', flex: 2, renderCell: (params) => (
+                <Box sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                    {params.value}
+                </Box>
+            )
+        },
+        {
+            field: 'description', headerName: 'Mô tả', flex: 2, renderCell: (params) => (
+                <Box sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                    {params.value}
+                </Box>
+            )
+        },
         {
             field: 'actions',
             headerName: 'Quản lý',
@@ -32,12 +44,12 @@ export const ReportSuggestTableRender = ({
                 <>
                     <Tooltip title="Sửa">
                         <IconButton onClick={() => handleEdit(params.row.id)}>
-                            <EditIcon sx={{ fontSize: 16 }} />
+                            <EditIcon />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Xóa">
                         <IconButton onClick={() => handleDelete(params.row.id)}>
-                            <DeleteIcon sx={{ fontSize: 16 }} />
+                            <DeleteIcon />
                         </IconButton>
                     </Tooltip>
                 </>
