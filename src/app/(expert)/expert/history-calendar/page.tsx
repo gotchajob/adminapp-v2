@@ -1,25 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
-import MainCard from "ui-component/cards/MainCard";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField
 } from "@mui/material";
-import { BookingCurrent } from "package/api/booking/expert/current";
-import CalendarHistoryPage from "./_component/CalendarHistory";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import { useGetBookingCurrent } from "hooks/use-get-booking";
 import { ExpertToken } from "hooks/use-login";
 import { useRefresh } from "hooks/use-refresh";
 import { useRouter } from "next/navigation";
 import { PatchBookingAccept } from "package/api/booking/id/accept";
 import { PatchBookingReject } from "package/api/booking/id/reject";
+import { useEffect, useState } from "react";
+import MainCard from "ui-component/cards/MainCard";
 import { RenderHistoryBookingTable } from "./_component/table";
 
 interface ParamsType {
@@ -91,11 +96,42 @@ const ExpertBookingPage = ({ params }: { params: ParamsType }) => {
     console.log("booking:", bookings);
   }, [bookings]);
 
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
+  useEffect(() => { console.log("bookings", bookings) }, [bookings])
 
   return (
     <>
       <MainCard title="Danh sách các báo cáo buổi phỏng vấn">
-        {bookings &&
+        {bookings ?
           (<RenderHistoryBookingTable
             bookings={bookings.filter(
               (row) =>
@@ -104,7 +140,7 @@ const ExpertBookingPage = ({ params }: { params: ParamsType }) => {
                 row.status == 6 ||
                 row.status == 7 ||
                 row.status == 8
-            )} handleOpenDialog={handleOpenDialog} />)}
+            )} handleOpenDialog={handleOpenDialog} />) : (SkeletonTable())}
         {/* //   :
         //   (<RenderHistoryBookingTable
         //     bookings={fakeBookingCurrentData.filter(

@@ -17,6 +17,7 @@ import * as yup from 'yup';
 import { enqueueSnackbar } from 'notistack';
 import { ExpertToken, StaffToken } from 'hooks/use-login';
 import { UserChangePassword } from 'package/api/user/change-password';
+import { LoadingButton } from '@mui/lab';
 
 // Validation schema
 const validationSchema = yup.object().shape({
@@ -39,6 +40,7 @@ const ChangePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
@@ -48,6 +50,7 @@ const ChangePassword = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
+      setLoading(true);
       try {
         const res = await UserChangePassword(
           {
@@ -65,6 +68,8 @@ const ChangePassword = () => {
       } catch (error) {
         enqueueSnackbar('Lỗi hệ thống xảy ra khi đổi mật khẩu.', { variant: 'error' });
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -154,14 +159,14 @@ const ChangePassword = () => {
             <Grid container justifyContent="flex-end" spacing={2} sx={{ mt: 3 }}>
               <Grid item>
                 <AnimateButton>
-                  <Button variant="contained" type="submit">
+                  <LoadingButton variant="contained" type="submit" loading={loading}>
                     Đổi mật khẩu
-                  </Button>
+                  </LoadingButton>
                 </AnimateButton>
               </Grid>
               <Grid item>
-                <Button sx={{ color: 'error.main' }} onClick={() => formik.resetForm()}>
-                  Clear
+                <Button sx={{ color: 'info' }} onClick={() => formik.resetForm()}>
+                  Bỏ thay đổi
                 </Button>
               </Grid>
             </Grid>

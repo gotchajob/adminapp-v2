@@ -11,6 +11,7 @@ import { useGetFilter } from 'components/common/filter-table/hook-filter';
 import { FlexBox } from 'components/common/box/flex-box';
 import { enqueueSnackbar } from 'notistack';
 import { PatchExpertQuestionCategoryById } from 'package/api/expert-question-category/id';
+import { LoadingButton } from '@mui/lab';
 
 export const CategoryTable = ({ refresh, refreshTime, token }: { refresh: () => void; refreshTime: number; token: string; }) => {
     const { expertQuestionCategoryCurrent } = UseGetExpertQuestionCategoryCurrent(token, refreshTime);
@@ -19,12 +20,14 @@ export const CategoryTable = ({ refresh, refreshTime, token }: { refresh: () => 
     const [editMode, setEditMode] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<any | null>(null);
     const [newCategory, setNewCategory] = useState({ category: '', description: '' });
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleStatusChange = (categoryId: number) => {
         setCategoryStatus(prev => ({ ...prev, [categoryId]: !prev[categoryId] }));
     };
 
     const handleAddCategory = async () => {
+        setLoading(true);
         try {
             if (newCategory.category === "" || newCategory.description === "") return;
 
@@ -53,6 +56,8 @@ export const CategoryTable = ({ refresh, refreshTime, token }: { refresh: () => 
             setNewCategory({ category: '', description: '' });
         } catch (error) {
             enqueueSnackbar('Lỗi trong quá trình xử lý', { variant: 'error' });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -145,7 +150,7 @@ export const CategoryTable = ({ refresh, refreshTime, token }: { refresh: () => 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenAddDialog(false)} color="primary">Đóng</Button>
-                    <Button onClick={handleAddCategory} color="primary">{editMode ? "Cập nhật" : "Thêm"}</Button>
+                    <LoadingButton onClick={handleAddCategory} color="primary" loading={loading}>{editMode ? "Cập nhật" : "Thêm"}</LoadingButton>
                 </DialogActions>
             </Dialog>
         </>

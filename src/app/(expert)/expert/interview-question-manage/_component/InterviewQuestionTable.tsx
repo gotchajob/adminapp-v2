@@ -14,6 +14,7 @@ import { PostBookingExpertFeedbackQuestion } from 'package/api/booking-expert-fe
 import { enqueueSnackbar } from 'notistack';
 import { FlexBox } from 'components/common/box/flex-box';
 import { useGetFilter } from 'components/common/filter-table/hook-filter';
+import { LoadingButton } from '@mui/lab';
 
 export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refresh: () => void; refreshTime: number; token: string; }) => {
     const { bookingExpertFeedbackQuestion } = UseGetBookingExpertFeedbackQuestionCurrent(token, refreshTime);
@@ -23,9 +24,11 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
     const [selectedQuestion, setSelectedQuestion] = useState<any | null>(null);
     const [editMode, setEditMode] = useState(false);
     const [questionData, setQuestionData] = useState<{ question: string, type: string, categoryId: number }>({ question: '', type: '', categoryId: 0 });
+    const [loading, setLoading] = useState<boolean>(false);
 
     // Hàm xử lý lưu câu hỏi (thêm hoặc chỉnh sửa)
     const handleSaveQuestion = async () => {
+        setLoading(true);
         try {
             if (questionData.question === "" || questionData.type === "" || questionData.categoryId === 0) return;
 
@@ -54,10 +57,13 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
             resetDialog();
         } catch (error) {
             enqueueSnackbar('Lỗi trong quá trình xử lý', { variant: 'error' });
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleDeleteQuestion = async () => {
+        setLoading(true);
         try {
             if (selectedQuestion) {
                 const res = await DelBookingExpertFeedbackQuestionById({ id: selectedQuestion.id }, token);
@@ -71,6 +77,8 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
             setOpenDeleteDialog(false);
         } catch (error) {
             enqueueSnackbar('Lỗi trong quá trình xóa câu hỏi', { variant: 'error' });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -94,7 +102,7 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
 
     const columns: GridColDef[] = [
         { field: 'question', headerName: 'Câu hỏi', flex: 1 },
-        { field: 'type', headerName: 'Kiểu câu hỏi', flex: 1 },
+        { field: 'type', headerName: 'Kiểu câu hỏi', flex: 1, renderCell: (params) => (<Typography>{expertTypeInputList?.find(type => type.name === params.value)?.description}</Typography>) },
         { field: 'category', headerName: 'Danh mục', flex: 1 },
         {
             field: 'actions',
@@ -218,9 +226,9 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
                     <Button onClick={resetDialog} color="primary">
                         Đóng
                     </Button>
-                    <Button onClick={handleSaveQuestion} color="primary">
+                    <LoadingButton onClick={handleSaveQuestion} color="primary" loading={loading}>
                         {editMode ? "Cập nhật" : "Thêm"}
-                    </Button>
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
 
@@ -248,9 +256,9 @@ export const InterviewQuestionTable = ({ refresh, refreshTime, token }: { refres
                     <Button onClick={() => setOpenDeleteDialog(false)} color="primary">
                         Đóng
                     </Button>
-                    <Button onClick={handleDeleteQuestion} color="primary" autoFocus>
+                    <LoadingButton onClick={handleDeleteQuestion} color="primary" autoFocus loading={loading}>
                         Xóa
-                    </Button>
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
         </>

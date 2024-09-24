@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Avatar, Box, Button, ButtonBase, CardMedia, CircularProgress, Grid, Rating, Skeleton, Switch, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, ButtonBase, CardMedia, CircularProgress, Grid, Rating, Skeleton, Switch, TextField, Tooltip, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import SubCard from 'ui-component/cards/SubCard';
 import { gridSpacing } from 'store/constant';
@@ -26,6 +26,7 @@ import { useGetExpertSkillOptions, useGetExpertSkillOptionsCurrent } from 'hooks
 import { useRefresh } from 'hooks/use-refresh';
 import { PatchExpertSkillOptonHidden, PatchExpertSkillOptonShow } from 'package/api/expert-skill-option/id';
 import { ExpertSkillOptionCurrent } from 'package/api/expert-skill-option/current';
+import { LoadingButton } from '@mui/lab';
 
 const Cover = '/assets/images/profile/img-profile-bg.png';
 
@@ -42,6 +43,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   const { districtOptions } = useGetDistrict(provinceCode);
   const { wardOptions } = useGetWard(districtCode);
   const { countries } = useGetCountry();
+  const [loading, setLoading] = useState(false);
 
   const [initialData, setInitialData] = useState({
     address: expert?.address || '',
@@ -77,15 +79,16 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
     email: '',
     phone: '',
     address: '',
+    experience: '',
   });
 
   const validateForm = () => {
-    let tempErrors = { firstName: '', lastName: '', email: '', phone: '', address: '' };
+    let tempErrors = { firstName: '', lastName: '', email: '', phone: '', address: '', experience: '' };
     let isValid = true;
 
     const nameRegex = /^[A-Za-zÀ-ỹ\s]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10,15}$/;
+    const phoneRegex = /^[0-9]{0,15}$/;
 
     // Kiểm tra tên
     if (!formData.firstName) {
@@ -131,7 +134,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
       tempErrors.phone = 'Số điện thoại chỉ được chứa số';
       isValid = false;
     } else if (!phoneRegex.test(formData.phone)) {
-      tempErrors.phone = 'Số điện thoại phải có 10-15 số';
+      tempErrors.phone = 'Số điện thoại dài tối đa 15 số';
       isValid = false;
     }
 
@@ -144,6 +147,15 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
       isValid = false;
     } else if (formData.address.length > 100) {
       tempErrors.address = 'Địa chỉ quá dài, tối đa 100 ký tự';
+      isValid = false;
+    }
+
+    // Kiểm tra kinh nghiệm
+    if (!formData.experience) {
+      tempErrors.experience = 'Kinh nghiệm không được để trống';
+      isValid = false;
+    } else if (isNaN(Number(formData.experience)) || Number(formData.experience) <= 0) {
+      tempErrors.experience = 'Kinh nghiệm phải là số lớn hơn 0';
       isValid = false;
     }
 
@@ -203,6 +215,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
       enqueueSnackbar('Vui lòng sửa các lỗi trong biểu mẫu', { variant: 'error' });
       return;
     }
+    setLoading(true);
     try {
       const updatedData = {
         emailContact: formData.email,
@@ -231,6 +244,8 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Có lỗi xảy ra!', { variant: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -411,6 +426,8 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   label="Kinh nghiệm (năm)"
                   value={formData.experience}
                   onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                  error={!!errors.experience}
+                  helperText={errors.experience}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -613,33 +630,39 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
         expertSkillOptionsCurrent.map((skillOption: ExpertSkillOptionCurrent, index) => {
           return (
             <Grid item xs={4} key={index}>
-              <SubCard
-                title={
-                  <FlexBetween>
-                    <Typography color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>{skillOption.skillOptionName}</Typography>
-                    <Switch
-                      checked={skillOption.status === 1}
-                      onChange={() => handleToggle(skillOption.id, skillOption.status)}
-                      color="primary"
-                    />
-                  </FlexBetween>
-                }
+              <StyledLink
+                href={`/expert/skill-feedback/${skillOption.skillOptionName}/${skillOption.id}`}
               >
-                <FlexBetween>
-                  <Rating
-                    value={skillOption.sumPoint}
-                    size="small"
-                    readOnly
-                    disabled={skillOption.status === 1}
-                  />
-                  <Text fontSize={13} color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>
-                    <span style={{ fontWeight: "bold" }}>
-                      {skillOption.totalRating}
-                    </span>{" "}
-                    lượt đánh giá
-                  </Text>
-                </FlexBetween>
-              </SubCard>
+                <SubCard
+                  title={
+                    <FlexBetween>
+                      <Tooltip title="Nhấn vào để xem đánh giá kỹ năng">
+                        <Typography color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>{skillOption.skillOptionName}</Typography>
+                      </Tooltip>
+                      <Switch
+                        checked={skillOption.status === 1}
+                        onChange={() => handleToggle(skillOption.id, skillOption.status)}
+                        color="primary"
+                      />
+                    </FlexBetween>
+                  }
+                >
+                  <FlexBetween>
+                    <Rating
+                      value={skillOption.sumPoint}
+                      size="small"
+                      readOnly
+                      disabled={skillOption.status === 1}
+                    />
+                    <Text fontSize={13} color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>
+                      <span style={{ fontWeight: "bold" }}>
+                        {skillOption.totalRating}
+                      </span>{" "}
+                      lượt đánh giá
+                    </Text>
+                  </FlexBetween>
+                </SubCard>
+              </StyledLink>
             </Grid>
           );
         })
@@ -651,11 +674,15 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
         </Grid>
       )}
       <Grid item xs={12} sx={{ textAlign: 'right' }}>
-        <Button variant="contained" onClick={handleUpdate}>
+        <LoadingButton
+          variant="contained"
+          onClick={handleUpdate}
+          loading={loading}
+        >
           Cập nhật
-        </Button>
+        </LoadingButton>
       </Grid>
-    </Grid>
+    </Grid >
   );
 };
 

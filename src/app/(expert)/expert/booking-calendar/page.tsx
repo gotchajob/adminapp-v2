@@ -6,6 +6,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
@@ -97,6 +104,36 @@ const ExpertBookingPage = ({ params }: { params: ParamsType }) => {
     handleCloseDialog();
   };
 
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   return (
     <MainCard title="Danh sách khách hàng đặt lịch phỏng vấn">
       <Typography
@@ -107,14 +144,14 @@ const ExpertBookingPage = ({ params }: { params: ParamsType }) => {
         Bạn chỉ có thể từ chối những buổi đặt lịch từ khách hàng cách{" "}
         {policyById.value} phút hiện tại.
       </Typography>
-      {bookings && (
+      {bookings ? (
         <RenderCustomerBookingsTable
           bookings={bookings.filter(
             (row) =>
               row.status == 1 || row.status == 2 || row.status == 3
           )}
           handleOpenDialog={handleOpenDialog}
-        />)}
+        />) : (SkeletonTable())}
 
       {/* <RenderCustomerBookingsTable
         //     bookings={fakeBookingCurrentData.filter(
