@@ -403,7 +403,6 @@ const SkillOptionInput = ({
     <Autocomplete
       size="small"
       multiple
-      sx={{ ".MuiInputBase-root": { height: 40 } }}
       options={skillOptions}
       getOptionLabel={(option) => option.name}
       filterSelectedOptions
