@@ -158,7 +158,7 @@ export default function ExpertTransactionWithDraw() {
 
     return (
         <MainCard title="Danh sách yêu cầu rút tiền của chuyên gia">
-            
+
             {transaction.list.length > 0 && transactionType.length > 0 ? (
                 <RenderExpertTransactionWithDrawTable
                     transaction={transaction.list}
