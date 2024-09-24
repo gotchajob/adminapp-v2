@@ -41,7 +41,7 @@ export interface PatchStaffByIdResponse {
 
 export interface PatchStaffByIdRequest {
     id: number,
-    password: string,
+    password: string | null,
     firstName: string,
     lastName: string
 }

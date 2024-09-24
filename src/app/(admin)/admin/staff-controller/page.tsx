@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, CircularProgress, Typography, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Box, CircularProgress, Typography, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, TableContainer, Skeleton, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { RenderStaffTable } from "./_components/StaffTable";
 import { useRefresh } from "hooks/use-refresh";
 import { AdminToken } from "hooks/use-login";
@@ -18,13 +18,13 @@ export default function StaffController() {
     const { refresh, refreshTime } = useRefresh();
     const { adminToken } = AdminToken();
     const { staffs, loading } = UseGetAllStaff(adminToken, refreshTime);
-
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
     const [actionType, setActionType] = useState<"enable" | "disable" | null>(null);
     const [loadingAction, setLoadingAction] = useState(false);
     const [openAddStaffDialog, setOpenAddStaffDialog] = useState(false);
     const [openEditStaffDialog, setOpenEditStaffDialog] = useState(false);
+
     const [newStaffData, setNewStaffData] = useState({
         email: "",
         password: "",
@@ -32,7 +32,18 @@ export default function StaffController() {
         lastName: "",
     });
 
-    const [editStaffData, setEditStaffData] = useState({
+    const [editStaffData, setEditStaffData] = useState<{
+        password: string | null;
+        firstName: string;
+        lastName: string;
+    }>({
+        password: "",
+        firstName: "",
+        lastName: "",
+    });
+
+    const [errors, setErrors] = useState({
+        email: "",
         password: "",
         firstName: "",
         lastName: "",
@@ -48,6 +59,40 @@ export default function StaffController() {
         setOpenDialog(false);
         setSelectedStaffId(null);
         setActionType(null);
+    };
+
+    const validateForm = (data: any, isEdit: boolean = false) => {
+        let tempErrors = { email: "", password: "", firstName: "", lastName: "" };
+        let isValid = true;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const nameRegex = /^[A-Za-zÀ-ỹ\s]+$/;
+
+        // Kiểm tra tên và họ
+        if (!data.firstName || !nameRegex.test(data.firstName) || data.firstName.length < 2 || data.firstName.length > 30) {
+            tempErrors.firstName = "Tên không hợp lệ hoặc không đúng độ dài";
+            isValid = false;
+        }
+
+        if (!data.lastName || !nameRegex.test(data.lastName) || data.lastName.length < 2 || data.lastName.length > 30) {
+            tempErrors.lastName = "Họ không hợp lệ hoặc không đúng độ dài";
+            isValid = false;
+        }
+
+        // Kiểm tra mật khẩu (khi thêm tài khoản mới)
+        if (!isEdit) {
+            if (!data.password || data.password.length < 1) {
+                tempErrors.password = "Cần điền mặt khẩu";
+                isValid = false;
+            } else if (!emailRegex.test(data.email)) {
+                tempErrors.email = "Email không hợp lệ";
+                isValid = false;
+            }
+        }
+
+        setErrors(tempErrors);
+
+        return isValid;
     };
 
     const handleDisable = async () => {
@@ -89,6 +134,7 @@ export default function StaffController() {
     };
 
     const handleAddStaff = async () => {
+        if (!validateForm(newStaffData, false)) return;
         try {
             setLoadingAction(true);
             const response = await PostStaff(newStaffData, adminToken);
@@ -113,11 +159,16 @@ export default function StaffController() {
     };
 
     const handleEditStaff = async () => {
+        if (!validateForm(editStaffData, true)) return;
         if (!selectedStaffId) return;
         try {
             setLoadingAction(true);
             const response = await PatchStaffById(
-                { id: selectedStaffId, ...editStaffData },
+                {
+                    ...editStaffData,
+                    id: selectedStaffId,
+                    password: editStaffData.password === "" ? null : editStaffData.password,
+                },
                 adminToken
             );
             if (response.status === "success") {
@@ -139,6 +190,37 @@ export default function StaffController() {
         }
     };
 
+    const SkeletonTable = () => {
+        return (
+            <TableContainer>
+                <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+                <Table sx={{ borderCollapse: 'collapse' }}>
+                    <TableHead>
+                        <TableRow>
+                            {Array.from(new Array(5)).map((_, index) => (
+                                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                                    <Skeleton variant="rectangular" />
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Array.from(new Array(5)).map((_, rowIndex) => (
+                            <TableRow key={rowIndex}>
+                                {Array.from(new Array(5)).map((_, cellIndex) => (
+                                    <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                                        <Skeleton variant="rectangular" />
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    };
+
+
     return (
         <>
             <MainCard title={
@@ -155,9 +237,7 @@ export default function StaffController() {
                 </Box>
             }>
                 {loading ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
-                        <CircularProgress />
-                    </Box>
+                    SkeletonTable()
                 ) : (
                     <RenderStaffTable
                         staffs={staffs}
@@ -197,10 +277,30 @@ export default function StaffController() {
                 <DialogContent>
                     <TextField
                         margin="normal"
+                        label="Tên"
+                        fullWidth
+                        value={newStaffData.firstName}
+                        onChange={(e) => setNewStaffData({ ...newStaffData, firstName: e.target.value })}
+                        error={!!errors.firstName}
+                        helperText={errors.firstName}
+                    />
+                    <TextField
+                        margin="normal"
+                        label="Họ"
+                        fullWidth
+                        value={newStaffData.lastName}
+                        onChange={(e) => setNewStaffData({ ...newStaffData, lastName: e.target.value })}
+                        error={!!errors.lastName}
+                        helperText={errors.lastName}
+                    />
+                    <TextField
+                        margin="normal"
                         label="Email"
                         fullWidth
                         value={newStaffData.email}
                         onChange={(e) => setNewStaffData({ ...newStaffData, email: e.target.value })}
+                        error={!!errors.email}
+                        helperText={errors.email}
                     />
                     <TextField
                         margin="normal"
@@ -209,34 +309,28 @@ export default function StaffController() {
                         fullWidth
                         value={newStaffData.password}
                         onChange={(e) => setNewStaffData({ ...newStaffData, password: e.target.value })}
-                    />
-                    <TextField
-                        margin="normal"
-                        label="Tên"
-                        fullWidth
-                        value={newStaffData.firstName}
-                        onChange={(e) => setNewStaffData({ ...newStaffData, firstName: e.target.value })}
-                    />
-                    <TextField
-                        margin="normal"
-                        label="Họ"
-                        fullWidth
-                        value={newStaffData.lastName}
-                        onChange={(e) => setNewStaffData({ ...newStaffData, lastName: e.target.value })}
+                        error={!!errors.password}
+                        helperText={errors.password}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenAddStaffDialog(false)} disabled={loadingAction}>
+                    <Button
+                        onClick={() => {
+                            setErrors({ email: "", password: "", firstName: "", lastName: "" });
+                            setOpenAddStaffDialog(false);
+                        }}
+                        disabled={loadingAction}>
                         Đóng
                     </Button>
                     <Button onClick={handleAddStaff} color="primary" disabled={loadingAction}>
                         Thêm tài khoản
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
 
             {/* Dialog cập nhật thông tin tài khoản */}
-            <Dialog open={openEditStaffDialog} onClose={() => setOpenEditStaffDialog(false)}>
+            < Dialog open={openEditStaffDialog} onClose={() => setOpenEditStaffDialog(false)
+            }>
                 <DialogTitle>Cập nhật thông tin tài khoản</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -245,6 +339,8 @@ export default function StaffController() {
                         fullWidth
                         value={editStaffData.firstName}
                         onChange={(e) => setEditStaffData({ ...editStaffData, firstName: e.target.value })}
+                        error={!!errors.firstName}
+                        helperText={errors.firstName}
                     />
                     <TextField
                         margin="normal"
@@ -252,6 +348,8 @@ export default function StaffController() {
                         fullWidth
                         value={editStaffData.lastName}
                         onChange={(e) => setEditStaffData({ ...editStaffData, lastName: e.target.value })}
+                        error={!!errors.lastName}
+                        helperText={errors.lastName}
                     />
                     <TextField
                         margin="normal"
@@ -260,17 +358,24 @@ export default function StaffController() {
                         fullWidth
                         value={editStaffData.password}
                         onChange={(e) => setEditStaffData({ ...editStaffData, password: e.target.value })}
+                        error={!!errors.password}
+                        helperText={errors.password}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenEditStaffDialog(false)} disabled={loadingAction}>
-                        Hủy
+                    <Button
+                        onClick={() => {
+                            setErrors({ email: "", password: "", firstName: "", lastName: "" });
+                            setOpenEditStaffDialog(false);
+                        }}
+                        disabled={loadingAction}>
+                        Đóng
                     </Button>
                     <Button onClick={handleEditStaff} color="primary" disabled={loadingAction}>
                         Cập nhật
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
         </>
     );
 }

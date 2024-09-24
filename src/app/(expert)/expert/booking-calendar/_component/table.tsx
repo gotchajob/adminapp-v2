@@ -62,7 +62,7 @@ export const RenderCustomerBookingsTable = ({
         {
             field: 'customerInfo',
             headerName: 'Tên khách hàng',
-            flex: 1,
+            flex: 1.2,
             renderCell: (params) => (
                 <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.row.customerInfo.fullName}

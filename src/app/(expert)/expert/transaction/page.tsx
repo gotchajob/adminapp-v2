@@ -5,6 +5,7 @@ import {
   Chip,
   CircularProgress,
   Pagination,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -52,15 +53,44 @@ export default function TransactionPage() {
     return type ? type.description : "Không xác định";
   };
 
+  const SkeletonTable = () => {
+    return (
+      <TableContainer>
+        <Skeleton variant="rectangular" width="15%" sx={{ margin: 3 }} />
+        <Table sx={{ borderCollapse: 'collapse' }}>
+          <TableHead>
+            <TableRow>
+              {Array.from(new Array(5)).map((_, index) => (
+                <TableCell key={index} sx={{ padding: 2, border: 0 }} width="30%">
+                  <Skeleton variant="rectangular" />
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.from(new Array(5)).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from(new Array(5)).map((_, cellIndex) => (
+                  <TableCell key={cellIndex} width="30%" sx={{ padding: 2, border: 0 }}>
+                    <Skeleton variant="rectangular" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   useEffect(() => {
     console.log("transactionCurrentWithdraw", transactionCurrentWithdraw);
     console.log("transactionType", transactionType);
   }, [transactionCurrentWithdraw, transactionType]);
 
-
   return (
     <MainCard title="Danh sách yêu cầu rút tiền">
-      {transactionCurrentWithdraw && (<RenderTransactionCurrentWithdrawTable transactionCurrentWithdraw={transactionCurrentWithdraw} transactionType={transactionType} />)}
+      {transactionCurrentWithdraw && transactionCurrentWithdraw.list.length > 0 ? (<RenderTransactionCurrentWithdrawTable transactionCurrentWithdraw={transactionCurrentWithdraw} transactionType={transactionType} />) : (SkeletonTable())}
     </MainCard>
   );
 }

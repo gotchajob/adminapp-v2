@@ -47,6 +47,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { formatDate, getDatesBetween } from "package/util";
 import { enqueueSnackbar } from "notistack";
+import { LoadingButton } from "@mui/lab";
 
 // ==============================|| APPLICATION CALENDAR ||============================== //
 
@@ -82,6 +83,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   const calendarState = useSelector((state) => state.calendar);
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState(matchSm ? "listWeek" : "dayGridMonth");
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   // calendar toolbar events
   const handleDateToday = () => {
@@ -256,6 +258,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   };
 
   const handleCreateNewEvent = async () => {
+    setLoadingButton(true);
     try {
       if (newEvent) {
         const res = await PostAvailability(
@@ -279,10 +282,13 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
       refresh();
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: "error" });
+    } finally {
+      setLoadingButton(false);
     }
   };
 
   const handleCreateDateRange = async () => {
+    setLoadingButton(true);
     if (!startDate || !endDate || !newEvent?.startTime || !newEvent?.endTime) {
       console.error("Vui lòng điền đầy đủ thông tin.");
       return;
@@ -313,6 +319,8 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
       refresh();
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: "error" });
+    } finally {
+      setLoadingButton(false);
     }
   };
 
@@ -329,6 +337,8 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
       refresh();
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: "error" });
+    } finally {
+      setLoadingButton(false);
     }
   };
 
@@ -556,12 +566,13 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                 <Button onClick={handleEditModalClose} color="primary">
                   Đóng
                 </Button>
-                {(selectEvent.status !== 2) && (<Button
+                {(selectEvent.status !== 2) && (<LoadingButton
                   onClick={() => handleEventDelete(selectEvent.id)}
                   color="error"
+                  loading={loadingButton}
                 >
                   Xóa
-                </Button>)}
+                </LoadingButton>)}
               </DialogActions>
             </>
           )}
@@ -625,9 +636,9 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
             <Button onClick={handleAddModalClose} color="primary">
               Đóng
             </Button>
-            <Button onClick={handleCreateNewEvent} color="success">
+            <LoadingButton onClick={handleCreateNewEvent} color="success" loading={loadingButton}>
               Thêm
-            </Button>
+            </LoadingButton>
           </DialogActions>
         </DialogContent>
       </Dialog>
