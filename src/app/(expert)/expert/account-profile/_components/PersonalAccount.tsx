@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Avatar, Box, Button, ButtonBase, CardMedia, CircularProgress, Grid, Rating, Skeleton, Switch, TextField, Tooltip, Typography } from '@mui/material';
+import { Autocomplete, Avatar, Box, Button, ButtonBase, CardMedia, CircularProgress, Grid, Rating, Skeleton, Switch, TextField, Tooltip, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import SubCard from 'ui-component/cards/SubCard';
 import { gridSpacing } from 'store/constant';
@@ -27,6 +27,8 @@ import { useRefresh } from 'hooks/use-refresh';
 import { PatchExpertSkillOptonHidden, PatchExpertSkillOptonShow } from 'package/api/expert-skill-option/id';
 import { ExpertSkillOptionCurrent } from 'package/api/expert-skill-option/current';
 import { LoadingButton } from '@mui/lab';
+import { ExpertNation, GetExpertNation } from 'package/api/expert-nation-support';
+import { useGetNationSupportCurrent } from 'hooks/use-get-nation-support';
 
 const Cover = '/assets/images/profile/img-profile-bg.png';
 
@@ -44,6 +46,9 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   const { wardOptions } = useGetWard(districtCode);
   const { countries } = useGetCountry();
   const [loading, setLoading] = useState(false);
+  const { nationSupportCurrent, loading: nationSupportCurrentLoading } = useGetNationSupportCurrent(expertToken, refreshTime);
+  const [nation, setNation] = useState<string[]>([]);
+
 
   const [initialData, setInitialData] = useState({
     address: expert?.address || '',
@@ -278,6 +283,18 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
     console.log("expertSkillOptionsCurrent:", expertSkillOptionsCurrent);
   }, [initialData, expert, expertSkillOptionsCurrent])
 
+  useEffect(() => {
+    if (!nationSupportCurrentLoading && nationSupportCurrent && countries.length > 0) {
+      const mappedNation = nationSupportCurrent.map((n) => n.nation);
+      const validNations = mappedNation.filter((nation) => countries.includes(nation));
+      setNation(validNations);
+    }
+  }, [nationSupportCurrent, nationSupportCurrentLoading, countries]);
+
+  useEffect(() => {
+    console.log("nationSupportCurrent:", nationSupportCurrent);
+  }, [nationSupportCurrent])
+
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12}>
@@ -369,13 +386,38 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                 onChange={handleAvatarChange}
               />
             </Grid>
-            <Grid item xs={12} md={9}>
+            <Grid item xs={12} md={9} pb={3}>
               <Grid container spacing={gridSpacing}>
                 <Grid item xs={12} md={4}>
                   {/* Có thể thêm nội dung khác ở đây */}
                 </Grid>
                 <Grid item xs={12} md={8}>
-                  {/* Có thể thêm nội dung khác ở đây */}
+                  {nation.length > 0 ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Autocomplete
+                        multiple
+                        options={countries}
+                        getOptionLabel={(option) => option}
+                        filterSelectedOptions
+                        renderInput={(params) => <TextField {...params} label="Quốc gia hỗ trợ" />}
+                        defaultValue={nation}
+                        onChange={(e, v) => {
+                          setNation(v);
+                        }}
+                        sx={{ flex: 1 }}
+                      />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => console.log('Cập nhật quốc gia:', nation)}
+                        disabled={nation.length === 0}
+                      >
+                        Cập nhật quốc gia
+                      </Button>
+                    </Box>
+                  ) : (
+                    <Skeleton variant="rectangular" width="100%" height={56} />
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -680,7 +722,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
           onClick={handleUpdate}
           loading={loading}
         >
-          Cập nhật
+          Cập nhật thông tin cá nhân
         </LoadingButton>
       </Grid>
     </Grid >

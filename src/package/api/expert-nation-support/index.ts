@@ -1,4 +1,3 @@
-import { accessToken } from 'mapbox-gl';
 import { apiServerFetch, errorSystem } from '../api-fetch';
 
 export interface GetExpertNationSupportRequest {
@@ -11,9 +10,9 @@ export interface GetExpertNationResponnse {
   data: ExpertNation[];
 }
 
-export interface ExpertNation{
-  id:number;
-  nation:string;
+export interface ExpertNation {
+  id: number;
+  nation: string;
 }
 
 export const GetExpertNation = async (params: GetExpertNationSupportRequest,): Promise<GetExpertNationResponnse> => {

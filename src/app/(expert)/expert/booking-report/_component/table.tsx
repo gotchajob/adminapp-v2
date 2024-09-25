@@ -104,7 +104,15 @@ export const RenderBookingReportForExpertTable = ({ bookingReportForExpert, hand
         let data = [...bookingReportForExpert];
         if (text.trim() !== '') {
             const lowerCaseText = text.toLowerCase();
-            data = data.filter((row) => {
+            data = data.sort((a, b) => {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                if (dateA < dateB) {
+                    return 1
+                } else {
+                    return -1;
+                }
+            }).filter((row) => {
                 return (
                     row.bookingReportSuggest.some((suggest: any) =>
                         suggest.reportSuggest.toLowerCase().includes(lowerCaseText)

@@ -154,10 +154,18 @@ export const RenderHistoryBookingTable = ({
         let data = [...bookings];
         if (text.trim() !== '') {
             const lowerCaseText = text.toLowerCase();
-            data = data.filter((row) => {
+            data = data.sort((a, b) => {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                if (dateA < dateB) {
+                    return 1
+                } else {
+                    return -1;
+                }
+            }).filter((row) => {
                 return (
-                    // row.customerInfo.fullName.toLowerCase().includes(lowerCaseText) ||
-                    // row.note.toLowerCase().includes(lowerCaseText) ||
+                    row.customerInfo.fullName.toLowerCase().includes(lowerCaseText) ||
+                    row.note.toLowerCase().includes(lowerCaseText) ||
                     formatDate(row.startInterviewDate, 'dd/MM/yyyy hh:mm').includes(lowerCaseText) ||
                     getStatusLabel(row.status).props.label.toLowerCase().includes(lowerCaseText)
                 );

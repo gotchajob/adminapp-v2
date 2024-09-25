@@ -51,8 +51,11 @@ export interface PostAvailabilityResponse {
 export const PostAvailability = async (params: PostAvailabilityRequest, accessToken: string): Promise<PostAvailabilityResponse> => {
     try {
         const res = await apiServerFetch(`/availability`, 'POST', params, accessToken);
+        if (res.status === 'error') {
+            throw new Error(res.responseText)
+        }
         return res;
     } catch (error: any) {
-        return errorSystem('Lấy danh sách thất bại', '');
+        return errorSystem(error, '');
     }
 };
