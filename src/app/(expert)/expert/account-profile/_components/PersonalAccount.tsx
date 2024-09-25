@@ -630,39 +630,40 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
         expertSkillOptionsCurrent.map((skillOption: ExpertSkillOptionCurrent, index) => {
           return (
             <Grid item xs={4} key={index}>
-              <StyledLink
-                href={`/expert/skill-feedback/${skillOption.skillOptionName}/${skillOption.id}`}
-              >
-                <SubCard
-                  title={
-                    <FlexBetween>
+
+              <SubCard
+                title={
+                  <FlexBetween>
+                    <StyledLink
+                      href={`/expert/skill-feedback/${skillOption.skillOptionName}/${skillOption.id}`}
+                    >
                       <Tooltip title="Nhấn vào để xem đánh giá kỹ năng">
                         <Typography color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>{skillOption.skillOptionName}</Typography>
                       </Tooltip>
-                      <Switch
-                        checked={skillOption.status === 1}
-                        onChange={() => handleToggle(skillOption.id, skillOption.status)}
-                        color="primary"
-                      />
-                    </FlexBetween>
-                  }
-                >
-                  <FlexBetween>
-                    <Rating
-                      value={skillOption.sumPoint}
-                      size="small"
-                      readOnly
-                      disabled={skillOption.status === 1}
+                    </StyledLink>
+                    <Switch
+                      checked={skillOption.status === 1}
+                      onChange={() => handleToggle(skillOption.id, skillOption.status)}
+                      color="primary"
                     />
-                    <Text fontSize={13} color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>
-                      <span style={{ fontWeight: "bold" }}>
-                        {skillOption.totalRating}
-                      </span>{" "}
-                      lượt đánh giá
-                    </Text>
                   </FlexBetween>
-                </SubCard>
-              </StyledLink>
+                }
+              >
+                <FlexBetween>
+                  <Rating
+                    value={skillOption.sumPoint}
+                    size="small"
+                    readOnly
+                    disabled={skillOption.status === 1}
+                  />
+                  <Text fontSize={13} color={skillOption.status === 1 ? 'inherit' : 'text.disabled'}>
+                    <span style={{ fontWeight: "bold" }}>
+                      {skillOption.totalRating}
+                    </span>{" "}
+                    lượt đánh giá
+                  </Text>
+                </FlexBetween>
+              </SubCard>
             </Grid>
           );
         })
