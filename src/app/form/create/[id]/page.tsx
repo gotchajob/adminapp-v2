@@ -136,15 +136,6 @@ export default function Page({ params }: { params: { id: string } }) {
       if (expertSkillOptionList.length < 1) {
         throw new Error("Vui lòng thêm ít nhất 1 kĩ năng");
       }
-      // console.log({
-      //   ...value,
-      //   expertRegisterRequestId: +params.id.split("-")[1],
-      //   portfolioUrl: "",
-      //   address: `${values.street}, ${values.ward}, ${values.district}, ${values.province}`,
-      //   education,
-      //   nationSupport: nation,
-      //   expertSKillOptionList: expertSkillOptionList,
-      // });
       const res = await PostCreateExpertForm({
         ...value,
         expertRegisterRequestId: +params.id.split("-")[1],
@@ -546,6 +537,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 <ManageCertificate certificateList={certificateList} setCertificateList={setCertificateList}/>
               </SubCard>
             </Grid>
+            
             <Grid item lg={12}>
               <SubCard title="Lĩnh vực đăng kí">
                 <Grid
