@@ -62,6 +62,7 @@ import {
 } from "package/api/expert-register-request/id/reject-form";
 import { enqueueSnackbar } from "notistack";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { Certificate, ManageCertificate } from "components/certificate";
 
 const StatusChip = ({ status }: { status: number }) => {
   const props = { label: "", variant: "" };
@@ -138,6 +139,16 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
     setRequireId(requireId.filter((value) => value !== id));
   };
 
+  const [certificateList, setCertificateList] = useState<Certificate[]>([]);
+
+  useEffect(() => {
+    let listData: Certificate[] = [];
+    if (expert && expert.certification) {
+      listData = JSON.parse(expert.certification);
+    }
+    setCertificateList([...listData]);
+  }, [expert]);
+
   const rejectHandle = async () => {
     try {
       setIsLoading(true);
@@ -151,7 +162,7 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
           description: expertFormRequireValue?.description || "",
           status: 1,
         });
-      })
+      });
       const currentHost = window.location.hostname;
       const action = await ExpertRegisterRejectForm({
         id: expertRegisterRequest[0].id,
@@ -171,7 +182,7 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
       });
     } finally {
       refresh();
-      setOpenRejectForm(false)
+      setOpenRejectForm(false);
       setIsLoading(false);
       setOpenConfirm(false);
     }
@@ -559,6 +570,14 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
                     )
                   )}
                 </Grid>
+              </SubCard>
+            </Grid>
+            <Grid item lg={12}>
+              <SubCard title="Chứng chỉ & bằng cấp">
+                <ManageCertificate
+                  certificateList={certificateList}
+                  setCertificateList={setCertificateList}
+                />
               </SubCard>
             </Grid>
             <Grid item lg={12}>

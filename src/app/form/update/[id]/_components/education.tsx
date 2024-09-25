@@ -1,11 +1,13 @@
-'use client';
+"use client";
 
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import { Fragment, useEffect, useState } from 'react';
-import SubCard from 'ui-component/cards/SubCard';
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import { IconX } from "@tabler/icons-react";
+import { Fragment, useEffect, useState } from "react";
+import SubCard from "ui-component/cards/SubCard";
 
 export interface EducationData {
   time: string;
@@ -13,12 +15,18 @@ export interface EducationData {
   title: string;
   titleDes: string;
 }
-export const EducationForm = ({ setEducation, initValue }: { setEducation: (value: string) => void; initValue: string }) => {
+export const EducationForm = ({
+  setEducation,
+  initValue,
+}: {
+  setEducation: (value: string) => void;
+  initValue: string;
+}) => {
   const sampleEducation: EducationData = {
-    time: '',
-    timeDes: '',
-    title: '',
-    titleDes: ''
+    time: "",
+    timeDes: "",
+    title: "",
+    titleDes: "",
   };
   const [isUpdate, setIsUpdate] = useState(0);
 
@@ -26,7 +34,9 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
     setEducation(JSON.stringify(educationList));
   }, [isUpdate]);
 
-  const [educationList, setEducationList] = useState<EducationData[]>(JSON.parse(initValue));
+  const [educationList, setEducationList] = useState<EducationData[]>(
+    JSON.parse(initValue)
+  );
   const handleUpdateEducationData = (data: EducationData, index: number) => {
     const newEducationList = educationList;
     newEducationList[index] = data;
@@ -36,6 +46,13 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
   const handleAddEducation = () => {
     setEducationList([...educationList, sampleEducation]);
   };
+  const handleDeleteEducation = (id: number) => {
+    const newEducationList = educationList.filter(
+      (data, index) => index !== id
+    );
+    setEducationList(newEducationList);
+    setIsUpdate(isUpdate + 1);
+  };
   return (
     <SubCard title="Thời gian">
       <Grid
@@ -44,21 +61,21 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
         ml={3}
         alignItems="center"
         sx={{
-          position: 'relative',
-          '&>*': {
-            position: 'relative',
-            zIndex: '5'
+          position: "relative",
+          "&>*": {
+            position: "relative",
+            zIndex: "5",
           },
-          '&:after': {
+          "&:after": {
             content: '""',
-            position: 'absolute',
-            top: '0',
+            position: "absolute",
+            top: "0",
             left: 0,
-            width: '0.5px',
-            height: '100%',
-            bgcolor: 'divider',
-            zIndex: '1'
-          }
+            width: "0.5px",
+            height: "100%",
+            bgcolor: "divider",
+            zIndex: "1",
+          },
         }}
       >
         {educationList.map((education, index) => (
@@ -73,9 +90,9 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
                       placeholder="Thời gian"
                       sx={{
                         input: {
-                          fontWeight: 'bold',
-                          fontSize: 14
-                        }
+                          fontWeight: "bold",
+                          fontSize: 14,
+                        },
                       }}
                       value={education.time}
                       onChange={(e) => {
@@ -89,8 +106,8 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
                       size="small"
                       sx={{
                         input: {
-                          fontSize: 12
-                        }
+                          fontSize: 12,
+                        },
                       }}
                       value={education.timeDes}
                       onChange={(e) => {
@@ -101,7 +118,7 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
                     />
                   </Stack>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={1}>
                   <Stack spacing={1} mr={20}>
                     <TextField
                       variant="standard"
@@ -109,9 +126,9 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
                       placeholder="Tiêu đề"
                       sx={{
                         input: {
-                          fontWeight: 'bold',
-                          fontSize: 14
-                        }
+                          fontWeight: "bold",
+                          fontSize: 14,
+                        },
                       }}
                       value={education.title}
                       onChange={(e) => {
@@ -125,8 +142,8 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
                       size="small"
                       sx={{
                         input: {
-                          fontSize: 12
-                        }
+                          fontSize: 12,
+                        },
                       }}
                       value={education.titleDes}
                       onChange={(e) => {
@@ -136,6 +153,19 @@ export const EducationForm = ({ setEducation, initValue }: { setEducation: (valu
                       }}
                     />
                   </Stack>
+                </Grid>
+                <Grid item xs={1}>
+                  <Grid item xs={1}>
+                    <IconButton
+                      color="error"
+                      size="small"
+                      onClick={() => {
+                        handleDeleteEducation(index);
+                      }}
+                    >
+                      <IconX />
+                    </IconButton>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
