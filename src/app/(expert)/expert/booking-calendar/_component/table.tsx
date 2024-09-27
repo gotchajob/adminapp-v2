@@ -178,7 +178,15 @@ export const RenderCustomerBookingsTable = ({
         let data = [...bookings];
         if (text.trim() !== '') {
             const lowerCaseText = text.toLowerCase();
-            data = data.filter((row) => {
+            data = data.sort((a, b) => {
+                const dateA = new Date(a.startInterviewDate);
+                const dateB = new Date(b.startInterviewDate);
+                if (dateA < dateB) {
+                    return 1
+                } else {
+                    return -1;
+                }
+            }).filter((row) => {
                 return (
                     row.customerInfo.fullName.toLowerCase().includes(lowerCaseText) ||
                     getStatusLabel(row.status).props.label.toLowerCase().includes(lowerCaseText) ||

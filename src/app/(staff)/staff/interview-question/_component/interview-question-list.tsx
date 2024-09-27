@@ -63,7 +63,7 @@ function InterviewQuestionList() {
   // Hàm xử lý xóa câu hỏi
   const handleDelete = async (id: number) => {
     try {
-      const res = await DelBookingCustomerFeedbackQuestionById({ id }, staffToken);
+      const res = await DelBookingCustomerFeedbackQuestionById({ id: selectedQuestionForDelete }, staffToken);
       if (res.status !== "success") {
         enqueueSnackbar("Xóa câu hỏi thất bại", { variant: "error" });
         return;

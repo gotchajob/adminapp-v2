@@ -262,13 +262,13 @@ export default function BookingDetailPage({
                         }
                       />
                       <Typography variant="body2" ml={1}>
-                        {booking.customerInfo.fullName}
+                        {booking.customerInfo?.fullName}
                       </Typography>
                     </FlexBox>
                     <Stack direction="row" spacing={1}>
                       <Typography variant="subtitle1">Email :</Typography>
                       <Typography variant="body2">
-                        {booking.customerInfo.email}
+                        {booking.customerInfo?.email}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -284,7 +284,7 @@ export default function BookingDetailPage({
                       </Typography>
                       <Typography variant="body2">
                         {formatDate(
-                          booking.startInterviewDate,
+                          booking?.startInterviewDate,
                           "yyyy-MM-dd hh:mm"
                         )}
                       </Typography>
@@ -295,7 +295,7 @@ export default function BookingDetailPage({
                       </Typography>
                       <Typography variant="body2">
                         {formatDate(
-                          booking.endInterviewDate,
+                          booking?.endInterviewDate,
                           "yyyy-MM-dd hh:mm"
                         )}
                       </Typography>

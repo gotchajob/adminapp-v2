@@ -11,9 +11,9 @@ export interface ApproveBookingReportResponse {
 
 export const ApproveBookingReport = async (params: ApproveBookingReportRequest, accessToken: string): Promise<ApproveBookingReportResponse> => {
     try {
-        const res = await apiServerFetch(`booking-report/${params.id}/approve`, "PATCH", { note: params.note }, accessToken);
-        return res
+        const res = await apiServerFetch(`/booking-report/${params.id}/approve`, "PATCH", { note: params.note }, accessToken);
+        return res;
     } catch (error) {
-        return errorSystem("Lỗi không thể gửi yêu cầu", "")
+        return errorSystem("Lỗi không thể gửi yêu cầu", "");
     }
 };

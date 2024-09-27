@@ -94,7 +94,15 @@ export const RenderTransactionCurrentWithdrawTable = ({ transactionCurrentWithdr
         let data = [...transactionCurrentWithdraw.list];
         if (text.trim() !== '') {
             const lowerCaseText = text.toLowerCase();
-            data = data.filter((row) => {
+            data = data.sort((a, b) => {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                if (dateA < dateB) {
+                    return 1
+                } else {
+                    return -1;
+                }
+            }).filter((row) => {
                 const transaction = transactionType.find(t => t.id === row.typeId);
                 return (
                     transaction?.description.toLowerCase().includes(lowerCaseText) ||

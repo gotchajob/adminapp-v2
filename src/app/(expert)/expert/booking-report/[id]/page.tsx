@@ -35,15 +35,15 @@ import SubCard from "ui-component/cards/SubCard";
 const renderStatusChip = (status: number) => {
     switch (status) {
         case 1:
-            return <Chip label="Processing" color="primary" sx={{ fontWeight: 'bold', color: 'white' }} />;
+            return <Chip label="Đang xử lí" color="primary" sx={{ fontWeight: 'bold', color: 'white' }} />;
         case 2:
-            return <Chip label="Expert Processing" color="warning" sx={{ fontWeight: 'bold', color: 'white' }} />;
+            return <Chip label="Chờ chuyên gia phản hồi" color="warning" sx={{ fontWeight: 'bold', color: 'white' }} />;
         case 3:
-            return <Chip label="Staff Processing" color="info" sx={{ fontWeight: 'bold', color: 'white' }} />;
+            return <Chip label="Chờ nhân viên phản hồi" color="info" sx={{ fontWeight: 'bold', color: 'white' }} />;
         case 4:
-            return <Chip label="Approved" color="success" sx={{ fontWeight: 'bold', color: 'white' }} />;
+            return <Chip label="Duyệt" color="success" sx={{ fontWeight: 'bold', color: 'white' }} />;
         case 5:
-            return <Chip label="Rejected" color="error" sx={{ fontWeight: 'bold', color: 'white' }} />;
+            return <Chip label="Không duyệt" color="error" sx={{ fontWeight: 'bold', color: 'white' }} />;
         default:
             return <Chip label="Unknown" color="default" sx={{ fontWeight: 'bold', color: 'white' }} />;
     }

@@ -56,7 +56,7 @@ export const InterviewQuestionTableRender = ({
                 <>
                     <Tooltip title="Sửa">
                         <IconButton onClick={() => handleEdit(params.row.id)}>
-                            <EditIcon  />
+                            <EditIcon />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Xóa">

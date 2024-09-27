@@ -144,7 +144,15 @@ export const RenderExpertTransactionWithDrawTable = ({
     const filteredData = useMemo(() => {
         const lowerCaseText = text.toLowerCase();
 
-        return transaction.filter((trans) => {
+        return transaction.sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            if (dateA < dateB) {
+                return 1
+            } else {
+                return -1;
+            }
+        }).filter((trans) => {
             const transactionTypeDescription = transactionType.find(type => type.id === trans.typeId)?.description.toLowerCase() || '';
             const formattedDate = formatDate(trans.createdAt, "dd/MM/yyyy hh:mm").toLowerCase();
             const formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(trans.amount).toLowerCase();
