@@ -35,10 +35,11 @@ export interface PostBlogCategoryResponse {
   data: string;
 }
 export const PostBlogCategory = async (
-  params: PostBlogCategoryRequest
+  params: PostBlogCategoryRequest,
+  accessToken: string
 ): Promise<PostBlogCategoryResponse> => {
   try {
-    const res = await apiServerFetch("/blog-category", "POST", params);
+    const res = await apiServerFetch("/blog-category", "POST", params, accessToken);
     return res;
   } catch (error) {
     return errorSystem("Lỗi không thể tạo mới danh mục", "");

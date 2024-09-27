@@ -10,6 +10,7 @@ import { useState } from "react";
 import { PostBlogCategory } from "package/api/blog-category";
 import { enqueueSnackbar } from "notistack";
 import Stack from "@mui/material/Stack";
+import { StaffToken } from "hooks/use-login";
 export const CreateBlogCategoryPopup = ({
   open,
   setOpen,
@@ -21,6 +22,7 @@ export const CreateBlogCategoryPopup = ({
 }) => {
   const [category, setCategory] = useState("");
 
+  const { staffToken } = StaffToken();
   const [description, setDescription] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +30,7 @@ export const CreateBlogCategoryPopup = ({
   const handleCreateNewBlogCategory = async () => {
     try {
       setIsLoading(true);
-      const data = await PostBlogCategory({ category, description });
+      const data = await PostBlogCategory({ category, description }, staffToken);
       if (data.status === "error") {
         throw new Error(data.responseText);
       }
@@ -38,7 +40,7 @@ export const CreateBlogCategoryPopup = ({
       enqueueSnackbar(error.message, { variant: "error" });
     } finally {
       setIsLoading(false);
-      refresh()
+      refresh();
     }
   };
 

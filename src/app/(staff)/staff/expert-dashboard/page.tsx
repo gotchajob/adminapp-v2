@@ -7,13 +7,13 @@ import EarningCard from "components/common/dashboard/label/earning-card";
 import { Text } from "components/common/text/text";
 import { cookies } from "next/headers";
 import { apiServerFetch } from "package/api/api-fetch";
-import { getExpertToken } from "package/cookies/token";
+import { getExpertToken, getStaffToken } from "package/cookies/token";
 import MainCard from "ui-component/cards/MainCard";
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = async() => {
-  const accessToken = await getExpertToken(cookies());
+  const accessToken = await getStaffToken(cookies());
   const data1 = await apiServerFetch(
     "/dash-board/total-expert",
     "GET",
