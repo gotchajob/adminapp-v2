@@ -18,63 +18,63 @@ import { Transaction } from 'package/api/transaction';
 import { TransactionTableRender } from './TransactionTable';
 
 // Dữ liệu fake giao dịch
-export const fakeTransactions: Transaction[] = [
-  {
-    id: 1,
-    accountId: 1001,
-    amount: 500000,
-    balanceAfterTransaction: 1500000,
-    typeId: 1, // 1: Nạp tiền
-    status: 1, // 1: Thành công
-    description: 'Nạp tiền vào tài khoản',
-    createdAt: '2024-08-01T10:15:30.000Z',
-    referId: 301,
-  },
-  {
-    id: 2,
-    accountId: 1002,
-    amount: 200000,
-    balanceAfterTransaction: 800000,
-    typeId: 2, // 2: Rút tiền
-    status: 1, // 1: Thành công
-    description: 'Rút tiền từ tài khoản',
-    createdAt: '2024-08-02T14:45:10.000Z',
-    referId: 302,
-  },
-  {
-    id: 3,
-    accountId: 1001,
-    amount: 100000,
-    balanceAfterTransaction: 1600000,
-    typeId: 3, // 3: Chuyển khoản nhận
-    status: 1, // 1: Thành công
-    description: 'Nhận tiền từ tài khoản 1003',
-    createdAt: '2024-08-03T09:25:50.000Z',
-    referId: 303,
-  },
-  {
-    id: 4,
-    accountId: 1003,
-    amount: 500000,
-    balanceAfterTransaction: 500000,
-    typeId: 4, // 4: Chuyển khoản gửi
-    status: 2, // 2: Đang xử lý
-    description: 'Chuyển tiền cho tài khoản 1001',
-    createdAt: '2024-08-04T16:10:15.000Z',
-    referId: 304,
-  },
-  {
-    id: 5,
-    accountId: 1002,
-    amount: 300000,
-    balanceAfterTransaction: 1100000,
-    typeId: 1, // 1: Nạp tiền
-    status: 3, // 3: Thất bại
-    description: 'Nạp tiền thất bại',
-    createdAt: '2024-08-05T11:35:40.000Z',
-    referId: 305,
-  }
-];
+// export const fakeTransactions: Transaction[] = [
+//   {
+//     id: 1,
+//     accountId: 1001,
+//     amount: 500000,
+//     balanceAfterTransaction: 1500000,
+//     typeId: 1, // 1: Nạp tiền
+//     status: 1, // 1: Thành công
+//     description: 'Nạp tiền vào tài khoản',
+//     createdAt: '2024-08-01T10:15:30.000Z',
+//     referId: 301,
+//   },
+//   {
+//     id: 2,
+//     accountId: 1002,
+//     amount: 200000,
+//     balanceAfterTransaction: 800000,
+//     typeId: 2, // 2: Rút tiền
+//     status: 1, // 1: Thành công
+//     description: 'Rút tiền từ tài khoản',
+//     createdAt: '2024-08-02T14:45:10.000Z',
+//     referId: 302,
+//   },
+//   {
+//     id: 3,
+//     accountId: 1001,
+//     amount: 100000,
+//     balanceAfterTransaction: 1600000,
+//     typeId: 3, // 3: Chuyển khoản nhận
+//     status: 1, // 1: Thành công
+//     description: 'Nhận tiền từ tài khoản 1003',
+//     createdAt: '2024-08-03T09:25:50.000Z',
+//     referId: 303,
+//   },
+//   {
+//     id: 4,
+//     accountId: 1003,
+//     amount: 500000,
+//     balanceAfterTransaction: 500000,
+//     typeId: 4, // 4: Chuyển khoản gửi
+//     status: 2, // 2: Đang xử lý
+//     description: 'Chuyển tiền cho tài khoản 1001',
+//     createdAt: '2024-08-04T16:10:15.000Z',
+//     referId: 304,
+//   },
+//   {
+//     id: 5,
+//     accountId: 1002,
+//     amount: 300000,
+//     balanceAfterTransaction: 1100000,
+//     typeId: 1, // 1: Nạp tiền
+//     status: 3, // 3: Thất bại
+//     description: 'Nạp tiền thất bại',
+//     createdAt: '2024-08-05T11:35:40.000Z',
+//     referId: 305,
+//   }
+// ];
 
 const TransactionList = () => {
   const theme = useTheme();

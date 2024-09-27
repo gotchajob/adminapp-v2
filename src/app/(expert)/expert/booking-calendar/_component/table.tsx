@@ -33,7 +33,7 @@ const getStatusLabel = (status: number) => {
         case 7:
             return <Chip label="Hủy bởi chuyên gia" color="error" />;
         case 8:
-            return <Chip label="Từ chối" color="error" />;
+            return <Chip label="Đã bị report" color="error" />;
         default:
             return <Chip label="Trạng thái không xác định" color="default" />;
     }
@@ -78,7 +78,7 @@ export const RenderCustomerBookingsTable = ({
                     <Box sx={{
                         whiteSpace: 'normal',
                         wordWrap: 'break-word',
-                        backgroundColor: isToday(params.value) ? 'success.main' : 'transparent'
+                        color: isToday(params.row.startInterviewDate) ? 'success.main' : 'black'
                     }}>
                         {formatDate(params.value, 'dd/MM/yyyy hh:mm')}
                     </Box>
@@ -90,7 +90,7 @@ export const RenderCustomerBookingsTable = ({
             headerName: 'Thời điểm kết thúc',
             flex: 1.3,
             renderCell: (params) => (
-                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word', color: isToday(params.row.endInterviewDate) ? 'success.main' : 'black' }}>
                     {formatDate(params.value, 'dd/MM/yyyy hh:mm')}
                 </Box>
             ),
@@ -135,7 +135,7 @@ export const RenderCustomerBookingsTable = ({
                         <IconButton
                             color="default"
                             component={Link}
-                            href={`/expert/booking-calendar/${params.row.id}`}
+                            href={`/expert/interview/${params.row.id}`}
                         >
                             <VisibilityIcon sx={{ fontSize: '1.1rem' }} />
                         </IconButton>
@@ -214,7 +214,6 @@ export const RenderCustomerBookingsTable = ({
         rows: filteredData.map((data, index) => ({
             ...data,
             object: JSON.stringify(data),
-            customerInfo: JSON.stringify(data),
         })),
     };
 

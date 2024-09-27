@@ -29,6 +29,7 @@ import { ExpertSkillOptionCurrent } from 'package/api/expert-skill-option/curren
 import { LoadingButton } from '@mui/lab';
 import { ExpertNation, GetExpertNation } from 'package/api/expert-nation-support';
 import { useGetNationSupportCurrent } from 'hooks/use-get-nation-support';
+import { PatchExpertCurrentNation } from 'package/api/expert-nation-support/update-list';
 
 const Cover = '/assets/images/profile/img-profile-bg.png';
 
@@ -277,6 +278,25 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
     }
   };
 
+  // Xử lý cập nhật danh sách quốc gia
+  const handleNationUpdate = async () => {
+    try {
+      setLoading(true);
+      const response = await PatchExpertCurrentNation({ nations: nation }, expertToken);
+      if (response.status === 'success') {
+        enqueueSnackbar('Cập nhật quốc gia hỗ trợ thành công', { variant: 'success' });
+      } else {
+        enqueueSnackbar('Cập nhật quốc gia hỗ trợ thất bại', { variant: 'error' });
+      }
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Có lỗi xảy ra khi cập nhật quốc gia hỗ trợ', { variant: 'error' });
+    } finally {
+      refresh();
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     console.log("expert:", expert);
     console.log("initialData:", initialData);
@@ -392,7 +412,7 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                   {/* Có thể thêm nội dung khác ở đây */}
                 </Grid>
                 <Grid item xs={12} md={8}>
-                  {nation.length > 0 ? (
+                  {nationSupportCurrent ? (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Autocomplete
                         multiple
@@ -400,20 +420,21 @@ const PersonalAccount = ({ expert }: { expert?: ExpertCurrent }) => {
                         getOptionLabel={(option) => option}
                         filterSelectedOptions
                         renderInput={(params) => <TextField {...params} label="Quốc gia hỗ trợ" />}
-                        defaultValue={nation}
+                        defaultValue={nationSupportCurrent.map((n) => n.nation)}
                         onChange={(e, v) => {
                           setNation(v);
                         }}
                         sx={{ flex: 1 }}
                       />
-                      <Button
+                      <LoadingButton
                         variant="contained"
                         color="primary"
-                        onClick={() => console.log('Cập nhật quốc gia:', nation)}
+                        onClick={handleNationUpdate}
+                        loading={loading}
                         disabled={nation.length === 0}
                       >
                         Cập nhật quốc gia
-                      </Button>
+                      </LoadingButton>
                     </Box>
                   ) : (
                     <Skeleton variant="rectangular" width="100%" height={56} />

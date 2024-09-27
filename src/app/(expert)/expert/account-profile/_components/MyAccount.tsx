@@ -27,6 +27,7 @@ const MyAccount = ({ expert }: { expert?: ExpertCurrent }) => {
   const [updatingCost, setUpdatingCost] = useState(false);
 
   useEffect(() => {
+    console.log("expert", expert);
     if (expert) {
       setContent(expert.shortDescription || "<p></p>");
     }

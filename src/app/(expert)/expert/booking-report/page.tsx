@@ -97,7 +97,7 @@ export default function BookingReportForExpertPage() {
     const { expertToken } = ExpertToken();
     const { refresh, refreshTime } = useRefresh();
     const [page, setPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(6);
+    const [rowsPerPage, setRowsPerPage] = useState(1000);
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
     const [content, setContent] = useState("");

@@ -39,6 +39,6 @@ export const PostBankInfo = async (params: PostBankInfoReq, accessToken: string)
         const res = await apiServerFetch(`/bankInfo`, 'POST', params, accessToken);
         return res;
     } catch (error: any) {
-        return errorSystem('Lấy danh sách thất bại', '');
+        return errorSystem(error.message, '');
     }
 };

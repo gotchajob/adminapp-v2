@@ -305,6 +305,9 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
       currentDate.setDate(currentDate.getDate() + 1);
     }
     try {
+      if (!datesArray) {
+        return;
+      }
       if (datesArray) {
         const res = await PostAvailability(
           { request: datesArray },

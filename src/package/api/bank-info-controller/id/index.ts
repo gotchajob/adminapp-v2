@@ -41,7 +41,7 @@ export const DelBankInfoById = async (params: DelBankInfoByIdRq, accessToken: st
         const res = await apiServerFetch(`/bankInfo/${params.id}`, 'DELETE', undefined, accessToken);
         return res;
     } catch (error: any) {
-        return errorSystem('Lấy danh sách thất bại', {});
+        return errorSystem(error.message, {});
     }
 };
 
@@ -66,6 +66,6 @@ export const PatchBankInfoById = async (params: PatchBankInfoByIdRq, accessToken
         }, accessToken);
         return res;
     } catch (error: any) {
-        return errorSystem('Lấy danh sách thất bại', '');
+        return errorSystem(error.message, '');
     }
 };

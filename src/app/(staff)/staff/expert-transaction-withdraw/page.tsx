@@ -47,11 +47,11 @@ export default function ExpertTransactionWithDraw() {
     const { staffToken } = StaffToken();
     const { refresh, refreshTime } = useRefresh();
     const [page, setPage] = useState(1);
-    const [rowsPerPage] = useState(6);
+    const [rowsPerPage, setRowsPerPage] = useState(1000);
     const [loading, setLoading] = useState<boolean>(false);
     const [totalPage, setTotalPage] = useState(1);
 
-    const { transaction, loading: transactionLoading } = useGetTransaction({ pageNumber: page, pageSize: rowsPerPage, sortBy: "createdAt:desc", search: ["transactionTypeId:3", "status:2"] }, staffToken, refreshTime);
+    const { transaction, loading: transactionLoading } = useGetTransaction({ pageNumber: 1, pageSize: 1000, sortBy: "createdAt:desc", search: ["transactionTypeId:2", "status:2"] }, staffToken, refreshTime);
     const { transactionType, loading: transactionTypeLoading } = useGetTransactionType(refreshTime);
 
     // Lấy description của transaction type dựa trên typeId
@@ -120,6 +120,10 @@ export default function ExpertTransactionWithDraw() {
         }
     };
 
+    useEffect(() => {
+        console.log("transaction", transaction)
+    }, [transaction])
+
     const SkeletonTable = () => {
         return (
             <TableContainer>
@@ -149,12 +153,6 @@ export default function ExpertTransactionWithDraw() {
             </TableContainer>
         );
     };
-
-    useEffect(() => {
-        if (transaction && transaction.totalPage) {
-            setTotalPage(transaction.totalPage);
-        }
-    }, [transaction]);
 
     return (
         <MainCard title="Danh sách yêu cầu rút tiền của chuyên gia">

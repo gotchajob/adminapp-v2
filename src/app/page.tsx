@@ -16,7 +16,7 @@ export default async function Page() {
   }
 
   if (expertToken !== '') {
-    redirect('/expert');
+    redirect('/expert/expert-calendar');
   }
 
   redirect('/login');

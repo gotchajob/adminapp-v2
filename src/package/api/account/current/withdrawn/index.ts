@@ -16,6 +16,6 @@ export const PatchAccountCurrentWithdrawn = async (params: PatchAccountCurrentWi
         const res = await apiServerFetch(`/account/current/withdrawn`, 'PATCH', params, accessToken);
         return res;
     } catch (error: any) {
-        return errorSystem('Lấy danh sách thất bại', '');
+        return errorSystem(error.message, '');
     }
 };

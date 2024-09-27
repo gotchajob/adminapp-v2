@@ -6,7 +6,7 @@ import MainCard from "ui-component/cards/MainCard";
 
 export default function Page() {
   const { ratingParams } = useGetExpertBookingTotalRating(
-    { pageNumber: 1, pageSize: 10, sortBy: "createdAt" },
+    { pageNumber: 1, pageSize: 1000, sortBy: "createdAt" },
     0
   );
   return (

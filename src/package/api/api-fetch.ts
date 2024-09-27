@@ -24,16 +24,16 @@ export const apiServerFetch = async (url: string, method: 'GET' | 'POST' | 'PATC
     cache: 'no-cache',
     ...newBody
   });
-  
+
   // const res = await fetch('https://2d38-2401-d800-bf1-1b01-d8d8-6195-1994-94a4.ngrok-free.app' + url, {
   //   method,
   //   headers,
   //   cache: 'no-cache',
   //   ...newBody
   // });
-
   if (res.status !== 200) {
-    throw new Error('Backend error');
+    const data = await res.json()
+    throw new Error(data.responseText);
   }
   return await res.json();
 };

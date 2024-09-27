@@ -46,7 +46,7 @@ const getStatusLabel = (status: number) => {
     case 7:
       return { label: "Hủy bởi chuyên gia", color: "error" };
     case 8:
-      return { label: "Từ chối", color: "error" };
+      return { label: "Đã bị report", color: "error" };
     default:
       return { label: "Trạng thái không xác định", color: "default" };
   }
@@ -160,20 +160,20 @@ export default function BookingDetailPage({
               </Grid>
               <Grid item xs={4} style={{ textAlign: "right" }}> {/* Nút chấp nhận và chặn */}
                 <Stack direction="row" spacing={2} justifyContent="flex-end">
-                  <Button
+                  {[1].includes(booking.status) && (<Button
                     variant="outlined"
                     color="info"
-                    onClick={() => setOpenAcceptDialog(true)} // Mở dialog chấp nhận
+                    onClick={() => setOpenAcceptDialog(true)}
                   >
                     Chấp nhận
-                  </Button>
-                  <Button
+                  </Button>)}
+                  {/* <Button
                     variant="outlined"
                     color="error"
                     onClick={() => setOpenBanDialog(true)} // Mở dialog chặn
                   >
                     Chặn
-                  </Button>
+                  </Button> */}
                 </Stack>
               </Grid>
             </Grid>

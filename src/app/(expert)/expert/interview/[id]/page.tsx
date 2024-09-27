@@ -58,7 +58,7 @@ const getStatusLabel = (status: number) => {
     case 7:
       return { label: "Hủy bởi chuyên gia", color: "error" };
     case 8:
-      return { label: "Từ chối", color: "error" };
+      return { label: "Đã bị report", color: "error" };
     default:
       return { label: "Trạng thái không xác định", color: "default" };
   }

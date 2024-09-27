@@ -56,6 +56,6 @@ export const PostAvailability = async (params: PostAvailabilityRequest, accessTo
         }
         return res;
     } catch (error: any) {
-        return errorSystem(error, '');
+        return errorSystem(error.message, '');
     }
 };

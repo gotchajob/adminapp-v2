@@ -30,7 +30,7 @@ export default function Page() {
   };
 
   const { blogs: blogList, totalPage } = useGetBlogs(
-    { pageNumber: 1, pageSize: 10 },
+    { pageNumber: 1, pageSize: 100 },
     refreshTime
   );
 

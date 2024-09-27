@@ -7,8 +7,8 @@ import MainCard from "ui-component/cards/MainCard";
 
 export default function Page({ params }: { params: { slug: string[] } }) {
   const { ratingParams } = useGetExpertTotalSkillRating(
-    {expertSkillOptionId: +params.slug[1]},
-    { pageNumber: 1, pageSize: 10, sortBy: "createdAt",expertSkillOptionId: +params.slug[1] },
+    { expertSkillOptionId: +params.slug[1] },
+    { pageNumber: 1, pageSize: 1000, sortBy: "createdAt", expertSkillOptionId: +params.slug[1] },
     0
   );
   return (

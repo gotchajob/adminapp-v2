@@ -12,12 +12,12 @@ export interface PatchExpertNationResponnse {
 
 export const PatchExpertCurrentNation = async (params: PatchExpertNationSupportRequest, accessToken: string): Promise<PatchExpertNationResponnse> => {
     try {
-        const res = await apiServerFetch(`/expert-nation-support/update-list`, 'PATCH', {}, accessToken);
+        const res = await apiServerFetch(`/expert-nation-support/update-list`, 'PATCH', { nations: params.nations }, accessToken);
         if (res.status === 'error') {
-            throw new Error('');
+            throw new Error(res.responseText);
         }
         return res;
     } catch (error: any) {
-        return errorSystem(error, {});
+        return errorSystem(error, "");
     }
 };

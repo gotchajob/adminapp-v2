@@ -99,7 +99,7 @@ export const UseGetBookingReportById = (params: GetBookingReportByIdRequest, acc
         }
     }
 
-    useEffect(() => { fetchGetBookingReportById(); }, [params, refresh, accessToken])
+    useEffect(() => { fetchGetBookingReportById(); }, [params.id, refresh, accessToken])
 
     return {
         bookingReportById, loading

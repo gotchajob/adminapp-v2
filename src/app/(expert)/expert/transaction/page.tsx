@@ -44,7 +44,7 @@ export default function TransactionPage() {
 
   const { expertToken } = ExpertToken();
 
-  const { transactionCurrentWithdraw, loading: transactionCurrentWithdrawLoading } = useGetTransactionCurrentWithdraw({ pageNumber: 1, pageSize: 10 }, expertToken, refreshTime);
+  const { transactionCurrentWithdraw, loading: transactionCurrentWithdrawLoading } = useGetTransactionCurrentWithdraw({ pageNumber: 1, pageSize: 1000 }, expertToken, refreshTime);
 
   const { transactionType, loading: transactionTypeLoading } = useGetTransactionType(refreshTime);
 

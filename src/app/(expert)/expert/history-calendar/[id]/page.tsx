@@ -44,7 +44,7 @@ const getStatusLabel = (status: number) => {
     case 7:
       return { label: "Hủy bởi chuyên gia", color: "error" };
     case 8:
-      return { label: "Từ chối", color: "error" };
+      return { label: "Đã bị report", color: "error" };
     default:
       return { label: "Trạng thái không xác định", color: "default" };
   }
@@ -104,13 +104,8 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    console.log("booking:", booking);
-    console.log("expertSkillOptions:", expertSkillOptions);
-  }, [params, booking, expertSkillOptions]);
-
   const filteredSkillOptions = useMemo(() => {
-    if (!booking?.skillOptionBooking) return [];
+    if (booking && booking?.skillOptionBooking.length < 0) return [];
     return expertSkillOptions.filter((skill: ExpertSkillOption) =>
       booking?.skillOptionBooking.includes({
         skillId: skill.skillOptionId,
@@ -119,6 +114,12 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
       })
     );
   }, [booking, expertSkillOptions]);
+
+  useEffect(() => {
+    console.log("booking:", booking);
+    console.log("expertSkillOptions:", expertSkillOptions);
+    console.log("filteredSkillOptions", filteredSkillOptions);
+  }, [params, booking, expertSkillOptions]);
 
   return (
     <SubCard>
@@ -170,7 +171,7 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
                           Kỹ năng khách hàng chọn phỏng vấn:
                         </Typography>
                         <Stack direction="row" spacing={1}>
-                          {filteredSkillOptions?.map((skill) => (
+                          {filteredSkillOptions.length > 0 && filteredSkillOptions?.map((skill) => (
                             <Chip
                               key={skill.id}
                               label={skill.skillOptionName}
@@ -185,10 +186,10 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
                       <Typography variant="h4">Thông tin đặt lịch</Typography>
                       <Stack spacing={1}>
                         <Stack direction="row" spacing={1}>
-                          <Typography variant="subtitle1">
+                          {/* <Typography variant="subtitle1">
                             Tổng tiền :
                           </Typography>
-                          <Typography variant="body2"></Typography>
+                          <Typography variant="body2"></Typography> */}
                         </Stack>
                         <Stack spacing={1}>
                           <Stack direction="row" spacing={1}>
@@ -203,12 +204,14 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
                             />
                           </Stack>
                         </Stack>
-                        {booking.rejectReason !== '' && (<Stack direction="row" spacing={1}>
-                          <Typography variant="subtitle1">
-                            Lý do hủy đặt lịch :
-                          </Typography>
-                          <Typography variant="body2">{booking.rejectReason}</Typography>
-                        </Stack>)}
+                        {booking && booking.rejectReason && booking.rejectReason.trim() !== '' && (
+                          <Stack direction="row" spacing={1}>
+                            <Typography variant="subtitle1">
+                              Lý do hủy đặt lịch :
+                            </Typography>
+                            <Typography variant="body2">{booking.rejectReason}</Typography>
+                          </Stack>
+                        )}
                       </Stack>
                     </Stack>
                   </Grid>
@@ -319,7 +322,6 @@ const BookingDetailPage = ({ params }: { params: { id: string } }) => {
               />)}
             </DialogContent>
           </Dialog>
-
         </Grid>
       )}
     </SubCard>

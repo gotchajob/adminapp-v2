@@ -28,40 +28,40 @@ import CustomerToolbar from "./CustomerBookingToolbar";
 import { useGetBooking } from "hooks/use-get-booking";
 import { Booking } from "package/api/booking";
 
-const fakeEvents = [
-    {
-        title: 'Đã đặt lịch1',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-08-02T09:00:00',
-        end: '2024-08-02T10:00:00'
-    },
-    {
-        title: 'Đã đặt lịch2',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-08-04T09:00:00',
-        end: '2024-08-04T10:00:00'
-    },
-    {
-        title: 'Đã đặt lịch3',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-08-03T14:00:00',
-        end: '2024-08-03T15:00:00'
-    },
-    {
-        title: 'Đã đặt lịch',
-        description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
-        color: '#FFC107',
-        textColor: '#ffffff',
-        start: '2024-08-05T14:00:00',
-        end: '2024-08-05T15:00:00'
-    },
-];
+// const fakeEvents = [
+//     {
+//         title: 'Đã đặt lịch1',
+//         description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
+//         color: '#FFC107',
+//         textColor: '#ffffff',
+//         start: '2024-08-02T09:00:00',
+//         end: '2024-08-02T10:00:00'
+//     },
+//     {
+//         title: 'Đã đặt lịch2',
+//         description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
+//         color: '#FFC107',
+//         textColor: '#ffffff',
+//         start: '2024-08-04T09:00:00',
+//         end: '2024-08-04T10:00:00'
+//     },
+//     {
+//         title: 'Đã đặt lịch3',
+//         description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
+//         color: '#FFC107',
+//         textColor: '#ffffff',
+//         start: '2024-08-03T14:00:00',
+//         end: '2024-08-03T15:00:00'
+//     },
+//     {
+//         title: 'Đã đặt lịch',
+//         description: 'Chờ phản hồi từ chuyên gia Anshan Handgun',
+//         color: '#FFC107',
+//         textColor: '#ffffff',
+//         start: '2024-08-05T14:00:00',
+//         end: '2024-08-05T15:00:00'
+//     },
+// ];
 
 const CustomerCalendarPage = ({ onNext, onSelectEvent }: { onNext: () => void, onSelectEvent: (event: any) => void }) => {
     const calendarRef = useRef<FullCalendar>(null);

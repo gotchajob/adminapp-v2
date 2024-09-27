@@ -33,10 +33,17 @@ const getStatusLabel = (status: number) => {
         case 7:
             return <Chip label="Hủy bởi chuyên gia" color="error" />;
         case 8:
-            return <Chip label="Từ chối" color="error" />;
+            return <Chip label="Đã bị report" color="error" />;
         default:
             return <Chip label="Trạng thái không xác định" color="default" />;
     }
+};
+
+const isToday = (date: string) => {
+    const today = new Date();
+    const formattedToday = formatDate(today.toISOString(), "dd-MM-yyyy");
+    const formattedDate = formatDate(date, "dd-MM-yyyy");
+    return formattedDate === formattedToday;
 };
 
 export const RenderHistoryBookingTable = ({
@@ -63,9 +70,11 @@ export const RenderHistoryBookingTable = ({
             headerName: 'Thời điểm bắt đầu',
             flex: 1,
             renderCell: (params) => (
-                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                <Box sx={{
+                    whiteSpace: 'normal', wordWrap: 'break-word', color: isToday(params.row.startInterviewDate) ? 'success.main' : 'black'
+                }}>
                     {formatDate(params.value, 'dd/MM/yyyy hh:mm')}
-                </Box>
+                </Box >
             ),
         },
         {
@@ -73,9 +82,11 @@ export const RenderHistoryBookingTable = ({
             headerName: 'Thời điểm kết thúc',
             flex: 1,
             renderCell: (params) => (
-                <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                <Box sx={{
+                    whiteSpace: 'normal', wordWrap: 'break-word', color: isToday(params.row.endInterviewDate) ? 'success.main' : 'black'
+                }}>
                     {formatDate(params.value, 'dd/MM/yyyy hh:mm')}
-                </Box>
+                </Box >
             ),
         },
         {
@@ -197,7 +208,6 @@ export const RenderHistoryBookingTable = ({
         rows: filteredData.map((data, index) => ({
             ...data,
             object: JSON.stringify(data),
-            customerInfo: JSON.stringify(data),
         })),
     };
 

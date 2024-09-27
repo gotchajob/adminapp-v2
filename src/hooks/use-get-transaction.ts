@@ -57,7 +57,7 @@ export const useGetTransaction = (params: GetTransactionReq, accessToken: string
         }
     }
 
-    useEffect(() => { fetchTransaction() }, [params.pageNumber, params.pageSize, params.search, params.sortBy, accessToken, refresh]);
+    useEffect(() => { fetchTransaction(); }, [accessToken, refresh, params.pageNumber, params.pageSize, params.sortBy]);
 
     return {
         transaction, loading

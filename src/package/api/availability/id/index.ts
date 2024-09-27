@@ -18,6 +18,6 @@ export const DelAvailability = async (params: DelAvailabilityRequest, accessToke
         }
         return res;
     } catch (error: any) {
-        return errorSystem(error, '');
+        return errorSystem(error.message, '');
     }
 };
