@@ -121,6 +121,7 @@ export default function BookingDetailPage({
 
   useEffect(() => {
     console.log(booking);
+    setComment(bookingExpertFeedbackByBooking?.comment);
   }, [booking]);
 
   const [selectFeedbackQuestionList, setSelectAddFeedbackQuestion] = useState<
@@ -316,30 +317,37 @@ export default function BookingDetailPage({
                 sx={{ cursor: "pointer" }}
                 width={"100%"}
               >
-                {booking && (<Image
-                  src={booking.customerCv?.image || "https://th.bing.com/th/id/R.97b7aabdda0bb17d06b0bfe4676c4bd8?rik=LR3rS6Yr98kBfA&pid=ImgRaw&r=0"}
-                  alt="Customer CV"
-                  width={700}
-                  height={1000}
-                  style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-                />)}
-              </FlexCenter>
-
-              <Dialog open={open} onClose={handleClose} fullWidth>
-                <DialogContent>
-                  {booking && (<Image
+                {booking && (
+                  <Image
                     src={
                       booking.customerCv?.image ||
                       "https://th.bing.com/th/id/R.97b7aabdda0bb17d06b0bfe4676c4bd8?rik=LR3rS6Yr98kBfA&pid=ImgRaw&r=0"
                     }
                     alt="Customer CV"
-                    layout="intrinsic"
                     width={700}
                     height={1000}
-                    objectFit="cover"
-                    objectPosition="top"
                     style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-                  />)}
+                  />
+                )}
+              </FlexCenter>
+
+              <Dialog open={open} onClose={handleClose} fullWidth>
+                <DialogContent>
+                  {booking && (
+                    <Image
+                      src={
+                        booking.customerCv?.image ||
+                        "https://th.bing.com/th/id/R.97b7aabdda0bb17d06b0bfe4676c4bd8?rik=LR3rS6Yr98kBfA&pid=ImgRaw&r=0"
+                      }
+                      alt="Customer CV"
+                      layout="intrinsic"
+                      width={700}
+                      height={1000}
+                      objectFit="cover"
+                      objectPosition="top"
+                      style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+                    />
+                  )}
                 </DialogContent>
               </Dialog>
             </Stack>
@@ -397,7 +405,7 @@ export default function BookingDetailPage({
                   <TextField
                     multiline
                     rows={3}
-                    value={bookingExpertFeedbackByBooking?.comment}
+                    value={comment}
                     onChange={(event) => {
                       setComment(event.target.value);
                     }}
@@ -454,7 +462,6 @@ export default function BookingDetailPage({
                     rows={3}
                     value={bookingExpertFeedbackByBooking?.comment}
                     fullWidth
-                    disabled
                   ></TextField>
                 </SubCard>
               </Grid>
