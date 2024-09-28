@@ -123,7 +123,6 @@ export default function BookingDetailPage({
     console.log(booking);
   }, [booking]);
 
-
   const [selectFeedbackQuestionList, setSelectAddFeedbackQuestion] = useState<
     BookingExpertFeedbackQuestion[]
   >([]);
@@ -373,7 +372,7 @@ export default function BookingDetailPage({
               </SubCard>
             </Stack>
           </Grid>
-          {(booking.status === 3 || booking.status === 4) && (
+          {booking.status === 3 && (
             <>
               <Grid item xs={12}>
                 <Divider />
@@ -436,7 +435,7 @@ export default function BookingDetailPage({
               </Grid>
             </>
           )}
-          {booking.status === 5 && (
+          {booking.status === 4 || booking.status === 5 && (
             <>
               <Grid item xs={12}>
                 <Divider />
