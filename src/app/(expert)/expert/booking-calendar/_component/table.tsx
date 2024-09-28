@@ -149,7 +149,7 @@ export const RenderCustomerBookingsTable = ({
                             <CheckIcon sx={{ fontSize: '1.1rem' }} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Từ chối">
+                    <Tooltip title={[1].includes(params.row.status) ? "Từ chối" : "Hủy"}>
                         <IconButton
                             color="secondary"
                             onClick={() => handleOpenDialog(params.row.id, 'reject')}

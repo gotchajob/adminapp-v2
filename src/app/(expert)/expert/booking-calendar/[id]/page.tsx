@@ -268,8 +268,8 @@ export default function BookingDetailPage({
                 </StyledLink>
               </Grid>
               <Grid item>
-                <Button variant="contained" onClick={handleCancelClick} disabled={booking.canCancel}>
-                  Hủy đặt lịch
+                <Button variant="contained" onClick={handleCancelClick} disabled={booking?.canCancel}>
+                  {[1].includes(booking?.status) ? "Từ chối đặt lịch" : "Hủy đặt lịch "}
                 </Button>
               </Grid>
             </Grid>
