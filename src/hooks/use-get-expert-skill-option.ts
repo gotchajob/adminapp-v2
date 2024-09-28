@@ -80,10 +80,12 @@ export const useGetExpertSkillOptionsCurrent = (accessToken: string, refresh: nu
   >([]);
   const [loading, setLoading] = useState(false);
   const getExpertSkillOptionsCurrent = async () => {
+    
     if (accessToken) {
       try {
         setLoading(true);
         const data = await GetExpertSkillOptionCurrent(accessToken);
+        console.log(data)
         setExpertSkillOptionsCurrent(data.data);
       } catch (error) {
       } finally {

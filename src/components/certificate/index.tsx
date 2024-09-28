@@ -14,9 +14,11 @@ export interface Certificate {
 export const ManageCertificate = ({
   certificateList,
   setCertificateList,
+  disableEdit
 }: {
   certificateList: Certificate[];
   setCertificateList: (data: Certificate[]) => void;
+  disableEdit?: boolean
 }) => {
   const handleDeleteCertificate = (index: number) => {
     let newCertificateList = [...certificateList];
@@ -83,13 +85,13 @@ export const ManageCertificate = ({
   return (
     <Stack spacing={3}>
       {certificateList.map((item, index) => renderCertificate(item, index))}
-      <Button
+      {!disableEdit && <Button
         onClick={handleAddNewCertificate}
         variant="outlined"
         sx={{ width: 200 }}
       >
         Thêm mới chứng chỉ
-      </Button>
+      </Button>}
     </Stack>
   );
 };

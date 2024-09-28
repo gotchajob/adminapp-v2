@@ -28,7 +28,7 @@ export interface Expert {
   facebookUrl: string;
   twitterUrl: string;
   linkedinUrl: string;
-  certification: string;
+  certificate: string;
   education: string;
 }
 

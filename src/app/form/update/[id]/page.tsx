@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   try {
     certification = [
       ...certification,
-      JSON.parse(expert.data.certification),
+      JSON.parse(expert.data.certificate),
     ];
   } catch (error) {}
   return (

@@ -597,7 +597,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       setIsAgree(checked);
                     }}
                   />
-                  <StyledLink href={"/"}>
+                  <StyledLink href={"https://gotchajob.vn/policy/dang-ki-expert"}>
                     <Text fontSize={15} sx={{ textDecoration: "underline" }}>
                       Tôi đồng ý với các điều khoản sử dụng
                     </Text>

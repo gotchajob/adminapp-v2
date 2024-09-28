@@ -23,6 +23,7 @@ const ReactQuillDemo = ({
     setText(value);
   };
   const handleBlur = () => {
+    console.log("rời khỏi thẻ")
     setData(text);
   }
   useEffect(() => {

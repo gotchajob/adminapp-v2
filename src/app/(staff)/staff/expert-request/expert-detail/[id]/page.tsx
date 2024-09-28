@@ -143,9 +143,10 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     let listData: Certificate[] = [];
-    if (expert && expert.certification) {
-      listData = JSON.parse(expert.certification);
+    if (expert && expert.certificate) {
+      listData = JSON.parse(expert.certificate);
     }
+    console.log(expert);
     setCertificateList([...listData]);
   }, [expert]);
 
@@ -575,6 +576,7 @@ const ExpertProfilePage = ({ params }: { params: { id: string } }) => {
             <Grid item lg={12}>
               <SubCard title="Chứng chỉ & bằng cấp">
                 <ManageCertificate
+                  disableEdit
                   certificateList={certificateList}
                   setCertificateList={setCertificateList}
                 />

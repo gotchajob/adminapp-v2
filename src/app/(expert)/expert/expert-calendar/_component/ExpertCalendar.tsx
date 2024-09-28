@@ -48,6 +48,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { formatDate, getDatesBetween } from "package/util";
 import { enqueueSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
+import { FlexBetween } from "components/common/box/flex-box";
+import { StyledLink } from "components/common/link/styled-link";
 
 // ==============================|| APPLICATION CALENDAR ||============================== //
 
@@ -150,7 +152,7 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   //     }
   // };
 
-  const handleUpdateEvent = async (eventId: string, update: FormikValues) => { };
+  const handleUpdateEvent = async (eventId: string, update: FormikValues) => {};
 
   // const handleRangeSelect = (arg: DateSelectArg) => {
   //     const calendarEl = calendarRef.current;
@@ -198,7 +200,10 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
   );
 
   const { availabilities, loading: availabilitiesLoadings } =
-    useGetAvailability({ expertId: expertCurrent ? expertCurrent.expertId : 0 }, refreshTime);
+    useGetAvailability(
+      { expertId: expertCurrent ? expertCurrent.expertId : 0 },
+      refreshTime
+    );
 
   const [isAddDateRangeOpen, setIsAddDateRangeOpen] = useState(false);
 
@@ -233,8 +238,8 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     if (arg) {
       setNewEvent({
         date: arg.startStr,
-        startTime: '',
-        endTime: '',
+        startTime: "",
+        endTime: "",
       });
     }
     setIsAddModalOpen(true);
@@ -352,7 +357,9 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         setDatesBetween(dates);
       } catch (error: any) {
         console.error("Lỗi khi tính toán các ngày giữa:", error);
-        enqueueSnackbar("Lỗi khi tính toán các ngày giữa:", { variant: "error" });
+        enqueueSnackbar("Lỗi khi tính toán các ngày giữa:", {
+          variant: "error",
+        });
       }
     }
   }, [startDate, endDate]);
@@ -363,25 +370,30 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
     setEvents(convertedEvents);
   }, [expertCurrent, availabilities, expertToken, refreshTime]);
 
-  useEffect(() => { console.log("select Event:", selectEvent) }, [selectEvent])
+  useEffect(() => {
+    console.log("select Event:", selectEvent);
+  }, [selectEvent]);
 
   if (loading) return <Loader />;
 
   return (
     <Box px={2} py={1}>
       <CalendarStyled>
-        <Grid item xs={12}>
-          <Grid container justifyContent="flex-end">
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleAddDateRangeOpen}
-            >
-              <AddAlarmTwoToneIcon fontSize="small" sx={{ mr: 0.75 }} />
-              Thêm nhiều lịch phỏng vấn
-            </Button>
-          </Grid>
-        </Grid>
+        <FlexBetween>
+          <StyledLink target="_blank" href={"https://gotchajob.vn/policy/dang-ki-expert"}>
+            <Typography fontSize={15} sx={{ textDecoration: "underline" }}>
+              Tôi đồng ý với các điều khoản sử dụng
+            </Typography>
+          </StyledLink>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={handleAddDateRangeOpen}
+          >
+            <AddAlarmTwoToneIcon fontSize="small" sx={{ mr: 0.75 }} />
+            Thêm nhiều lịch phỏng vấn
+          </Button>
+        </FlexBetween>
         <ExpertToolbar
           date={date}
           view={view}
@@ -516,7 +528,12 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
         open={isEditModalOpen}
         sx={{ "& .MuiDialog-paper": { p: 0 } }}
       >
-        <DialogTitle color="primary"> {(selectEvent?.status == 2) ? "Thông tin buổi phỏng vấn" : "Xóa lịch phỏng vấn"}</DialogTitle>
+        <DialogTitle color="primary">
+          {" "}
+          {selectEvent?.status == 2
+            ? "Thông tin buổi phỏng vấn"
+            : "Xóa lịch phỏng vấn"}
+        </DialogTitle>
         <DialogContent>
           {selectEvent && (
             <>
@@ -569,13 +586,15 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
                 <Button onClick={handleEditModalClose} color="primary">
                   Đóng
                 </Button>
-                {(selectEvent.status !== 2) && (<LoadingButton
-                  onClick={() => handleEventDelete(selectEvent.id)}
-                  color="error"
-                  loading={loadingButton}
-                >
-                  Xóa
-                </LoadingButton>)}
+                {selectEvent.status !== 2 && (
+                  <LoadingButton
+                    onClick={() => handleEventDelete(selectEvent.id)}
+                    color="error"
+                    loading={loadingButton}
+                  >
+                    Xóa
+                  </LoadingButton>
+                )}
               </DialogActions>
             </>
           )}
@@ -639,7 +658,11 @@ const ExpertCalendarPage = ({ onNext }: { onNext: () => void }) => {
             <Button onClick={handleAddModalClose} color="primary">
               Đóng
             </Button>
-            <LoadingButton onClick={handleCreateNewEvent} color="success" loading={loadingButton}>
+            <LoadingButton
+              onClick={handleCreateNewEvent}
+              color="success"
+              loading={loadingButton}
+            >
               Thêm
             </LoadingButton>
           </DialogActions>
