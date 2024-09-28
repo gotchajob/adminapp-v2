@@ -121,8 +121,8 @@ export default function BookingDetailPage({
 
   useEffect(() => {
     console.log(booking);
-    setComment(bookingExpertFeedbackByBooking?.comment);
   }, [booking]);
+
 
   const [selectFeedbackQuestionList, setSelectAddFeedbackQuestion] = useState<
     BookingExpertFeedbackQuestion[]

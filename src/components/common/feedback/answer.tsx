@@ -8,7 +8,7 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Grid from '@mui/material/Grid';
-import { Fragment, ReactNode } from 'react';
+import { Fragment, ReactNode, useEffect } from 'react';
 import { FlexBox } from '../box/flex-box';
 import { Text } from '../text/text';
 import Stack from '@mui/material/Stack';
@@ -40,6 +40,11 @@ export const Answer = ({
   feedbackQuestionList: BookingExpertFeedbackQuestion[];
 }) => {
 
+  useEffect(() => {
+    
+    console.log("answerList", answerList)
+    console.log("feedbackQuestionList", feedbackQuestionList)
+  }, [answerList, feedbackQuestionList])
   const handleUpdateAnwser = ({ questionId, value }: { questionId: number; value: any }) => {
     const newAnswer = [...answerList];
     const index = newAnswer.findIndex((value) => value.questionId === questionId);

@@ -33,7 +33,7 @@ export const ReadOnlyAnswer = ({
 
     switch (props.questionType) {
       case 'text':
-        input = <TextField fullWidth minRows={5} multiline />;
+        input = <TextField fullWidth minRows={5} multiline value={props.answer} />;
         break;
       case 'attitude':
         input = (
