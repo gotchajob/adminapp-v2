@@ -34,7 +34,7 @@ export const GetExpertSkillRating = async (
   url.append("expertSkillOptionId", params.expertSkillOptionId + "");
   try {
     const res = await apiServerFetch(
-      "/expert-skill-rating?" + url.toString(),
+      "/expert-skill-rating/for-expert?" + url.toString(),
       "GET",
       undefined,
       accessToken

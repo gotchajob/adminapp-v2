@@ -11,6 +11,8 @@ export default function Page({ params }: { params: { slug: string[] } }) {
     { pageNumber: 1, pageSize: 1000, sortBy: "createdAt", expertSkillOptionId: +params.slug[1] },
     0
   );
+
+  console.log(ratingParams)
   return (
     <MainCard
       title={<Text variant="h4">Thông tin đánh giá về {decodeURI(params.slug[0])}</Text>}

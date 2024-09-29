@@ -59,7 +59,7 @@ const dashboard: NavItemType = {
     },
     {
       id: "cv",
-      title: <FormattedMessage id="Quản lý CV" />,
+      title: <FormattedMessage id="Quản lý mẫu CV" />,
       type: "item",
       url: "/staff/cv",
       icon: ContactsIcon,

@@ -104,21 +104,6 @@ export const RenderCVListTable = ({
       flex: 1,
       renderCell: (params) => <Box>{StatusCV(params.value)}</Box>,
     },
-    {
-      field: "actions",
-      headerName: "Actions",
-      flex: 1.5,
-      renderCell: (params) => (
-        <Stack
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          spacing={1}
-        >
-          <Switch checked={true} />
-        </Stack>
-      ),
-    },
   ];
 
   const { handleChangeEventText, text } = useGetFilter();

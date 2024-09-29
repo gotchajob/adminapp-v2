@@ -16,7 +16,7 @@ const sampleIcon = [
 export const GetIcon = ({ setIcon }: { setIcon: (value: string) => void }) => {
   const [selectedIcon, setSelectedIcon] = useState("");
   return (
-    <Grid container spacing={0}>
+    <Grid container spacing={0} >
       {sampleIcon.map((icon, index) => (
         <Grid
           item

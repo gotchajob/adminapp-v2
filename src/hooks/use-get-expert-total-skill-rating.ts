@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ExpertToken } from "./use-login";
 import { GetExpertTotalSkillRating, GetExpertTotalSkillRatingRequest } from "package/api/expert-skill-rating/total-rating";
 import { GetExpertSkillRating, GetExpertSkillRatingRequest } from "package/api/expert-skill-rating/for-expert";
+import { formatDate } from "package/util";
 
 export const useGetExpertTotalSkillRating = (
   params1: GetExpertTotalSkillRatingRequest,
@@ -34,9 +35,12 @@ export const useGetExpertTotalSkillRating = (
       newRatingParams.totalRatingList[index].count = newRatingParams.totalRatingList[index].count + value.count
     });
 
+    console.log(feedback)
+
     feedback.data.list.forEach((value) =>
       newRatingParams.feedbackList.push({
         ...value,
+        createdAt: formatDate(value.createdAt, "dd/MM/yyyy"),
         user: {
           avatar: "",
           fullName: "Nguời dùng",

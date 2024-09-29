@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { GetIcon } from "./get-icon";
 import { Text } from "components/common/text/text";
+import Box from "@mui/material/Box";
 
 export const CreateTemplateComponent = ({
   setTemplateComponent,
@@ -33,16 +34,16 @@ export const CreateTemplateComponent = ({
   const [icon, setIcon] = useState("");
 
   const handleSetTemplateComponent = () => {
-    const newTemplateComponent: CVComponent= {
+    const newTemplateComponent: CVComponent = {
       componentName,
       dataType,
       title,
       icon,
       //@ts-ignore
-      ...initTemplate[dataType]
-    }
+      ...initTemplate[dataType],
+    };
 
-    setTemplateComponent(newTemplateComponent)
+    setTemplateComponent(newTemplateComponent);
   };
 
   return (
@@ -85,7 +86,9 @@ export const CreateTemplateComponent = ({
             ))}
           </TextField>
           <Text variant="h5">Chọn Icon:</Text>
-          <GetIcon setIcon={setIcon} />
+          <Box height={300} sx={{overflowY: "scroll"}}>
+            <GetIcon setIcon={setIcon} />
+          </Box>
         </Stack>
       </DialogContent>
       <DialogActions>
