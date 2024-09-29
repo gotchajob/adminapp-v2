@@ -12,6 +12,11 @@ const sampleIcon = [
   "ph:target",
   "bytesize:work",
   "mdi:certificate",
+  "ph:read-cv-logo-fill",
+  "ph:certificate-bold",
+  "ant-design:safety-certificate-filled",
+  "iconamoon:certificate-badge",
+  "fluent:text-description-ltr-20-filled"
 ];
 export const GetIcon = ({ setIcon }: { setIcon: (value: string) => void }) => {
   const [selectedIcon, setSelectedIcon] = useState("");
